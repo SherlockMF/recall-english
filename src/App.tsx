@@ -27,6 +27,7 @@ import { exportBackupJson, importBackup } from './lib/backup'
 import {
   addWordToList,
   getUserDataSnapshot,
+  getWordListItemsForWord,
   initializeDatabase,
   putLearningTracks,
   putSettings,
@@ -258,7 +259,7 @@ function App() {
     return updated
   }
 
-  async function enrichDraft(expression: string, category: SystemListSlug, existingDefinition?: string) {
+  async function enrichDraft(expression: string, category: SystemListSlug | 'other', existingDefinition?: string) {
     return enrichWithLlm({ expression, category, existingDefinition })
   }
 
@@ -396,11 +397,13 @@ function App() {
       ...current.listSlugs.filter((slug) => slug === 'my-vocabulary' || slug === patch.category),
       patch.category,
     ])
+    const scenarioNote = current.scenarioNote
     const updated: VocabularyItem = {
       ...current,
       ...patch,
       listSlugs,
       category: patch.category,
+      scenarioNote,
       acceptedZhAnswers: uniqueStrings([patch.zhGloss, ...current.acceptedZhAnswers]),
       usagePrompts,
       updatedAt: new Date().toISOString(),
@@ -409,16 +412,28 @@ function App() {
     const newUsageTrack = !hasUsageTrack && usagePrompts.length
       ? createInitialTracks([updated], new Date()).filter((track) => track.type === 'usage')
       : []
+    const existingMemberships = await getWordListItemsForWord(id)
+    const nextMembershipIds = new Set(listSlugs.map((slug) => `membership-${id}-${slug}`))
+    const deleteMembershipIds = existingMemberships
+      .filter((membership) => !nextMembershipIds.has(membership.id))
+      .map((membership) => membership.id)
+    const existingMyVocabulary = existingMemberships.find(
+      (membership) => membership.listId === listIdForSlug('my-vocabulary'),
+    )
     const memberships = listSlugs.map((slug, index) => ({
       id: `membership-${id}-${slug}`,
       wordId: id,
       listId: listIdForSlug(slug),
       priority: updated.priority,
       sortOrder: index,
+      subcategory: slug === 'my-vocabulary'
+        ? (existingMyVocabulary?.subcategory ?? scenarioNote)
+        : undefined,
     }))
     await writeBatch({
       words: [stripHydration(updated)],
       memberships,
+      deleteMembershipIds,
       tracks: newUsageTrack,
     })
     setItems((all) => all.map((item) => item.id === id ? updated : item))
@@ -563,7 +578,12 @@ function ErrorScreen({ message, onRetry }: { message: string; onRetry: () => voi
 }
 
 function stripHydration(item: VocabularyItem | Word): Word {
-  const { listSlugs: _listSlugs, category: _category, ...word } = item as VocabularyItem
+  const {
+    listSlugs: _listSlugs,
+    category: _category,
+    scenarioNote: _scenarioNote,
+    ...word
+  } = item as VocabularyItem
   return word
 }
 
@@ -582,7 +602,10 @@ function customItemFromDraft(draft: CustomItemDraft): {
     ? [{ en: draft.exampleEn.trim(), zh: draft.exampleZh.trim() }]
     : []
   const id = makeId('custom')
-  const listSlugs = uniqueListSlugs([draft.category, 'my-vocabulary'])
+  const scenarioNote = draft.category === 'other' ? draft.scenarioNote?.trim() : undefined
+  const listSlugs = draft.category === 'other'
+    ? uniqueListSlugs(['my-vocabulary'])
+    : uniqueListSlugs([draft.category, 'my-vocabulary'])
   const word: Word = {
     id,
     expression,
@@ -612,11 +635,17 @@ function customItemFromDraft(draft: CustomItemDraft): {
     listId: listIdForSlug(slug),
     priority: 0,
     sortOrder: index,
+    subcategory: scenarioNote,
   }))
   return {
     word,
     memberships,
-    item: { ...word, listSlugs, category: draft.category },
+    item: {
+      ...word,
+      listSlugs,
+      category: draft.category === 'other' ? 'my-vocabulary' : draft.category,
+      scenarioNote,
+    },
   }
 }
 

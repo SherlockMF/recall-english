@@ -76,6 +76,7 @@ export function StudySession({
   const [revealed, setRevealed] = useState(false)
   const [correction, setCorrection] = useState('')
   const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
   const [grading, setGrading] = useState(false)
   const [hinting, setHinting] = useState(false)
   const [ensuringUsage, setEnsuringUsage] = useState(false)
@@ -193,13 +194,21 @@ export function StudySession({
     else if (needsCorrection && rating === 'good') rating = 'hard'
 
     setSaving(true)
-    await onRate(task, rating, {
-      answer,
-      hintLevel,
-      responseMs: Math.max(0, Date.now() - startedAt.current),
-      promptType: task.trackType === 'usage' ? usagePrompt?.type ?? 'usage' : task.trackType,
-      wasOverride: rating !== evaluation.rating,
-    })
+    setSaveError(null)
+    try {
+      await onRate(task, rating, {
+        answer,
+        hintLevel,
+        responseMs: Math.max(0, Date.now() - startedAt.current),
+        promptType: task.trackType === 'usage' ? usagePrompt?.type ?? 'usage' : task.trackType,
+        wasOverride: rating !== evaluation.rating,
+      })
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : '保存复习结果失败，请重试')
+      return
+    } finally {
+      setSaving(false)
+    }
 
     const nextSummary: SessionSummary = {
       ...summary,
@@ -227,7 +236,6 @@ export function StudySession({
       setTasks(nextTasks)
     }
 
-    setSaving(false)
     if (index + 1 >= nextTasks.length) {
       setPhase('complete')
       return
@@ -424,6 +432,7 @@ export function StudySession({
                     <strong>想起来了</strong><span>正常间隔</span>
                   </button>
                 </div>
+                {saveError && <p className="save-error" role="alert">{saveError}</p>}
               </div>
             </>
           )}

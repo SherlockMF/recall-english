@@ -99,6 +99,16 @@ describe('Free Dictionary lookup', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
+  it('reports upstream 5xx failures with a recoverable message', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(response('<html>bad gateway</html>', 502))
+    vi.stubGlobal('fetch', fetchMock)
+
+    await expect(lookupDictionary('levarage')).rejects.toMatchObject({
+      code: 'server',
+      status: 502,
+    })
+  })
+
   it('uses a five-second default and reports an aborted request as a timeout', async () => {
     expect(DICTIONARY_TIMEOUT_MS).toBe(5_000)
     vi.stubGlobal(

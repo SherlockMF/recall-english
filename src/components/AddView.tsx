@@ -2,16 +2,20 @@ import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import type { DictionaryMeaning, DictionaryResult, SystemListSlug } from '../domain/types'
 import { hasDeepseekApiKey } from '../lib/llm/config'
-import type { EnrichmentDraft } from '../lib/llm/enrich'
+import type { EnrichCategory, EnrichmentDraft } from '../lib/llm/enrich'
+import { inferCategoryFromDictionary } from '../lib/inferCategory'
 import { categoryLabels } from '../lib/presentation'
 import { Icon } from './Icon'
+
+export type AddCategory = EnrichCategory
 
 export interface CustomItemDraft {
   expression: string
   zhGloss: string
   enDefinition: string
   partOfSpeech: string
-  category: SystemListSlug
+  category: AddCategory
+  scenarioNote?: string
   exampleEn: string
   exampleZh: string
   collocations: string[]
@@ -31,12 +35,12 @@ interface AddViewProps {
   ) => Promise<{ added: number; skipped: number }>
   onEnrich?: (
     expression: string,
-    category: SystemListSlug,
+    category: AddCategory,
     existingDefinition?: string,
   ) => Promise<EnrichmentDraft>
 }
 
-const domainCategories: SystemListSlug[] = ['daily', 'business', 'finance', 'accounting']
+const domainCategories: AddCategory[] = ['daily', 'business', 'finance', 'accounting', 'other']
 
 export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich }: AddViewProps) {
   const [mode, setMode] = useState<'single' | 'bulk'>('single')
@@ -52,7 +56,8 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich }: AddViewProps) 
   const [exampleEn, setExampleEn] = useState('')
   const [exampleZh, setExampleZh] = useState('')
   const [collocations, setCollocations] = useState('')
-  const [category, setCategory] = useState<SystemListSlug>('daily')
+  const [category, setCategory] = useState<AddCategory>('daily')
+  const [scenarioNote, setScenarioNote] = useState('')
   const [saveMessage, setSaveMessage] = useState('')
   const [saving, setSaving] = useState(false)
   const [enriching, setEnriching] = useState(false)
@@ -60,6 +65,7 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich }: AddViewProps) 
 
   const selectedDictionaryMeaning: DictionaryMeaning | undefined = dictionaryResult?.meanings[selectedMeaning]
   const bulkRows = useMemo(() => parseBulkRows(bulkText), [bulkText])
+  const bulkCategory: SystemListSlug = category === 'other' ? 'daily' : category
 
   function applyMeaning(result: DictionaryResult, index: number) {
     const meaning = result.meanings[index]
@@ -69,6 +75,12 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich }: AddViewProps) 
     setEnDefinition(meaning.definition)
     setPartOfSpeech(meaning.partOfSpeech || 'expression')
     setExampleEn(meaning.example ?? '')
+    const inferred = inferCategoryFromDictionary(
+      result.word,
+      meaning.definition,
+      meaning.partOfSpeech,
+    )
+    if (inferred) setCategory(inferred)
   }
 
   async function handleLookup() {
@@ -101,14 +113,24 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich }: AddViewProps) 
     setSaveMessage('')
     try {
       const draft = await onEnrich(cleaned, category, enDefinition || undefined)
-      setExpression(cleaned)
+      const nextExpression = draft.expression || cleaned
+      setQuery(nextExpression)
+      setExpression(nextExpression)
+      setCategory(draft.category)
+      if (draft.category === 'other') {
+        setScenarioNote(draft.scenarioNote?.trim() || scenarioNote)
+      }
       if (!zhGloss.trim()) setZhGloss(draft.zhGloss)
       if (!enDefinition.trim()) setEnDefinition(draft.enDefinition)
       if (!partOfSpeech.trim() || partOfSpeech === 'expression') setPartOfSpeech(draft.partOfSpeech)
       if (!exampleEn.trim()) setExampleEn(draft.exampleEn)
       if (!exampleZh.trim()) setExampleZh(draft.exampleZh)
       if (!collocations.trim() && draft.collocations.length) setCollocations(draft.collocations.join(', '))
-      setSaveMessage('已用 AI 补全空字段，请确认后再保存。')
+      setSaveMessage(
+        draft.expression && draft.expression.toLocaleLowerCase('en-US') !== cleaned.toLocaleLowerCase('en-US')
+          ? `已用 AI 补全，并纠正拼写为 “${draft.expression}”。请确认场景后再保存。`
+          : '已用 AI 补全，并更新了使用场景。请确认后再保存。',
+      )
     } catch (error) {
       setSaveMessage(error instanceof Error ? error.message : 'AI 补全失败，请稍后重试。')
     } finally {
@@ -122,6 +144,10 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich }: AddViewProps) 
       setSaveMessage('请至少填写英文表达和一个明确的中文义项。')
       return
     }
+    if (category === 'other' && !scenarioNote.trim()) {
+      setSaveMessage('选择「其他」时，请填写自定义场景备注。')
+      return
+    }
     setSaving(true)
     const result = await onAdd({
       expression: expression.trim(),
@@ -129,6 +155,7 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich }: AddViewProps) 
       enDefinition: enDefinition.trim(),
       partOfSpeech: partOfSpeech.trim() || 'expression',
       category,
+      scenarioNote: category === 'other' ? scenarioNote.trim() : undefined,
       exampleEn: exampleEn.trim(),
       exampleZh: exampleZh.trim(),
       collocations: collocations.split(/[,，\n]/).map((item) => item.trim()).filter(Boolean),
@@ -150,13 +177,15 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich }: AddViewProps) 
       setExampleEn('')
       setExampleZh('')
       setCollocations('')
+      setScenarioNote('')
+      setCategory('daily')
     }
   }
 
   async function handleBulkSave() {
     if (!bulkRows.length) return
     setSaving(true)
-    const result = await onBulkAdd(bulkRows, category)
+    const result = await onBulkAdd(bulkRows, bulkCategory)
     setSaving(false)
     setSaveMessage(`已加入 ${result.added} 条，跳过 ${result.skipped} 条重复或无效内容。`)
     if (result.added) setBulkText('')
@@ -210,7 +239,7 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich }: AddViewProps) 
                   {enriching ? 'AI 补全中…' : 'AI 补全'}
                 </button>
               </div>
-              <p className="field-help">短语或离线时可以直接填写下面的表单，不会阻止保存。</p>
+              <p className="field-help">词典辅助：补英文释义/例句，并尽量推断使用场景。AI 补全：补中文义项、例句、搭配，并纠正拼写与场景。短语或离线时也可直接填表。</p>
               {lookupState === 'error' && <div className="inline-alert warning">{lookupMessage}</div>}
             </div>
 
@@ -255,11 +284,21 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich }: AddViewProps) 
                 </label>
                 <label>
                   <span>使用场景</span>
-                  <select onChange={(event) => setCategory(event.target.value as SystemListSlug)} value={category}>
+                  <select onChange={(event) => setCategory(event.target.value as AddCategory)} value={category}>
                     {domainCategories.map((item) => <option key={item} value={item}>{categoryLabels[item]}</option>)}
                   </select>
                 </label>
               </div>
+              {category === 'other' && (
+                <label>
+                  <span>其他场景备注 *</span>
+                  <input
+                    onChange={(event) => setScenarioNote(event.target.value)}
+                    placeholder="例如：宿舍维修、社团活动、签证材料"
+                    value={scenarioNote}
+                  />
+                </label>
+              )}
               <label>
                 <span>简短英文定义</span>
                 <textarea onChange={(event) => setEnDefinition(event.target.value)} placeholder="Keep it short and clear." rows={2} value={enDefinition} />
@@ -318,11 +357,15 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich }: AddViewProps) 
           <div className="bulk-footer">
             <label className="compact-select">
               <span>统一归类</span>
-              <select onChange={(event) => setCategory(event.target.value as SystemListSlug)} value={category}>
+              <select onChange={(event) => setCategory(event.target.value as AddCategory)} value={category}>
                 {domainCategories.map((item) => <option key={item} value={item}>{categoryLabels[item]}</option>)}
               </select>
             </label>
-            <span className="parsed-count">识别到 {bulkRows.length} 条有效内容</span>
+            <span className="parsed-count">
+              {category === 'other'
+                ? `识别到 ${bulkRows.length} 条（批量「其他」暂归入日常生活）`
+                : `识别到 ${bulkRows.length} 条有效内容`}
+            </span>
             <button className="primary-button" disabled={!bulkRows.length || saving} onClick={() => void handleBulkSave()} type="button">
               <Icon name="plus" size={18} /> 加入队列
             </button>

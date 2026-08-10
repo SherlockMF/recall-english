@@ -59,6 +59,7 @@ describe('llm content helpers', () => {
         choices: [{
           message: {
             content: JSON.stringify({
+              expression: 'invoice',
               zhGloss: '发票',
               enDefinition: 'a document requesting payment',
               partOfSpeech: 'noun',
@@ -67,6 +68,7 @@ describe('llm content helpers', () => {
               collocations: ['issue an invoice', 'overdue invoice'],
               acceptedZhAnswers: ['账单'],
               acceptedEnVariants: ['tax invoice'],
+              category: 'accounting',
             }),
           },
         }],
@@ -74,7 +76,37 @@ describe('llm content helpers', () => {
     }))
     const draft = await enrichWithLlm({ expression: 'invoice', category: 'accounting' })
     expect(draft.zhGloss).toBe('发票')
+    expect(draft.expression).toBe('invoice')
+    expect(draft.category).toBe('accounting')
     expect(draft.collocations).toContain('issue an invoice')
+  })
+
+  it('accepts corrected spelling and other category from enrich payload', async () => {
+    setDeepseekApiKey('sk-test')
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        choices: [{
+          message: {
+            content: JSON.stringify({
+              expression: 'leverage',
+              zhGloss: '杠杆',
+              enDefinition: 'use of borrowed capital',
+              partOfSpeech: 'noun',
+              exampleEn: 'The firm used leverage carefully.',
+              exampleZh: '公司谨慎使用杠杆。',
+              collocations: ['financial leverage'],
+              acceptedZhAnswers: [],
+              acceptedEnVariants: [],
+              category: 'finance',
+            }),
+          },
+        }],
+      }),
+    }))
+    const draft = await enrichWithLlm({ expression: 'levarage', category: 'daily' })
+    expect(draft.expression).toBe('leverage')
+    expect(draft.category).toBe('finance')
   })
 
   it('parses two usage prompts', async () => {

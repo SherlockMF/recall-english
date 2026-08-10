@@ -10,6 +10,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/deepseek/, ''),
       },
+      '/api/dictionary': {
+        target: 'https://api.dictionaryapi.dev',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/dictionary/, ''),
+      },
     },
   },
   preview: {
@@ -18,6 +23,11 @@ export default defineConfig({
         target: 'https://api.deepseek.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/deepseek/, ''),
+      },
+      '/api/dictionary': {
+        target: 'https://api.dictionaryapi.dev',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/dictionary/, ''),
       },
     },
   },

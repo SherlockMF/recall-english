@@ -1,11 +1,12 @@
 import type { LearningTrack, ListSlug, TrackType, VocabularyItem } from '../domain/types'
 
-export const categoryLabels: Record<ListSlug, string> = {
+export const categoryLabels: Record<ListSlug | 'other', string> = {
   daily: '日常生活',
   business: '商业英语',
   finance: '金融英语',
   accounting: '会计英语',
   'my-vocabulary': '我的词库',
+  other: '其他',
 }
 
 export const trackLabels: Record<TrackType, string> = {

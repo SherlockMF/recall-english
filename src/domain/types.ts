@@ -57,6 +57,8 @@ export interface Word {
 export interface VocabularyItem extends Word {
   listSlugs: ListSlug[]
   category: ListSlug
+  /** Free-text scenario note when the item is filed under a custom “其他” context. */
+  scenarioNote?: string
 }
 
 export interface VocabularyList {
@@ -218,11 +220,16 @@ export function primaryListSlug(listSlugs: ListSlug[]): ListSlug {
   return 'my-vocabulary'
 }
 
-export function hydrateWord(word: Word, listSlugs: ListSlug[]): VocabularyItem {
+export function hydrateWord(
+  word: Word,
+  listSlugs: ListSlug[],
+  scenarioNote?: string,
+): VocabularyItem {
   const slugs = listSlugs.length > 0 ? listSlugs : (['my-vocabulary'] as ListSlug[])
   return {
     ...word,
     listSlugs: slugs,
     category: primaryListSlug(slugs),
+    scenarioNote: scenarioNote?.trim() || undefined,
   }
 }

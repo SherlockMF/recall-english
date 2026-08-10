@@ -217,7 +217,7 @@ const dailyRows: SeedRow[] = [
     examples: [['The deposit is equal to two months\' rent.', '押金相当于两个月的租金。'], ['Take photos of the room to protect your deposit.', '给房间拍照，以保障押金能退回。']],
   },
   {
-    expression: 'utility bill', sense: 'household-service-charge', zh: '水电网账单', definition: 'a bill for household services such as electricity, water, or gas', partOfSpeech: 'noun phrase', variants: ['utilities bill'], collocations: ['pay a utility bill', 'monthly utility bill', 'share utility bills'],
+    expression: 'utility bill', sense: 'household-service-charge', zh: '水电网账单', definition: 'a bill for household services such as electricity, water, or gas', partOfSpeech: 'noun phrase', collocations: ['pay a utility bill', 'monthly utility bill', 'share utility bills'],
     examples: [['Our utility bill increased because we used more air conditioning.', '因为使用了更多空调，我们的水电网账单增加了。'], ['The flatmates share each utility bill equally.', '室友们平分每张水电网账单。']],
   },
   {
@@ -338,7 +338,7 @@ const dailyRows: SeedRow[] = [
   },
   {
     expression: 'bank account', sense: 'money-account-at-bank', zh: '银行账户', definition: 'an arrangement with a bank for keeping and managing money', partOfSpeech: 'noun phrase', collocations: ['open a bank account', 'bank account details', 'student bank account'],
-    examples: [['I opened a bank account to receive scholarship payments.', '我开了一个银行账户来接收奖学金。'], ['Never send your bank account password to anyone.', '绝不要把银行账户密码发给任何人。']],
+    examples: [['I opened a bank account to receive scholarship payments.', '我开了一个银行账户来接收奖学金。'], ['Never share your bank account details or online-banking password.', '绝不要把银行账户详情或网银密码分享给任何人。']],
   },
   {
     expression: 'cashless payment', sense: 'electronic-payment', zh: '无现金支付', definition: 'payment made electronically rather than with notes or coins', partOfSpeech: 'noun phrase', collocations: ['accept cashless payment', 'cashless payment method', 'make a cashless payment'],
@@ -528,7 +528,7 @@ const financeRows: SeedRow[] = [
     examples: [['Accounts receivable increase when customers buy on credit.', '客户赊购时，应收账款增加。'], ['The accountant reviews overdue accounts receivable each Friday.', '会计每周五审查逾期应收账款。']],
   },
   {
-    expression: 'accounts payable', sense: 'supplier-amounts-due', zh: '应付账款', definition: 'amounts an entity owes suppliers for goods or services received on credit', partOfSpeech: 'plural noun', variants: ['trade payables'], collocations: ['pay accounts payable', 'accounts payable balance', 'accounts payable department'],
+    expression: 'accounts payable', sense: 'supplier-amounts-due', zh: '应付账款', definition: 'amounts an entity owes suppliers for goods or services received on credit', partOfSpeech: 'plural noun', variants: ['trade payables'], collocations: ['settle accounts payable', 'accounts payable balance', 'accounts payable department'],
     examples: [['Accounts payable are normally presented as current liabilities.', '应付账款通常列报为流动负债。'], ['The accounts payable team matches each invoice to a purchase order.', '应付账款团队把每张发票与采购订单匹配。']],
   },
   {
@@ -556,7 +556,7 @@ const financeRows: SeedRow[] = [
     examples: [['A provision is recognised when an outflow is probable and can be estimated reliably.', '经济利益很可能流出且金额能可靠估计时确认预计负债。'], ['The company measured a provision for product warranties.', '公司计量了一项产品保修预计负债。']],
   },
   {
-    expression: 'impairment', sense: 'asset-value-reduction', zh: '减值', definition: 'a reduction recognised when an asset\'s carrying amount exceeds the amount recoverable from it', partOfSpeech: 'noun', collocations: ['impairment test', 'impairment loss', 'recognise impairment'],
+    expression: 'impairment', sense: 'asset-value-reduction', zh: '减值', definition: 'a recognised reduction in an asset\'s carrying amount; for many non-financial assets under IAS 36, it arises when carrying amount exceeds recoverable amount', partOfSpeech: 'noun', collocations: ['impairment test', 'impairment loss', 'recognise impairment'],
     examples: [['The impairment test showed that the machine could not recover its carrying amount.', '减值测试显示该机器无法收回其账面金额。'], ['The entity recognised impairment after demand for the product fell sharply.', '产品需求大幅下降后，主体确认了减值。']],
   },
   {
@@ -589,7 +589,7 @@ const financeRows: SeedRow[] = [
   },
   {
     expression: 'credit', sense: 'right-side-account-entry', zh: '贷方记录', definition: 'an entry on the right side of an account', partOfSpeech: 'noun', zhAnswers: ['贷方'], collocations: ['record a credit', 'credit entry', 'credit balance'],
-    examples: [['A credit to revenue records an increase in income.', '收入账户的贷方记录收入的增加。'], ['The payment creates a credit in the cash account.', '该付款在现金账户形成一笔贷方记录。']],
+    examples: [['A credit to revenue records an increase in income.', '收入账户的贷方记录收入的增加。'], ['Paying a supplier creates a credit entry in the cash account.', '向供应商付款会在现金账户形成一笔贷方记录。']],
   },
   {
     expression: 'journal entry', sense: 'transaction-record-with-debits-credits', zh: '会计分录', definition: 'a record of a transaction showing the accounts and debit and credit amounts affected', partOfSpeech: 'noun phrase', collocations: ['record a journal entry', 'adjusting journal entry', 'post a journal entry'],
@@ -624,7 +624,7 @@ const financeRows: SeedRow[] = [
     examples: [['Retained earnings increase when profit is kept in the company.', '利润留在公司时，留存收益增加。'], ['A dividend reduces retained earnings when it is declared.', '股利宣告时会减少留存收益。']],
   },
   {
-    expression: 'share capital', sense: 'owner-contributed-share-funds', zh: '股本', definition: 'the amount invested in a company by shareholders in exchange for issued shares', partOfSpeech: 'noun phrase', collocations: ['issue share capital', 'ordinary share capital', 'paid-up share capital'],
+    expression: 'share capital', sense: 'owner-contributed-share-funds', zh: '股本', definition: 'the nominal or par value of shares issued by a company, recorded separately from any share premium', partOfSpeech: 'noun phrase', collocations: ['issue share capital', 'ordinary share capital', 'paid-up share capital'],
     examples: [['Share capital increased when the company issued new ordinary shares.', '公司发行新的普通股时，股本增加。'], ['The statement of changes in equity reports movements in share capital.', '权益变动表报告股本的变动。']],
   },
   {
@@ -640,7 +640,7 @@ const financeRows: SeedRow[] = [
     examples: [['Gross profit equals revenue less cost of sales.', '毛利等于营业收入减销售成本。'], ['Higher supplier prices reduced the shop\'s gross profit.', '供应商价格上涨降低了商店的毛利。']],
   },
   {
-    expression: 'operating profit', sense: 'profit-from-operations', zh: '营业利润', definition: 'profit from normal operations before finance costs and tax', partOfSpeech: 'noun phrase', collocations: ['calculate operating profit', 'operating profit margin', 'increase operating profit'],
+    expression: 'operating profit', sense: 'profit-from-operations', zh: '营业利润', definition: 'profit from an entity\'s operations, generally measured before finance costs and income tax; its exact composition may vary by entity', partOfSpeech: 'noun phrase', collocations: ['calculate operating profit', 'operating profit margin', 'increase operating profit'],
     examples: [['Operating profit improved after the company reduced administrative expenses.', '公司降低管理费用后，营业利润有所改善。'], ['The analyst compared operating profit across three years.', '分析师比较了三年的营业利润。']],
   },
   {
@@ -796,8 +796,8 @@ const financeRows: SeedRow[] = [
     examples: [['A bank reconciliation compares the cash ledger with the bank statement.', '银行对账把现金账簿与银行对账单进行比较。'], ['The monthly reconciliation found an unrecorded bank fee.', '月度对账发现了一笔未记录的银行手续费。']],
   },
   {
-    expression: 'tax liability', sense: 'amount-of-tax-owed', zh: '应纳税负债', definition: 'the amount of tax that an individual or entity is obliged to pay', partOfSpeech: 'noun phrase', collocations: ['calculate tax liability', 'current tax liability', 'settle a tax liability'],
-    examples: [['The current tax liability reflects tax payable on this year\'s taxable profit.', '当期应纳税负债反映本年应税利润应付的税款。'], ['The company set aside cash to settle its tax liability.', '公司预留现金以清偿应纳税负债。']],
+    expression: 'tax liability', sense: 'amount-of-tax-owed', zh: '应交税费', definition: 'the amount of tax that an individual or entity is obliged to pay', partOfSpeech: 'noun phrase', zhAnswers: ['应纳税额', '应付税款'], collocations: ['calculate tax liability', 'current tax liability', 'settle a tax liability'],
+    examples: [['The current tax liability reflects tax payable on this year\'s taxable profit.', '当期应交税费反映本年应税利润应付的税款。'], ['The company set aside cash to settle its tax liability.', '公司预留现金以清偿应交税费。']],
   },
   {
     expression: 'deferred tax', sense: 'future-tax-from-temporary-differences', zh: '递延所得税', definition: 'tax recognised for future consequences of temporary differences and certain carryforwards', partOfSpeech: 'noun phrase', collocations: ['deferred tax asset', 'deferred tax liability', 'recognise deferred tax'],
@@ -852,10 +852,10 @@ const businessRows: SeedRow[] = [
   },
   {
     expression: 'competitor', sense: 'rival-serving-same-market', zh: '竞争对手', definition: 'a business offering a similar solution or competing for the same customers', partOfSpeech: 'noun', collocations: ['direct competitor', 'analyse a competitor', 'competitor pricing'],
-    examples: [['A competitor launched a cheaper plan last month.', '一家竞争对手上个月推出了更便宜的方案。'], ['We compared each competitor on price, service, and speed.', '我们从价格、服务和速度方面比较了每个竞争对手。']],
+    examples: [['A competitor launched a cheaper plan last month.', '一家竞争企业上个月推出了更便宜的方案。'], ['We compared each competitor on price, service, and speed.', '我们从价格、服务和速度方面比较了每个竞争对手。']],
   },
   {
-    expression: 'competitive advantage', sense: 'hard-to-match-business-edge', zh: '竞争优势', definition: 'an attribute or capability that helps a business outperform rivals and is difficult to copy', partOfSpeech: 'noun phrase', collocations: ['build a competitive advantage', 'sustainable competitive advantage', 'source of competitive advantage'],
+    expression: 'competitive advantage', sense: 'hard-to-match-business-edge', zh: '竞争优势', definition: 'an attribute or capability that enables a business to outperform rivals; it is sustainable when difficult to imitate', partOfSpeech: 'noun phrase', collocations: ['build a competitive advantage', 'sustainable competitive advantage', 'source of competitive advantage'],
     examples: [['Local accounting expertise gives us a competitive advantage.', '本地会计专业知识给了我们竞争优势。'], ['Fast customer support became a sustainable competitive advantage.', '快速客户支持成为一种可持续竞争优势。']],
   },
   {

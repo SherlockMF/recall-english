@@ -24,7 +24,9 @@ import {
   exportBackup,
   importBackup,
   parseBackup,
+  parseBackupV2,
   validateBackup,
+  validateBackupV2,
 } from './backup'
 
 const older = '2026-08-09T00:00:00.000Z'
@@ -166,6 +168,35 @@ describe('backup import and export', () => {
     await expect(importBackup(malformed)).rejects.toThrow('$.unexpected')
     expect(await getAllVocabulary()).toEqual([
       expect.objectContaining({ expression: 'keep me' }),
+    ])
+  })
+
+  it('rejects malformed V2 backups before replacing stored data', async () => {
+    await writeBatch({
+      words: [word({ expression: 'keep me v2' })],
+      lists: ALL_VOCABULARY_LISTS,
+      memberships: [{
+        id: 'membership-vocabulary-1-accounting',
+        wordId: 'vocabulary-1',
+        listId: LIST_IDS.accounting,
+        priority: 1,
+        sortOrder: 0,
+      }],
+    })
+
+    const exported = await exportBackup()
+    const malformedV2 = {
+      ...exported,
+      memberships: [{
+        ...exported.memberships[0],
+        wordId: 'missing-word',
+      }],
+    }
+
+    expect(() => parseBackupV2(JSON.stringify(malformedV2))).toThrow(BackupValidationError)
+    await expect(importBackup(malformedV2)).rejects.toThrow('引用了不存在的词条')
+    expect(await getAllVocabulary()).toEqual([
+      expect.objectContaining({ expression: 'keep me v2' }),
     ])
   })
 

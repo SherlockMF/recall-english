@@ -108,6 +108,7 @@ export function LibraryView({
                 <article className={item.status === 'paused' ? 'word-card paused' : 'word-card'} key={item.id}>
                   <div className="word-card-top">
                     <span className={`category-chip ${item.category}`}>{categoryLabels[item.category]}</span>
+                    {item.scenarioNote && <span className="category-chip my-vocabulary">{item.scenarioNote}</span>}
                     <div className="word-card-actions">
                       <button aria-label={`英式发音 ${item.expression}`} className="mini-text-button" onClick={() => void speakWord(item, 'uk')} type="button">UK</button>
                       <button aria-label={`美式发音 ${item.expression}`} className="mini-text-button" onClick={() => void speakWord(item, 'us')} type="button">US</button>

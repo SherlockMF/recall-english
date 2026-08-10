@@ -89,6 +89,7 @@ export interface DatabaseBatch {
   words?: Word[]
   lists?: VocabularyList[]
   memberships?: WordListItem[]
+  deleteMembershipIds?: string[]
   tracks?: LearningTrack[]
   attempts?: ReviewAttempt[]
   settings?: UserSettings
@@ -402,14 +403,19 @@ export function hydrateWords(
 ): VocabularyItem[] {
   const listMap = slugByListId(lists)
   const byWord = new Map<string, ListSlug[]>()
+  const noteByWord = new Map<string, string>()
   for (const membership of memberships) {
     const slug = listMap.get(membership.listId)
     if (!slug) continue
     const current = byWord.get(membership.wordId) ?? []
     if (!current.includes(slug)) current.push(slug)
     byWord.set(membership.wordId, current)
+    const note = membership.subcategory?.trim()
+    if (note && !noteByWord.has(membership.wordId)) {
+      noteByWord.set(membership.wordId, note)
+    }
   }
-  return words.map((word) => hydrateWord(word, byWord.get(word.id) ?? []))
+  return words.map((word) => hydrateWord(word, byWord.get(word.id) ?? [], noteByWord.get(word.id)))
 }
 
 export async function getWord(id: string): Promise<Word | undefined> {
@@ -669,6 +675,9 @@ export async function writeBatch(batch: DatabaseBatch): Promise<void> {
   }
   for (const membership of batch.memberships ?? []) {
     await transaction.objectStore('wordListItems').put(membership)
+  }
+  for (const membershipId of batch.deleteMembershipIds ?? []) {
+    await transaction.objectStore('wordListItems').delete(membershipId)
   }
   for (const track of batch.tracks ?? []) {
     await transaction.objectStore('tracks').put(track)

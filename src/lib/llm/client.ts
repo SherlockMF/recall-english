@@ -96,7 +96,10 @@ export async function chatJson(options: ChatJsonOptions): Promise<unknown> {
       throw new LlmError('aborted', '请求已取消。')
     }
     if (error instanceof DOMException && error.name === 'AbortError') {
-      throw new LlmError('timeout', 'DeepSeek 请求超时。')
+      throw new LlmError(
+        'timeout',
+        'DeepSeek 请求超时。可能是网络较慢或 Key/代理异常，请稍后重试；也可手动填写并选择使用场景。',
+      )
     }
     throw new LlmError(
       'network',

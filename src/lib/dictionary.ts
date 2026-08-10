@@ -8,7 +8,7 @@ import {
   setDictionaryCache,
 } from './db'
 
-export const DICTIONARY_API_BASE_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en'
+export const DICTIONARY_API_BASE_URL = '/api/dictionary/api/v2/entries/en'
 export const DICTIONARY_TIMEOUT_MS = 5_000
 
 export type DictionaryLookupErrorCode =
@@ -191,11 +191,18 @@ function browserIsOffline(): boolean {
 
 function responseError(response: Response): DictionaryLookupError {
   if (response.status === 404) {
-    return new DictionaryLookupError('not-found', '没有找到这个英文词条。', 404)
+    return new DictionaryLookupError('not-found', '没有找到这个英文词条。请检查拼写，或改用 AI 补全 / 手动填写。', 404)
+  }
+  if (response.status >= 500) {
+    return new DictionaryLookupError(
+      'server',
+      '词典服务暂时异常。请检查拼写，或改用 AI 补全 / 手动填写。',
+      response.status,
+    )
   }
   return new DictionaryLookupError(
     'server',
-    `词典服务暂时不可用（HTTP ${response.status}）。`,
+    `词典服务暂时不可用（HTTP ${response.status}）。也可改用 AI 补全或手动填写。`,
     response.status,
   )
 }
@@ -264,9 +271,12 @@ export async function lookupDictionary(
       throw new DictionaryLookupError('offline', '当前处于离线状态，且本地没有该词条。')
     }
     if (error instanceof TypeError) {
-      throw new DictionaryLookupError('network', '无法连接词典服务，请检查网络。')
+      throw new DictionaryLookupError(
+        'network',
+        '无法连接词典服务。请确认用 npm run dev 启动（本地代理），或改用 AI 补全 / 手动填写。',
+      )
     }
-    throw new DictionaryLookupError('network', '词典查询失败，请稍后重试。')
+    throw new DictionaryLookupError('network', '词典查询失败。可改用 AI 补全或手动填写。')
   } finally {
     clearTimeout(timeoutId)
     options.signal?.removeEventListener('abort', handleExternalAbort)

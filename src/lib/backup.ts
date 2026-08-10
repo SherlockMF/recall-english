@@ -163,6 +163,119 @@ function validateUsagePrompt(value: unknown, path: string): UsagePrompt {
   return record as unknown as UsagePrompt
 }
 
+function validateWord(value: unknown, path: string): Word {
+  const record = objectAt(value, path, [
+    'id',
+    'expression',
+    'lemma',
+    'senseKey',
+    'zhGloss',
+    'enDefinition',
+    'partOfSpeech',
+    'acceptedZhAnswers',
+    'acceptedEnVariants',
+    'examples',
+    'collocations',
+    'source',
+    'priority',
+    'status',
+    'ipaUk',
+    'ipaUs',
+    'audioUk',
+    'audioUs',
+    'synonyms',
+    'antonyms',
+    'usagePrompts',
+    'createdAt',
+    'updatedAt',
+  ])
+  stringAt(record.id, `${path}.id`, true)
+  stringAt(record.expression, `${path}.expression`, true)
+  stringAt(record.lemma, `${path}.lemma`, true)
+  stringAt(record.senseKey, `${path}.senseKey`, true)
+  stringAt(record.zhGloss, `${path}.zhGloss`)
+  stringAt(record.enDefinition, `${path}.enDefinition`)
+  stringAt(record.partOfSpeech, `${path}.partOfSpeech`)
+  arrayAt(record.acceptedZhAnswers, `${path}.acceptedZhAnswers`, validateString)
+  arrayAt(record.acceptedEnVariants, `${path}.acceptedEnVariants`, validateString)
+  arrayAt(record.examples, `${path}.examples`, validateExample)
+  arrayAt(record.collocations, `${path}.collocations`, validateString)
+  literalAt(record.source, `${path}.source`, [
+    'seed',
+    'custom',
+    'dictionary',
+  ] as const satisfies readonly VocabularySource[])
+  finiteNumberAt(record.priority, `${path}.priority`, { min: 0 })
+  literalAt(record.status, `${path}.status`, [
+    'active',
+    'paused',
+  ] as const satisfies readonly VocabularyStatus[])
+  optionalStringAt(record.ipaUk, `${path}.ipaUk`)
+  optionalStringAt(record.ipaUs, `${path}.ipaUs`)
+  optionalStringAt(record.audioUk, `${path}.audioUk`)
+  optionalStringAt(record.audioUs, `${path}.audioUs`)
+  if (record.synonyms !== undefined) {
+    arrayAt(record.synonyms, `${path}.synonyms`, validateString)
+  }
+  if (record.antonyms !== undefined) {
+    arrayAt(record.antonyms, `${path}.antonyms`, validateString)
+  }
+  arrayAt(record.usagePrompts, `${path}.usagePrompts`, validateUsagePrompt)
+  dateAt(record.createdAt, `${path}.createdAt`)
+  dateAt(record.updatedAt, `${path}.updatedAt`)
+  return record as unknown as Word
+}
+
+function validateVocabularyList(value: unknown, path: string): VocabularyList {
+  const record = objectAt(value, path, [
+    'id',
+    'name',
+    'slug',
+    'description',
+    'category',
+    'isSystem',
+    'createdAt',
+  ])
+  stringAt(record.id, `${path}.id`, true)
+  stringAt(record.name, `${path}.name`, true)
+  literalAt(record.slug, `${path}.slug`, [
+    'daily',
+    'business',
+    'finance',
+    'accounting',
+    'my-vocabulary',
+  ] as const satisfies readonly ListSlug[])
+  stringAt(record.description, `${path}.description`)
+  literalAt(record.category, `${path}.category`, [
+    'daily',
+    'business',
+    'finance',
+    'accounting',
+    'my-vocabulary',
+  ] as const satisfies readonly ListSlug[])
+  booleanAt(record.isSystem, `${path}.isSystem`)
+  dateAt(record.createdAt, `${path}.createdAt`)
+  return record as unknown as VocabularyList
+}
+
+function validateWordListItem(value: unknown, path: string): WordListItem {
+  const record = objectAt(value, path, [
+    'id',
+    'wordId',
+    'listId',
+    'priority',
+    'subcategory',
+    'sortOrder',
+  ])
+  stringAt(record.id, `${path}.id`, true)
+  stringAt(record.wordId, `${path}.wordId`, true)
+  stringAt(record.listId, `${path}.listId`, true)
+  finiteNumberAt(record.priority, `${path}.priority`, { min: 0 })
+  optionalStringAt(record.subcategory, `${path}.subcategory`)
+  finiteNumberAt(record.sortOrder, `${path}.sortOrder`, { integer: true, min: 0 })
+  return record as unknown as WordListItem
+}
+
 function validateVocabularyItem(value: unknown, path: string): BackupV1['vocabulary'][number] {
   const record = objectAt(value, path, [
     'id',
@@ -398,6 +511,27 @@ export function validateBackup(value: unknown): asserts value is BackupV1 {
   validateSettings(record.settings, '$.settings')
 }
 
+export function validateBackupV2(value: unknown): asserts value is BackupV2 {
+  const record = objectAt(value, '$', [
+    'version',
+    'exportedAt',
+    'words',
+    'lists',
+    'memberships',
+    'tracks',
+    'attempts',
+    'settings',
+  ])
+  if (record.version !== 2) fail('$.version', '仅支持版本 2')
+  dateAt(record.exportedAt, '$.exportedAt')
+  arrayAt(record.words, '$.words', validateWord)
+  arrayAt(record.lists, '$.lists', validateVocabularyList)
+  arrayAt(record.memberships, '$.memberships', validateWordListItem)
+  arrayAt(record.tracks, '$.tracks', validateLearningTrack)
+  arrayAt(record.attempts, '$.attempts', validateReviewAttempt)
+  validateSettings(record.settings, '$.settings')
+}
+
 function decodeBackup(input: unknown): unknown {
   if (typeof input !== 'string') return input
   try {
@@ -539,6 +673,140 @@ export function deduplicateBackup(backup: BackupV1): BackupV1 {
   }
 }
 
+function wordIdentity(word: Word): string {
+  return `${semanticPart(word.expression)}\u0000${semanticPart(word.senseKey)}`
+}
+
+function preferWord(left: Word, right: Word): Word {
+  return Date.parse(right.updatedAt) > Date.parse(left.updatedAt) ? right : left
+}
+
+export function deduplicateBackupV2(backup: BackupV2): BackupV2 {
+  const words: Word[] = []
+  const wordsByIdentity = new Map<string, { index: number; id: string }>()
+  const wordIdentityById = new Map<string, string>()
+  const itemIdMap = new Map<string, string>()
+
+  for (const word of backup.words) {
+    const identity = wordIdentity(word)
+    const priorIdentity = wordIdentityById.get(word.id)
+    if (priorIdentity && priorIdentity !== identity) {
+      fail('$.words', `词条 ID ${word.id} 指向了不同词义`)
+    }
+    wordIdentityById.set(word.id, identity)
+
+    const existing = wordsByIdentity.get(identity)
+    if (!existing) {
+      wordsByIdentity.set(identity, { index: words.length, id: word.id })
+      itemIdMap.set(word.id, word.id)
+      words.push(word)
+      continue
+    }
+
+    itemIdMap.set(word.id, existing.id)
+    const preferred = preferWord(words[existing.index], word)
+    words[existing.index] = { ...preferred, id: existing.id }
+  }
+
+  const canonicalWordIds = new Set(words.map((word) => word.id))
+  const listIds = new Set(backup.lists.map((list) => list.id))
+
+  const memberships: WordListItem[] = []
+  const membershipByKey = new Map<string, { index: number; id: string }>()
+  for (const sourceMembership of backup.memberships) {
+    const wordId = itemIdMap.get(sourceMembership.wordId) ?? sourceMembership.wordId
+    if (!canonicalWordIds.has(wordId)) {
+      fail('$.memberships', `列表关联 ${sourceMembership.id} 引用了不存在的词条`)
+    }
+    if (!listIds.has(sourceMembership.listId)) {
+      fail('$.memberships', `列表关联 ${sourceMembership.id} 引用了不存在的词表`)
+    }
+    const membership = { ...sourceMembership, wordId }
+    const key = `${membership.wordId}\u0000${membership.listId}`
+    const existing = membershipByKey.get(key)
+    if (!existing) {
+      membershipByKey.set(key, { index: memberships.length, id: membership.id })
+      memberships.push(membership)
+      continue
+    }
+    memberships[existing.index] = membership
+  }
+
+  const tracks: LearningTrack[] = []
+  const trackByIdentity = new Map<string, { index: number; id: string }>()
+  const trackIdentityById = new Map<string, string>()
+  const trackIdMap = new Map<string, string>()
+
+  for (const sourceTrack of backup.tracks) {
+    const itemId = itemIdMap.get(sourceTrack.itemId) ?? sourceTrack.itemId
+    if (!canonicalWordIds.has(itemId)) {
+      fail('$.tracks', `学习轨道 ${sourceTrack.id} 引用了不存在的词条`)
+    }
+    const track = { ...sourceTrack, itemId }
+    const identity = trackIdentity(track)
+    const priorIdentity = trackIdentityById.get(track.id)
+    if (priorIdentity && priorIdentity !== identity) {
+      fail('$.tracks', `轨道 ID ${track.id} 指向了不同任务`)
+    }
+    trackIdentityById.set(track.id, identity)
+
+    const existing = trackByIdentity.get(identity)
+    if (!existing) {
+      trackByIdentity.set(identity, { index: tracks.length, id: track.id })
+      trackIdMap.set(track.id, track.id)
+      tracks.push(track)
+      continue
+    }
+
+    trackIdMap.set(track.id, existing.id)
+    const preferred = preferTrack(tracks[existing.index], track)
+    tracks[existing.index] = { ...preferred, id: existing.id, itemId }
+  }
+
+  const canonicalTracks = new Map(tracks.map((track) => [track.id, track]))
+  const attempts: ReviewAttempt[] = []
+  const attemptIndexById = new Map<string, number>()
+
+  for (const sourceAttempt of backup.attempts) {
+    const itemId = itemIdMap.get(sourceAttempt.itemId) ?? sourceAttempt.itemId
+    const trackId = trackIdMap.get(sourceAttempt.trackId) ?? sourceAttempt.trackId
+    const track = canonicalTracks.get(trackId)
+    if (!track || !canonicalWordIds.has(itemId)) {
+      fail('$.attempts', `复习记录 ${sourceAttempt.id} 引用了不存在的数据`)
+    }
+    if (track.itemId !== itemId || track.type !== sourceAttempt.trackType) {
+      fail('$.attempts', `复习记录 ${sourceAttempt.id} 与学习轨道不一致`)
+    }
+    const attempt = { ...sourceAttempt, itemId, trackId }
+    const existingIndex = attemptIndexById.get(attempt.id)
+    if (existingIndex === undefined) {
+      attemptIndexById.set(attempt.id, attempts.length)
+      attempts.push(attempt)
+      continue
+    }
+
+    const existing = attempts[existingIndex]
+    if (
+      existing.itemId !== attempt.itemId ||
+      existing.trackId !== attempt.trackId ||
+      existing.trackType !== attempt.trackType
+    ) {
+      fail('$.attempts', `复习记录 ID ${attempt.id} 指向了不同任务`)
+    }
+    if (Date.parse(attempt.reviewedAt) > Date.parse(existing.reviewedAt)) {
+      attempts[existingIndex] = attempt
+    }
+  }
+
+  return {
+    ...backup,
+    words,
+    memberships,
+    tracks,
+    attempts,
+  }
+}
+
 export function parseBackup(input: unknown): BackupV1 {
   const decoded = decodeBackup(input)
   validateBackup(decoded)
@@ -629,23 +897,35 @@ export async function exportBackupJson(space = 2): Promise<string> {
   return JSON.stringify(await exportBackup(), null, space)
 }
 
+export function parseBackupV2(input: unknown): BackupV2 {
+  const decoded = decodeBackup(input)
+  validateBackupV2(decoded)
+  return deduplicateBackupV2(decoded)
+}
+
 export async function importBackup(input: unknown): Promise<BackupImportSummary> {
-  const decoded = decodeBackup(input) as { version?: number }
-  if (decoded && typeof decoded === 'object' && decoded.version === 2) {
-    const record = decoded as BackupV2
+  const decoded = decodeBackup(input)
+  if (decoded && typeof decoded === 'object' && (decoded as { version?: number }).version === 2) {
+    validateBackupV2(decoded)
+    const backup = deduplicateBackupV2(decoded as BackupV2)
+    const original = decoded as BackupV2
     await replaceUserData({
-      words: record.words,
-      lists: record.lists?.length ? record.lists : ALL_VOCABULARY_LISTS,
-      memberships: record.memberships,
-      tracks: record.tracks,
-      attempts: record.attempts,
-      settings: record.settings,
+      words: backup.words,
+      lists: backup.lists.length ? backup.lists : ALL_VOCABULARY_LISTS,
+      memberships: backup.memberships,
+      tracks: backup.tracks,
+      attempts: backup.attempts,
+      settings: backup.settings,
     })
     return {
-      vocabulary: record.words.length,
-      tracks: record.tracks.length,
-      attempts: record.attempts.length,
-      duplicatesRemoved: { vocabulary: 0, tracks: 0, attempts: 0 },
+      vocabulary: backup.words.length,
+      tracks: backup.tracks.length,
+      attempts: backup.attempts.length,
+      duplicatesRemoved: {
+        vocabulary: original.words.length - backup.words.length,
+        tracks: original.tracks.length - backup.tracks.length,
+        attempts: original.attempts.length - backup.attempts.length,
+      },
     }
   }
 
