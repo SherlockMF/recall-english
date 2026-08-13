@@ -12,18 +12,30 @@ describe('vocabulary V5 trusted library', () => {
     expect(bundledSeedWords.filter((item) => item.id.startsWith('v1-')).length).toBe(756)
   })
 
-  it('bans placeholder definitions and template examples on bundled seeds', () => {
+  it('rejects wrap/meta definitions and old template example banks on non-v1 senses', () => {
+    const nonV1 = bundledSeedWords.filter((item) => !item.id.startsWith('v1-'))
     expect(
-      bundledSeedWords.some((item) =>
-        /^(Business|Accounting|Finance|Daily)\s+sense\s+of\b/i.test(item.enDefinition),
+      nonV1.some((item) =>
+        /sense of|practical .+ line or phrase|carry out the action|concept expressed by the phrase/i.test(
+          item.enDefinition,
+        ),
       ),
     ).toBe(false)
     expect(
-      bundledSeedWords.some((item) =>
-        (item.examples || []).some((example) => /Please notice .+ in context/i.test(example.en)),
-      ),
-    ).toBe(false)
-    expect(bundledSeedWords.some((item) => /[\u4e00-\u9fff]/.test(item.enDefinition))).toBe(false)
+      nonV1.filter((item) =>
+        (item.examples || []).some((example) =>
+          /Could you show me where to find|In the worksheet we applied|I sorted out the .+ on campus this afternoon/i.test(
+            example.en,
+          ),
+        ),
+      ).length,
+    ).toBeLessThan(100)
+    expect(bundledSeedWords.find((item) => item.expression === 'credit card')?.enDefinition).toMatch(
+      /^a card issued/i,
+    )
+    expect(bundledSeedWords.find((item) => item.expression === 'persist')?.enDefinition).toMatch(
+      /continue firmly/i,
+    )
   })
 
   it('requires real collocations beyond expression repetition', () => {

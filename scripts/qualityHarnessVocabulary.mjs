@@ -47,8 +47,11 @@ function flag(id, rule, detail) {
 }
 
 for (const word of bundled) {
-  if (/^(Business|Accounting|Finance|Daily)\s+sense\s+of\b/i.test(word.enDefinition || '')) {
+  if (/^(Business|Accounting|Finance|Daily|Common English)\s+sense\s+of\b/i.test(word.enDefinition || '') || /\bsense of\b/i.test(word.enDefinition || '')) {
     fail(word.id, 'placeholder_definition', word.enDefinition)
+  }
+  if (/concept expressed by the phrase/i.test(word.enDefinition || '') || /in a way that matters for .+ communication/i.test(word.enDefinition || '')) {
+    fail(word.id, 'meta_wrap_definition', word.enDefinition)
   }
   if (/[\u4e00-\u9fff]/.test(word.enDefinition || '')) {
     fail(word.id, 'chinese_in_en_definition', word.enDefinition)

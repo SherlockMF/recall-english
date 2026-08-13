@@ -84,7 +84,7 @@ describe('seedWords', () => {
         (item) => /^a\.\s/i.test(item.zhGloss) || item.acceptedZhAnswers.some((a) => /^a\.\s/i.test(a)),
       ),
     ).toBe(false)
-    expect(bundledSeedWords.some((item) => /^\s*[navsr](\.|\s)/i.test(item.enDefinition))).toBe(false)
+    expect(bundledSeedWords.some((item) => /^\s*[navsr]\.\s/i.test(item.enDefinition))).toBe(false)
     expect(seedWords.find((item) => item.expression === 'bad debt')?.enDefinition).toMatch(
       /irrecoverable|written off/i,
     )

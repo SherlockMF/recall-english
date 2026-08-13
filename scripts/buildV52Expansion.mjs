@@ -133,7 +133,7 @@ function cleanEnDefinition(def) {
   text = text
     .replace(/\\n/g, '\n')
     .split(/\n+/)
-    .map((part) => part.replace(/^[navsr]\.\s+/i, '').replace(/^[navsr]\s+(?=[A-Za-z("'])/i, '').trim())
+    .map((part) => part.replace(/^[navsr]\.\s+/i, '').trim())
     .filter(Boolean)[0] || ''
   text = text.replace(/^&\s*/, '').trim()
   if (!text || text.length < 12) return ''

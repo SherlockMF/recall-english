@@ -84,9 +84,8 @@ function stripEnPosPrefix(text) {
   if (/^see\s+/i.test(next) || /see aught/i.test(next)) return ''
   next = next.replace(/^&\s*/g, '')
   for (let i = 0; i < 4; i += 1) {
-    const stripped = next
-      .replace(/^[navsr]\.\s+/i, '')
-      .replace(/^[navsr]\s+(?=[A-Za-z("'])/i, '')
+    // Only strip explicit POS markers with a dot (n. / v. / a. …), never bare English articles.
+    const stripped = next.replace(/^[navsr]\.\s+/i, '')
     if (stripped === next) break
     next = stripped.trim()
   }
