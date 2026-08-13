@@ -1,0 +1,52 @@
+{
+  "V1_professional_focus_2500.json": {
+    "words": 2500,
+    "memberships": 2559,
+    "membershipCounts": {
+      "list-accounting": 370,
+      "list-business": 972,
+      "list-daily": 745,
+      "list-finance": 472
+    }
+  },
+  "V2_additions_2500.json": {
+    "words": 2500,
+    "memberships": 2556,
+    "membershipCounts": {
+      "list-finance": 496,
+      "list-business": 697,
+      "list-accounting": 363,
+      "list-daily": 1000
+    }
+  },
+  "V2_cumulative_5000.json": {
+    "words": 5000,
+    "memberships": 5115,
+    "membershipCounts": {
+      "list-accounting": 733,
+      "list-business": 1669,
+      "list-daily": 1745,
+      "list-finance": 968
+    }
+  },
+  "V3_additions_2500.json": {
+    "words": 2500,
+    "memberships": 2524,
+    "membershipCounts": {
+      "list-business": 646,
+      "list-accounting": 215,
+      "list-finance": 363,
+      "list-daily": 1300
+    }
+  },
+  "V3_cumulative_7500.json": {
+    "words": 7500,
+    "memberships": 7639,
+    "membershipCounts": {
+      "list-accounting": 948,
+      "list-business": 2315,
+      "list-daily": 3045,
+      "list-finance": 1331
+    }
+  }
+}

@@ -11,3 +11,6 @@ Thumbs.db
 !.env.example
 .superpowers/
 .mac-desktop-shortcut
+data/vocabulary-packs/_shards/
+data/vocabulary-packs/_incoming_v1v2v3/
+data/vocabulary-packs/_export/
