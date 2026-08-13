@@ -359,7 +359,7 @@ const dailyRows: SeedRow[] = [
     examples: [['Mobile coverage is weak inside this lecture hall.', '这间讲堂里的移动网络信号覆盖很弱。'], ['Check the provider\'s coverage before choosing a plan.', '选择套餐前查看运营商的信号覆盖。']],
   },
   {
-    expression: 'Wi-Fi', sense: 'wireless-internet', zh: '无线网络', definition: 'technology that connects devices to the internet without wires', partOfSpeech: 'noun', variants: ['wifi', 'WiFi'], collocations: ['connect to Wi-Fi', 'campus Wi-Fi', 'Wi-Fi password'],
+    expression: 'Wi-Fi', sense: 'wireless-internet', zh: '无线网络', definition: 'wireless local-area networking technology based on IEEE 802.11 standards', partOfSpeech: 'noun', variants: ['wifi', 'WiFi'], collocations: ['connect to Wi-Fi', 'campus Wi-Fi', 'Wi-Fi password'],
     examples: [['The Wi-Fi password is printed at the reception desk.', '无线网络密码印在接待处。'], ['I connected to the campus Wi-Fi before downloading the slides.', '下载幻灯片前，我连接了校园无线网络。']],
   },
   {
@@ -626,7 +626,7 @@ const financeRows: SeedRow[] = [
     examples: [['Retained earnings increase when profit is kept in the company.', '利润留在公司时，留存收益增加。'], ['A dividend reduces retained earnings when it is declared.', '股利宣告时会减少留存收益。']],
   },
   {
-    expression: 'share capital', sense: 'owner-contributed-share-funds', zh: '股本', definition: 'the nominal or par value of shares issued by a company, recorded separately from any share premium', partOfSpeech: 'noun phrase', collocations: ['issue share capital', 'ordinary share capital', 'paid-up share capital'],
+    expression: 'share capital', sense: 'owner-contributed-share-funds', zh: '股本', definition: 'equity capital arising from shares issued by a company; under Malaysia’s Companies Act 2016 shares generally have no par value, so share capital is not defined by a nominal/par amount', partOfSpeech: 'noun phrase', collocations: ['issue share capital', 'ordinary share capital', 'paid-up share capital'],
     examples: [['Share capital increased when the company issued new ordinary shares.', '公司发行新的普通股时，股本增加。'], ['The statement of changes in equity reports movements in share capital.', '权益变动表报告股本的变动。']],
   },
   {
@@ -726,7 +726,7 @@ const financeRows: SeedRow[] = [
     examples: [['The portfolio contains Malaysian shares, global funds, and bonds.', '该投资组合包含马来西亚股票、全球基金和债券。'], ['She reviews her portfolio whenever her investment goals change.', '每当投资目标改变时，她都会审查投资组合。']],
   },
   {
-    expression: 'bond', sense: 'debt-security', zh: '债券', definition: 'a debt security under which an issuer promises interest and repayment of principal', partOfSpeech: 'noun', collocations: ['issue a bond', 'government bond', 'bond yield'],
+    expression: 'bond', sense: 'debt-security', zh: '债券', definition: 'a debt security under which an issuer promises repayment of principal and may provide coupons or another form of return', partOfSpeech: 'noun', collocations: ['issue a bond', 'government bond', 'bond yield'],
     examples: [['A bond generally requires the issuer to repay principal at maturity.', '债券通常要求发行人在到期时偿还本金。'], ['The investor bought a government bond for stable income.', '投资者购买政府债券以获得稳定收入。']],
   },
   {
@@ -798,8 +798,8 @@ const financeRows: SeedRow[] = [
     examples: [['A bank reconciliation compares the cash ledger with the bank statement.', '银行对账把现金账簿与银行对账单进行比较。'], ['The monthly reconciliation found an unrecorded bank fee.', '月度对账发现了一笔未记录的银行手续费。']],
   },
   {
-    expression: 'tax liability', sense: 'amount-of-tax-owed', zh: '应交税费', definition: 'the amount of tax that an individual or entity is obliged to pay', partOfSpeech: 'noun phrase', zhAnswers: ['应纳税额', '应付税款'], collocations: ['calculate tax liability', 'current tax liability', 'settle a tax liability'],
-    examples: [['The current tax liability reflects tax payable on this year\'s taxable profit.', '当期应交税费反映本年应税利润应付的税款。'], ['The company set aside cash to settle its tax liability.', '公司预留现金以清偿应交税费。']],
+    expression: 'tax liability', sense: 'amount-of-tax-owed', zh: '应纳税额', definition: 'the amount of tax that an individual or entity is obliged to pay', partOfSpeech: 'noun phrase', zhAnswers: ['应付税款', '应交税费'], collocations: ['calculate tax liability', 'current tax liability', 'settle a tax liability'],
+    examples: [['The current tax liability reflects tax payable on this year\'s taxable profit.', '当期应纳税额反映本年应税利润应付的税款。'], ['The company set aside cash to settle its tax liability.', '公司预留现金以清偿应纳税额。']],
   },
   {
     expression: 'deferred tax', sense: 'future-tax-from-temporary-differences', zh: '递延所得税', definition: 'tax recognised for future consequences of temporary differences and certain carryforwards', partOfSpeech: 'noun phrase', collocations: ['deferred tax asset', 'deferred tax liability', 'recognise deferred tax'],
@@ -818,7 +818,7 @@ const financeRows: SeedRow[] = [
     examples: [['IFRS aims to improve transparency and comparability in financial reporting.', '国际财务报告准则旨在提高财务报告的透明度和可比性。'], ['The accounting policy explains how the company applies IFRS.', '会计政策解释公司如何应用国际财务报告准则。']],
   },
   {
-    expression: 'recognition', sense: 'including-item-in-statements', zh: '确认', definition: 'the process of including an item that meets the definition and criteria in the financial statements', partOfSpeech: 'noun', collocations: ['revenue recognition', 'recognition criteria', 'initial recognition'],
+    expression: 'recognition', sense: 'including-item-in-statements', zh: '确认', definition: 'including an item in the financial statements when it meets the definition of a financial statement element and provides useful information (relevant and faithfully represented)', partOfSpeech: 'noun', collocations: ['revenue recognition', 'recognition criteria', 'initial recognition'],
     examples: [['Recognition places an asset, liability, income, or expense in the financial statements.', '确认把资产、负债、收入或费用纳入财务报表。'], ['The contract terms affect the timing of revenue recognition.', '合同条款影响收入确认的时间。']],
   },
   {

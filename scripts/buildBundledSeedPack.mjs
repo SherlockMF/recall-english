@@ -1,14 +1,13 @@
 /**
- * Build bundled seed JSON from the vocabulary pack.
+ * Build bundled seed JSON from the trusted V1 vocabulary pack (Vocabulary V5.0).
  *
- * Source: data/vocabulary-packs/all_batches_combined_vocabulary_pack.json
+ * Source: data/vocabulary-packs/trusted_v1_vocabulary_pack.json
  * Output: src/data/bundledSeedWords.json + bundledSeedMemberships.json
  *
  * Skips pack entries whose expression already exists in the handcrafted seed
  * (seedVocabulary.ts), so the curated 240 stay authoritative.
  *
- * Also normalizes ECDICT-style Chinese gloss noise (literal `\n`, `[经]` tags,
- * embedded POS markers) so study answers stay usable.
+ * Hard-fails on placeholder definitions, template examples, or fake collocations.
  *
  * Run: node scripts/buildBundledSeedPack.mjs
  */
@@ -17,7 +16,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-const SEED_TIMESTAMP = '2026-08-13T00:00:00.000Z'
+const SEED_TIMESTAMP = '2026-08-14T00:00:00.000Z'
 
 function normalizeExpression(value) {
   return value
@@ -27,32 +26,21 @@ function normalizeExpression(value) {
     .replace(/\s+/g, ' ')
 }
 
+function normalizeLoose(value) {
+  return String(value ?? '')
+    .normalize('NFKC')
+    .trim()
+    .toLocaleLowerCase('en-US')
+    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+    .replace(/\s+/g, ' ')
+}
+
 function unique(values) {
   return [...new Set(values.map((value) => value.trim()).filter(Boolean))]
 }
 
-/** Clean ECDICT debris: literal `\n`, bracket tags, POS prefixes. */
 function sanitizeZhFragment(value) {
   return String(value ?? '')
-    .replace(/偶而/g, '偶尔')
-    .replace(/迫随者/g, '追随者')
-    .replace(/不辛/g, '不幸')
-    .replace(/论误/g, '讹误')
-    .replace(/给于/g, '给予')
-    .replace(/挑畔/g, '挑衅')
-    .replace(/鞭苔/g, '鞭笞')
-    .replace(/机僚/g, '官僚')
-    .replace(/计可证/g, '许可证')
-    .replace(/宜传/g, '宣传')
-    .replace(/船双/g, '船只')
-    .replace(/常期信用/g, '长期信用')
-    .replace(/欧州/g, '欧洲')
-    .replace(/守侯/g, '守候')
-    .replace(/合部所有/g, '全部所有')
-    .replace(/权品/g, '样品')
-    .replace(/记时/g, '计时')
-    .replace(/续学生签证/g, '续签学生签证')
-    .replace(/大部份/g, '大部分')
     .replace(/\\n/g, '；')
     .replace(/\n/g, '；')
     .replace(/\[[^\]]{1,8}\]/g, '')
@@ -71,18 +59,24 @@ function splitZhSenses(value) {
     .filter((part) => part.length > 0 && !/^(vt|vi|n|adj|adv)$/i.test(part))
 }
 
+/** Sense-aligned answers only: primary gloss sense + near-synonym answers, not a full dictionary dump. */
+function senseAlignedZhAnswers(rawGloss, answers) {
+  const senses = splitZhSenses(rawGloss)
+  const primary = senses[0] || sanitizeZhFragment(rawGloss) || String(rawGloss ?? '').trim()
+  const fromAnswers = (Array.isArray(answers) ? answers : [])
+    .flatMap(splitZhSenses)
+    .filter((value) => value === primary || value.includes(primary) || primary.includes(value))
+  const banned = /性交|强奸|嫖|淫|猥亵|肉欲|男风|白痴|耶稣受难|脱离肉体|精液|迷幻药|花柳病/
+  return unique([primary, ...fromAnswers])
+    .filter((value) => !banned.test(value))
+    .filter((value) => !/^(a|n|v|s|r|aux)\./i.test(value))
+    .slice(0, 4)
+}
+
 function primaryZhGloss(raw) {
   const senses = splitZhSenses(raw)
   if (senses.length === 0) return sanitizeZhFragment(raw) || String(raw ?? '').trim()
-  return senses.slice(0, 3).join('，')
-}
-
-function cleanedAcceptedZhAnswers(rawGloss, answers) {
-  const fromAnswers = (Array.isArray(answers) ? answers : []).flatMap(splitZhSenses)
-  const banned = /性交|强奸|嫖|淫|猥亵|肉欲|男风|白痴|耶稣受难|脱离肉体|精液|迷幻药|花柳病/
-  return unique([primaryZhGloss(rawGloss), ...fromAnswers, ...splitZhSenses(rawGloss)])
-    .filter((value) => !banned.test(value))
-    .filter((value) => !/^(a|n|v|s|r|aux)\./i.test(value))
+  return senses[0]
 }
 
 function stripEnPosPrefix(text) {
@@ -99,18 +93,18 @@ function stripEnPosPrefix(text) {
   return next
 }
 
-function cleanEnDefinition(value, expression) {
+function cleanEnDefinition(value) {
   let text = String(value ?? '').trim()
-  const placeholder = text.match(/^(Business|Accounting|Finance|Daily) sense of [“"'](.+?)[”"']\.?$/i)
-  if (placeholder && expression) {
-    return `${placeholder[1]} sense of “${expression}”.`
+  if (/^(Business|Accounting|Finance|Daily)\s+sense\s+of\b/i.test(text)) {
+    throw new Error(`Placeholder definition not allowed: ${text.slice(0, 80)}`)
   }
   const parts = text
     .replace(/\\n/g, '\n')
     .split(/\n+/)
     .map((part) => stripEnPosPrefix(part))
     .filter(Boolean)
-  let first = parts[0] || stripEnPosPrefix(text)
+  const first = parts[0] || stripEnPosPrefix(text)
+  if (!first) throw new Error('Empty English definition after cleanup')
   return first.length > 400 ? `${first.slice(0, 397)}...` : first
 }
 
@@ -124,17 +118,19 @@ function loadHandcraftedExpressions() {
   for (const match of source.matchAll(/expression:\s*'((?:\\'|[^'])*)'/g)) {
     expressions.add(normalizeExpression(match[1].replace(/\\'/g, "'")))
   }
+  for (const match of source.matchAll(/expression:\s*"((?:\\"|[^"])*)"/g)) {
+    expressions.add(normalizeExpression(match[1].replace(/\\"/g, '"')))
+  }
   return expressions
 }
 
 function buildUsagePrompts(wordId, expression, exampleEn) {
-  const sample = exampleEn?.trim() || `I need to use “${expression}” in a real sentence.`
-  const cloze = sample.replace(new RegExp(escapeRegExp(expression), 'i'), '_____')
+  const sample = exampleEn || `I used ${expression} in a real situation.`
   return [
     {
       id: `${wordId}-cloze`,
       type: 'cloze',
-      prompt: `Complete the sentence: ${cloze}`,
+      prompt: `Complete: ${sample.replace(new RegExp(escapeRegExp(expression), 'i'), '_____')}`,
       answer: expression,
       modelAnswer: sample,
       checkpoints: [expression],
@@ -149,85 +145,113 @@ function buildUsagePrompts(wordId, expression, exampleEn) {
   ]
 }
 
-function ensureExamples(word) {
-  const zhGloss = primaryZhGloss(word.zhGloss)
-  const examples = Array.isArray(word.examples) ? word.examples.map((item) => ({
-    en: String(item.en ?? ''),
-    zh: String(item.zh ?? ''),
-  })).filter((item) => item.en.trim() && item.zh.trim()) : []
+function isFakeCollocation(col, expression, partOfSpeech) {
+  const nc = normalizeLoose(col)
+  const ne = normalizeLoose(expression)
+  if (!nc || !ne) return true
+  if (nc === ne) return true
+  if (partOfSpeech && nc === normalizeLoose(`${expression} ${partOfSpeech}`)) return true
+  if (nc === normalizeLoose(`use ${expression}`)) return true
+  if (nc === normalizeLoose(`${expression} (${partOfSpeech})`)) return true
+  return false
+}
 
-  if (examples.length === 0) {
-    examples.push({
-      en: `Please notice ${word.expression} in context.`,
-      zh: `请在语境中注意「${zhGloss}」。`,
-    })
+function requireExamples(word) {
+  const examples = Array.isArray(word.examples)
+    ? word.examples
+        .map((item) => ({
+          en: String(item.en ?? '').trim(),
+          zh: String(item.zh ?? '').trim(),
+        }))
+        .filter((item) => item.en && item.zh)
+    : []
+  if (examples.length < 2) {
+    throw new Error(`${word.id}: need ≥2 real examples (got ${examples.length})`)
   }
-  if (examples.length === 1) {
-    examples.push({
-      en: `${word.expression} matters in real study and work contexts.`,
-      zh: `在真实学习与工作场景中要注意「${zhGloss}」。`,
-    })
+  for (const example of examples) {
+    if (/Please notice .+ in context/i.test(example.en)) {
+      throw new Error(`${word.id}: banned template example`)
+    }
+    if (/matters in real study and work contexts/i.test(example.en)) {
+      throw new Error(`${word.id}: banned filler example`)
+    }
   }
   return examples.slice(0, 2)
 }
 
-function ensureCollocations(word) {
+function requireCollocations(word) {
   const fromPack = Array.isArray(word.collocations) ? word.collocations : []
-  const filled = unique([
-    ...fromPack,
-    word.expression,
-    word.lemma && word.lemma !== word.expression ? word.lemma : '',
-    word.partOfSpeech ? `${word.expression} (${word.partOfSpeech})` : '',
-  ])
-  if (filled.length >= 2) return filled.slice(0, 3)
-  return unique([word.expression, `use ${word.expression}`]).slice(0, 2)
+  const valid = unique(fromPack).filter(
+    (value) => !isFakeCollocation(value, word.expression, word.partOfSpeech),
+  )
+  if (valid.length < 2) {
+    throw new Error(
+      `${word.id} (${word.expression}): need ≥2 real collocations (got ${valid.length})`,
+    )
+  }
+  return valid.slice(0, 3)
 }
 
-const packPath = join(root, 'data/vocabulary-packs/all_batches_combined_vocabulary_pack.json')
+const packPath = join(root, 'data/vocabulary-packs/trusted_v1_vocabulary_pack.json')
 const pack = JSON.parse(readFileSync(packPath, 'utf8'))
 const existing = loadHandcraftedExpressions()
 
+if (!String(pack.kind).includes('vocabulary') && pack.kind !== 'vocabulary-pack') {
+  throw new Error('trusted pack kind must be vocabulary-pack')
+}
+
 const words = []
 const skipped = []
+const errors = []
 
 for (const word of pack.words) {
+  if (!String(word.id).startsWith('v1-')) {
+    errors.push(`${word.id}: trusted pack must only contain v1-* ids`)
+    continue
+  }
   const key = normalizeExpression(word.expression)
   if (existing.has(key)) {
     skipped.push(word.expression)
     continue
   }
 
-  const examples = ensureExamples(word)
-  const zhGloss = primaryZhGloss(word.zhGloss)
-  const next = {
-    id: word.id,
-    expression: word.expression,
-    lemma: word.lemma || word.expression.toLocaleLowerCase('en-US'),
-    senseKey: word.senseKey,
-    zhGloss,
-    enDefinition: cleanEnDefinition(word.enDefinition, word.expression),
-    partOfSpeech: word.partOfSpeech,
-    acceptedZhAnswers: cleanedAcceptedZhAnswers(word.zhGloss, word.acceptedZhAnswers),
-    acceptedEnVariants: unique([word.expression, ...(word.acceptedEnVariants ?? [])]).filter((value) => {
-      if (value === word.expression) return true
-      return !/sales sales|improvementbudget|profit rata|financial time stock|return of (investment|equity)|irresistible|payable agent|cash and delivery|imports'|application-for |fully depreciated assets in active$|reserve for purchase of treasury$|cumulative capital stock/i.test(value)
-    }),
-    examples,
-    collocations: ensureCollocations(word),
-    source: 'seed',
-    priority: Number.isFinite(word.priority) ? word.priority : 1,
-    status: 'active',
-    usagePrompts: buildUsagePrompts(word.id, word.expression, examples[0]?.en),
-    createdAt: SEED_TIMESTAMP,
-    updatedAt: SEED_TIMESTAMP,
+  try {
+    const examples = requireExamples(word)
+    const zhGloss = primaryZhGloss(word.zhGloss)
+    const next = {
+      id: word.id,
+      expression: word.expression,
+      lemma: word.lemma || word.expression.toLocaleLowerCase('en-US'),
+      senseKey: word.senseKey,
+      zhGloss,
+      enDefinition: cleanEnDefinition(word.enDefinition),
+      partOfSpeech: word.partOfSpeech,
+      acceptedZhAnswers: senseAlignedZhAnswers(word.zhGloss, word.acceptedZhAnswers),
+      acceptedEnVariants: unique([word.expression, ...(word.acceptedEnVariants ?? [])]),
+      examples,
+      collocations: requireCollocations(word),
+      source: 'seed',
+      priority: Number.isFinite(word.priority) ? word.priority : 1,
+      status: 'active',
+      usagePrompts: buildUsagePrompts(word.id, word.expression, examples[0]?.en),
+      createdAt: SEED_TIMESTAMP,
+      updatedAt: SEED_TIMESTAMP,
+    }
+    if (word.ipaUk) next.ipaUk = word.ipaUk
+    if (word.ipaUs) next.ipaUs = word.ipaUs
+    if (word.audioUk) next.audioUk = word.audioUk
+    if (word.audioUs) next.audioUs = word.audioUs
+    if (Array.isArray(word.synonyms) && word.synonyms.length) next.synonyms = word.synonyms
+    if (Array.isArray(word.antonyms) && word.antonyms.length) next.antonyms = word.antonyms
+    words.push(next)
+  } catch (error) {
+    errors.push(error instanceof Error ? error.message : String(error))
   }
-  if (word.ipaUk) next.ipaUk = word.ipaUk
-  if (word.ipaUs) next.ipaUs = word.ipaUs
-  if (word.audioUk) next.audioUk = word.audioUk
-  if (word.audioUs) next.audioUs = word.audioUs
-  if (Array.isArray(word.synonyms) && word.synonyms.length) next.synonyms = word.synonyms
-  if (Array.isArray(word.antonyms) && word.antonyms.length) next.antonyms = word.antonyms
-  words.push(next)
+}
+
+if (errors.length) {
+  console.error(JSON.stringify({ failed: errors.length, sample: errors.slice(0, 20) }, null, 2))
+  process.exit(1)
 }
 
 const keptIds = new Set(words.map((word) => word.id))

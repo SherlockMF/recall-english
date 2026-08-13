@@ -10,7 +10,11 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "preview": "vite preview",
-    "seed:pack": "node scripts/buildBundledSeedPack.mjs"
+    "seed:pack": "node scripts/buildBundledSeedPack.mjs",
+    "seed:slice": "node scripts/sliceTrustedVocabularyPack.mjs",
+    "seed:enrich-v1": "node scripts/enrichTrustedV1.mjs",
+    "seed:quality": "node scripts/qualityHarnessVocabulary.mjs",
+    "seed:v5": "npm run seed:slice && npm run seed:enrich-v1 && npm run seed:pack && npm run seed:quality"
   },
   "dependencies": {
     "idb": "^8.0.3",

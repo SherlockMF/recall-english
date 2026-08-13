@@ -69,40 +69,28 @@ function expectCompleteHandcraftedItem(item: Word): void {
 describe('seedWords', () => {
   it('keeps historical handcrafted seed ids and merges bundled pack senses', () => {
     expect(handcraftedSeedWords).toHaveLength(240)
-    expect(bundledSeedWords).toHaveLength(7350)
-    expect(seedWords).toHaveLength(7590)
+    expect(bundledSeedWords).toHaveLength(756)
+    expect(seedWords).toHaveLength(996)
     expect(seedWords.some((item) => item.id === 'seed-daily-001')).toBe(true)
     expect(seedWords.some((item) => item.id === 'seed-finance-001')).toBe(true)
     expect(seedWords.some((item) => item.id === 'seed-business-001')).toBe(true)
     expect(seedWords.every((item) => item.source === 'seed')).toBe(true)
+    expect(bundledSeedWords.every((item) => item.id.startsWith('v1-'))).toBe(true)
+    expect(seedWords.some((item) => /^(core|econ)-/.test(item.id))).toBe(false)
     expect(seedWords.some((item) => item.expression === 'rape')).toBe(false)
     expect(seedWords.some((item) => /customary's/i.test(item.expression))).toBe(false)
-    expect(seedWords.some((item) => item.expression === "customer's deposit")).toBe(true)
-    expect(seedWords.some((item) => item.expression === 'capital dividend')).toBe(true)
-    expect(seedWords.some((item) => item.expression === 'bank ratte')).toBe(false)
-    expect(seedWords.some((item) => item.expression === 'balloon payment')).toBe(true)
-    const customerDeposit = seedWords.find((item) => item.expression === "customer's deposit")
-    expect(customerDeposit?.enDefinition).toMatch(/customer's deposit/)
-    expect(customerDeposit?.enDefinition).not.toMatch(/customary/)
     expect(
       bundledSeedWords.some(
         (item) => /^a\.\s/i.test(item.zhGloss) || item.acceptedZhAnswers.some((a) => /^a\.\s/i.test(a)),
       ),
     ).toBe(false)
     expect(bundledSeedWords.some((item) => /^\s*[navsr](\.|\s)/i.test(item.enDefinition))).toBe(false)
-    expect(seedWords.find((item) => item.expression === 'formal invoice')?.zhGloss).toMatch(/正式发票/)
-    expect(seedWords.find((item) => item.id === 'econ-69233843b037a1')?.zhGloss).toBe('国际清算银行')
-    expect(seedWords.find((item) => item.expression === 'annual percentage rate')?.zhGloss).toMatch(/年百分率/)
-    expect(seedWords.find((item) => item.expression === 'teach')?.enDefinition).toMatch(/instruction|learn/i)
-    expect(seedWords.find((item) => item.expression === 'teach')?.enDefinition).not.toMatch(/pirate/i)
-    expect(seedWords.some((item) => item.expression === 'sale afloat')).toBe(true)
-    expect(
-      seedWords.some((item) =>
-        (item.acceptedEnVariants ?? []).some((variant) =>
-          /payable agent|cash and delivery|sales sales/i.test(variant),
-        ),
-      ),
-    ).toBe(false)
+    expect(seedWords.find((item) => item.expression === 'bad debt')?.enDefinition).toMatch(
+      /irrecoverable|written off/i,
+    )
+    expect(seedWords.find((item) => item.expression === 'share capital')?.enDefinition).toMatch(
+      /no par value|Companies Act 2016/i,
+    )
     expect(
       seedWords.some((item) =>
         /精液|迷幻药|花柳病/.test(`${item.zhGloss}|${(item.acceptedZhAnswers ?? []).join('|')}`),
