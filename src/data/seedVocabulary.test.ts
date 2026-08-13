@@ -69,14 +69,14 @@ function expectCompleteHandcraftedItem(item: Word): void {
 describe('seedWords', () => {
   it('keeps historical handcrafted seed ids and merges bundled pack senses', () => {
     expect(handcraftedSeedWords).toHaveLength(240)
-    expect(bundledSeedWords).toHaveLength(756)
-    expect(seedWords).toHaveLength(996)
+    expect(bundledSeedWords).toHaveLength(2760)
+    expect(seedWords).toHaveLength(3000)
     expect(seedWords.some((item) => item.id === 'seed-daily-001')).toBe(true)
     expect(seedWords.some((item) => item.id === 'seed-finance-001')).toBe(true)
     expect(seedWords.some((item) => item.id === 'seed-business-001')).toBe(true)
     expect(seedWords.every((item) => item.source === 'seed')).toBe(true)
-    expect(bundledSeedWords.every((item) => item.id.startsWith('v1-'))).toBe(true)
-    expect(seedWords.some((item) => /^(core|econ)-/.test(item.id))).toBe(false)
+    expect(bundledSeedWords.every((item) => /^(v1|core|econ)-/.test(item.id))).toBe(true)
+    expect(seedWords.some((item) => item.id.startsWith('v1-'))).toBe(true)
     expect(seedWords.some((item) => item.expression === 'rape')).toBe(false)
     expect(seedWords.some((item) => /customary's/i.test(item.expression))).toBe(false)
     expect(

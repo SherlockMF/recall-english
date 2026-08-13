@@ -2,15 +2,16 @@
  * Offline quality harness for production seeds / trusted V1 pack.
  * Run: node scripts/qualityHarnessVocabulary.mjs
  */
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const bundled = JSON.parse(readFileSync(join(root, 'src/data/bundledSeedWords.json'), 'utf8'))
-const trusted = JSON.parse(
-  readFileSync(join(root, 'data/vocabulary-packs/trusted_v1_vocabulary_pack.json'), 'utf8'),
-)
+const trustedPath = existsSync(join(root, 'data/vocabulary-packs/trusted_v5_1_vocabulary_pack.json'))
+  ? join(root, 'data/vocabulary-packs/trusted_v5_1_vocabulary_pack.json')
+  : join(root, 'data/vocabulary-packs/trusted_v1_vocabulary_pack.json')
+const trusted = JSON.parse(readFileSync(trustedPath, 'utf8'))
 
 function normalizeLoose(value) {
   return String(value ?? '')
@@ -43,11 +44,11 @@ function flag(id, rule, detail) {
 }
 
 for (const word of bundled) {
-  if (/^(core|econ)-/.test(word.id)) {
-    fail(word.id, 'quarantine_in_production', word.id)
-  }
   if (/^(Business|Accounting|Finance|Daily)\s+sense\s+of\b/i.test(word.enDefinition || '')) {
     fail(word.id, 'placeholder_definition', word.enDefinition)
+  }
+  if (/[\u4e00-\u9fff]/.test(word.enDefinition || '')) {
+    fail(word.id, 'chinese_in_en_definition', word.enDefinition)
   }
   for (const example of word.examples || []) {
     if (/Please notice .+ in context/i.test(example.en || '')) {

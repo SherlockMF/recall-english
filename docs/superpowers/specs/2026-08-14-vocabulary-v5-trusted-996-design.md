@@ -1,7 +1,7 @@
 # Vocabulary V5 — Trusted 996 Design
 
 **Date:** 2026-08-14  
-**Status:** Approved for implementation / in progress  
+**Status:** V5.0 shipped; V5.1 expansion in progress / shipped locally  
 **Audit source:** `c:\Users\84754\Downloads\recall-english-vocabulary-audit-2026-08-14.xlsx`
 
 ## Goal

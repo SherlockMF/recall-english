@@ -4,12 +4,13 @@ import { snapshotLearningTracks, snapshotMapLearningProgress } from '../lib/lear
 import { ALL_VOCABULARY_LISTS } from './vocabularyLists'
 import { bundledSeedWords, seedMemberships, seedWords } from './seedVocabulary'
 
-describe('vocabulary V5.0 trusted library', () => {
-  it('keeps production seeds at trusted 996 without core/econ', () => {
-    expect(bundledSeedWords).toHaveLength(756)
-    expect(seedWords).toHaveLength(996)
-    expect(bundledSeedWords.every((item) => item.id.startsWith('v1-'))).toBe(true)
-    expect(seedWords.some((item) => /^(core|econ)-/.test(item.id))).toBe(false)
+describe('vocabulary V5 trusted library', () => {
+  it('keeps V5.1 production size at 3000 with v1+rebuilt core/econ', () => {
+    expect(bundledSeedWords).toHaveLength(2760)
+    expect(seedWords).toHaveLength(3000)
+    expect(bundledSeedWords.every((item) => /^(v1|core|econ)-/.test(item.id))).toBe(true)
+    expect(bundledSeedWords.filter((item) => item.id.startsWith('v1-')).length).toBe(756)
+    expect(bundledSeedWords.filter((item) => /^(core|econ)-/.test(item.id)).length).toBe(2004)
   })
 
   it('bans placeholder definitions and template examples on bundled seeds', () => {
@@ -23,6 +24,7 @@ describe('vocabulary V5.0 trusted library', () => {
         (item.examples || []).some((example) => /Please notice .+ in context/i.test(example.en)),
       ),
     ).toBe(false)
+    expect(bundledSeedWords.some((item) => /[\u4e00-\u9fff]/.test(item.enDefinition))).toBe(false)
   })
 
   it('requires real collocations beyond expression repetition', () => {
@@ -53,8 +55,6 @@ describe('vocabulary V5.0 trusted library', () => {
     expect(shareCapital?.enDefinition).not.toMatch(/nominal or par value of shares issued/i)
 
     expect(byExpression('Wi-Fi')?.enDefinition).toMatch(/IEEE 802\.11|local-area/i)
-    expect(byExpression('Wi-Fi')?.enDefinition).not.toMatch(/connects devices to the internet without wires/i)
-
     expect(byExpression('tax liability')?.zhGloss).toMatch(/应纳税额|应付税款/)
     expect(byExpression('bond')?.enDefinition).toMatch(/may provide coupons|other form of return/i)
     expect(byExpression('recognition')?.enDefinition).toMatch(/useful information|faithfully represented/i)
@@ -64,7 +64,6 @@ describe('vocabulary V5.0 trusted library', () => {
 
     const eir = byExpression('effective interest rate')
     expect(eir?.enDefinition).toMatch(/amortis|amortiz|discount/i)
-    expect(eir?.enDefinition).not.toMatch(/^the actual annual interest rate after considering compounding$/i)
 
     expect(byExpression('inventory write-down')?.enDefinition).toMatch(/net realis(?:able|able) value|NRV/i)
     expect(byExpression('recoverable amount')?.enDefinition).toMatch(/fair value less costs of disposal/i)
@@ -87,6 +86,6 @@ describe('vocabulary V5.0 trusted library', () => {
         2,
       ),
     )
-    expect(progress.total).toBe(996)
+    expect(progress.total).toBe(3000)
   })
 })

@@ -11,7 +11,7 @@
  *
  * Run: node scripts/buildBundledSeedPack.mjs
  */
-import { readFileSync, writeFileSync } from 'node:fs'
+import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -192,11 +192,16 @@ function requireCollocations(word) {
   return valid.slice(0, 3)
 }
 
-const packPath = join(root, 'data/vocabulary-packs/trusted_v1_vocabulary_pack.json')
+const packPathCandidates = [
+  join(root, 'data/vocabulary-packs/trusted_v5_1_vocabulary_pack.json'),
+  join(root, 'data/vocabulary-packs/trusted_v1_vocabulary_pack.json'),
+]
+const packPath = packPathCandidates.find((path) => existsSync(path))
+if (!packPath) throw new Error('No trusted vocabulary pack found')
 const pack = JSON.parse(readFileSync(packPath, 'utf8'))
 const existing = loadHandcraftedExpressions()
 
-if (!String(pack.kind).includes('vocabulary') && pack.kind !== 'vocabulary-pack') {
+if (pack.kind !== 'vocabulary-pack') {
   throw new Error('trusted pack kind must be vocabulary-pack')
 }
 
@@ -205,8 +210,9 @@ const skipped = []
 const errors = []
 
 for (const word of pack.words) {
-  if (!String(word.id).startsWith('v1-')) {
-    errors.push(`${word.id}: trusted pack must only contain v1-* ids`)
+  const id = String(word.id)
+  if (!/^(v1|core|econ)-/.test(id)) {
+    errors.push(`${word.id}: production pack must use v1-*/core-*/econ-* ids`)
     continue
   }
   const key = normalizeExpression(word.expression)
@@ -277,6 +283,7 @@ writeFileSync(wordsOut, `${JSON.stringify(words, null, 2)}\n`)
 writeFileSync(membershipsOut, `${JSON.stringify(memberships, null, 2)}\n`)
 
 console.log(JSON.stringify({
+  packPath,
   packWords: pack.words.length,
   added: words.length,
   skippedHandcraftedOverlap: skipped.length,
