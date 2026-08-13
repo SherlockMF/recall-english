@@ -193,6 +193,7 @@ function requireCollocations(word) {
 }
 
 const packPathCandidates = [
+  join(root, 'data/vocabulary-packs/trusted_v5_2_vocabulary_pack.json'),
   join(root, 'data/vocabulary-packs/trusted_v5_1_vocabulary_pack.json'),
   join(root, 'data/vocabulary-packs/trusted_v1_vocabulary_pack.json'),
 ]

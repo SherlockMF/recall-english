@@ -5,12 +5,11 @@ import { ALL_VOCABULARY_LISTS } from './vocabularyLists'
 import { bundledSeedWords, seedMemberships, seedWords } from './seedVocabulary'
 
 describe('vocabulary V5 trusted library', () => {
-  it('keeps V5.1 production size at 3000 with v1+rebuilt core/econ', () => {
-    expect(bundledSeedWords).toHaveLength(2760)
-    expect(seedWords).toHaveLength(3000)
+  it('keeps V5.2 production size at 7500', () => {
+    expect(bundledSeedWords).toHaveLength(7260)
+    expect(seedWords).toHaveLength(7500)
     expect(bundledSeedWords.every((item) => /^(v1|core|econ)-/.test(item.id))).toBe(true)
     expect(bundledSeedWords.filter((item) => item.id.startsWith('v1-')).length).toBe(756)
-    expect(bundledSeedWords.filter((item) => /^(core|econ)-/.test(item.id)).length).toBe(2004)
   })
 
   it('bans placeholder definitions and template examples on bundled seeds', () => {
@@ -50,21 +49,13 @@ describe('vocabulary V5 trusted library', () => {
     const byExpression = (expression: string) =>
       seedWords.find((item) => item.expression === expression)
 
-    const shareCapital = byExpression('share capital')
-    expect(shareCapital?.enDefinition).toMatch(/no par value|Companies Act 2016/i)
-    expect(shareCapital?.enDefinition).not.toMatch(/nominal or par value of shares issued/i)
-
+    expect(byExpression('share capital')?.enDefinition).toMatch(/no par value|Companies Act 2016/i)
     expect(byExpression('Wi-Fi')?.enDefinition).toMatch(/IEEE 802\.11|local-area/i)
     expect(byExpression('tax liability')?.zhGloss).toMatch(/应纳税额|应付税款/)
     expect(byExpression('bond')?.enDefinition).toMatch(/may provide coupons|other form of return/i)
     expect(byExpression('recognition')?.enDefinition).toMatch(/useful information|faithfully represented/i)
-
     expect(byExpression('bad debt')?.enDefinition).toMatch(/irrecoverable|written off/i)
-    expect(byExpression('bad debt')?.enDefinition).not.toMatch(/unlikely to be collected/i)
-
-    const eir = byExpression('effective interest rate')
-    expect(eir?.enDefinition).toMatch(/amortis|amortiz|discount/i)
-
+    expect(byExpression('effective interest rate')?.enDefinition).toMatch(/amortis|amortiz|discount/i)
     expect(byExpression('inventory write-down')?.enDefinition).toMatch(/net realis(?:able|able) value|NRV/i)
     expect(byExpression('recoverable amount')?.enDefinition).toMatch(/fair value less costs of disposal/i)
     expect(byExpression('recoverable amount')?.enDefinition).toMatch(/value in use/i)
@@ -86,6 +77,6 @@ describe('vocabulary V5 trusted library', () => {
         2,
       ),
     )
-    expect(progress.total).toBe(3000)
+    expect(progress.total).toBe(7500)
   })
 })

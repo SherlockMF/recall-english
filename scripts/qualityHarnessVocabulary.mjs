@@ -8,9 +8,12 @@ import { fileURLToPath } from 'node:url'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const bundled = JSON.parse(readFileSync(join(root, 'src/data/bundledSeedWords.json'), 'utf8'))
-const trustedPath = existsSync(join(root, 'data/vocabulary-packs/trusted_v5_1_vocabulary_pack.json'))
-  ? join(root, 'data/vocabulary-packs/trusted_v5_1_vocabulary_pack.json')
-  : join(root, 'data/vocabulary-packs/trusted_v1_vocabulary_pack.json')
+const trustedPath = [
+  join(root, 'data/vocabulary-packs/trusted_v5_2_vocabulary_pack.json'),
+  join(root, 'data/vocabulary-packs/trusted_v5_1_vocabulary_pack.json'),
+  join(root, 'data/vocabulary-packs/trusted_v1_vocabulary_pack.json'),
+].find((path) => existsSync(path))
+if (!trustedPath) throw new Error('No trusted pack for quality harness')
 const trusted = JSON.parse(readFileSync(trustedPath, 'utf8'))
 
 function normalizeLoose(value) {
