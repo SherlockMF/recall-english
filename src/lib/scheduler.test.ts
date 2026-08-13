@@ -261,6 +261,40 @@ describe('buildDailyQueue', () => {
 
     expect(new Set(queue.map((task) => task.itemId))).toEqual(new Set(['priority-one']))
   })
+
+  it('counts newly introduced items by local calendar day, not UTC day', () => {
+    const now = new Date(2026, 7, 13, 10, 0, 0)
+    const earlierSameLocalDay = new Date(2026, 7, 13, 1, 0, 0)
+    const items = [
+      makeItem('already-started', 'daily', { priority: 1 }),
+      makeItem('still-fresh-a', 'daily', { priority: 2 }),
+      makeItem('still-fresh-b', 'daily', { priority: 3 }),
+    ]
+    const tracks = createInitialTracks(items, now)
+    const attempts = [makeAttempt(0, 'already-started', {
+      reviewedAt: earlierSameLocalDay.toISOString(),
+    })]
+
+    const queue = buildDailyQueue(
+      settings({
+        coreMinutes: 10,
+        newItemsPerDay: 2,
+        contentMix: { daily: 1, business: 0, finance: 0, accounting: 0 },
+      }),
+      items,
+      tracks,
+      attempts,
+      now,
+      'core',
+    )
+
+    const freshQueued = new Set(
+      queue
+        .filter((task) => task.itemId === 'still-fresh-a' || task.itemId === 'still-fresh-b')
+        .map((task) => task.itemId),
+    )
+    expect(freshQueued).toEqual(new Set(['still-fresh-a']))
+  })
 })
 
 describe('adaptive target', () => {
@@ -319,8 +353,61 @@ describe('review scheduling and retry placement', () => {
     const lapsed = scheduleReview(good, 'again', lapsedAt, 0.9)
     expect(lapsed.lapses).toBe(good.lapses + 1)
     expect(lapsed.lastReview).toBe(lapsedAt.toISOString())
+    expect(lapsed.firstGoodAt).toBeUndefined()
+    expect(lapsed.lastGoodAt).toBeUndefined()
+
+    const recovered = scheduleReview(lapsed, 'good', new Date(lapsedAt.getTime() + 60_000), 0.9)
+    expect(recovered.firstGoodAt).toBe(recovered.lastGoodAt)
+    expect(recovered.firstGoodAt).not.toBe(good.firstGoodAt)
   })
 
+  it('clears good timestamps after again, but not after hard', () => {
+    const base = createInitialTracks([makeItem('word')], NOW)[0]
+    const good = scheduleReview(base, 'good', NOW, 0.9)
+    const later = new Date(NOW.getTime() + 8 * 24 * 60 * 60 * 1000)
+    const solid = scheduleReview(good, 'good', later, 0.9)
+    const hard = scheduleReview(solid, 'hard', new Date(later.getTime() + 60_000), 0.9)
+
+    expect(solid.firstGoodAt).toBe(NOW.toISOString())
+    expect(solid.lastGoodAt).toBe(later.toISOString())
+    expect(hard.firstGoodAt).toBe(NOW.toISOString())
+    expect(hard.lastGoodAt).toBe(later.toISOString())
+    expect(hard.lastReview).toBe(new Date(later.getTime() + 60_000).toISOString())
+  })
+
+  it('re-locks usage after again removes core good timestamps', () => {
+    const item = makeItem('usable', 'daily', {
+      usagePrompts: [{
+        id: 'prompt',
+        type: 'sentence',
+        prompt: 'Write a sentence.',
+        modelAnswer: 'This is usable.',
+        checkpoints: ['usable'],
+      }],
+    })
+    const seeded = createInitialTracks([item], NOW).map((track) => (
+      track.type === 'usage'
+        ? { ...track, unlocked: true, firstGoodAt: NOW.toISOString(), lastGoodAt: NOW.toISOString() }
+        : {
+          ...track,
+          firstGoodAt: NOW.toISOString(),
+          lastGoodAt: NOW.toISOString(),
+        }
+    ))
+    const afterAgain = scheduleReview(
+      seeded.find((track) => track.type === 'receptive')!,
+      'again',
+      new Date(NOW.getTime() + 60_000),
+      0.9,
+    )
+    const replaced = seeded.map((track) => track.id === afterAgain.id ? afterAgain : track)
+    const synced = unlockEligibleUsageTracks(replaced, new Date(NOW.getTime() + 60_000))
+
+    expect(synced.find((track) => track.type === 'usage')?.unlocked).toBe(false)
+  })
+})
+
+describe('requeueFailedTask', () => {
   it('requeues a failed task after a gap without mutating the pending queue', () => {
     const failed = {
       id: 'failed',

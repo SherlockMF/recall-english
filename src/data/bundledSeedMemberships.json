@@ -1,0 +1,6138 @@
+[
+  {
+    "id": "membership-v1-analytical-procedure-2b5ddaa0-accounting-audit",
+    "wordId": "v1-analytical-procedure-2b5ddaa0",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 271,
+    "subcategory": "audit"
+  },
+  {
+    "id": "membership-v1-audit-opinion-be9ef0e8-accounting-audit",
+    "wordId": "v1-audit-opinion-be9ef0e8",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 262,
+    "subcategory": "audit"
+  },
+  {
+    "id": "membership-v1-audit-procedure-578fff77-accounting-audit",
+    "wordId": "v1-audit-procedure-578fff77",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 261,
+    "subcategory": "audit"
+  },
+  {
+    "id": "membership-v1-audit-report-d43ff21f-accounting-audit",
+    "wordId": "v1-audit-report-d43ff21f",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 263,
+    "subcategory": "audit"
+  },
+  {
+    "id": "membership-v1-confirmation-156e0573-accounting-audit",
+    "wordId": "v1-confirmation-156e0573",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 273,
+    "subcategory": "audit"
+  },
+  {
+    "id": "membership-v1-control-risk-4d128a96-accounting-audit",
+    "wordId": "v1-control-risk-4d128a96",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 267,
+    "subcategory": "audit"
+  },
+  {
+    "id": "membership-v1-detection-risk-cab6db6a-accounting-audit",
+    "wordId": "v1-detection-risk-cab6db6a",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 269,
+    "subcategory": "audit"
+  },
+  {
+    "id": "membership-v1-independence-425fb842-accounting-audit",
+    "wordId": "v1-independence-425fb842",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 276,
+    "subcategory": "audit"
+  },
+  {
+    "id": "membership-v1-inherent-risk-77924408-accounting-audit",
+    "wordId": "v1-inherent-risk-77924408",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 268,
+    "subcategory": "audit"
+  },
+  {
+    "id": "membership-v1-inventory-observation-d558c26e-accounting-audit",
+    "wordId": "v1-inventory-observation-d558c26e",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 274,
+    "subcategory": "audit"
+  },
+  {
+    "id": "membership-v1-material-misstatement-8c54d203-accounting-audit",
+    "wordId": "v1-material-misstatement-8c54d203",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 265,
+    "subcategory": "audit"
+  },
+  {
+    "id": "membership-v1-professional-skepticism-67903ff9-accounting-audit",
+    "wordId": "v1-professional-skepticism-67903ff9",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 275,
+    "subcategory": "audit"
+  },
+  {
+    "id": "membership-v1-sampling-1fac0f83-accounting-audit",
+    "wordId": "v1-sampling-1fac0f83",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 272,
+    "subcategory": "audit"
+  },
+  {
+    "id": "membership-v1-substantive-testing-9f016c3f-accounting-audit",
+    "wordId": "v1-substantive-testing-9f016c3f",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 270,
+    "subcategory": "audit"
+  },
+  {
+    "id": "membership-v1-account-balance-eb80d7a1-accounting-bookkeeping-ledger",
+    "wordId": "v1-account-balance-eb80d7a1",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 177,
+    "subcategory": "bookkeeping-ledger"
+  },
+  {
+    "id": "membership-v1-adjusting-entry-1bc747f5-accounting-bookkeeping-ledger",
+    "wordId": "v1-adjusting-entry-1bc747f5",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 175,
+    "subcategory": "bookkeeping-ledger"
+  },
+  {
+    "id": "membership-v1-audit-trail-fc7158b4-accounting-bookkeeping-ledger",
+    "wordId": "v1-audit-trail-fc7158b4",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 179,
+    "subcategory": "bookkeeping-ledger"
+  },
+  {
+    "id": "membership-v1-bank-reconciliation-b88c9299-accounting-bookkeeping-ledger",
+    "wordId": "v1-bank-reconciliation-b88c9299",
+    "listId": "list-accounting",
+    "priority": 10,
+    "sortOrder": 174,
+    "subcategory": "bookkeeping-ledger"
+  },
+  {
+    "id": "membership-v1-chart-of-accounts-0a9939d6-accounting-bookkeeping-ledger",
+    "wordId": "v1-chart-of-accounts-0a9939d6",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 167,
+    "subcategory": "bookkeeping-ledger"
+  },
+  {
+    "id": "membership-v1-closing-entry-7964f659-accounting-bookkeeping-ledger",
+    "wordId": "v1-closing-entry-7964f659",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 176,
+    "subcategory": "bookkeeping-ledger"
+  },
+  {
+    "id": "membership-v1-credit-note-1e0e2700-accounting-bookkeeping-ledger",
+    "wordId": "v1-credit-note-1e0e2700",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 170,
+    "subcategory": "bookkeeping-ledger"
+  },
+  {
+    "id": "membership-v1-debit-note-9bfae905-accounting-bookkeeping-ledger",
+    "wordId": "v1-debit-note-9bfae905",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 171,
+    "subcategory": "bookkeeping-ledger"
+  },
+  {
+    "id": "membership-v1-general-journal-a75a19d5-accounting-bookkeeping-ledger",
+    "wordId": "v1-general-journal-a75a19d5",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 164,
+    "subcategory": "bookkeeping-ledger"
+  },
+  {
+    "id": "membership-v1-ledger-account-38b34351-accounting-bookkeeping-ledger",
+    "wordId": "v1-ledger-account-38b34351",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 166,
+    "subcategory": "bookkeeping-ledger"
+  },
+  {
+    "id": "membership-v1-posting-fa754c27-accounting-bookkeeping-ledger",
+    "wordId": "v1-posting-fa754c27",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 172,
+    "subcategory": "bookkeeping-ledger"
+  },
+  {
+    "id": "membership-v1-source-document-c3cc8ea5-accounting-bookkeeping-ledger",
+    "wordId": "v1-source-document-c3cc8ea5",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 168,
+    "subcategory": "bookkeeping-ledger"
+  },
+  {
+    "id": "membership-v1-supporting-document-a82ebe4f-accounting-bookkeeping-ledger",
+    "wordId": "v1-supporting-document-a82ebe4f",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 178,
+    "subcategory": "bookkeeping-ledger"
+  },
+  {
+    "id": "membership-v1-accounting-equation-b70bf94c-accounting-financial-statements",
+    "wordId": "v1-accounting-equation-b70bf94c",
+    "listId": "list-accounting",
+    "priority": 10,
+    "sortOrder": 140,
+    "subcategory": "financial-statements"
+  },
+  {
+    "id": "membership-v1-closing-balance-d8f592c4-accounting-financial-statements",
+    "wordId": "v1-closing-balance-d8f592c4",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 158,
+    "subcategory": "financial-statements"
+  },
+  {
+    "id": "membership-v1-comparative-figure-83bc99d0-accounting-financial-statements",
+    "wordId": "v1-comparative-figure-83bc99d0",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 156,
+    "subcategory": "financial-statements"
+  },
+  {
+    "id": "membership-v1-current-asset-d1dabbde-accounting-financial-statements",
+    "wordId": "v1-current-asset-d1dabbde",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 144,
+    "subcategory": "financial-statements"
+  },
+  {
+    "id": "membership-v1-current-liability-bc9a1e11-accounting-financial-statements",
+    "wordId": "v1-current-liability-bc9a1e11",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 146,
+    "subcategory": "financial-statements"
+  },
+  {
+    "id": "membership-v1-financial-statement-7055ecec-accounting-financial-statements",
+    "wordId": "v1-financial-statement-7055ecec",
+    "listId": "list-accounting",
+    "priority": 10,
+    "sortOrder": 148,
+    "subcategory": "financial-statements"
+  },
+  {
+    "id": "membership-v1-financial-year-0e3a4471-accounting-financial-statements",
+    "wordId": "v1-financial-year-0e3a4471",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 155,
+    "subcategory": "financial-statements"
+  },
+  {
+    "id": "membership-v1-non-current-asset-8ada4b0e-accounting-financial-statements",
+    "wordId": "v1-non-current-asset-8ada4b0e",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 145,
+    "subcategory": "financial-statements"
+  },
+  {
+    "id": "membership-v1-non-current-liability-bacb84ca-accounting-financial-statements",
+    "wordId": "v1-non-current-liability-bacb84ca",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 147,
+    "subcategory": "financial-statements"
+  },
+  {
+    "id": "membership-v1-note-to-the-accounts-6516ba30-accounting-financial-statements",
+    "wordId": "v1-note-to-the-accounts-6516ba30",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 153,
+    "subcategory": "financial-statements"
+  },
+  {
+    "id": "membership-v1-opening-balance-5c95fac6-accounting-financial-statements",
+    "wordId": "v1-opening-balance-5c95fac6",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 157,
+    "subcategory": "financial-statements"
+  },
+  {
+    "id": "membership-v1-reporting-period-bc8eb216-accounting-financial-statements",
+    "wordId": "v1-reporting-period-bc8eb216",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 154,
+    "subcategory": "financial-statements"
+  },
+  {
+    "id": "membership-v1-statement-of-changes-in-equity-286ac3af-accounting-financial-statements",
+    "wordId": "v1-statement-of-changes-in-equity-286ac3af",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 152,
+    "subcategory": "financial-statements"
+  },
+  {
+    "id": "membership-v1-closing-inventory-130242d5-accounting-inventory",
+    "wordId": "v1-closing-inventory-130242d5",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 202,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-cost-of-goods-sold-682d6d4e-accounting-inventory",
+    "wordId": "v1-cost-of-goods-sold-682d6d4e",
+    "listId": "list-accounting",
+    "priority": 10,
+    "sortOrder": 206,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-fifo-bfe2a646-accounting-inventory",
+    "wordId": "v1-fifo-bfe2a646",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 207,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-finished-goods-f572a4f5-accounting-inventory",
+    "wordId": "v1-finished-goods-f572a4f5",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 214,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-freight-in-a849ad3a-accounting-inventory",
+    "wordId": "v1-freight-in-a849ad3a",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 212,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-inventory-count-face03fd-accounting-inventory",
+    "wordId": "v1-inventory-count-face03fd",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 203,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-inventory-provision-4a6e69f8-accounting-inventory",
+    "wordId": "v1-inventory-provision-4a6e69f8",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 219,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-inventory-shrinkage-4daa5ff2-accounting-inventory",
+    "wordId": "v1-inventory-shrinkage-4daa5ff2",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 216,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-inventory-turnover-2d8e7708-accounting-inventory",
+    "wordId": "v1-inventory-turnover-2d8e7708",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 205,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-inventory-write-down-14e39798-accounting-inventory",
+    "wordId": "v1-inventory-write-down-14e39798",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 210,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-net-realizable-value-1d6b9461-accounting-inventory",
+    "wordId": "v1-net-realizable-value-1d6b9461",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 209,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-obsolete-inventory-00f585aa-accounting-inventory",
+    "wordId": "v1-obsolete-inventory-00f585aa",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 217,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-opening-inventory-014d422c-accounting-inventory",
+    "wordId": "v1-opening-inventory-014d422c",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 201,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-purchase-cost-4f709865-accounting-inventory",
+    "wordId": "v1-purchase-cost-4f709865",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 211,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-raw-materials-01c6892e-accounting-inventory",
+    "wordId": "v1-raw-materials-01c6892e",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 215,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-slow-moving-inventory-17870d9b-accounting-inventory",
+    "wordId": "v1-slow-moving-inventory-17870d9b",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 218,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-stocktake-2a464717-accounting-inventory",
+    "wordId": "v1-stocktake-2a464717",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 204,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-weighted-average-cost-e6cd436b-accounting-inventory",
+    "wordId": "v1-weighted-average-cost-e6cd436b",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 208,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-work-in-progress-786a2efc-accounting-inventory",
+    "wordId": "v1-work-in-progress-786a2efc",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 213,
+    "subcategory": "inventory"
+  },
+  {
+    "id": "membership-v1-adverse-variance-a8a338b1-accounting-management-costing",
+    "wordId": "v1-adverse-variance-a8a338b1",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 256,
+    "subcategory": "management-costing"
+  },
+  {
+    "id": "membership-v1-budget-variance-0fae982e-accounting-management-costing",
+    "wordId": "v1-budget-variance-0fae982e",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 253,
+    "subcategory": "management-costing"
+  },
+  {
+    "id": "membership-v1-cost-allocation-af1d3c2f-accounting-management-costing",
+    "wordId": "v1-cost-allocation-af1d3c2f",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 247,
+    "subcategory": "management-costing"
+  },
+  {
+    "id": "membership-v1-cost-driver-1a7f93ed-accounting-management-costing",
+    "wordId": "v1-cost-driver-1a7f93ed",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 248,
+    "subcategory": "management-costing"
+  },
+  {
+    "id": "membership-v1-direct-cost-83786979-accounting-management-costing",
+    "wordId": "v1-direct-cost-83786979",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 241,
+    "subcategory": "management-costing"
+  },
+  {
+    "id": "membership-v1-direct-labour-085e7ec8-accounting-management-costing",
+    "wordId": "v1-direct-labour-085e7ec8",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 244,
+    "subcategory": "management-costing"
+  },
+  {
+    "id": "membership-v1-direct-material-8cbb5682-accounting-management-costing",
+    "wordId": "v1-direct-material-8cbb5682",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 243,
+    "subcategory": "management-costing"
+  },
+  {
+    "id": "membership-v1-favourable-variance-e4903602-accounting-management-costing",
+    "wordId": "v1-favourable-variance-e4903602",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 255,
+    "subcategory": "management-costing"
+  },
+  {
+    "id": "membership-v1-indirect-cost-7baa4af0-accounting-management-costing",
+    "wordId": "v1-indirect-cost-7baa4af0",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 242,
+    "subcategory": "management-costing"
+  },
+  {
+    "id": "membership-v1-manufacturing-overhead-9656fa95-accounting-management-costing",
+    "wordId": "v1-manufacturing-overhead-9656fa95",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 246,
+    "subcategory": "management-costing"
+  },
+  {
+    "id": "membership-v1-margin-of-safety-a896ec6f-accounting-management-costing",
+    "wordId": "v1-margin-of-safety-a896ec6f",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 251,
+    "subcategory": "management-costing"
+  },
+  {
+    "id": "membership-v1-mixed-cost-eba1bdb2-accounting-management-costing",
+    "wordId": "v1-mixed-cost-eba1bdb2",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 240,
+    "subcategory": "management-costing"
+  },
+  {
+    "id": "membership-v1-relevant-cost-788d2293-accounting-management-costing",
+    "wordId": "v1-relevant-cost-788d2293",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 257,
+    "subcategory": "management-costing"
+  },
+  {
+    "id": "membership-v1-standard-cost-4440b6db-accounting-management-costing",
+    "wordId": "v1-standard-cost-4440b6db",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 254,
+    "subcategory": "management-costing"
+  },
+  {
+    "id": "membership-v1-accumulated-depreciation-ffccce73-accounting-non-current-assets",
+    "wordId": "v1-accumulated-depreciation-ffccce73",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 228,
+    "subcategory": "non-current-assets"
+  },
+  {
+    "id": "membership-v1-capital-expenditure-8ef1f9d8-accounting-non-current-assets",
+    "wordId": "v1-capital-expenditure-8ef1f9d8",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 30,
+    "subcategory": "non-current-assets"
+  },
+  {
+    "id": "membership-v1-capitalization-9d5f06a4-accounting-non-current-assets",
+    "wordId": "v1-capitalization-9d5f06a4",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 222,
+    "subcategory": "non-current-assets"
+  },
+  {
+    "id": "membership-v1-disposal-2eff600b-accounting-non-current-assets",
+    "wordId": "v1-disposal-2eff600b",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 232,
+    "subcategory": "non-current-assets"
+  },
+  {
+    "id": "membership-v1-gain-on-disposal-2211b895-accounting-non-current-assets",
+    "wordId": "v1-gain-on-disposal-2211b895",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 233,
+    "subcategory": "non-current-assets"
+  },
+  {
+    "id": "membership-v1-goodwill-1352b334-accounting-non-current-assets",
+    "wordId": "v1-goodwill-1352b334",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 237,
+    "subcategory": "non-current-assets"
+  },
+  {
+    "id": "membership-v1-impairment-loss-2c2395fd-accounting-non-current-assets",
+    "wordId": "v1-impairment-loss-2c2395fd",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 230,
+    "subcategory": "non-current-assets"
+  },
+  {
+    "id": "membership-v1-intangible-asset-f77159dc-accounting-non-current-assets",
+    "wordId": "v1-intangible-asset-f77159dc",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 236,
+    "subcategory": "non-current-assets"
+  },
+  {
+    "id": "membership-v1-loss-on-disposal-3ec15483-accounting-non-current-assets",
+    "wordId": "v1-loss-on-disposal-3ec15483",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 234,
+    "subcategory": "non-current-assets"
+  },
+  {
+    "id": "membership-v1-ppe-e5d0348f-accounting-non-current-assets",
+    "wordId": "v1-ppe-e5d0348f",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 221,
+    "subcategory": "non-current-assets"
+  },
+  {
+    "id": "membership-v1-property-plant-and-equipment-c7e75185-accounting-non-current-assets",
+    "wordId": "v1-property-plant-and-equipment-c7e75185",
+    "listId": "list-accounting",
+    "priority": 10,
+    "sortOrder": 220,
+    "subcategory": "non-current-assets"
+  },
+  {
+    "id": "membership-v1-recoverable-amount-b8505a6c-accounting-non-current-assets",
+    "wordId": "v1-recoverable-amount-b8505a6c",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 231,
+    "subcategory": "non-current-assets"
+  },
+  {
+    "id": "membership-v1-residual-value-8268e14c-accounting-non-current-assets",
+    "wordId": "v1-residual-value-8268e14c",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 226,
+    "subcategory": "non-current-assets"
+  },
+  {
+    "id": "membership-v1-revenue-expenditure-5b5d79ff-accounting-non-current-assets",
+    "wordId": "v1-revenue-expenditure-5b5d79ff",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 223,
+    "subcategory": "non-current-assets"
+  },
+  {
+    "id": "membership-v1-straight-line-depreciation-6931a70e-accounting-non-current-assets",
+    "wordId": "v1-straight-line-depreciation-6931a70e",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 224,
+    "subcategory": "non-current-assets"
+  },
+  {
+    "id": "membership-v1-useful-life-d4a3e24e-accounting-non-current-assets",
+    "wordId": "v1-useful-life-d4a3e24e",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 225,
+    "subcategory": "non-current-assets"
+  },
+  {
+    "id": "membership-v1-accounting-estimate-be97baad-accounting-ratios-reporting",
+    "wordId": "v1-accounting-estimate-be97baad",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 316,
+    "subcategory": "ratios-reporting"
+  },
+  {
+    "id": "membership-v1-accounting-policy-0ab3c8c1-accounting-ratios-reporting",
+    "wordId": "v1-accounting-policy-0ab3c8c1",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 315,
+    "subcategory": "ratios-reporting"
+  },
+  {
+    "id": "membership-v1-asset-turnover-a6d56a35-accounting-ratios-reporting",
+    "wordId": "v1-asset-turnover-a6d56a35",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 312,
+    "subcategory": "ratios-reporting"
+  },
+  {
+    "id": "membership-v1-gross-profit-margin-96677837-accounting-ratios-reporting",
+    "wordId": "v1-gross-profit-margin-96677837",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 310,
+    "subcategory": "ratios-reporting"
+  },
+  {
+    "id": "membership-v1-net-profit-margin-d92e801e-accounting-ratios-reporting",
+    "wordId": "v1-net-profit-margin-d92e801e",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 311,
+    "subcategory": "ratios-reporting"
+  },
+  {
+    "id": "membership-v1-payables-turnover-f11fc390-accounting-ratios-reporting",
+    "wordId": "v1-payables-turnover-f11fc390",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 314,
+    "subcategory": "ratios-reporting"
+  },
+  {
+    "id": "membership-v1-prior-period-error-172cc76a-accounting-ratios-reporting",
+    "wordId": "v1-prior-period-error-172cc76a",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 317,
+    "subcategory": "ratios-reporting"
+  },
+  {
+    "id": "membership-v1-quick-ratio-be7a6983-accounting-ratios-reporting",
+    "wordId": "v1-quick-ratio-be7a6983",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 309,
+    "subcategory": "ratios-reporting"
+  },
+  {
+    "id": "membership-v1-receivables-turnover-f0fa049c-accounting-ratios-reporting",
+    "wordId": "v1-receivables-turnover-f0fa049c",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 313,
+    "subcategory": "ratios-reporting"
+  },
+  {
+    "id": "membership-v1-accrued-expense-02a89fb9-accounting-revenue-expense-accrual",
+    "wordId": "v1-accrued-expense-02a89fb9",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 189,
+    "subcategory": "revenue-expense-accrual"
+  },
+  {
+    "id": "membership-v1-accrued-income-22b2ddb7-accounting-revenue-expense-accrual",
+    "wordId": "v1-accrued-income-22b2ddb7",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 190,
+    "subcategory": "revenue-expense-accrual"
+  },
+  {
+    "id": "membership-v1-allowance-for-doubtful-accounts-0aba62b2-accounting-revenue-expense-accrual",
+    "wordId": "v1-allowance-for-doubtful-accounts-0aba62b2",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 196,
+    "subcategory": "revenue-expense-accrual"
+  },
+  {
+    "id": "membership-v1-bad-debt-e13f829d-accounting-revenue-expense-accrual",
+    "wordId": "v1-bad-debt-e13f829d",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 195,
+    "subcategory": "revenue-expense-accrual"
+  },
+  {
+    "id": "membership-v1-credit-purchase-243a06b1-accounting-revenue-expense-accrual",
+    "wordId": "v1-credit-purchase-243a06b1",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 198,
+    "subcategory": "revenue-expense-accrual"
+  },
+  {
+    "id": "membership-v1-credit-sale-1b5525e5-accounting-revenue-expense-accrual",
+    "wordId": "v1-credit-sale-1b5525e5",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 197,
+    "subcategory": "revenue-expense-accrual"
+  },
+  {
+    "id": "membership-v1-deferred-revenue-a437cedc-accounting-revenue-expense-accrual",
+    "wordId": "v1-deferred-revenue-a437cedc",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 192,
+    "subcategory": "revenue-expense-accrual"
+  },
+  {
+    "id": "membership-v1-operating-expense-e0a2a369-accounting-revenue-expense-accrual",
+    "wordId": "v1-operating-expense-e0a2a369",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 185,
+    "subcategory": "revenue-expense-accrual"
+  },
+  {
+    "id": "membership-v1-revenue-recognition-3c2de914-accounting-revenue-expense-accrual",
+    "wordId": "v1-revenue-recognition-3c2de914",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 199,
+    "subcategory": "revenue-expense-accrual"
+  },
+  {
+    "id": "membership-v1-sales-revenue-f32552fd-accounting-revenue-expense-accrual",
+    "wordId": "v1-sales-revenue-f32552fd",
+    "listId": "list-accounting",
+    "priority": 10,
+    "sortOrder": 181,
+    "subcategory": "revenue-expense-accrual"
+  },
+  {
+    "id": "membership-v1-book-value-61d6c5db-accounting-shared",
+    "wordId": "v1-book-value-61d6c5db",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 122,
+    "subcategory": "shared-financial-reporting"
+  },
+  {
+    "id": "membership-v1-free-cash-flow-0a485c50-accounting-shared",
+    "wordId": "v1-free-cash-flow-0a485c50",
+    "listId": "list-accounting",
+    "priority": 10,
+    "sortOrder": 39,
+    "subcategory": "shared-financial-reporting"
+  },
+  {
+    "id": "membership-v1-corporate-tax-d7377385-accounting-tax-reporting",
+    "wordId": "v1-corporate-tax-d7377385",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 288,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-current-tax-859f2882-accounting-tax-reporting",
+    "wordId": "v1-current-tax-859f2882",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 280,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-filing-deadline-97ff85da-accounting-tax-reporting",
+    "wordId": "v1-filing-deadline-97ff85da",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 296,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-penalty-92bd9cf6-accounting-tax-reporting",
+    "wordId": "v1-penalty-92bd9cf6",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 297,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-permanent-difference-b71f80f4-accounting-tax-reporting",
+    "wordId": "v1-permanent-difference-b71f80f4",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 284,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-tax-allowance-77ff920b-accounting-tax-reporting",
+    "wordId": "v1-tax-allowance-77ff920b",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 286,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-tax-assessment-32626e9e-accounting-tax-reporting",
+    "wordId": "v1-tax-assessment-32626e9e",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 291,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-tax-base-913e2269-accounting-tax-reporting",
+    "wordId": "v1-tax-base-913e2269",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 282,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-tax-compliance-17d2e063-accounting-tax-reporting",
+    "wordId": "v1-tax-compliance-17d2e063",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 294,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-tax-deduction-65c6b348-accounting-tax-reporting",
+    "wordId": "v1-tax-deduction-65c6b348",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 285,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-tax-expense-33040ff6-accounting-tax-reporting",
+    "wordId": "v1-tax-expense-33040ff6",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 279,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-tax-payable-5822b725-accounting-tax-reporting",
+    "wordId": "v1-tax-payable-5822b725",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 292,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-tax-planning-23220794-accounting-tax-reporting",
+    "wordId": "v1-tax-planning-23220794",
+    "listId": "list-accounting",
+    "priority": 7,
+    "sortOrder": 295,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-tax-rate-d2e628f1-accounting-tax-reporting",
+    "wordId": "v1-tax-rate-d2e628f1",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 287,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-tax-refund-69651f03-accounting-tax-reporting",
+    "wordId": "v1-tax-refund-69651f03",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 293,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-tax-return-0e992055-accounting-tax-reporting",
+    "wordId": "v1-tax-return-0e992055",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 290,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-taxable-income-7a32215e-accounting-tax-reporting",
+    "wordId": "v1-taxable-income-7a32215e",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 278,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-temporary-difference-74478fc1-accounting-tax-reporting",
+    "wordId": "v1-temporary-difference-74478fc1",
+    "listId": "list-accounting",
+    "priority": 8,
+    "sortOrder": 283,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-withholding-tax-deab529a-accounting-tax-reporting",
+    "wordId": "v1-withholding-tax-deab529a",
+    "listId": "list-accounting",
+    "priority": 9,
+    "sortOrder": 289,
+    "subcategory": "tax-reporting"
+  },
+  {
+    "id": "membership-v1-can-the-delivery-fee-be-waived-for-a-large-20fef8fa-business-advanced-sentences",
+    "wordId": "v1-can-the-delivery-fee-be-waived-for-a-large-20fef8fa",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 203,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-can-we-test-this-in-a-few-locations-first-15fa3373-business-advanced-sentences",
+    "wordId": "v1-can-we-test-this-in-a-few-locations-first-15fa3373",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 206,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-can-you-notify-us-before-changing-the-pack-0408864c-business-advanced-sentences",
+    "wordId": "v1-can-you-notify-us-before-changing-the-pack-0408864c",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 213,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-can-you-provide-monthly-sales-data-2d529d49-business-advanced-sentences",
+    "wordId": "v1-can-you-provide-monthly-sales-data-2d529d49",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 214,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-could-we-agree-on-a-fixed-price-for-three--b0cbdfd7-business-advanced-sentences",
+    "wordId": "v1-could-we-agree-on-a-fixed-price-for-three--b0cbdfd7",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 204,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-confirm-the-unit-price-for-each--6e65c962-business-advanced-sentences",
+    "wordId": "v1-could-you-confirm-the-unit-price-for-each--6e65c962",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 200,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-replace-damaged-units-in-the-nex-5d7b7f20-business-advanced-sentences",
+    "wordId": "v1-could-you-replace-damaged-units-in-the-nex-5d7b7f20",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 210,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-summarize-the-key-points-from-to-743ad40b-business-advanced-sentences",
+    "wordId": "v1-could-you-summarize-the-key-points-from-to-743ad40b",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 218,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-how-quickly-can-you-respond-to-quality-iss-bbf7613d-business-advanced-sentences",
+    "wordId": "v1-how-quickly-can-you-respond-to-quality-iss-bbf7613d",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 211,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-how-will-we-measure-sales-performance-7f86ada1-business-advanced-sentences",
+    "wordId": "v1-how-will-we-measure-sales-performance-7f86ada1",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 208,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-let-s-compare-actual-sales-with-the-foreca-127336b8-business-advanced-sentences",
+    "wordId": "v1-let-s-compare-actual-sales-with-the-foreca-127336b8",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 215,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-let-s-confirm-the-next-steps-and-owners-9467ac19-business-advanced-sentences",
+    "wordId": "v1-let-s-confirm-the-next-steps-and-owners-9467ac19",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 219,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-please-confirm-the-final-commercial-terms--38cba497-business-advanced-sentences",
+    "wordId": "v1-please-confirm-the-final-commercial-terms--38cba497",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 205,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-please-flag-any-risk-that-could-delay-deli-538bb8ca-business-advanced-sentences",
+    "wordId": "v1-please-flag-any-risk-that-could-delay-deli-538bb8ca",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 217,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-please-keep-the-same-packaging-for-the-rep-758df017-business-advanced-sentences",
+    "wordId": "v1-please-keep-the-same-packaging-for-the-rep-758df017",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 212,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-please-quote-separately-for-each-option-861ecd25-business-advanced-sentences",
+    "wordId": "v1-please-quote-separately-for-each-option-861ecd25",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 201,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-we-should-review-stock-levels-before-reord-0e8953b1-business-advanced-sentences",
+    "wordId": "v1-we-should-review-stock-levels-before-reord-0e8953b1",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 216,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-what-quantity-would-qualify-for-a-better-p-47da4008-business-advanced-sentences",
+    "wordId": "v1-what-quantity-would-qualify-for-a-better-p-47da4008",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 202,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-what-results-would-you-expect-from-the-tri-8af87cf0-business-advanced-sentences",
+    "wordId": "v1-what-results-would-you-expect-from-the-tri-8af87cf0",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 207,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-who-will-handle-customer-complaints-a447e253-business-advanced-sentences",
+    "wordId": "v1-who-will-handle-customer-complaints-a447e253",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 209,
+    "subcategory": "advanced-sentences"
+  },
+  {
+    "id": "membership-v1-can-either-party-change-the-price-unilater-8d8a1d86-business-contract-sentences",
+    "wordId": "v1-can-either-party-change-the-price-unilater-8d8a1d86",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 177,
+    "subcategory": "contract-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-put-the-agreed-terms-in-writing-b002b62d-business-contract-sentences",
+    "wordId": "v1-could-you-put-the-agreed-terms-in-writing-b002b62d",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 170,
+    "subcategory": "contract-sentences"
+  },
+  {
+    "id": "membership-v1-how-long-is-the-contract-term-53cb01e7-business-contract-sentences",
+    "wordId": "v1-how-long-is-the-contract-term-53cb01e7",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 172,
+    "subcategory": "contract-sentences"
+  },
+  {
+    "id": "membership-v1-how-will-disputes-be-resolved-07d94797-business-contract-sentences",
+    "wordId": "v1-how-will-disputes-be-resolved-07d94797",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 176,
+    "subcategory": "contract-sentences"
+  },
+  {
+    "id": "membership-v1-is-there-a-notice-period-for-termination-e93dae24-business-contract-sentences",
+    "wordId": "v1-is-there-a-notice-period-for-termination-e93dae24",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 174,
+    "subcategory": "contract-sentences"
+  },
+  {
+    "id": "membership-v1-let-s-make-sure-the-responsibilities-are-c-005fb4e2-business-contract-sentences",
+    "wordId": "v1-let-s-make-sure-the-responsibilities-are-c-005fb4e2",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 179,
+    "subcategory": "contract-sentences"
+  },
+  {
+    "id": "membership-v1-we-should-define-the-scope-of-work-clearly-fd4906bb-business-contract-sentences",
+    "wordId": "v1-we-should-define-the-scope-of-work-clearly-fd4906bb",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 178,
+    "subcategory": "contract-sentences"
+  },
+  {
+    "id": "membership-v1-what-is-the-termination-clause-ada051cd-business-contract-sentences",
+    "wordId": "v1-what-is-the-termination-clause-ada051cd",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 173,
+    "subcategory": "contract-sentences"
+  },
+  {
+    "id": "membership-v1-when-does-the-agreement-take-effect-7d39c654-business-contract-sentences",
+    "wordId": "v1-when-does-the-agreement-take-effect-7d39c654",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 171,
+    "subcategory": "contract-sentences"
+  },
+  {
+    "id": "membership-v1-who-is-responsible-if-the-product-is-damag-7586dceb-business-contract-sentences",
+    "wordId": "v1-who-is-responsible-if-the-product-is-damag-7586dceb",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 175,
+    "subcategory": "contract-sentences"
+  },
+  {
+    "id": "membership-v1-are-you-looking-for-an-exclusive-distribut-ab79067a-business-cooperation-sentences",
+    "wordId": "v1-are-you-looking-for-an-exclusive-distribut-ab79067a",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 140,
+    "subcategory": "cooperation-sentences"
+  },
+  {
+    "id": "membership-v1-can-we-review-the-cooperation-after-the-tr-83456516-business-cooperation-sentences",
+    "wordId": "v1-can-we-review-the-cooperation-after-the-tr-83456516",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 148,
+    "subcategory": "cooperation-sentences"
+  },
+  {
+    "id": "membership-v1-how-will-after-sales-issues-be-handled-beed4b78-business-cooperation-sentences",
+    "wordId": "v1-how-will-after-sales-issues-be-handled-beed4b78",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 147,
+    "subcategory": "cooperation-sentences"
+  },
+  {
+    "id": "membership-v1-i-d-like-to-clarify-our-responsibilities-b-fb1e90ef-business-cooperation-sentences",
+    "wordId": "v1-i-d-like-to-clarify-our-responsibilities-b-fb1e90ef",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 149,
+    "subcategory": "cooperation-sentences"
+  },
+  {
+    "id": "membership-v1-is-there-a-minimum-sales-target-b9f53f25-business-cooperation-sentences",
+    "wordId": "v1-is-there-a-minimum-sales-target-b9f53f25",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 143,
+    "subcategory": "cooperation-sentences"
+  },
+  {
+    "id": "membership-v1-what-support-can-you-provide-to-distributo-949bf0f4-business-cooperation-sentences",
+    "wordId": "v1-what-support-can-you-provide-to-distributo-949bf0f4",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 144,
+    "subcategory": "cooperation-sentences"
+  },
+  {
+    "id": "membership-v1-which-territory-would-the-agreement-cover-2e0e90a6-business-cooperation-sentences",
+    "wordId": "v1-which-territory-would-the-agreement-cover-2e0e90a6",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 142,
+    "subcategory": "cooperation-sentences"
+  },
+  {
+    "id": "membership-v1-who-owns-the-equipment-after-the-deposit-i-15977c19-business-cooperation-sentences",
+    "wordId": "v1-who-owns-the-equipment-after-the-deposit-i-15977c19",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 146,
+    "subcategory": "cooperation-sentences"
+  },
+  {
+    "id": "membership-v1-who-will-be-responsible-for-equipment-main-e4bf75df-business-cooperation-sentences",
+    "wordId": "v1-who-will-be-responsible-for-equipment-main-e4bf75df",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 145,
+    "subcategory": "cooperation-sentences"
+  },
+  {
+    "id": "membership-v1-would-this-be-an-exclusive-or-non-exclusiv-17f522f9-business-cooperation-sentences",
+    "wordId": "v1-would-this-be-an-exclusive-or-non-exclusiv-17f522f9",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 141,
+    "subcategory": "cooperation-sentences"
+  },
+  {
+    "id": "membership-v1-ambient-temperature-2c932213-business-logistics-inventory",
+    "wordId": "v1-ambient-temperature-2c932213",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 248,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-cold-chain-a354a8a6-business-logistics-inventory",
+    "wordId": "v1-cold-chain-a354a8a6",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 247,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-customs-clearance-659f6972-business-logistics-inventory",
+    "wordId": "v1-customs-clearance-659f6972",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 252,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-damaged-goods-9c1cce9e-business-logistics-inventory",
+    "wordId": "v1-damaged-goods-9c1cce9e",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 256,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-delivery-4c55ec36-business-logistics-inventory",
+    "wordId": "v1-delivery-4c55ec36",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 237,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-delivery-fee-9192ea3d-business-logistics-inventory",
+    "wordId": "v1-delivery-fee-9192ea3d",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 240,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-estimated-delivery-date-f05a4c4e-business-logistics-inventory",
+    "wordId": "v1-estimated-delivery-date-f05a4c4e",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 251,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-export-document-b158acd5-business-logistics-inventory",
+    "wordId": "v1-export-document-b158acd5",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 254,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-freight-a94be45d-business-logistics-inventory",
+    "wordId": "v1-freight-a94be45d",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 238,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-freight-charge-bcdfd098-business-logistics-inventory",
+    "wordId": "v1-freight-charge-bcdfd098",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 239,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-frozen-bc677144-business-logistics-inventory",
+    "wordId": "v1-frozen-bc677144",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 250,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-import-permit-16acdfc3-business-logistics-inventory",
+    "wordId": "v1-import-permit-16acdfc3",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 253,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-in-stock-981a3992-business-logistics-inventory",
+    "wordId": "v1-in-stock-981a3992",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 24,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-out-of-stock-a29e9b64-business-logistics-inventory",
+    "wordId": "v1-out-of-stock-a29e9b64",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 23,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-packing-list-cc6db0fd-business-logistics-inventory",
+    "wordId": "v1-packing-list-cc6db0fd",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 255,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-ready-stock-c8fba712-business-logistics-inventory",
+    "wordId": "v1-ready-stock-c8fba712",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 245,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-refrigerated-294d1cda-business-logistics-inventory",
+    "wordId": "v1-refrigerated-294d1cda",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 249,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-restock-b7922a54-business-logistics-inventory",
+    "wordId": "v1-restock-b7922a54",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 246,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-shipment-312a4d32-business-logistics-inventory",
+    "wordId": "v1-shipment-312a4d32",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 235,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-shipping-4fa8626c-business-logistics-inventory",
+    "wordId": "v1-shipping-4fa8626c",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 236,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-shipping-address-dcff6870-business-logistics-inventory",
+    "wordId": "v1-shipping-address-dcff6870",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 241,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-stock-level-8653950b-business-logistics-inventory",
+    "wordId": "v1-stock-level-8653950b",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 244,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-tracking-number-5765a001-business-logistics-inventory",
+    "wordId": "v1-tracking-number-5765a001",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 131,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-warehouse-7c70dc5b-business-logistics-inventory",
+    "wordId": "v1-warehouse-7c70dc5b",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 242,
+    "subcategory": "logistics-inventory"
+  },
+  {
+    "id": "membership-v1-can-you-deliver-directly-to-the-customer-s-1c48ca82-business-logistics-sentences",
+    "wordId": "v1-can-you-deliver-directly-to-the-customer-s-1c48ca82",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 126,
+    "subcategory": "logistics-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-send-me-the-tracking-number-once-2ffcb5ca-business-logistics-sentences",
+    "wordId": "v1-could-you-send-me-the-tracking-number-once-2ffcb5ca",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 123,
+    "subcategory": "logistics-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-share-the-packing-list-before-sh-4b1a998d-business-logistics-sentences",
+    "wordId": "v1-could-you-share-the-packing-list-before-sh-4b1a998d",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 129,
+    "subcategory": "logistics-sentences"
+  },
+  {
+    "id": "membership-v1-do-you-have-ready-stock-95d9eecd-business-logistics-sentences",
+    "wordId": "v1-do-you-have-ready-stock-95d9eecd",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 120,
+    "subcategory": "logistics-sentences"
+  },
+  {
+    "id": "membership-v1-how-do-you-handle-out-of-stock-items-e67ff0ea-business-logistics-sentences",
+    "wordId": "v1-how-do-you-handle-out-of-stock-items-e67ff0ea",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 128,
+    "subcategory": "logistics-sentences"
+  },
+  {
+    "id": "membership-v1-how-soon-can-you-ship-the-order-a0d9b6f7-business-logistics-sentences",
+    "wordId": "v1-how-soon-can-you-ship-the-order-a0d9b6f7",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 121,
+    "subcategory": "logistics-sentences"
+  },
+  {
+    "id": "membership-v1-is-cold-chain-delivery-required-333910b2-business-logistics-sentences",
+    "wordId": "v1-is-cold-chain-delivery-required-333910b2",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 125,
+    "subcategory": "logistics-sentences"
+  },
+  {
+    "id": "membership-v1-what-happens-if-the-goods-arrive-damaged-9562a170-business-logistics-sentences",
+    "wordId": "v1-what-happens-if-the-goods-arrive-damaged-9562a170",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 127,
+    "subcategory": "logistics-sentences"
+  },
+  {
+    "id": "membership-v1-what-is-the-estimated-delivery-date-7bd5009b-business-logistics-sentences",
+    "wordId": "v1-what-is-the-estimated-delivery-date-7bd5009b",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 122,
+    "subcategory": "logistics-sentences"
+  },
+  {
+    "id": "membership-v1-who-is-responsible-for-the-delivery-fee-181ee75b-business-logistics-sentences",
+    "wordId": "v1-who-is-responsible-for-the-delivery-fee-181ee75b",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 124,
+    "subcategory": "logistics-sentences"
+  },
+  {
+    "id": "membership-v1-action-item-6f789a74-business-meeting-communication",
+    "wordId": "v1-action-item-6f789a74",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 279,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-attachment-3bcfae42-business-meeting-communication",
+    "wordId": "v1-attachment-3bcfae42",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 285,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-available-time-slot-eae873cf-business-meeting-communication",
+    "wordId": "v1-available-time-slot-eae873cf",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 290,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-business-plan-56ddecbd-business-meeting-communication",
+    "wordId": "v1-business-plan-56ddecbd",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 287,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-confirm-f77acae3-business-meeting-communication",
+    "wordId": "v1-confirm-f77acae3",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 282,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-contact-person-e911c469-business-meeting-communication",
+    "wordId": "v1-contact-person-e911c469",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 288,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-follow-up-89092aeb-business-meeting-communication",
+    "wordId": "v1-follow-up-89092aeb",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 280,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-follow-up-with-dcfac254-business-meeting-communication",
+    "wordId": "v1-follow-up-with-dcfac254",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 281,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-get-back-to-you-af2ef1a2-business-meeting-communication",
+    "wordId": "v1-get-back-to-you-af2ef1a2",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 295,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-keep-me-posted-f23d6616-business-meeting-communication",
+    "wordId": "v1-keep-me-posted-f23d6616",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 294,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-let-me-check-51022d3e-business-meeting-communication",
+    "wordId": "v1-let-me-check-51022d3e",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 296,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-meeting-agenda-8ef1b899-business-meeting-communication",
+    "wordId": "v1-meeting-agenda-8ef1b899",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 277,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-meeting-minutes-eb270775-business-meeting-communication",
+    "wordId": "v1-meeting-minutes-eb270775",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 278,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-point-of-contact-8255ce68-business-meeting-communication",
+    "wordId": "v1-point-of-contact-8255ce68",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 289,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-proposal-e7c681ae-business-meeting-communication",
+    "wordId": "v1-proposal-e7c681ae",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 286,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-reschedule-a-meeting-ffd67cbe-business-meeting-communication",
+    "wordId": "v1-reschedule-a-meeting-ffd67cbe",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 292,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-schedule-a-meeting-cba0139f-business-meeting-communication",
+    "wordId": "v1-schedule-a-meeting-cba0139f",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 291,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-send-a-reminder-814ac28d-business-meeting-communication",
+    "wordId": "v1-send-a-reminder-814ac28d",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 293,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-update-355b603d-business-meeting-communication",
+    "wordId": "v1-update-355b603d",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 284,
+    "subcategory": "meeting-communication"
+  },
+  {
+    "id": "membership-v1-best-price-ee844d85-business-negotiation",
+    "wordId": "v1-best-price-ee844d85",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 202,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-close-the-deal-3eeefb7e-business-negotiation",
+    "wordId": "v1-close-the-deal-3eeefb7e",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 218,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-commercial-terms-ed3a960a-business-negotiation",
+    "wordId": "v1-commercial-terms-ed3a960a",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 206,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-counteroffer-16980138-business-negotiation",
+    "wordId": "v1-counteroffer-16980138",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 201,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-exclusive-distribution-f73c5829-business-negotiation",
+    "wordId": "v1-exclusive-distribution-f73c5829",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 207,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-final-offer-adfcbfd2-business-negotiation",
+    "wordId": "v1-final-offer-adfcbfd2",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 216,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-flexibility-e0c8fd85-business-negotiation",
+    "wordId": "v1-flexibility-e0c8fd85",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 215,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-long-term-cooperation-576a4f06-business-negotiation",
+    "wordId": "v1-long-term-cooperation-576a4f06",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 213,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-mutual-benefit-b04a4e69-business-negotiation",
+    "wordId": "v1-mutual-benefit-b04a4e69",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 214,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-negotiable-7e0a21bc-business-negotiation",
+    "wordId": "v1-negotiable-7e0a21bc",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 200,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-negotiation-3c355225-business-negotiation",
+    "wordId": "v1-negotiation-3c355225",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 199,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-non-exclusive-e918fd91-business-negotiation",
+    "wordId": "v1-non-exclusive-e918fd91",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 208,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-price-adjustment-a3c06b3c-business-negotiation",
+    "wordId": "v1-price-adjustment-a3c06b3c",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 204,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-reach-an-agreement-b6621b4e-business-negotiation",
+    "wordId": "v1-reach-an-agreement-b6621b4e",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 217,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-sales-target-34d5261f-business-negotiation",
+    "wordId": "v1-sales-target-34d5261f",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 210,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-target-price-1e2c57a2-business-negotiation",
+    "wordId": "v1-target-price-1e2c57a2",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 203,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-terms-and-conditions-5498ecde-business-negotiation",
+    "wordId": "v1-terms-and-conditions-5498ecde",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 205,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-territory-0bdb506a-business-negotiation",
+    "wordId": "v1-territory-0bdb506a",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 209,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-trial-period-26971099-business-negotiation",
+    "wordId": "v1-trial-period-26971099",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 212,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-volume-commitment-5ed63201-business-negotiation",
+    "wordId": "v1-volume-commitment-5ed63201",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 211,
+    "subcategory": "negotiation"
+  },
+  {
+    "id": "membership-v1-can-we-use-the-same-terms-for-the-next-ord-b1343c72-business-operations-sentences",
+    "wordId": "v1-can-we-use-the-same-terms-for-the-next-ord-b1343c72",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 183,
+    "subcategory": "operations-sentences"
+  },
+  {
+    "id": "membership-v1-can-you-send-me-an-update-by-tomorrow-f13f5932-business-operations-sentences",
+    "wordId": "v1-can-you-send-me-an-update-by-tomorrow-f13f5932",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 187,
+    "subcategory": "operations-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-confirm-the-exact-product-name-a-88ba61ab-business-operations-sentences",
+    "wordId": "v1-could-you-confirm-the-exact-product-name-a-88ba61ab",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 180,
+    "subcategory": "operations-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-notify-me-before-the-driver-arri-6f813c2b-business-operations-sentences",
+    "wordId": "v1-could-you-notify-me-before-the-driver-arri-6f813c2b",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 185,
+    "subcategory": "operations-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-send-the-revised-document-today-66d98829-business-operations-sentences",
+    "wordId": "v1-could-you-send-the-revised-document-today-66d98829",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 182,
+    "subcategory": "operations-sentences"
+  },
+  {
+    "id": "membership-v1-i-ll-review-the-numbers-and-get-back-to-yo-303646a2-business-operations-sentences",
+    "wordId": "v1-i-ll-review-the-numbers-and-get-back-to-yo-303646a2",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 188,
+    "subcategory": "operations-sentences"
+  },
+  {
+    "id": "membership-v1-let-s-finalize-the-details-before-placing--2dc3b768-business-operations-sentences",
+    "wordId": "v1-let-s-finalize-the-details-before-placing--2dc3b768",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 189,
+    "subcategory": "operations-sentences"
+  },
+  {
+    "id": "membership-v1-please-confirm-the-final-quantity-before-s-21ab8fad-business-operations-sentences",
+    "wordId": "v1-please-confirm-the-final-quantity-before-s-21ab8fad",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 184,
+    "subcategory": "operations-sentences"
+  },
+  {
+    "id": "membership-v1-please-let-me-know-if-any-item-is-unavaila-5aee75dd-business-operations-sentences",
+    "wordId": "v1-please-let-me-know-if-any-item-is-unavaila-5aee75dd",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 181,
+    "subcategory": "operations-sentences"
+  },
+  {
+    "id": "membership-v1-who-should-i-contact-if-there-is-a-problem-0ed532b0-business-operations-sentences",
+    "wordId": "v1-who-should-i-contact-if-there-is-a-problem-0ed532b0",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 186,
+    "subcategory": "operations-sentences"
+  },
+  {
+    "id": "membership-v1-back-order-0a03f93e-business-ordering-moq",
+    "wordId": "v1-back-order-0a03f93e",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 193,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-cancel-an-order-386e425f-business-ordering-moq",
+    "wordId": "v1-cancel-an-order-386e425f",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 194,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-carton-1b88292e-business-ordering-moq",
+    "wordId": "v1-carton-1b88292e",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 183,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-case-pack-605872e0-business-ordering-moq",
+    "wordId": "v1-case-pack-605872e0",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 184,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-lead-time-9f6ec74f-business-ordering-moq",
+    "wordId": "v1-lead-time-9f6ec74f",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 196,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-minimum-order-quantity-df30feee-business-ordering-moq",
+    "wordId": "v1-minimum-order-quantity-df30feee",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 180,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-minimum-order-value-ad4fd6a1-business-ordering-moq",
+    "wordId": "v1-minimum-order-value-ad4fd6a1",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 181,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-mixed-order-701a8f66-business-ordering-moq",
+    "wordId": "v1-mixed-order-701a8f66",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 188,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-moq-3cd94092-business-ordering-moq",
+    "wordId": "v1-moq-3cd94092",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 179,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-order-confirmation-f9145c82-business-ordering-moq",
+    "wordId": "v1-order-confirmation-f9145c82",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 191,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-order-quantity-55338a2a-business-ordering-moq",
+    "wordId": "v1-order-quantity-55338a2a",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 182,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-order-status-960165bd-business-ordering-moq",
+    "wordId": "v1-order-status-960165bd",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 195,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-per-carton-1110b893-business-ordering-moq",
+    "wordId": "v1-per-carton-1110b893",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 185,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-per-flavour-1c3b4b9b-business-ordering-moq",
+    "wordId": "v1-per-flavour-1c3b4b9b",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 187,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-per-unit-af869707-business-ordering-moq",
+    "wordId": "v1-per-unit-af869707",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 186,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-place-an-order-14d85771-business-ordering-moq",
+    "wordId": "v1-place-an-order-14d85771",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 189,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-production-lead-time-4477d14d-business-ordering-moq",
+    "wordId": "v1-production-lead-time-4477d14d",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 197,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-reorder-91aec8f8-business-ordering-moq",
+    "wordId": "v1-reorder-91aec8f8",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 198,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-repeat-order-420818e1-business-ordering-moq",
+    "wordId": "v1-repeat-order-420818e1",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 192,
+    "subcategory": "ordering-moq"
+  },
+  {
+    "id": "membership-v1-can-i-order-three-cartons-with-mixed-skus-42923a99-business-ordering-sentences",
+    "wordId": "v1-can-i-order-three-cartons-with-mixed-skus-42923a99",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 106,
+    "subcategory": "ordering-sentences"
+  },
+  {
+    "id": "membership-v1-can-we-mix-different-flavours-in-one-order-85243f37-business-ordering-sentences",
+    "wordId": "v1-can-we-mix-different-flavours-in-one-order-85243f37",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 103,
+    "subcategory": "ordering-sentences"
+  },
+  {
+    "id": "membership-v1-can-we-place-a-repeat-order-at-the-same-pr-3ab7cd03-business-ordering-sentences",
+    "wordId": "v1-can-we-place-a-repeat-order-at-the-same-pr-3ab7cd03",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 108,
+    "subcategory": "ordering-sentences"
+  },
+  {
+    "id": "membership-v1-can-we-start-with-a-smaller-trial-order-646b9637-business-ordering-sentences",
+    "wordId": "v1-can-we-start-with-a-smaller-trial-order-646b9637",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 104,
+    "subcategory": "ordering-sentences"
+  },
+  {
+    "id": "membership-v1-how-many-units-are-there-per-carton-ae029a16-business-ordering-sentences",
+    "wordId": "v1-how-many-units-are-there-per-carton-ae029a16",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 105,
+    "subcategory": "ordering-sentences"
+  },
+  {
+    "id": "membership-v1-is-the-moq-per-flavour-5f21aec0-business-ordering-sentences",
+    "wordId": "v1-is-the-moq-per-flavour-5f21aec0",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 102,
+    "subcategory": "ordering-sentences"
+  },
+  {
+    "id": "membership-v1-is-the-moq-per-sku-or-for-the-total-order-0d6cb0a8-business-ordering-sentences",
+    "wordId": "v1-is-the-moq-per-sku-or-for-the-total-order-0d6cb0a8",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 101,
+    "subcategory": "ordering-sentences"
+  },
+  {
+    "id": "membership-v1-what-s-the-lead-time-after-order-confirmat-8d97a9d4-business-ordering-sentences",
+    "wordId": "v1-what-s-the-lead-time-after-order-confirmat-8d97a9d4",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 109,
+    "subcategory": "ordering-sentences"
+  },
+  {
+    "id": "membership-v1-what-s-your-moq-6bcde303-business-ordering-sentences",
+    "wordId": "v1-what-s-your-moq-6bcde303",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 100,
+    "subcategory": "ordering-sentences"
+  },
+  {
+    "id": "membership-v1-when-can-you-confirm-the-order-162d1de0-business-ordering-sentences",
+    "wordId": "v1-when-can-you-confirm-the-order-162d1de0",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 107,
+    "subcategory": "ordering-sentences"
+  },
+  {
+    "id": "membership-v1-30-day-terms-9681feef-business-payment",
+    "wordId": "v1-30-day-terms-9681feef",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 234,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-advance-payment-e12398c5-business-payment",
+    "wordId": "v1-advance-payment-e12398c5",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 222,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-balance-payment-3ccbf883-business-payment",
+    "wordId": "v1-balance-payment-3ccbf883",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 223,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-bank-transfer-c499365c-business-payment",
+    "wordId": "v1-bank-transfer-c499365c",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 94,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-commercial-invoice-e4195de1-business-payment",
+    "wordId": "v1-commercial-invoice-e4195de1",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 229,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-credit-term-3037d095-business-payment",
+    "wordId": "v1-credit-term-3037d095",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 233,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-full-payment-741c53a5-business-payment",
+    "wordId": "v1-full-payment-741c53a5",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 224,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-outstanding-payment-5293d657-business-payment",
+    "wordId": "v1-outstanding-payment-5293d657",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 231,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-overdue-payment-5ac89728-business-payment",
+    "wordId": "v1-overdue-payment-5ac89728",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 232,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-partial-payment-eb67cf67-business-payment",
+    "wordId": "v1-partial-payment-eb67cf67",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 225,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-payment-confirmation-44a6060a-business-payment",
+    "wordId": "v1-payment-confirmation-44a6060a",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 109,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-payment-due-date-d8810957-business-payment",
+    "wordId": "v1-payment-due-date-d8810957",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 226,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-payment-method-9ee53191-business-payment",
+    "wordId": "v1-payment-method-9ee53191",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 220,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-payment-receipt-202e2527-business-payment",
+    "wordId": "v1-payment-receipt-202e2527",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 230,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-payment-terms-6bcfff36-business-payment",
+    "wordId": "v1-payment-terms-6bcfff36",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 219,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-pro-forma-invoice-24da2670-business-payment",
+    "wordId": "v1-pro-forma-invoice-24da2670",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 228,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-proof-of-payment-4424e83d-business-payment",
+    "wordId": "v1-proof-of-payment-4424e83d",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 138,
+    "subcategory": "payment"
+  },
+  {
+    "id": "membership-v1-can-we-pay-by-bank-transfer-37bc09c2-business-payment-sentences",
+    "wordId": "v1-can-we-pay-by-bank-transfer-37bc09c2",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 113,
+    "subcategory": "payment-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-confirm-whether-the-payment-has--7e4e07e2-business-payment-sentences",
+    "wordId": "v1-could-you-confirm-whether-the-payment-has--7e4e07e2",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 118,
+    "subcategory": "payment-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-issue-an-invoice-b4612a2d-business-payment-sentences",
+    "wordId": "v1-could-you-issue-an-invoice-b4612a2d",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 115,
+    "subcategory": "payment-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-send-me-the-pro-forma-invoice-cc6f870a-business-payment-sentences",
+    "wordId": "v1-could-you-send-me-the-pro-forma-invoice-cc6f870a",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 116,
+    "subcategory": "payment-sentences"
+  },
+  {
+    "id": "membership-v1-do-you-offer-credit-terms-39c9cf88-business-payment-sentences",
+    "wordId": "v1-do-you-offer-credit-terms-39c9cf88",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 114,
+    "subcategory": "payment-sentences"
+  },
+  {
+    "id": "membership-v1-how-much-deposit-is-required-cb910514-business-payment-sentences",
+    "wordId": "v1-how-much-deposit-is-required-cb910514",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 111,
+    "subcategory": "payment-sentences"
+  },
+  {
+    "id": "membership-v1-i-ve-sent-the-payment-please-confirm-recei-9f7b9eb7-business-payment-sentences",
+    "wordId": "v1-i-ve-sent-the-payment-please-confirm-recei-9f7b9eb7",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 117,
+    "subcategory": "payment-sentences"
+  },
+  {
+    "id": "membership-v1-please-find-the-proof-of-payment-attached-1e22d5e2-business-payment-sentences",
+    "wordId": "v1-please-find-the-proof-of-payment-attached-1e22d5e2",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 119,
+    "subcategory": "payment-sentences"
+  },
+  {
+    "id": "membership-v1-what-are-your-payment-terms-d56fb8c9-business-payment-sentences",
+    "wordId": "v1-what-are-your-payment-terms-d56fb8c9",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 110,
+    "subcategory": "payment-sentences"
+  },
+  {
+    "id": "membership-v1-when-is-the-balance-payment-due-e4538007-business-payment-sentences",
+    "wordId": "v1-when-is-the-balance-payment-due-e4538007",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 112,
+    "subcategory": "payment-sentences"
+  },
+  {
+    "id": "membership-v1-bulk-discount-22079084-business-pricing-quotation",
+    "wordId": "v1-bulk-discount-22079084",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 173,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-commission-73c8a614-business-pricing-quotation",
+    "wordId": "v1-commission-73c8a614",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 171,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-cost-price-77ef8c2c-business-pricing-quotation",
+    "wordId": "v1-cost-price-77ef8c2c",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 167,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-delivery-included-4f576711-business-pricing-quotation",
+    "wordId": "v1-delivery-included-4f576711",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 177,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-gross-margin-8c94c1db-business-pricing-quotation",
+    "wordId": "v1-gross-margin-8c94c1db",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 170,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-margin-e7be12d5-business-pricing-quotation",
+    "wordId": "v1-margin-e7be12d5",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 169,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-markup-ca3b6870-business-pricing-quotation",
+    "wordId": "v1-markup-ca3b6870",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 168,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-net-price-6dd83614-business-pricing-quotation",
+    "wordId": "v1-net-price-6dd83614",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 178,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-price-break-cd97a7de-business-pricing-quotation",
+    "wordId": "v1-price-break-cd97a7de",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 175,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-price-list-6c38c0d8-business-pricing-quotation",
+    "wordId": "v1-price-list-6c38c0d8",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 162,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-price-validity-bb80074d-business-pricing-quotation",
+    "wordId": "v1-price-validity-bb80074d",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 176,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-promotional-price-bde82643-business-pricing-quotation",
+    "wordId": "v1-promotional-price-bde82643",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 174,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-quotation-7fd09806-business-pricing-quotation",
+    "wordId": "v1-quotation-7fd09806",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 160,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-quote-1af9ada9-business-pricing-quotation",
+    "wordId": "v1-quote-1af9ada9",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 161,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-recommended-retail-price-72b06c14-business-pricing-quotation",
+    "wordId": "v1-recommended-retail-price-72b06c14",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 166,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-retail-price-da14a152-business-pricing-quotation",
+    "wordId": "v1-retail-price-da14a152",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 165,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-tax-included-52d3f6a8-business-pricing-quotation",
+    "wordId": "v1-tax-included-52d3f6a8",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 4,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-unit-price-56d02d9a-business-pricing-quotation",
+    "wordId": "v1-unit-price-56d02d9a",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 163,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-wholesale-price-f0861daa-business-pricing-quotation",
+    "wordId": "v1-wholesale-price-f0861daa",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 164,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-can-you-provide-the-ingredient-list-a50a5ab8-business-product-sample-sentences",
+    "wordId": "v1-can-you-provide-the-ingredient-list-a50a5ab8",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 137,
+    "subcategory": "product-sample-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-send-me-high-resolution-product--396bb59a-business-product-sample-sentences",
+    "wordId": "v1-could-you-send-me-high-resolution-product--396bb59a",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 139,
+    "subcategory": "product-sample-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-send-me-some-samples-first-07da6969-business-product-sample-sentences",
+    "wordId": "v1-could-you-send-me-some-samples-first-07da6969",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 132,
+    "subcategory": "product-sample-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-send-me-the-product-specificatio-9f4421a2-business-product-sample-sentences",
+    "wordId": "v1-could-you-send-me-the-product-specificatio-9f4421a2",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 130,
+    "subcategory": "product-sample-sentences"
+  },
+  {
+    "id": "membership-v1-do-you-have-a-product-catalogue-ed39cf1a-business-product-sample-sentences",
+    "wordId": "v1-do-you-have-a-product-catalogue-ed39cf1a",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 131,
+    "subcategory": "product-sample-sentences"
+  },
+  {
+    "id": "membership-v1-do-you-have-the-relevant-certificates-ae4a1000-business-product-sample-sentences",
+    "wordId": "v1-do-you-have-the-relevant-certificates-ae4a1000",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 138,
+    "subcategory": "product-sample-sentences"
+  },
+  {
+    "id": "membership-v1-does-the-packaging-support-retail-display-bb8dd2d9-business-product-sample-sentences",
+    "wordId": "v1-does-the-packaging-support-retail-display-bb8dd2d9",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 136,
+    "subcategory": "product-sample-sentences"
+  },
+  {
+    "id": "membership-v1-how-should-this-product-be-stored-012241a7-business-product-sample-sentences",
+    "wordId": "v1-how-should-this-product-be-stored-012241a7",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 135,
+    "subcategory": "product-sample-sentences"
+  },
+  {
+    "id": "membership-v1-is-there-a-charge-for-samples-fcf45a6b-business-product-sample-sentences",
+    "wordId": "v1-is-there-a-charge-for-samples-fcf45a6b",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 133,
+    "subcategory": "product-sample-sentences"
+  },
+  {
+    "id": "membership-v1-what-s-the-shelf-life-of-this-product-3ad327c7-business-product-sample-sentences",
+    "wordId": "v1-what-s-the-shelf-life-of-this-product-3ad327c7",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 134,
+    "subcategory": "product-sample-sentences"
+  },
+  {
+    "id": "membership-v1-after-sales-service-4d474ac0-business-quality-compliance",
+    "wordId": "v1-after-sales-service-4d474ac0",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 318,
+    "subcategory": "quality-compliance"
+  },
+  {
+    "id": "membership-v1-batch-number-00f74b51-business-quality-compliance",
+    "wordId": "v1-batch-number-00f74b51",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 321,
+    "subcategory": "quality-compliance"
+  },
+  {
+    "id": "membership-v1-certificate-of-analysis-6365f8ce-business-quality-compliance",
+    "wordId": "v1-certificate-of-analysis-6365f8ce",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 324,
+    "subcategory": "quality-compliance"
+  },
+  {
+    "id": "membership-v1-complaint-a488e573-business-quality-compliance",
+    "wordId": "v1-complaint-a488e573",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 317,
+    "subcategory": "quality-compliance"
+  },
+  {
+    "id": "membership-v1-compliance-document-9901a2a2-business-quality-compliance",
+    "wordId": "v1-compliance-document-9901a2a2",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 325,
+    "subcategory": "quality-compliance"
+  },
+  {
+    "id": "membership-v1-defective-product-001dca7e-business-quality-compliance",
+    "wordId": "v1-defective-product-001dca7e",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 315,
+    "subcategory": "quality-compliance"
+  },
+  {
+    "id": "membership-v1-expiry-date-9c1ff1e6-business-quality-compliance",
+    "wordId": "v1-expiry-date-9c1ff1e6",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 322,
+    "subcategory": "quality-compliance"
+  },
+  {
+    "id": "membership-v1-manufacturing-date-6bd3aba6-business-quality-compliance",
+    "wordId": "v1-manufacturing-date-6bd3aba6",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 323,
+    "subcategory": "quality-compliance"
+  },
+  {
+    "id": "membership-v1-product-label-9beb1e98-business-quality-compliance",
+    "wordId": "v1-product-label-9beb1e98",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 326,
+    "subcategory": "quality-compliance"
+  },
+  {
+    "id": "membership-v1-product-recall-aaa88eab-business-quality-compliance",
+    "wordId": "v1-product-recall-aaa88eab",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 320,
+    "subcategory": "quality-compliance"
+  },
+  {
+    "id": "membership-v1-quality-control-db1be02d-business-quality-compliance",
+    "wordId": "v1-quality-control-db1be02d",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 312,
+    "subcategory": "quality-compliance"
+  },
+  {
+    "id": "membership-v1-quality-issue-4f1b42b1-business-quality-compliance",
+    "wordId": "v1-quality-issue-4f1b42b1",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 314,
+    "subcategory": "quality-compliance"
+  },
+  {
+    "id": "membership-v1-quality-standard-9589b6fd-business-quality-compliance",
+    "wordId": "v1-quality-standard-9589b6fd",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 313,
+    "subcategory": "quality-compliance"
+  },
+  {
+    "id": "membership-v1-replacement-a7d2dcaa-business-quality-compliance",
+    "wordId": "v1-replacement-a7d2dcaa",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 316,
+    "subcategory": "quality-compliance"
+  },
+  {
+    "id": "membership-v1-return-procedure-ec211320-business-quality-compliance",
+    "wordId": "v1-return-procedure-ec211320",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 319,
+    "subcategory": "quality-compliance"
+  },
+  {
+    "id": "membership-v1-can-you-break-down-the-cost-for-me-5a815267-business-quotation-sentences",
+    "wordId": "v1-can-you-break-down-the-cost-for-me-5a815267",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 99,
+    "subcategory": "quotation-sentences"
+  },
+  {
+    "id": "membership-v1-can-you-offer-a-better-price-for-a-larger--9aaadd1b-business-quotation-sentences",
+    "wordId": "v1-can-you-offer-a-better-price-for-a-larger--9aaadd1b",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 94,
+    "subcategory": "quotation-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-revise-the-quotation-baaf4973-business-quotation-sentences",
+    "wordId": "v1-could-you-revise-the-quotation-baaf4973",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 98,
+    "subcategory": "quotation-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-send-me-a-quotation-for-100-unit-3526a209-business-quotation-sentences",
+    "wordId": "v1-could-you-send-me-a-quotation-for-100-unit-3526a209",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 91,
+    "subcategory": "quotation-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-send-me-your-latest-price-list-ee501924-business-quotation-sentences",
+    "wordId": "v1-could-you-send-me-your-latest-price-list-ee501924",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 90,
+    "subcategory": "quotation-sentences"
+  },
+  {
+    "id": "membership-v1-does-this-price-include-delivery-bf30dd69-business-quotation-sentences",
+    "wordId": "v1-does-this-price-include-delivery-bf30dd69",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 95,
+    "subcategory": "quotation-sentences"
+  },
+  {
+    "id": "membership-v1-does-this-price-include-tax-99f0692b-business-quotation-sentences",
+    "wordId": "v1-does-this-price-include-tax-99f0692b",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 96,
+    "subcategory": "quotation-sentences"
+  },
+  {
+    "id": "membership-v1-how-long-is-this-quotation-valid-c376143b-business-quotation-sentences",
+    "wordId": "v1-how-long-is-this-quotation-valid-c376143b",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 97,
+    "subcategory": "quotation-sentences"
+  },
+  {
+    "id": "membership-v1-is-there-any-room-for-negotiation-52e08496-business-quotation-sentences",
+    "wordId": "v1-is-there-any-room-for-negotiation-52e08496",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 93,
+    "subcategory": "quotation-sentences"
+  },
+  {
+    "id": "membership-v1-is-this-your-best-price-a274b9a9-business-quotation-sentences",
+    "wordId": "v1-is-this-your-best-price-a274b9a9",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 92,
+    "subcategory": "quotation-sentences"
+  },
+  {
+    "id": "membership-v1-account-management-5bc2ba54-business-sales-distribution",
+    "wordId": "v1-account-management-5bc2ba54",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 276,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-customer-feedback-c0365f91-business-sales-distribution",
+    "wordId": "v1-customer-feedback-c0365f91",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 269,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-distribution-channel-4a068b5d-business-sales-distribution",
+    "wordId": "v1-distribution-channel-4a068b5d",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 258,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-in-store-promotion-a287d919-business-sales-distribution",
+    "wordId": "v1-in-store-promotion-a287d919",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 272,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-market-entry-409aea6e-business-sales-distribution",
+    "wordId": "v1-market-entry-409aea6e",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 262,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-point-of-sale-3afed768-business-sales-distribution",
+    "wordId": "v1-point-of-sale-3afed768",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 259,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-product-display-d04e5f9d-business-sales-distribution",
+    "wordId": "v1-product-display-d04e5f9d",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 270,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-promotional-material-b74fa63e-business-sales-distribution",
+    "wordId": "v1-promotional-material-b74fa63e",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 271,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-repeat-purchase-f7d781a8-business-sales-distribution",
+    "wordId": "v1-repeat-purchase-f7d781a8",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 268,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-retail-outlet-115327fb-business-sales-distribution",
+    "wordId": "v1-retail-outlet-115327fb",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 260,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-sales-channel-92e0c1d3-business-sales-distribution",
+    "wordId": "v1-sales-channel-92e0c1d3",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 257,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-sales-forecast-362bbad4-business-sales-distribution",
+    "wordId": "v1-sales-forecast-362bbad4",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 275,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-sales-volume-f3d6b55a-business-sales-distribution",
+    "wordId": "v1-sales-volume-f3d6b55a",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 266,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-sampling-event-87d5f401-business-sales-distribution",
+    "wordId": "v1-sampling-event-87d5f401",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 273,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-sell-through-rate-2db24c78-business-sales-distribution",
+    "wordId": "v1-sell-through-rate-2db24c78",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 267,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-store-placement-f4b66efb-business-sales-distribution",
+    "wordId": "v1-store-placement-f4b66efb",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 261,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-target-customer-8987b77b-business-sales-distribution",
+    "wordId": "v1-target-customer-8987b77b",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 264,
+    "subcategory": "sales-distribution"
+  },
+  {
+    "id": "membership-v1-can-you-provide-promotional-materials-99d3f4c3-business-sales-ops-sentences",
+    "wordId": "v1-can-you-provide-promotional-materials-99d3f4c3",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 167,
+    "subcategory": "sales-ops-sentences"
+  },
+  {
+    "id": "membership-v1-do-you-have-enough-stock-for-the-promotion-0f7be069-business-sales-ops-sentences",
+    "wordId": "v1-do-you-have-enough-stock-for-the-promotion-0f7be069",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 165,
+    "subcategory": "sales-ops-sentences"
+  },
+  {
+    "id": "membership-v1-how-often-do-customers-reorder-98405869-business-sales-ops-sentences",
+    "wordId": "v1-how-often-do-customers-reorder-98405869",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 162,
+    "subcategory": "sales-ops-sentences"
+  },
+  {
+    "id": "membership-v1-how-should-we-display-the-product-in-store-f4cecc1a-business-sales-ops-sentences",
+    "wordId": "v1-how-should-we-display-the-product-in-store-f4cecc1a",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 166,
+    "subcategory": "sales-ops-sentences"
+  },
+  {
+    "id": "membership-v1-let-s-review-the-sales-results-after-one-m-36b689b2-business-sales-ops-sentences",
+    "wordId": "v1-let-s-review-the-sales-results-after-one-m-36b689b2",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 168,
+    "subcategory": "sales-ops-sentences"
+  },
+  {
+    "id": "membership-v1-we-need-to-improve-the-sell-through-rate-41ed7b22-business-sales-ops-sentences",
+    "wordId": "v1-we-need-to-improve-the-sell-through-rate-41ed7b22",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 169,
+    "subcategory": "sales-ops-sentences"
+  },
+  {
+    "id": "membership-v1-what-feedback-are-you-getting-from-custome-c78e292c-business-sales-ops-sentences",
+    "wordId": "v1-what-feedback-are-you-getting-from-custome-c78e292c",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 163,
+    "subcategory": "sales-ops-sentences"
+  },
+  {
+    "id": "membership-v1-what-is-your-current-sales-volume-94c7d47d-business-sales-ops-sentences",
+    "wordId": "v1-what-is-your-current-sales-volume-94c7d47d",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 160,
+    "subcategory": "sales-ops-sentences"
+  },
+  {
+    "id": "membership-v1-which-sales-channels-are-performing-best-34266504-business-sales-ops-sentences",
+    "wordId": "v1-which-sales-channels-are-performing-best-34266504",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 161,
+    "subcategory": "sales-ops-sentences"
+  },
+  {
+    "id": "membership-v1-which-sku-sells-the-fastest-7599bd4e-business-sales-ops-sentences",
+    "wordId": "v1-which-sku-sells-the-fastest-7599bd4e",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 164,
+    "subcategory": "sales-ops-sentences"
+  },
+  {
+    "id": "membership-v1-agent-4ef274b9-business-supplier-product",
+    "wordId": "v1-agent-4ef274b9",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 145,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-bulk-order-3e746147-business-supplier-product",
+    "wordId": "v1-bulk-order-3e746147",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 154,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-distributor-70c068d7-business-supplier-product",
+    "wordId": "v1-distributor-70c068d7",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 141,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-end-customer-ec75473b-business-supplier-product",
+    "wordId": "v1-end-customer-ec75473b",
+    "listId": "list-business",
+    "priority": 7,
+    "sortOrder": 147,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-flavour-b62417eb-business-supplier-product",
+    "wordId": "v1-flavour-b62417eb",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 157,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-manufacturer-a6967a1f-business-supplier-product",
+    "wordId": "v1-manufacturer-a6967a1f",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 144,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-pack-size-aab73b79-business-supplier-product",
+    "wordId": "v1-pack-size-aab73b79",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 158,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-product-catalogue-21bc1bac-business-supplier-product",
+    "wordId": "v1-product-catalogue-21bc1bac",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 150,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-product-range-3c6b2885-business-supplier-product",
+    "wordId": "v1-product-range-3c6b2885",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 148,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-product-specification-b31c05aa-business-supplier-product",
+    "wordId": "v1-product-specification-b31c05aa",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 149,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-product-variant-a51ff345-business-supplier-product",
+    "wordId": "v1-product-variant-a51ff345",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 156,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-reseller-9ffcc406-business-supplier-product",
+    "wordId": "v1-reseller-9ffcc406",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 146,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-retailer-fd3ff591-business-supplier-product",
+    "wordId": "v1-retailer-fd3ff591",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 143,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-sample-13ab6005-business-supplier-product",
+    "wordId": "v1-sample-13ab6005",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 151,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-sample-pack-266446c1-business-supplier-product",
+    "wordId": "v1-sample-pack-266446c1",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 152,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-shelf-life-94e9a267-business-supplier-product",
+    "wordId": "v1-shelf-life-94e9a267",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 159,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-sku-724fc840-business-supplier-product",
+    "wordId": "v1-sku-724fc840",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 155,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-trial-order-89657910-business-supplier-product",
+    "wordId": "v1-trial-order-89657910",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 153,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-wholesaler-917e1975-business-supplier-product",
+    "wordId": "v1-wholesaler-917e1975",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 142,
+    "subcategory": "supplier-product"
+  },
+  {
+    "id": "membership-v1-could-we-schedule-a-call-this-week-7ea580c1-business-whatsapp-email-sentences",
+    "wordId": "v1-could-we-schedule-a-call-this-week-7ea580c1",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 150,
+    "subcategory": "whatsapp-email-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-confirm-once-you-ve-received-it-a9d2547a-business-whatsapp-email-sentences",
+    "wordId": "v1-could-you-confirm-once-you-ve-received-it-a9d2547a",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 154,
+    "subcategory": "whatsapp-email-sentences"
+  },
+  {
+    "id": "membership-v1-i-ll-check-with-my-partner-and-get-back-to-3adb683f-business-whatsapp-email-sentences",
+    "wordId": "v1-i-ll-check-with-my-partner-and-get-back-to-3adb683f",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 155,
+    "subcategory": "whatsapp-email-sentences"
+  },
+  {
+    "id": "membership-v1-i-ll-send-you-the-details-on-whatsapp-df022938-business-whatsapp-email-sentences",
+    "wordId": "v1-i-ll-send-you-the-details-on-whatsapp-df022938",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 152,
+    "subcategory": "whatsapp-email-sentences"
+  },
+  {
+    "id": "membership-v1-i-ve-attached-the-quotation-for-your-refer-3bbce45d-business-whatsapp-email-sentences",
+    "wordId": "v1-i-ve-attached-the-quotation-for-your-refer-3bbce45d",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 153,
+    "subcategory": "whatsapp-email-sentences"
+  },
+  {
+    "id": "membership-v1-just-following-up-on-my-previous-message-6fb7e3dd-business-whatsapp-email-sentences",
+    "wordId": "v1-just-following-up-on-my-previous-message-6fb7e3dd",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 159,
+    "subcategory": "whatsapp-email-sentences"
+  },
+  {
+    "id": "membership-v1-let-me-confirm-the-details-and-come-back-t-445656d8-business-whatsapp-email-sentences",
+    "wordId": "v1-let-me-confirm-the-details-and-come-back-t-445656d8",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 156,
+    "subcategory": "whatsapp-email-sentences"
+  },
+  {
+    "id": "membership-v1-please-keep-me-posted-if-anything-changes-fd5e1710-business-whatsapp-email-sentences",
+    "wordId": "v1-please-keep-me-posted-if-anything-changes-fd5e1710",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 158,
+    "subcategory": "whatsapp-email-sentences"
+  },
+  {
+    "id": "membership-v1-thanks-for-the-update-1c61914b-business-whatsapp-email-sentences",
+    "wordId": "v1-thanks-for-the-update-1c61914b",
+    "listId": "list-business",
+    "priority": 9,
+    "sortOrder": 157,
+    "subcategory": "whatsapp-email-sentences"
+  },
+  {
+    "id": "membership-v1-what-time-works-best-for-you-dccbb711-business-whatsapp-email-sentences",
+    "wordId": "v1-what-time-works-best-for-you-dccbb711",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 151,
+    "subcategory": "whatsapp-email-sentences"
+  },
+  {
+    "id": "membership-v1-can-i-renew-my-plan-online-9a6ac3cd-daily-life-admin-sentences",
+    "wordId": "v1-can-i-renew-my-plan-online-9a6ac3cd",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 72,
+    "subcategory": "admin-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-make-a-copy-of-my-passport-45e3bffa-daily-life-admin-sentences",
+    "wordId": "v1-could-you-make-a-copy-of-my-passport-45e3bffa",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 79,
+    "subcategory": "admin-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-send-me-the-tracking-number-fea02b3e-daily-life-admin-sentences",
+    "wordId": "v1-could-you-send-me-the-tracking-number-fea02b3e",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 75,
+    "subcategory": "admin-sentences"
+  },
+  {
+    "id": "membership-v1-how-much-data-is-left-on-my-plan-d9ef9d13-daily-life-admin-sentences",
+    "wordId": "v1-how-much-data-is-left-on-my-plan-d9ef9d13",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 71,
+    "subcategory": "admin-sentences"
+  },
+  {
+    "id": "membership-v1-i-need-to-renew-my-student-visa-2b09aff6-daily-life-admin-sentences",
+    "wordId": "v1-i-need-to-renew-my-student-visa-2b09aff6",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 77,
+    "subcategory": "admin-sentences"
+  },
+  {
+    "id": "membership-v1-my-mobile-data-isn-t-working-57a69c56-daily-life-admin-sentences",
+    "wordId": "v1-my-mobile-data-isn-t-working-57a69c56",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 70,
+    "subcategory": "admin-sentences"
+  },
+  {
+    "id": "membership-v1-the-parcel-hasn-t-arrived-yet-09f81d1a-daily-life-admin-sentences",
+    "wordId": "v1-the-parcel-hasn-t-arrived-yet-09f81d1a",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 74,
+    "subcategory": "admin-sentences"
+  },
+  {
+    "id": "membership-v1-what-s-the-wi-fi-password-6bd32a2e-daily-life-admin-sentences",
+    "wordId": "v1-what-s-the-wi-fi-password-6bd32a2e",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 73,
+    "subcategory": "admin-sentences"
+  },
+  {
+    "id": "membership-v1-where-can-i-pick-up-the-parcel-219d22b1-daily-life-admin-sentences",
+    "wordId": "v1-where-can-i-pick-up-the-parcel-219d22b1",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 76,
+    "subcategory": "admin-sentences"
+  },
+  {
+    "id": "membership-v1-which-documents-do-i-need-to-submit-a8eef81f-daily-life-admin-sentences",
+    "wordId": "v1-which-documents-do-i-need-to-submit-a8eef81f",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 78,
+    "subcategory": "admin-sentences"
+  },
+  {
+    "id": "membership-v1-account-balance-eb80d7a1-daily-life-banking-payments",
+    "wordId": "v1-account-balance-eb80d7a1",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 96,
+    "subcategory": "banking-payments"
+  },
+  {
+    "id": "membership-v1-bank-transfer-c499365c-daily-life-banking-payments",
+    "wordId": "v1-bank-transfer-c499365c",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 94,
+    "subcategory": "banking-payments"
+  },
+  {
+    "id": "membership-v1-contactless-payment-ad25e151-daily-life-banking-payments",
+    "wordId": "v1-contactless-payment-ad25e151",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 108,
+    "subcategory": "banking-payments"
+  },
+  {
+    "id": "membership-v1-deposit-cash-f992867e-daily-life-banking-payments",
+    "wordId": "v1-deposit-cash-f992867e",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 103,
+    "subcategory": "banking-payments"
+  },
+  {
+    "id": "membership-v1-e-wallet-e9bd36e1-daily-life-banking-payments",
+    "wordId": "v1-e-wallet-e9bd36e1",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 100,
+    "subcategory": "banking-payments"
+  },
+  {
+    "id": "membership-v1-foreign-transaction-fee-d88eb231-daily-life-banking-payments",
+    "wordId": "v1-foreign-transaction-fee-d88eb231",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 106,
+    "subcategory": "banking-payments"
+  },
+  {
+    "id": "membership-v1-online-banking-3b5f97d4-daily-life-banking-payments",
+    "wordId": "v1-online-banking-3b5f97d4",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 95,
+    "subcategory": "banking-payments"
+  },
+  {
+    "id": "membership-v1-payment-confirmation-44a6060a-daily-life-banking-payments",
+    "wordId": "v1-payment-confirmation-44a6060a",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 109,
+    "subcategory": "banking-payments"
+  },
+  {
+    "id": "membership-v1-pin-804db41f-daily-life-banking-payments",
+    "wordId": "v1-pin-804db41f",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 107,
+    "subcategory": "banking-payments"
+  },
+  {
+    "id": "membership-v1-qr-payment-ccb09592-daily-life-banking-payments",
+    "wordId": "v1-qr-payment-ccb09592",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 99,
+    "subcategory": "banking-payments"
+  },
+  {
+    "id": "membership-v1-transaction-656666ce-daily-life-banking-payments",
+    "wordId": "v1-transaction-656666ce",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 97,
+    "subcategory": "banking-payments"
+  },
+  {
+    "id": "membership-v1-transaction-history-07ddc9b0-daily-life-banking-payments",
+    "wordId": "v1-transaction-history-07ddc9b0",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 98,
+    "subcategory": "banking-payments"
+  },
+  {
+    "id": "membership-v1-transfer-fee-98b3b788-daily-life-banking-payments",
+    "wordId": "v1-transfer-fee-98b3b788",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 104,
+    "subcategory": "banking-payments"
+  },
+  {
+    "id": "membership-v1-withdraw-cash-764a7a43-daily-life-banking-payments",
+    "wordId": "v1-withdraw-cash-764a7a43",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 102,
+    "subcategory": "banking-payments"
+  },
+  {
+    "id": "membership-v1-can-i-pay-by-contactless-card-e378c51f-daily-life-banking-sentences",
+    "wordId": "v1-can-i-pay-by-contactless-card-e378c51f",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 59,
+    "subcategory": "banking-sentences"
+  },
+  {
+    "id": "membership-v1-can-i-top-up-this-account-online-90e0b8f5-daily-life-banking-sentences",
+    "wordId": "v1-can-i-top-up-this-account-online-90e0b8f5",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 55,
+    "subcategory": "banking-sentences"
+  },
+  {
+    "id": "membership-v1-can-i-withdraw-cash-here-c3bacea5-daily-life-banking-sentences",
+    "wordId": "v1-can-i-withdraw-cash-here-c3bacea5",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 54,
+    "subcategory": "banking-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-check-the-transaction-status-b2decbc2-daily-life-banking-sentences",
+    "wordId": "v1-could-you-check-the-transaction-status-b2decbc2",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 57,
+    "subcategory": "banking-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-help-me-reset-my-online-banking--ad012e36-daily-life-banking-sentences",
+    "wordId": "v1-could-you-help-me-reset-my-online-banking--ad012e36",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 50,
+    "subcategory": "banking-sentences"
+  },
+  {
+    "id": "membership-v1-how-long-does-the-transfer-take-de3c1f4a-daily-life-banking-sentences",
+    "wordId": "v1-how-long-does-the-transfer-take-de3c1f4a",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 51,
+    "subcategory": "banking-sentences"
+  },
+  {
+    "id": "membership-v1-i-need-proof-of-payment-2eda5df9-daily-life-banking-sentences",
+    "wordId": "v1-i-need-proof-of-payment-2eda5df9",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 58,
+    "subcategory": "banking-sentences"
+  },
+  {
+    "id": "membership-v1-is-there-a-transfer-fee-a6528425-daily-life-banking-sentences",
+    "wordId": "v1-is-there-a-transfer-fee-a6528425",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 52,
+    "subcategory": "banking-sentences"
+  },
+  {
+    "id": "membership-v1-the-payment-didn-t-go-through-00211b83-daily-life-banking-sentences",
+    "wordId": "v1-the-payment-didn-t-go-through-00211b83",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 56,
+    "subcategory": "banking-sentences"
+  },
+  {
+    "id": "membership-v1-what-s-the-current-exchange-rate-0cec4716-daily-life-banking-sentences",
+    "wordId": "v1-what-s-the-current-exchange-rate-0cec4716",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 53,
+    "subcategory": "banking-sentences"
+  },
+  {
+    "id": "membership-v1-can-you-send-the-receipt-to-me-on-whatsapp-8225e908-daily-life-communication-sentences",
+    "wordId": "v1-can-you-send-the-receipt-to-me-on-whatsapp-8225e908",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 191,
+    "subcategory": "communication-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-send-me-the-invoice-by-email-1997a917-daily-life-communication-sentences",
+    "wordId": "v1-could-you-send-me-the-invoice-by-email-1997a917",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 190,
+    "subcategory": "communication-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-show-me-how-to-do-this-170b68fc-daily-life-communication-sentences",
+    "wordId": "v1-could-you-show-me-how-to-do-this-170b68fc",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 197,
+    "subcategory": "communication-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-speak-a-little-more-slowly-4cce9a91-daily-life-communication-sentences",
+    "wordId": "v1-could-you-speak-a-little-more-slowly-4cce9a91",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 194,
+    "subcategory": "communication-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-write-the-address-down-for-me-1ca91ac6-daily-life-communication-sentences",
+    "wordId": "v1-could-you-write-the-address-down-for-me-1ca91ac6",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 193,
+    "subcategory": "communication-sentences"
+  },
+  {
+    "id": "membership-v1-is-there-an-english-version-3c6aa823-daily-life-communication-sentences",
+    "wordId": "v1-is-there-an-english-version-3c6aa823",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 198,
+    "subcategory": "communication-sentences"
+  },
+  {
+    "id": "membership-v1-is-there-somewhere-i-can-charge-my-phone-b521c632-daily-life-communication-sentences",
+    "wordId": "v1-is-there-somewhere-i-can-charge-my-phone-b521c632",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 192,
+    "subcategory": "communication-sentences"
+  },
+  {
+    "id": "membership-v1-sorry-could-you-say-that-again-d65f9c5d-daily-life-communication-sentences",
+    "wordId": "v1-sorry-could-you-say-that-again-d65f9c5d",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 195,
+    "subcategory": "communication-sentences"
+  },
+  {
+    "id": "membership-v1-what-does-this-mean-7f85f151-daily-life-communication-sentences",
+    "wordId": "v1-what-does-this-mean-7f85f151",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 196,
+    "subcategory": "communication-sentences"
+  },
+  {
+    "id": "membership-v1-who-should-i-ask-about-this-34f2d652-daily-life-communication-sentences",
+    "wordId": "v1-who-should-i-ask-about-this-34f2d652",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 199,
+    "subcategory": "communication-sentences"
+  },
+  {
+    "id": "membership-v1-are-there-any-side-effects-3ded7e56-daily-life-health-sentences",
+    "wordId": "v1-are-there-any-side-effects-3ded7e56",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 63,
+    "subcategory": "health-sentences"
+  },
+  {
+    "id": "membership-v1-could-i-get-a-medical-certificate-14240fe7-daily-life-health-sentences",
+    "wordId": "v1-could-i-get-a-medical-certificate-14240fe7",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 65,
+    "subcategory": "health-sentences"
+  },
+  {
+    "id": "membership-v1-do-i-need-a-prescription-for-this-dade1d46-daily-life-health-sentences",
+    "wordId": "v1-do-i-need-a-prescription-for-this-dade1d46",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 61,
+    "subcategory": "health-sentences"
+  },
+  {
+    "id": "membership-v1-does-my-insurance-cover-this-35455e97-daily-life-health-sentences",
+    "wordId": "v1-does-my-insurance-cover-this-35455e97",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 66,
+    "subcategory": "health-sentences"
+  },
+  {
+    "id": "membership-v1-how-often-should-i-take-this-3047a7ba-daily-life-health-sentences",
+    "wordId": "v1-how-often-should-i-take-this-3047a7ba",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 62,
+    "subcategory": "health-sentences"
+  },
+  {
+    "id": "membership-v1-i-d-like-to-make-an-appointment-801a9b8e-daily-life-health-sentences",
+    "wordId": "v1-i-d-like-to-make-an-appointment-801a9b8e",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 60,
+    "subcategory": "health-sentences"
+  },
+  {
+    "id": "membership-v1-i-have-a-sore-throat-and-a-cough-30c09c79-daily-life-health-sentences",
+    "wordId": "v1-i-have-a-sore-throat-and-a-cough-30c09c79",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 64,
+    "subcategory": "health-sentences"
+  },
+  {
+    "id": "membership-v1-i-ve-had-these-symptoms-for-three-days-dc744af6-daily-life-health-sentences",
+    "wordId": "v1-i-ve-had-these-symptoms-for-three-days-dc744af6",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 68,
+    "subcategory": "health-sentences"
+  },
+  {
+    "id": "membership-v1-should-i-come-back-for-a-follow-up-cef1a965-daily-life-health-sentences",
+    "wordId": "v1-should-i-come-back-for-a-follow-up-cef1a965",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 69,
+    "subcategory": "health-sentences"
+  },
+  {
+    "id": "membership-v1-where-can-i-submit-the-claim-4e379505-daily-life-health-sentences",
+    "wordId": "v1-where-can-i-submit-the-claim-4e379505",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 67,
+    "subcategory": "health-sentences"
+  },
+  {
+    "id": "membership-v1-claim-3e74befe-daily-life-healthcare",
+    "wordId": "v1-claim-3e74befe",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 122,
+    "subcategory": "healthcare"
+  },
+  {
+    "id": "membership-v1-cough-46a19f5d-daily-life-healthcare",
+    "wordId": "v1-cough-46a19f5d",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 118,
+    "subcategory": "healthcare"
+  },
+  {
+    "id": "membership-v1-medical-certificate-cbc9fb3c-daily-life-healthcare",
+    "wordId": "v1-medical-certificate-cbc9fb3c",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 120,
+    "subcategory": "healthcare"
+  },
+  {
+    "id": "membership-v1-over-the-counter-medicine-894efd11-daily-life-healthcare",
+    "wordId": "v1-over-the-counter-medicine-894efd11",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 114,
+    "subcategory": "healthcare"
+  },
+  {
+    "id": "membership-v1-side-effect-5f86c494-daily-life-healthcare",
+    "wordId": "v1-side-effect-5f86c494",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 123,
+    "subcategory": "healthcare"
+  },
+  {
+    "id": "membership-v1-stomachache-7060c4d6-daily-life-healthcare",
+    "wordId": "v1-stomachache-7060c4d6",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 119,
+    "subcategory": "healthcare"
+  },
+  {
+    "id": "membership-v1-symptom-83230a36-daily-life-healthcare",
+    "wordId": "v1-symptom-83230a36",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 115,
+    "subcategory": "healthcare"
+  },
+  {
+    "id": "membership-v1-air-conditioner-c15e1ca3-daily-life-household-weather",
+    "wordId": "v1-air-conditioner-c15e1ca3",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 301,
+    "subcategory": "household-weather"
+  },
+  {
+    "id": "membership-v1-detergent-306add91-daily-life-household-weather",
+    "wordId": "v1-detergent-306add91",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 300,
+    "subcategory": "household-weather"
+  },
+  {
+    "id": "membership-v1-dryer-7bb024ac-daily-life-household-weather",
+    "wordId": "v1-dryer-7bb024ac",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 299,
+    "subcategory": "household-weather"
+  },
+  {
+    "id": "membership-v1-heavy-rain-6ace2858-daily-life-household-weather",
+    "wordId": "v1-heavy-rain-6ace2858",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 308,
+    "subcategory": "household-weather"
+  },
+  {
+    "id": "membership-v1-house-rules-90d705e1-daily-life-household-weather",
+    "wordId": "v1-house-rules-90d705e1",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 305,
+    "subcategory": "household-weather"
+  },
+  {
+    "id": "membership-v1-laundry-room-e9804d32-daily-life-household-weather",
+    "wordId": "v1-laundry-room-e9804d32",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 297,
+    "subcategory": "household-weather"
+  },
+  {
+    "id": "membership-v1-power-outage-146a83b6-daily-life-household-weather",
+    "wordId": "v1-power-outage-146a83b6",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 302,
+    "subcategory": "household-weather"
+  },
+  {
+    "id": "membership-v1-repair-request-c2ea4f40-daily-life-household-weather",
+    "wordId": "v1-repair-request-c2ea4f40",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 304,
+    "subcategory": "household-weather"
+  },
+  {
+    "id": "membership-v1-thunderstorm-34b219cc-daily-life-household-weather",
+    "wordId": "v1-thunderstorm-34b219cc",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 309,
+    "subcategory": "household-weather"
+  },
+  {
+    "id": "membership-v1-umbrella-ba1a69c6-daily-life-household-weather",
+    "wordId": "v1-umbrella-ba1a69c6",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 310,
+    "subcategory": "household-weather"
+  },
+  {
+    "id": "membership-v1-visitor-registration-026dd902-daily-life-household-weather",
+    "wordId": "v1-visitor-registration-026dd902",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 306,
+    "subcategory": "household-weather"
+  },
+  {
+    "id": "membership-v1-washing-machine-c1eacfa5-daily-life-household-weather",
+    "wordId": "v1-washing-machine-c1eacfa5",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 298,
+    "subcategory": "household-weather"
+  },
+  {
+    "id": "membership-v1-water-outage-e01d3ab0-daily-life-household-weather",
+    "wordId": "v1-water-outage-e01d3ab0",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 303,
+    "subcategory": "household-weather"
+  },
+  {
+    "id": "membership-v1-weather-forecast-e15dce58-daily-life-household-weather",
+    "wordId": "v1-weather-forecast-e15dce58",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 307,
+    "subcategory": "household-weather"
+  },
+  {
+    "id": "membership-v1-data-roaming-9ad328bb-daily-life-phone-delivery-admin",
+    "wordId": "v1-data-roaming-9ad328bb",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 127,
+    "subcategory": "phone-delivery-admin"
+  },
+  {
+    "id": "membership-v1-delivery-address-6ab5f9c6-daily-life-phone-delivery-admin",
+    "wordId": "v1-delivery-address-6ab5f9c6",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 132,
+    "subcategory": "phone-delivery-admin"
+  },
+  {
+    "id": "membership-v1-emergency-contact-26e4e310-daily-life-phone-delivery-admin",
+    "wordId": "v1-emergency-contact-26e4e310",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 139,
+    "subcategory": "phone-delivery-admin"
+  },
+  {
+    "id": "membership-v1-failed-delivery-b3734ec8-daily-life-phone-delivery-admin",
+    "wordId": "v1-failed-delivery-b3734ec8",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 133,
+    "subcategory": "phone-delivery-admin"
+  },
+  {
+    "id": "membership-v1-parcel-f9deb09e-daily-life-phone-delivery-admin",
+    "wordId": "v1-parcel-f9deb09e",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 130,
+    "subcategory": "phone-delivery-admin"
+  },
+  {
+    "id": "membership-v1-passport-copy-4c911bcb-daily-life-phone-delivery-admin",
+    "wordId": "v1-passport-copy-4c911bcb",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 137,
+    "subcategory": "phone-delivery-admin"
+  },
+  {
+    "id": "membership-v1-pick-up-a-parcel-6df90e66-daily-life-phone-delivery-admin",
+    "wordId": "v1-pick-up-a-parcel-6df90e66",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 134,
+    "subcategory": "phone-delivery-admin"
+  },
+  {
+    "id": "membership-v1-postpaid-plan-86ea1cf3-daily-life-phone-delivery-admin",
+    "wordId": "v1-postpaid-plan-86ea1cf3",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 125,
+    "subcategory": "phone-delivery-admin"
+  },
+  {
+    "id": "membership-v1-prepaid-plan-007b1464-daily-life-phone-delivery-admin",
+    "wordId": "v1-prepaid-plan-007b1464",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 124,
+    "subcategory": "phone-delivery-admin"
+  },
+  {
+    "id": "membership-v1-proof-of-payment-4424e83d-daily-life-phone-delivery-admin",
+    "wordId": "v1-proof-of-payment-4424e83d",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 138,
+    "subcategory": "phone-delivery-admin"
+  },
+  {
+    "id": "membership-v1-signal-51fd33e8-daily-life-phone-delivery-admin",
+    "wordId": "v1-signal-51fd33e8",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 129,
+    "subcategory": "phone-delivery-admin"
+  },
+  {
+    "id": "membership-v1-tracking-number-5765a001-daily-life-phone-delivery-admin",
+    "wordId": "v1-tracking-number-5765a001",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 131,
+    "subcategory": "phone-delivery-admin"
+  },
+  {
+    "id": "membership-v1-visa-renewal-6197f8c8-daily-life-phone-delivery-admin",
+    "wordId": "v1-visa-renewal-6197f8c8",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 136,
+    "subcategory": "phone-delivery-admin"
+  },
+  {
+    "id": "membership-v1-wi-fi-password-7619d238-daily-life-phone-delivery-admin",
+    "wordId": "v1-wi-fi-password-7619d238",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 128,
+    "subcategory": "phone-delivery-admin"
+  },
+  {
+    "id": "membership-v1-can-i-renew-the-lease-for-another-year-580b9168-daily-life-renting-sentences",
+    "wordId": "v1-can-i-renew-the-lease-for-another-year-580b9168",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 33,
+    "subcategory": "renting-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-send-me-the-tenancy-agreement-10c83fc4-daily-life-renting-sentences",
+    "wordId": "v1-could-you-send-me-the-tenancy-agreement-10c83fc4",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 35,
+    "subcategory": "renting-sentences"
+  },
+  {
+    "id": "membership-v1-how-much-is-the-security-deposit-8186cd93-daily-life-renting-sentences",
+    "wordId": "v1-how-much-is-the-security-deposit-8186cd93",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 31,
+    "subcategory": "renting-sentences"
+  },
+  {
+    "id": "membership-v1-how-much-notice-do-i-need-to-give-7ba42333-daily-life-renting-sentences",
+    "wordId": "v1-how-much-notice-do-i-need-to-give-7ba42333",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 34,
+    "subcategory": "renting-sentences"
+  },
+  {
+    "id": "membership-v1-is-the-utility-bill-included-in-the-rent-fb028b00-daily-life-renting-sentences",
+    "wordId": "v1-is-the-utility-bill-included-in-the-rent-fb028b00",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 30,
+    "subcategory": "renting-sentences"
+  },
+  {
+    "id": "membership-v1-my-access-card-isn-t-working-a210ee3d-daily-life-renting-sentences",
+    "wordId": "v1-my-access-card-isn-t-working-a210ee3d",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 37,
+    "subcategory": "renting-sentences"
+  },
+  {
+    "id": "membership-v1-the-air-conditioner-isn-t-working-4b4e4259-daily-life-renting-sentences",
+    "wordId": "v1-the-air-conditioner-isn-t-working-4b4e4259",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 38,
+    "subcategory": "renting-sentences"
+  },
+  {
+    "id": "membership-v1-when-can-i-move-in-1fc9a967-daily-life-renting-sentences",
+    "wordId": "v1-when-can-i-move-in-1fc9a967",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 39,
+    "subcategory": "renting-sentences"
+  },
+  {
+    "id": "membership-v1-when-is-the-rent-due-each-month-b2ac0753-daily-life-renting-sentences",
+    "wordId": "v1-when-is-the-rent-due-each-month-b2ac0753",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 32,
+    "subcategory": "renting-sentences"
+  },
+  {
+    "id": "membership-v1-who-should-i-contact-for-maintenance-41b189d3-daily-life-renting-sentences",
+    "wordId": "v1-who-should-i-contact-for-maintenance-41b189d3",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 36,
+    "subcategory": "renting-sentences"
+  },
+  {
+    "id": "membership-v1-access-card-bf4523a7-daily-life-renting-utilities",
+    "wordId": "v1-access-card-bf4523a7",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 66,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-electricity-bill-3b4d8686-daily-life-renting-utilities",
+    "wordId": "v1-electricity-bill-3b4d8686",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 61,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-furnished-a45a16d2-daily-life-renting-utilities",
+    "wordId": "v1-furnished-a45a16d2",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 72,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-internet-bill-7ad3f333-daily-life-renting-utilities",
+    "wordId": "v1-internet-bill-7ad3f333",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 63,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-key-deposit-3342e8ef-daily-life-renting-utilities",
+    "wordId": "v1-key-deposit-3342e8ef",
+    "listId": "list-daily",
+    "priority": 6,
+    "sortOrder": 67,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-maintenance-fee-96c87049-daily-life-renting-utilities",
+    "wordId": "v1-maintenance-fee-96c87049",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 64,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-management-office-3190be04-daily-life-renting-utilities",
+    "wordId": "v1-management-office-3190be04",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 65,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-monthly-rent-15bf4364-daily-life-renting-utilities",
+    "wordId": "v1-monthly-rent-15bf4364",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 59,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-move-in-8c009c68-daily-life-renting-utilities",
+    "wordId": "v1-move-in-8c009c68",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 68,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-move-out-08748623-daily-life-renting-utilities",
+    "wordId": "v1-move-out-08748623",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 69,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-notice-period-a51a5efa-daily-life-renting-utilities",
+    "wordId": "v1-notice-period-a51a5efa",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 71,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-renew-the-lease-90c4e9e5-daily-life-renting-utilities",
+    "wordId": "v1-renew-the-lease-90c4e9e5",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 70,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-rental-deposit-3a327f33-daily-life-renting-utilities",
+    "wordId": "v1-rental-deposit-3a327f33",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 58,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-security-deposit-8e824318-daily-life-renting-utilities",
+    "wordId": "v1-security-deposit-8e824318",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 57,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-tenant-14c39bf7-daily-life-renting-utilities",
+    "wordId": "v1-tenant-14c39bf7",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 55,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-unfurnished-a8bbcfd3-daily-life-renting-utilities",
+    "wordId": "v1-unfurnished-a8bbcfd3",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 73,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-water-bill-c2ebd108-daily-life-renting-utilities",
+    "wordId": "v1-water-bill-c2ebd108",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 62,
+    "subcategory": "renting-utilities"
+  },
+  {
+    "id": "membership-v1-allergy-30649ebd-daily-life-restaurant-cafe",
+    "wordId": "v1-allergy-30649ebd",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 17,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-bill-2201eb6e-daily-life-restaurant-cafe",
+    "wordId": "v1-bill-2201eb6e",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 1,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-dine-in-68f6cae6-daily-life-restaurant-cafe",
+    "wordId": "v1-dine-in-68f6cae6",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 5,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-less-spicy-2f2f403c-daily-life-restaurant-cafe",
+    "wordId": "v1-less-spicy-2f2f403c",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 16,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-main-course-61e86f6f-daily-life-restaurant-cafe",
+    "wordId": "v1-main-course-61e86f6f",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 13,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-menu-7d9c1998-daily-life-restaurant-cafe",
+    "wordId": "v1-menu-7d9c1998",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 0,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-portion-2f08899d-daily-life-restaurant-cafe",
+    "wordId": "v1-portion-2f08899d",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 14,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-refill-2c211789-daily-life-restaurant-cafe",
+    "wordId": "v1-refill-2c211789",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 11,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-reservation-1b446d1c-daily-life-restaurant-cafe",
+    "wordId": "v1-reservation-1b446d1c",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 19,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-separate-bills-0da65464-daily-life-restaurant-cafe",
+    "wordId": "v1-separate-bills-0da65464",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 8,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-service-charge-817a4a41-daily-life-restaurant-cafe",
+    "wordId": "v1-service-charge-817a4a41",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 3,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-side-dish-19a85006-daily-life-restaurant-cafe",
+    "wordId": "v1-side-dish-19a85006",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 12,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-sparkling-water-4a85ab1e-daily-life-restaurant-cafe",
+    "wordId": "v1-sparkling-water-4a85ab1e",
+    "listId": "list-daily",
+    "priority": 6,
+    "sortOrder": 10,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-split-the-bill-d081d762-daily-life-restaurant-cafe",
+    "wordId": "v1-split-the-bill-d081d762",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 7,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-still-water-f3171a05-daily-life-restaurant-cafe",
+    "wordId": "v1-still-water-f3171a05",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 9,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-tax-included-52d3f6a8-daily-life-restaurant-cafe",
+    "wordId": "v1-tax-included-52d3f6a8",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 4,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-vegetarian-e4da6ed0-daily-life-restaurant-cafe",
+    "wordId": "v1-vegetarian-e4da6ed0",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 18,
+    "subcategory": "restaurant-cafe"
+  },
+  {
+    "id": "membership-v1-can-i-get-a-refill-5f095ad4-daily-life-restaurant-sentences",
+    "wordId": "v1-can-i-get-a-refill-5f095ad4",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 8,
+    "subcategory": "restaurant-sentences"
+  },
+  {
+    "id": "membership-v1-can-i-have-this-less-spicy-38d0e0e2-daily-life-restaurant-sentences",
+    "wordId": "v1-can-i-have-this-less-spicy-38d0e0e2",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 3,
+    "subcategory": "restaurant-sentences"
+  },
+  {
+    "id": "membership-v1-can-we-split-the-bill-d0d961ab-daily-life-restaurant-sentences",
+    "wordId": "v1-can-we-split-the-bill-d0d961ab",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 1,
+    "subcategory": "restaurant-sentences"
+  },
+  {
+    "id": "membership-v1-could-i-get-the-bill-please-a9b5bd36-daily-life-restaurant-sentences",
+    "wordId": "v1-could-i-get-the-bill-please-a9b5bd36",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 0,
+    "subcategory": "restaurant-sentences"
+  },
+  {
+    "id": "membership-v1-could-i-make-a-reservation-for-two-00e136b3-daily-life-restaurant-sentences",
+    "wordId": "v1-could-i-make-a-reservation-for-two-00e136b3",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 7,
+    "subcategory": "restaurant-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-pack-this-separately-f35ce2e9-daily-life-restaurant-sentences",
+    "wordId": "v1-could-you-pack-this-separately-f35ce2e9",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 9,
+    "subcategory": "restaurant-sentences"
+  },
+  {
+    "id": "membership-v1-do-you-have-a-vegetarian-option-4772483e-daily-life-restaurant-sentences",
+    "wordId": "v1-do-you-have-a-vegetarian-option-4772483e",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 5,
+    "subcategory": "restaurant-sentences"
+  },
+  {
+    "id": "membership-v1-i-d-like-this-to-go-49db5f92-daily-life-restaurant-sentences",
+    "wordId": "v1-i-d-like-this-to-go-49db5f92",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 4,
+    "subcategory": "restaurant-sentences"
+  },
+  {
+    "id": "membership-v1-i-m-allergic-to-nuts-0085aacc-daily-life-restaurant-sentences",
+    "wordId": "v1-i-m-allergic-to-nuts-0085aacc",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 6,
+    "subcategory": "restaurant-sentences"
+  },
+  {
+    "id": "membership-v1-is-service-charge-included-b6168f9a-daily-life-restaurant-sentences",
+    "wordId": "v1-is-service-charge-included-b6168f9a",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 2,
+    "subcategory": "restaurant-sentences"
+  },
+  {
+    "id": "membership-v1-academic-transcript-0db9d4bd-daily-life-school",
+    "wordId": "v1-academic-transcript-0db9d4bd",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 93,
+    "subcategory": "school"
+  },
+  {
+    "id": "membership-v1-assessment-108635ec-daily-life-school",
+    "wordId": "v1-assessment-108635ec",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 82,
+    "subcategory": "school"
+  },
+  {
+    "id": "membership-v1-class-schedule-f0ccd008-daily-life-school",
+    "wordId": "v1-class-schedule-f0ccd008",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 80,
+    "subcategory": "school"
+  },
+  {
+    "id": "membership-v1-course-outline-4bc7ed97-daily-life-school",
+    "wordId": "v1-course-outline-4bc7ed97",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 81,
+    "subcategory": "school"
+  },
+  {
+    "id": "membership-v1-enrolment-1ff742b0-daily-life-school",
+    "wordId": "v1-enrolment-1ff742b0",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 90,
+    "subcategory": "school"
+  },
+  {
+    "id": "membership-v1-reference-list-808d091a-daily-life-school",
+    "wordId": "v1-reference-list-808d091a",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 86,
+    "subcategory": "school"
+  },
+  {
+    "id": "membership-v1-student-id-f6bb8180-daily-life-school",
+    "wordId": "v1-student-id-f6bb8180",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 92,
+    "subcategory": "school"
+  },
+  {
+    "id": "membership-v1-student-portal-e70d97b4-daily-life-school",
+    "wordId": "v1-student-portal-e70d97b4",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 89,
+    "subcategory": "school"
+  },
+  {
+    "id": "membership-v1-submission-14b2fcf8-daily-life-school",
+    "wordId": "v1-submission-14b2fcf8",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 78,
+    "subcategory": "school"
+  },
+  {
+    "id": "membership-v1-tuition-fee-de469d58-daily-life-school",
+    "wordId": "v1-tuition-fee-de469d58",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 91,
+    "subcategory": "school"
+  },
+  {
+    "id": "membership-v1-can-i-see-my-feedback-c29ced87-daily-life-school-sentences",
+    "wordId": "v1-can-i-see-my-feedback-c29ced87",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 48,
+    "subcategory": "school-sentences"
+  },
+  {
+    "id": "membership-v1-can-we-schedule-a-meeting-after-class-1fac858e-daily-life-school-sentences",
+    "wordId": "v1-can-we-schedule-a-meeting-after-class-1fac858e",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 45,
+    "subcategory": "school-sentences"
+  },
+  {
+    "id": "membership-v1-could-i-get-an-extension-9c004231-daily-life-school-sentences",
+    "wordId": "v1-could-i-get-an-extension-9c004231",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 41,
+    "subcategory": "school-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-explain-this-part-again-07215668-daily-life-school-sentences",
+    "wordId": "v1-could-you-explain-this-part-again-07215668",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 44,
+    "subcategory": "school-sentences"
+  },
+  {
+    "id": "membership-v1-do-we-need-to-include-references-0d481888-daily-life-school-sentences",
+    "wordId": "v1-do-we-need-to-include-references-0d481888",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 47,
+    "subcategory": "school-sentences"
+  },
+  {
+    "id": "membership-v1-has-the-class-schedule-changed-fbff2255-daily-life-school-sentences",
+    "wordId": "v1-has-the-class-schedule-changed-fbff2255",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 49,
+    "subcategory": "school-sentences"
+  },
+  {
+    "id": "membership-v1-is-attendance-compulsory-e54b0eed-daily-life-school-sentences",
+    "wordId": "v1-is-attendance-compulsory-e54b0eed",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 43,
+    "subcategory": "school-sentences"
+  },
+  {
+    "id": "membership-v1-when-is-the-assignment-due-fc1b2638-daily-life-school-sentences",
+    "wordId": "v1-when-is-the-assignment-due-fc1b2638",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 40,
+    "subcategory": "school-sentences"
+  },
+  {
+    "id": "membership-v1-where-should-i-submit-the-assignment-b37c03f0-daily-life-school-sentences",
+    "wordId": "v1-where-should-i-submit-the-assignment-b37c03f0",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 42,
+    "subcategory": "school-sentences"
+  },
+  {
+    "id": "membership-v1-which-chapters-are-covered-in-the-exam-64bb8f71-daily-life-school-sentences",
+    "wordId": "v1-which-chapters-are-covered-in-the-exam-64bb8f71",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 46,
+    "subcategory": "school-sentences"
+  },
+  {
+    "id": "membership-v1-barcode-ef18a257-daily-life-shopping",
+    "wordId": "v1-barcode-ef18a257",
+    "listId": "list-daily",
+    "priority": 6,
+    "sortOrder": 34,
+    "subcategory": "shopping"
+  },
+  {
+    "id": "membership-v1-cashier-1e1e5a46-daily-life-shopping",
+    "wordId": "v1-cashier-1e1e5a46",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 31,
+    "subcategory": "shopping"
+  },
+  {
+    "id": "membership-v1-checkout-counter-6a06e97f-daily-life-shopping",
+    "wordId": "v1-checkout-counter-6a06e97f",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 32,
+    "subcategory": "shopping"
+  },
+  {
+    "id": "membership-v1-discount-6fcebd5b-daily-life-shopping",
+    "wordId": "v1-discount-6fcebd5b",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 29,
+    "subcategory": "shopping"
+  },
+  {
+    "id": "membership-v1-exchange-a5e4ff1a-daily-life-shopping",
+    "wordId": "v1-exchange-a5e4ff1a",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 26,
+    "subcategory": "shopping"
+  },
+  {
+    "id": "membership-v1-fitting-room-bcfb428f-daily-life-shopping",
+    "wordId": "v1-fitting-room-bcfb428f",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 21,
+    "subcategory": "shopping"
+  },
+  {
+    "id": "membership-v1-in-stock-981a3992-daily-life-shopping",
+    "wordId": "v1-in-stock-981a3992",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 24,
+    "subcategory": "shopping"
+  },
+  {
+    "id": "membership-v1-member-price-7c59ac3a-daily-life-shopping",
+    "wordId": "v1-member-price-7c59ac3a",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 35,
+    "subcategory": "shopping"
+  },
+  {
+    "id": "membership-v1-out-of-stock-a29e9b64-daily-life-shopping",
+    "wordId": "v1-out-of-stock-a29e9b64",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 23,
+    "subcategory": "shopping"
+  },
+  {
+    "id": "membership-v1-price-tag-926ca43f-daily-life-shopping",
+    "wordId": "v1-price-tag-926ca43f",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 20,
+    "subcategory": "shopping"
+  },
+  {
+    "id": "membership-v1-promotion-727b14bc-daily-life-shopping",
+    "wordId": "v1-promotion-727b14bc",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 30,
+    "subcategory": "shopping"
+  },
+  {
+    "id": "membership-v1-return-policy-34238b1e-daily-life-shopping",
+    "wordId": "v1-return-policy-34238b1e",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 27,
+    "subcategory": "shopping"
+  },
+  {
+    "id": "membership-v1-shopping-bag-8eef1bb9-daily-life-shopping",
+    "wordId": "v1-shopping-bag-8eef1bb9",
+    "listId": "list-daily",
+    "priority": 6,
+    "sortOrder": 33,
+    "subcategory": "shopping"
+  },
+  {
+    "id": "membership-v1-size-chart-42932d19-daily-life-shopping",
+    "wordId": "v1-size-chart-42932d19",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 22,
+    "subcategory": "shopping"
+  },
+  {
+    "id": "membership-v1-warranty-eb16ef26-daily-life-shopping",
+    "wordId": "v1-warranty-eb16ef26",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 28,
+    "subcategory": "shopping"
+  },
+  {
+    "id": "membership-v1-can-i-pay-by-qr-code-043fed18-daily-life-shopping-sentences",
+    "wordId": "v1-can-i-pay-by-qr-code-043fed18",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 15,
+    "subcategory": "shopping-sentences"
+  },
+  {
+    "id": "membership-v1-can-i-return-this-if-it-doesn-t-fit-1bca8770-daily-life-shopping-sentences",
+    "wordId": "v1-can-i-return-this-if-it-doesn-t-fit-1bca8770",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 12,
+    "subcategory": "shopping-sentences"
+  },
+  {
+    "id": "membership-v1-can-i-try-this-on-2f996eba-daily-life-shopping-sentences",
+    "wordId": "v1-can-i-try-this-on-2f996eba",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 11,
+    "subcategory": "shopping-sentences"
+  },
+  {
+    "id": "membership-v1-could-i-get-a-receipt-c046207f-daily-life-shopping-sentences",
+    "wordId": "v1-could-i-get-a-receipt-c046207f",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 16,
+    "subcategory": "shopping-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-check-the-price-for-me-13ac62a3-daily-life-shopping-sentences",
+    "wordId": "v1-could-you-check-the-price-for-me-13ac62a3",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 19,
+    "subcategory": "shopping-sentences"
+  },
+  {
+    "id": "membership-v1-do-you-have-this-in-a-larger-size-b96fec93-daily-life-shopping-sentences",
+    "wordId": "v1-do-you-have-this-in-a-larger-size-b96fec93",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 10,
+    "subcategory": "shopping-sentences"
+  },
+  {
+    "id": "membership-v1-do-you-have-this-in-stock-c872d58b-daily-life-shopping-sentences",
+    "wordId": "v1-do-you-have-this-in-stock-c872d58b",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 18,
+    "subcategory": "shopping-sentences"
+  },
+  {
+    "id": "membership-v1-is-there-a-member-discount-6dbb7551-daily-life-shopping-sentences",
+    "wordId": "v1-is-there-a-member-discount-6dbb7551",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 14,
+    "subcategory": "shopping-sentences"
+  },
+  {
+    "id": "membership-v1-is-this-the-final-price-87102ad7-daily-life-shopping-sentences",
+    "wordId": "v1-is-this-the-final-price-87102ad7",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 17,
+    "subcategory": "shopping-sentences"
+  },
+  {
+    "id": "membership-v1-what-s-the-return-policy-e32715df-daily-life-shopping-sentences",
+    "wordId": "v1-what-s-the-return-policy-e32715df",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 13,
+    "subcategory": "shopping-sentences"
+  },
+  {
+    "id": "membership-v1-are-you-free-this-weekend-0b4d9432-daily-life-social-sentences",
+    "wordId": "v1-are-you-free-this-weekend-0b4d9432",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 80,
+    "subcategory": "social-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-send-me-the-location-f307e01f-daily-life-social-sentences",
+    "wordId": "v1-could-you-send-me-the-location-f307e01f",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 86,
+    "subcategory": "social-sentences"
+  },
+  {
+    "id": "membership-v1-do-you-want-to-grab-lunch-783c27fb-daily-life-social-sentences",
+    "wordId": "v1-do-you-want-to-grab-lunch-783c27fb",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 81,
+    "subcategory": "social-sentences"
+  },
+  {
+    "id": "membership-v1-i-ll-be-there-in-ten-minutes-387cb1e2-daily-life-social-sentences",
+    "wordId": "v1-i-ll-be-there-in-ten-minutes-387cb1e2",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 87,
+    "subcategory": "social-sentences"
+  },
+  {
+    "id": "membership-v1-i-ll-let-you-know-later-e5df8904-daily-life-social-sentences",
+    "wordId": "v1-i-ll-let-you-know-later-e5df8904",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 82,
+    "subcategory": "social-sentences"
+  },
+  {
+    "id": "membership-v1-i-might-be-a-little-late-bb001cec-daily-life-social-sentences",
+    "wordId": "v1-i-might-be-a-little-late-bb001cec",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 85,
+    "subcategory": "social-sentences"
+  },
+  {
+    "id": "membership-v1-let-s-reschedule-b4ebd727-daily-life-social-sentences",
+    "wordId": "v1-let-s-reschedule-b4ebd727",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 88,
+    "subcategory": "social-sentences"
+  },
+  {
+    "id": "membership-v1-no-worries-018d87cc-daily-life-social-sentences",
+    "wordId": "v1-no-worries-018d87cc",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 83,
+    "subcategory": "social-sentences"
+  },
+  {
+    "id": "membership-v1-thanks-for-letting-me-know-464e45c8-daily-life-social-sentences",
+    "wordId": "v1-thanks-for-letting-me-know-464e45c8",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 89,
+    "subcategory": "social-sentences"
+  },
+  {
+    "id": "membership-v1-that-works-for-me-aafb1bfc-daily-life-social-sentences",
+    "wordId": "v1-that-works-for-me-aafb1bfc",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 84,
+    "subcategory": "social-sentences"
+  },
+  {
+    "id": "membership-v1-detour-315738f3-daily-life-transport",
+    "wordId": "v1-detour-315738f3",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 48,
+    "subcategory": "transport"
+  },
+  {
+    "id": "membership-v1-drop-off-point-d6913453-daily-life-transport",
+    "wordId": "v1-drop-off-point-d6913453",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 44,
+    "subcategory": "transport"
+  },
+  {
+    "id": "membership-v1-estimated-arrival-time-487e6c8f-daily-life-transport",
+    "wordId": "v1-estimated-arrival-time-487e6c8f",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 46,
+    "subcategory": "transport"
+  },
+  {
+    "id": "membership-v1-last-train-60c08aa7-daily-life-transport",
+    "wordId": "v1-last-train-60c08aa7",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 41,
+    "subcategory": "transport"
+  },
+  {
+    "id": "membership-v1-one-way-ticket-f2e10e4c-daily-life-transport",
+    "wordId": "v1-one-way-ticket-f2e10e4c",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 37,
+    "subcategory": "transport"
+  },
+  {
+    "id": "membership-v1-parking-fee-4bf25159-daily-life-transport",
+    "wordId": "v1-parking-fee-4bf25159",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 50,
+    "subcategory": "transport"
+  },
+  {
+    "id": "membership-v1-parking-lot-f1f21f40-daily-life-transport",
+    "wordId": "v1-parking-lot-f1f21f40",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 51,
+    "subcategory": "transport"
+  },
+  {
+    "id": "membership-v1-pick-up-point-c9ff48e3-daily-life-transport",
+    "wordId": "v1-pick-up-point-c9ff48e3",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 45,
+    "subcategory": "transport"
+  },
+  {
+    "id": "membership-v1-platform-57734e10-daily-life-transport",
+    "wordId": "v1-platform-57734e10",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 39,
+    "subcategory": "transport"
+  },
+  {
+    "id": "membership-v1-return-ticket-5b606f43-daily-life-transport",
+    "wordId": "v1-return-ticket-5b606f43",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 38,
+    "subcategory": "transport"
+  },
+  {
+    "id": "membership-v1-ride-hailing-e6b5413c-daily-life-transport",
+    "wordId": "v1-ride-hailing-e6b5413c",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 53,
+    "subcategory": "transport"
+  },
+  {
+    "id": "membership-v1-route-fe40c727-daily-life-transport",
+    "wordId": "v1-route-fe40c727",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 47,
+    "subcategory": "transport"
+  },
+  {
+    "id": "membership-v1-rush-hour-9f23f71b-daily-life-transport",
+    "wordId": "v1-rush-hour-9f23f71b",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 43,
+    "subcategory": "transport"
+  },
+  {
+    "id": "membership-v1-seat-belt-43cd6597-daily-life-transport",
+    "wordId": "v1-seat-belt-43cd6597",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 52,
+    "subcategory": "transport"
+  },
+  {
+    "id": "membership-v1-toll-14f77349-daily-life-transport",
+    "wordId": "v1-toll-14f77349",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 49,
+    "subcategory": "transport"
+  },
+  {
+    "id": "membership-v1-could-you-drop-me-off-here-e2b347b8-daily-life-transport-sentences",
+    "wordId": "v1-could-you-drop-me-off-here-e2b347b8",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 21,
+    "subcategory": "transport-sentences"
+  },
+  {
+    "id": "membership-v1-could-you-wait-here-for-a-minute-23ed7660-daily-life-transport-sentences",
+    "wordId": "v1-could-you-wait-here-for-a-minute-23ed7660",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 29,
+    "subcategory": "transport-sentences"
+  },
+  {
+    "id": "membership-v1-do-i-need-to-transfer-ef2edd87-daily-life-transport-sentences",
+    "wordId": "v1-do-i-need-to-transfer-ef2edd87",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 25,
+    "subcategory": "transport-sentences"
+  },
+  {
+    "id": "membership-v1-how-long-will-it-take-to-get-there-0e777add-daily-life-transport-sentences",
+    "wordId": "v1-how-long-will-it-take-to-get-there-0e777add",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 22,
+    "subcategory": "transport-sentences"
+  },
+  {
+    "id": "membership-v1-how-much-is-the-fare-89c5c581-daily-life-transport-sentences",
+    "wordId": "v1-how-much-is-the-fare-89c5c581",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 27,
+    "subcategory": "transport-sentences"
+  },
+  {
+    "id": "membership-v1-is-there-a-faster-route-626ca0b3-daily-life-transport-sentences",
+    "wordId": "v1-is-there-a-faster-route-626ca0b3",
+    "listId": "list-daily",
+    "priority": 8,
+    "sortOrder": 23,
+    "subcategory": "transport-sentences"
+  },
+  {
+    "id": "membership-v1-is-there-a-toll-on-this-route-a32b65f7-daily-life-transport-sentences",
+    "wordId": "v1-is-there-a-toll-on-this-route-a32b65f7",
+    "listId": "list-daily",
+    "priority": 7,
+    "sortOrder": 28,
+    "subcategory": "transport-sentences"
+  },
+  {
+    "id": "membership-v1-what-time-is-the-last-train-1b388935-daily-life-transport-sentences",
+    "wordId": "v1-what-time-is-the-last-train-1b388935",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 26,
+    "subcategory": "transport-sentences"
+  },
+  {
+    "id": "membership-v1-where-is-the-pick-up-point-8b273273-daily-life-transport-sentences",
+    "wordId": "v1-where-is-the-pick-up-point-8b273273",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 20,
+    "subcategory": "transport-sentences"
+  },
+  {
+    "id": "membership-v1-which-platform-should-i-go-to-616a7ff1-daily-life-transport-sentences",
+    "wordId": "v1-which-platform-should-i-go-to-616a7ff1",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 24,
+    "subcategory": "transport-sentences"
+  },
+  {
+    "id": "membership-v1-annual-percentage-rate-07528b5e-finance-banking-interest",
+    "wordId": "v1-annual-percentage-rate-07528b5e",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 5,
+    "subcategory": "banking-interest"
+  },
+  {
+    "id": "membership-v1-cash-reserve-e75e8496-finance-banking-interest",
+    "wordId": "v1-cash-reserve-e75e8496",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 19,
+    "subcategory": "banking-interest"
+  },
+  {
+    "id": "membership-v1-collateral-da95879a-finance-banking-interest",
+    "wordId": "v1-collateral-da95879a",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 11,
+    "subcategory": "banking-interest"
+  },
+  {
+    "id": "membership-v1-credit-limit-0630a89f-finance-banking-interest",
+    "wordId": "v1-credit-limit-0630a89f",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 13,
+    "subcategory": "banking-interest"
+  },
+  {
+    "id": "membership-v1-credit-score-84ffe55f-finance-banking-interest",
+    "wordId": "v1-credit-score-84ffe55f",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 12,
+    "subcategory": "banking-interest"
+  },
+  {
+    "id": "membership-v1-default-12ba7386-finance-banking-interest",
+    "wordId": "v1-default-12ba7386",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 17,
+    "subcategory": "banking-interest"
+  },
+  {
+    "id": "membership-v1-effective-interest-rate-43237205-finance-banking-interest",
+    "wordId": "v1-effective-interest-rate-43237205",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 6,
+    "subcategory": "banking-interest"
+  },
+  {
+    "id": "membership-v1-installment-fc4338d2-finance-banking-interest",
+    "wordId": "v1-installment-fc4338d2",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 16,
+    "subcategory": "banking-interest"
+  },
+  {
+    "id": "membership-v1-interest-d88cad7b-finance-banking-interest",
+    "wordId": "v1-interest-d88cad7b",
+    "listId": "list-finance",
+    "priority": 10,
+    "sortOrder": 1,
+    "subcategory": "banking-interest"
+  },
+  {
+    "id": "membership-v1-maturity-986dd6e4-finance-banking-interest",
+    "wordId": "v1-maturity-986dd6e4",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 7,
+    "subcategory": "banking-interest"
+  },
+  {
+    "id": "membership-v1-maturity-date-269b552f-finance-banking-interest",
+    "wordId": "v1-maturity-date-269b552f",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 8,
+    "subcategory": "banking-interest"
+  },
+  {
+    "id": "membership-v1-mortgage-9eedc9ff-finance-banking-interest",
+    "wordId": "v1-mortgage-9eedc9ff",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 10,
+    "subcategory": "banking-interest"
+  },
+  {
+    "id": "membership-v1-outstanding-balance-009eacf6-finance-banking-interest",
+    "wordId": "v1-outstanding-balance-009eacf6",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 14,
+    "subcategory": "banking-interest"
+  },
+  {
+    "id": "membership-v1-repayment-2bd16ef3-finance-banking-interest",
+    "wordId": "v1-repayment-2bd16ef3",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 15,
+    "subcategory": "banking-interest"
+  },
+  {
+    "id": "membership-v1-simple-interest-8fe7ef76-finance-banking-interest",
+    "wordId": "v1-simple-interest-8fe7ef76",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 3,
+    "subcategory": "banking-interest"
+  },
+  {
+    "id": "membership-v1-capital-structure-bed4dfa9-finance-corporate-finance",
+    "wordId": "v1-capital-structure-bed4dfa9",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 47,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-cost-of-capital-ba24f9ad-finance-corporate-finance",
+    "wordId": "v1-cost-of-capital-ba24f9ad",
+    "listId": "list-finance",
+    "priority": 10,
+    "sortOrder": 45,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-debt-financing-21724a1b-finance-corporate-finance",
+    "wordId": "v1-debt-financing-21724a1b",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 48,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-debt-ratio-80439a61-finance-corporate-finance",
+    "wordId": "v1-debt-ratio-80439a61",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 52,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-debt-to-equity-ratio-0d98da3b-finance-corporate-finance",
+    "wordId": "v1-debt-to-equity-ratio-0d98da3b",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 53,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-dividend-policy-09765453-finance-corporate-finance",
+    "wordId": "v1-dividend-policy-09765453",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 57,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-enterprise-value-549c858c-finance-corporate-finance",
+    "wordId": "v1-enterprise-value-549c858c",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 59,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-equity-financing-f64170c4-finance-corporate-finance",
+    "wordId": "v1-equity-financing-f64170c4",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 49,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-financial-leverage-f91357cd-finance-corporate-finance",
+    "wordId": "v1-financial-leverage-f91357cd",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 51,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-interest-coverage-ratio-924ab3ea-finance-corporate-finance",
+    "wordId": "v1-interest-coverage-ratio-924ab3ea",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 54,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-profitability-24048b95-finance-corporate-finance",
+    "wordId": "v1-profitability-24048b95",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 41,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-return-on-assets-474d263c-finance-corporate-finance",
+    "wordId": "v1-return-on-assets-474d263c",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 44,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-return-on-equity-16963008-finance-corporate-finance",
+    "wordId": "v1-return-on-equity-16963008",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 43,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-revenue-growth-531adfe5-finance-corporate-finance",
+    "wordId": "v1-revenue-growth-531adfe5",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 40,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-share-buyback-fa469e99-finance-corporate-finance",
+    "wordId": "v1-share-buyback-fa469e99",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 58,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-weighted-average-cost-of-capital-a061c07b-finance-corporate-finance",
+    "wordId": "v1-weighted-average-cost-of-capital-a061c07b",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 46,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-working-capital-management-24e83648-finance-corporate-finance",
+    "wordId": "v1-working-capital-management-24e83648",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 56,
+    "subcategory": "corporate-finance"
+  },
+  {
+    "id": "membership-v1-call-option-698e1cd2-finance-derivatives-risk",
+    "wordId": "v1-call-option-698e1cd2",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 302,
+    "subcategory": "derivatives-risk"
+  },
+  {
+    "id": "membership-v1-counterparty-risk-42100342-finance-derivatives-risk",
+    "wordId": "v1-counterparty-risk-42100342",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 307,
+    "subcategory": "derivatives-risk"
+  },
+  {
+    "id": "membership-v1-derivative-c6073fae-finance-derivatives-risk",
+    "wordId": "v1-derivative-c6073fae",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 298,
+    "subcategory": "derivatives-risk"
+  },
+  {
+    "id": "membership-v1-forward-contract-6f7c8aa6-finance-derivatives-risk",
+    "wordId": "v1-forward-contract-6f7c8aa6",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 300,
+    "subcategory": "derivatives-risk"
+  },
+  {
+    "id": "membership-v1-futures-contract-77944177-finance-derivatives-risk",
+    "wordId": "v1-futures-contract-77944177",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 299,
+    "subcategory": "derivatives-risk"
+  },
+  {
+    "id": "membership-v1-hedge-ratio-66f6c22d-finance-derivatives-risk",
+    "wordId": "v1-hedge-ratio-66f6c22d",
+    "listId": "list-finance",
+    "priority": 6,
+    "sortOrder": 306,
+    "subcategory": "derivatives-risk"
+  },
+  {
+    "id": "membership-v1-option-fad391d6-finance-derivatives-risk",
+    "wordId": "v1-option-fad391d6",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 301,
+    "subcategory": "derivatives-risk"
+  },
+  {
+    "id": "membership-v1-put-option-a629e6bb-finance-derivatives-risk",
+    "wordId": "v1-put-option-a629e6bb",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 303,
+    "subcategory": "derivatives-risk"
+  },
+  {
+    "id": "membership-v1-strike-price-069e9b5c-finance-derivatives-risk",
+    "wordId": "v1-strike-price-069e9b5c",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 304,
+    "subcategory": "derivatives-risk"
+  },
+  {
+    "id": "membership-v1-underlying-asset-a490c288-finance-derivatives-risk",
+    "wordId": "v1-underlying-asset-a490c288",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 305,
+    "subcategory": "derivatives-risk"
+  },
+  {
+    "id": "membership-v1-active-management-4a92ce6e-finance-equity-investment",
+    "wordId": "v1-active-management-4a92ce6e",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 77,
+    "subcategory": "equity-investment"
+  },
+  {
+    "id": "membership-v1-asset-allocation-598ad4da-finance-equity-investment",
+    "wordId": "v1-asset-allocation-598ad4da",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 68,
+    "subcategory": "equity-investment"
+  },
+  {
+    "id": "membership-v1-benchmark-0b54df66-finance-equity-investment",
+    "wordId": "v1-benchmark-0b54df66",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 72,
+    "subcategory": "equity-investment"
+  },
+  {
+    "id": "membership-v1-capital-gain-21859b80-finance-equity-investment",
+    "wordId": "v1-capital-gain-21859b80",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 64,
+    "subcategory": "equity-investment"
+  },
+  {
+    "id": "membership-v1-capital-loss-ffb197ea-finance-equity-investment",
+    "wordId": "v1-capital-loss-ffb197ea",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 65,
+    "subcategory": "equity-investment"
+  },
+  {
+    "id": "membership-v1-exchange-traded-fund-80c40251-finance-equity-investment",
+    "wordId": "v1-exchange-traded-fund-80c40251",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 75,
+    "subcategory": "equity-investment"
+  },
+  {
+    "id": "membership-v1-expected-return-26e29c3b-finance-equity-investment",
+    "wordId": "v1-expected-return-26e29c3b",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 70,
+    "subcategory": "equity-investment"
+  },
+  {
+    "id": "membership-v1-index-5cdb8eb4-finance-equity-investment",
+    "wordId": "v1-index-5cdb8eb4",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 73,
+    "subcategory": "equity-investment"
+  },
+  {
+    "id": "membership-v1-index-fund-17e711f1-finance-equity-investment",
+    "wordId": "v1-index-fund-17e711f1",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 74,
+    "subcategory": "equity-investment"
+  },
+  {
+    "id": "membership-v1-market-capitalization-304d2d75-finance-equity-investment",
+    "wordId": "v1-market-capitalization-304d2d75",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 79,
+    "subcategory": "equity-investment"
+  },
+  {
+    "id": "membership-v1-market-return-f8c81027-finance-equity-investment",
+    "wordId": "v1-market-return-f8c81027",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 71,
+    "subcategory": "equity-investment"
+  },
+  {
+    "id": "membership-v1-mutual-fund-bc5918ef-finance-equity-investment",
+    "wordId": "v1-mutual-fund-bc5918ef",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 76,
+    "subcategory": "equity-investment"
+  },
+  {
+    "id": "membership-v1-passive-investing-fcd5127c-finance-equity-investment",
+    "wordId": "v1-passive-investing-fcd5127c",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 78,
+    "subcategory": "equity-investment"
+  },
+  {
+    "id": "membership-v1-risk-tolerance-40e325fc-finance-equity-investment",
+    "wordId": "v1-risk-tolerance-40e325fc",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 69,
+    "subcategory": "equity-investment"
+  },
+  {
+    "id": "membership-v1-shareholder-8967478e-finance-equity-investment",
+    "wordId": "v1-shareholder-8967478e",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 62,
+    "subcategory": "equity-investment"
+  },
+  {
+    "id": "membership-v1-stock-ec9a9a45-finance-equity-investment",
+    "wordId": "v1-stock-ec9a9a45",
+    "listId": "list-finance",
+    "priority": 10,
+    "sortOrder": 60,
+    "subcategory": "equity-investment"
+  },
+  {
+    "id": "membership-v1-bond-price-e3b183a5-finance-fixed-income",
+    "wordId": "v1-bond-price-e3b183a5",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 86,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-corporate-bond-65947bb9-finance-fixed-income",
+    "wordId": "v1-corporate-bond-65947bb9",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 91,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-coupon-baca0a05-finance-fixed-income",
+    "wordId": "v1-coupon-baca0a05",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 82,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-coupon-rate-eea15328-finance-fixed-income",
+    "wordId": "v1-coupon-rate-eea15328",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 83,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-credit-rating-bed30c9a-finance-fixed-income",
+    "wordId": "v1-credit-rating-bed30c9a",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 89,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-credit-risk-9ece97cf-finance-fixed-income",
+    "wordId": "v1-credit-risk-9ece97cf",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 87,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-default-risk-84b674b1-finance-fixed-income",
+    "wordId": "v1-default-risk-84b674b1",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 88,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-duration-f6b901e5-finance-fixed-income",
+    "wordId": "v1-duration-f6b901e5",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 94,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-face-value-058ed798-finance-fixed-income",
+    "wordId": "v1-face-value-058ed798",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 81,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-fixed-income-37f2ae02-finance-fixed-income",
+    "wordId": "v1-fixed-income-37f2ae02",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 95,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-government-bond-27bd59fd-finance-fixed-income",
+    "wordId": "v1-government-bond-27bd59fd",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 90,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-interest-rate-risk-ae5a291b-finance-fixed-income",
+    "wordId": "v1-interest-rate-risk-ae5a291b",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 93,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-issuer-b1c8811d-finance-fixed-income",
+    "wordId": "v1-issuer-b1c8811d",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 97,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-redemption-28cabedf-finance-fixed-income",
+    "wordId": "v1-redemption-28cabedf",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 98,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-secondary-market-34859518-finance-fixed-income",
+    "wordId": "v1-secondary-market-34859518",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 99,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-security-bfb06c38-finance-fixed-income",
+    "wordId": "v1-security-bfb06c38",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 96,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-yield-curve-24273863-finance-fixed-income",
+    "wordId": "v1-yield-curve-24273863",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 92,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-yield-d4e846df-finance-fixed-income",
+    "wordId": "v1-yield-d4e846df",
+    "listId": "list-finance",
+    "priority": 10,
+    "sortOrder": 84,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-yield-to-maturity-5c41b650-finance-fixed-income",
+    "wordId": "v1-yield-to-maturity-5c41b650",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 85,
+    "subcategory": "fixed-income"
+  },
+  {
+    "id": "membership-v1-appreciation-b521b059-finance-fx-risk",
+    "wordId": "v1-appreciation-b521b059",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 105,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-base-currency-a3c6655e-finance-fx-risk",
+    "wordId": "v1-base-currency-a3c6655e",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 103,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-beta-9983b05c-finance-fx-risk",
+    "wordId": "v1-beta-9983b05c",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 117,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-correlation-f99a57c2-finance-fx-risk",
+    "wordId": "v1-correlation-f99a57c2",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 116,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-currency-pair-33208370-finance-fx-risk",
+    "wordId": "v1-currency-pair-33208370",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 102,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-currency-risk-2da3ac58-finance-fx-risk",
+    "wordId": "v1-currency-risk-2da3ac58",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 111,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-foreign-exchange-9526d954-finance-fx-risk",
+    "wordId": "v1-foreign-exchange-9526d954",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 100,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-forward-rate-5b8dd1cb-finance-fx-risk",
+    "wordId": "v1-forward-rate-5b8dd1cb",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 108,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-hedge-947376cd-finance-fx-risk",
+    "wordId": "v1-hedge-947376cd",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 110,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-hedging-22949bd4-finance-fx-risk",
+    "wordId": "v1-hedging-22949bd4",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 109,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-market-risk-74e4e3da-finance-fx-risk",
+    "wordId": "v1-market-risk-74e4e3da",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 112,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-quote-currency-b174315d-finance-fx-risk",
+    "wordId": "v1-quote-currency-b174315d",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 104,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-risk-premium-cc8ba8c4-finance-fx-risk",
+    "wordId": "v1-risk-premium-cc8ba8c4",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 119,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-spot-rate-b8c969c0-finance-fx-risk",
+    "wordId": "v1-spot-rate-b8c969c0",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 107,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-systematic-risk-6d298d9e-finance-fx-risk",
+    "wordId": "v1-systematic-risk-6d298d9e",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 113,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-unsystematic-risk-6bceb7da-finance-fx-risk",
+    "wordId": "v1-unsystematic-risk-6bceb7da",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 114,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-value-at-risk-c91d3031-finance-fx-risk",
+    "wordId": "v1-value-at-risk-c91d3031",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 118,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-volatility-13f4a76c-finance-fx-risk",
+    "wordId": "v1-volatility-13f4a76c",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 115,
+    "subcategory": "fx-risk"
+  },
+  {
+    "id": "membership-v1-annuity-cde4c456-finance-time-value-capital-budgeting",
+    "wordId": "v1-annuity-cde4c456",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 25,
+    "subcategory": "time-value-capital-budgeting"
+  },
+  {
+    "id": "membership-v1-capital-budgeting-6257b97b-finance-time-value-capital-budgeting",
+    "wordId": "v1-capital-budgeting-6257b97b",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 32,
+    "subcategory": "time-value-capital-budgeting"
+  },
+  {
+    "id": "membership-v1-capital-expenditure-8ef1f9d8-finance-time-value-capital-budgeting",
+    "wordId": "v1-capital-expenditure-8ef1f9d8",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 30,
+    "subcategory": "time-value-capital-budgeting"
+  },
+  {
+    "id": "membership-v1-discount-factor-69b3db35-finance-time-value-capital-budgeting",
+    "wordId": "v1-discount-factor-69b3db35",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 24,
+    "subcategory": "time-value-capital-budgeting"
+  },
+  {
+    "id": "membership-v1-free-cash-flow-0a485c50-finance-time-value-capital-budgeting",
+    "wordId": "v1-free-cash-flow-0a485c50",
+    "listId": "list-finance",
+    "priority": 10,
+    "sortOrder": 39,
+    "subcategory": "time-value-capital-budgeting"
+  },
+  {
+    "id": "membership-v1-incremental-cash-flow-5a459a29-finance-time-value-capital-budgeting",
+    "wordId": "v1-incremental-cash-flow-5a459a29",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 37,
+    "subcategory": "time-value-capital-budgeting"
+  },
+  {
+    "id": "membership-v1-investment-horizon-d5b68889-finance-time-value-capital-budgeting",
+    "wordId": "v1-investment-horizon-d5b68889",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 33,
+    "subcategory": "time-value-capital-budgeting"
+  },
+  {
+    "id": "membership-v1-operating-expenditure-4a68115d-finance-time-value-capital-budgeting",
+    "wordId": "v1-operating-expenditure-4a68115d",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 31,
+    "subcategory": "time-value-capital-budgeting"
+  },
+  {
+    "id": "membership-v1-opportunity-cost-63db36a0-finance-time-value-capital-budgeting",
+    "wordId": "v1-opportunity-cost-63db36a0",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 35,
+    "subcategory": "time-value-capital-budgeting"
+  },
+  {
+    "id": "membership-v1-payback-period-2c4f8a91-finance-time-value-capital-budgeting",
+    "wordId": "v1-payback-period-2c4f8a91",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 29,
+    "subcategory": "time-value-capital-budgeting"
+  },
+  {
+    "id": "membership-v1-perpetuity-76101983-finance-time-value-capital-budgeting",
+    "wordId": "v1-perpetuity-76101983",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 26,
+    "subcategory": "time-value-capital-budgeting"
+  },
+  {
+    "id": "membership-v1-required-return-c8cf2181-finance-time-value-capital-budgeting",
+    "wordId": "v1-required-return-c8cf2181",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 34,
+    "subcategory": "time-value-capital-budgeting"
+  },
+  {
+    "id": "membership-v1-sunk-cost-2e5697b7-finance-time-value-capital-budgeting",
+    "wordId": "v1-sunk-cost-2e5697b7",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 36,
+    "subcategory": "time-value-capital-budgeting"
+  },
+  {
+    "id": "membership-v1-terminal-value-ceb5d620-finance-time-value-capital-budgeting",
+    "wordId": "v1-terminal-value-ceb5d620",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 38,
+    "subcategory": "time-value-capital-budgeting"
+  },
+  {
+    "id": "membership-v1-time-value-of-money-7706ea5e-finance-time-value-capital-budgeting",
+    "wordId": "v1-time-value-of-money-7706ea5e",
+    "listId": "list-finance",
+    "priority": 10,
+    "sortOrder": 22,
+    "subcategory": "time-value-capital-budgeting"
+  },
+  {
+    "id": "membership-v1-book-value-61d6c5db-finance-valuation-economics",
+    "wordId": "v1-book-value-61d6c5db",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 122,
+    "subcategory": "valuation-economics"
+  },
+  {
+    "id": "membership-v1-central-bank-2201dec5-finance-valuation-economics",
+    "wordId": "v1-central-bank-2201dec5",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 139,
+    "subcategory": "valuation-economics"
+  },
+  {
+    "id": "membership-v1-comparable-company-analysis-ab678302-finance-valuation-economics",
+    "wordId": "v1-comparable-company-analysis-ab678302",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 131,
+    "subcategory": "valuation-economics"
+  },
+  {
+    "id": "membership-v1-deflation-c5a48c86-finance-valuation-economics",
+    "wordId": "v1-deflation-c5a48c86",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 133,
+    "subcategory": "valuation-economics"
+  },
+  {
+    "id": "membership-v1-discounted-cash-flow-9d1bfd35-finance-valuation-economics",
+    "wordId": "v1-discounted-cash-flow-9d1bfd35",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 130,
+    "subcategory": "valuation-economics"
+  },
+  {
+    "id": "membership-v1-dividend-yield-f0f176fa-finance-valuation-economics",
+    "wordId": "v1-dividend-yield-f0f176fa",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 128,
+    "subcategory": "valuation-economics"
+  },
+  {
+    "id": "membership-v1-economic-growth-81d8c6a5-finance-valuation-economics",
+    "wordId": "v1-economic-growth-81d8c6a5",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 135,
+    "subcategory": "valuation-economics"
+  },
+  {
+    "id": "membership-v1-enterprise-value-multiple-e49fcf3a-finance-valuation-economics",
+    "wordId": "v1-enterprise-value-multiple-e49fcf3a",
+    "listId": "list-finance",
+    "priority": 7,
+    "sortOrder": 129,
+    "subcategory": "valuation-economics"
+  },
+  {
+    "id": "membership-v1-fiscal-policy-92168769-finance-valuation-economics",
+    "wordId": "v1-fiscal-policy-92168769",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 138,
+    "subcategory": "valuation-economics"
+  },
+  {
+    "id": "membership-v1-gross-domestic-product-d2162bae-finance-valuation-economics",
+    "wordId": "v1-gross-domestic-product-d2162bae",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 134,
+    "subcategory": "valuation-economics"
+  },
+  {
+    "id": "membership-v1-intrinsic-value-2189e454-finance-valuation-economics",
+    "wordId": "v1-intrinsic-value-2189e454",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 123,
+    "subcategory": "valuation-economics"
+  },
+  {
+    "id": "membership-v1-market-value-9d9b8f7b-finance-valuation-economics",
+    "wordId": "v1-market-value-9d9b8f7b",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 121,
+    "subcategory": "valuation-economics"
+  },
+  {
+    "id": "membership-v1-monetary-policy-8b4528d2-finance-valuation-economics",
+    "wordId": "v1-monetary-policy-8b4528d2",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 137,
+    "subcategory": "valuation-economics"
+  },
+  {
+    "id": "membership-v1-price-to-book-ratio-4ce68b21-finance-valuation-economics",
+    "wordId": "v1-price-to-book-ratio-4ce68b21",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 126,
+    "subcategory": "valuation-economics"
+  },
+  {
+    "id": "membership-v1-recession-b6bdf3b6-finance-valuation-economics",
+    "wordId": "v1-recession-b6bdf3b6",
+    "listId": "list-finance",
+    "priority": 8,
+    "sortOrder": 136,
+    "subcategory": "valuation-economics"
+  },
+  {
+    "id": "membership-v1-valuation-ea71fbc8-finance-valuation-economics",
+    "wordId": "v1-valuation-ea71fbc8",
+    "listId": "list-finance",
+    "priority": 10,
+    "sortOrder": 120,
+    "subcategory": "valuation-economics"
+  }
+]

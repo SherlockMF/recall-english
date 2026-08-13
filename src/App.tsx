@@ -10,6 +10,7 @@ import { ALL_VOCABULARY_LISTS, listIdForSlug } from './data/vocabularyLists'
 import {
   DEFAULT_SETTINGS,
   normalizeLemma,
+  primaryListSlug,
   type HintLevel,
   type LearningTrack,
   type ListSlug,
@@ -25,6 +26,14 @@ import {
 } from './domain/types'
 import { exportBackupJson, importBackup } from './lib/backup'
 import {
+  resolveListSlugsForEdit,
+  type EditCategory,
+} from './lib/listMembership'
+import {
+  exportVocabularyPackJson,
+  importVocabularyPack,
+} from './lib/vocabularyPack'
+import {
   addWordToList,
   getUserDataSnapshot,
   getWordListItemsForWord,
@@ -32,6 +41,7 @@ import {
   putLearningTracks,
   putSettings,
   putWord,
+  recordReview,
   writeBatch,
 } from './lib/db'
 import { lookupDictionary } from './lib/dictionary'
@@ -43,13 +53,15 @@ import {
   buildFallbackUsagePrompts,
   generateUsagePromptsWithLlm,
 } from './lib/llm/usageGenerate'
+import {
+  snapshotLearningTracks,
+  snapshotMapLearningProgress,
+} from './lib/learningTracks'
 import { getItemStage } from './lib/presentation'
 import {
   buildDailyQueue,
   createInitialTracks,
   getAdaptiveNewItemTarget,
-  scheduleReview,
-  unlockEligibleUsageTracks,
 } from './lib/scheduler'
 
 interface ActiveSession {
@@ -158,16 +170,19 @@ function App() {
     )).length
   }, [now, tracks])
 
-  const categorySnapshots = useMemo(() => (
-    (['daily', 'business', 'finance', 'accounting'] as const).map((category) => {
-      const categoryItems = items.filter((item) => item.listSlugs.includes(category))
-      const categoryIds = new Set(categoryItems.map((item) => item.id))
-      const learned = new Set(
-        tracks.filter((track) => categoryIds.has(track.itemId) && track.reps > 0).map((track) => track.itemId),
-      ).size
-      return { category, learned, total: categoryItems.length }
-    })
-  ), [items, tracks])
+  const learningTrackSnapshots = useMemo(() => {
+    const learnedItemIds = new Set(
+      tracks.filter((track) => track.reps > 0).map((track) => track.itemId),
+    )
+    return snapshotLearningTracks(items, learnedItemIds)
+  }, [items, tracks])
+
+  const mapProgress = useMemo(() => {
+    const stageByItemId = new Map(
+      items.map((item) => [item.id, getItemStage(item, tracks).key] as const),
+    )
+    return snapshotMapLearningProgress(items, stageByItemId)
+  }, [items, tracks])
 
   const recentWords = useMemo(() => {
     const seen = new Set<string>()
@@ -274,40 +289,24 @@ function App() {
       wasOverride: boolean
     },
   ) {
-    const currentTrack = tracks.find((track) => track.id === task.trackId)
-    if (!currentTrack) throw new Error('找不到当前学习轨道。')
-    const reviewedAt = new Date()
-    const scheduledTrack = scheduleReview(
-      currentTrack,
-      rating,
-      reviewedAt,
-      settings.desiredRetention,
-    )
-    const replacedTracks = tracks.map((track) => track.id === scheduledTrack.id ? scheduledTrack : track)
-    const unlockedTracks = unlockEligibleUsageTracks(replacedTracks, reviewedAt)
-    const changedTracks = unlockedTracks.filter((track, index) => {
-      const previous = tracks[index]
-      return track.id === scheduledTrack.id
-        || track.unlocked !== previous?.unlocked
-        || track.due !== previous?.due
-    })
-    const attempt: ReviewAttempt = {
-      id: makeId('attempt'),
+    const result = await recordReview({
       trackId: task.trackId,
-      itemId: task.itemId,
-      trackType: task.trackType,
-      promptType: detail.promptType,
-      answer: detail.answer,
       rating,
-      hintLevel: detail.hintLevel,
-      responseMs: detail.responseMs,
-      reviewedAt: reviewedAt.toISOString(),
-      wasOverride: detail.wasOverride || undefined,
-    }
-    await writeBatch({ tracks: changedTracks, attempts: [attempt] })
-    setTracks(unlockedTracks)
-    setAttempts((current) => [...current, attempt])
-    setNow(reviewedAt)
+      desiredRetention: settings.desiredRetention,
+      attempt: {
+        id: makeId('attempt'),
+        itemId: task.itemId,
+        trackType: task.trackType,
+        promptType: detail.promptType,
+        answer: detail.answer,
+        hintLevel: detail.hintLevel,
+        responseMs: detail.responseMs,
+        wasOverride: detail.wasOverride || undefined,
+      },
+    })
+    setTracks(result.tracks)
+    setAttempts((current) => [...current, result.attempt])
+    setNow(result.reviewedAt)
   }
 
   async function addCustomItem(draft: CustomItemDraft) {
@@ -322,13 +321,13 @@ function App() {
     await writeBatch({ words: [word], memberships, tracks: itemTracks })
     setItems((current) => [item, ...current])
     setTracks((current) => [...current, ...itemTracks])
-    return { ok: true, message: `已把 “${item.expression}” 加入我的词库。` }
+    return { ok: true, message: `已把 “${item.expression}” 加入优先学习。` }
   }
 
   async function addToMyVocabulary(item: VocabularyItem) {
     await addWordToList(item.id, 'my-vocabulary', item.priority)
     await refreshData()
-    return { ok: true as const, message: `已加入我的词库：${item.expression}` }
+    return { ok: true as const, message: `已加入优先学习：${item.expression}` }
   }
 
   async function bulkAdd(
@@ -386,23 +385,31 @@ function App() {
 
   async function updateItem(
     id: string,
-    patch: Pick<VocabularyItem, 'zhGloss' | 'enDefinition' | 'partOfSpeech' | 'examples' | 'collocations' | 'category'>,
+    patch: {
+      zhGloss: string
+      enDefinition: string
+      partOfSpeech: string
+      examples: VocabularyItem['examples']
+      collocations: string[]
+      category: EditCategory
+      scenarioNote?: string
+    },
   ) {
     const current = items.find((item) => item.id === id)
     if (!current) return
     const usagePrompts = current.usagePrompts.length
       ? current.usagePrompts
       : buildUsagePrompts(current.expression, patch.examples)
-    const listSlugs = uniqueListSlugs([
-      ...current.listSlugs.filter((slug) => slug === 'my-vocabulary' || slug === patch.category),
-      patch.category,
-    ])
-    const scenarioNote = current.scenarioNote
+    const listSlugs = resolveListSlugsForEdit(current.listSlugs, current.category, patch.category)
+    const { category: _editCategory, scenarioNote: patchScenarioNote, ...contentPatch } = patch
+    const scenarioNote = patch.category === 'other'
+      ? (patchScenarioNote?.trim() || current.scenarioNote)
+      : undefined
     const updated: VocabularyItem = {
       ...current,
-      ...patch,
+      ...contentPatch,
       listSlugs,
-      category: patch.category,
+      category: primaryListSlug(listSlugs),
       scenarioNote,
       acceptedZhAnswers: uniqueStrings([patch.zhGloss, ...current.acceptedZhAnswers]),
       usagePrompts,
@@ -417,18 +424,13 @@ function App() {
     const deleteMembershipIds = existingMemberships
       .filter((membership) => !nextMembershipIds.has(membership.id))
       .map((membership) => membership.id)
-    const existingMyVocabulary = existingMemberships.find(
-      (membership) => membership.listId === listIdForSlug('my-vocabulary'),
-    )
     const memberships = listSlugs.map((slug, index) => ({
       id: `membership-${id}-${slug}`,
       wordId: id,
       listId: listIdForSlug(slug),
       priority: updated.priority,
       sortOrder: index,
-      subcategory: slug === 'my-vocabulary'
-        ? (existingMyVocabulary?.subcategory ?? scenarioNote)
-        : undefined,
+      subcategory: slug === 'my-vocabulary' ? scenarioNote : undefined,
     }))
     await writeBatch({
       words: [stripHydration(updated)],
@@ -473,6 +475,33 @@ function App() {
     }
   }
 
+  async function downloadVocabularyPack() {
+    const json = await exportVocabularyPackJson()
+    const blob = new Blob([json], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = `recall-english-vocabulary-${new Date().toISOString().slice(0, 10)}.json`
+    anchor.click()
+    URL.revokeObjectURL(url)
+  }
+
+  async function restoreVocabularyPack(content: string) {
+    try {
+      const summary = await importVocabularyPack(content)
+      await refreshData()
+      return {
+        ok: true,
+        message: `词库合并完成：新增 ${summary.added}、更新 ${summary.updated}、未变 ${summary.unchanged}；新增归属 ${summary.membershipsAdded}。`,
+      }
+    } catch (error) {
+      return {
+        ok: false,
+        message: error instanceof Error ? error.message : '词库文件无效，未修改当前数据。',
+      }
+    }
+  }
+
   if (loading) return <LoadingScreen />
   if (loadError) return <ErrorScreen message={loadError} onRetry={() => window.location.reload()} />
 
@@ -488,15 +517,16 @@ function App() {
       >
         {tab === 'today' && (
           <TodayView
-            categories={categorySnapshots}
             dueCount={dueCount}
             estimatedMinutes={Math.min(settings.coreMinutes, Math.max(3, Math.ceil((dueCount * 0.35) + (newCount * 1.3))))}
+            mapProgress={mapProgress}
             newCount={newCount}
             noHintRate={noHintRate}
             now={now}
             onStart={() => startSession('core')}
             onStartExtension={() => startSession('extension')}
             recentWords={recentWords}
+            tracks={learningTrackSnapshots}
             usageDue={usageDue}
             usableThisWeek={usableThisWeek}
           />
@@ -535,7 +565,11 @@ function App() {
           }}
           onFinish={(_summary: SessionSummary) => undefined}
           onRate={handleRate}
+          onSpeechAccentChange={(accent) => {
+            void saveSettings({ ...settings, speechAccent: accent })
+          }}
           resolveHint={resolveHint}
+          speechAccent={settings.speechAccent}
           tracks={tracks}
           usableThisWeek={usableThisWeek}
         />
@@ -546,7 +580,9 @@ function App() {
           attemptCount={attempts.length}
           onClose={() => setSettingsOpen(false)}
           onExport={downloadBackup}
+          onExportVocabulary={downloadVocabularyPack}
           onImport={restoreBackup}
+          onImportVocabulary={restoreVocabularyPack}
           onSave={saveSettings}
           settings={settings}
           vocabularyCount={items.length}

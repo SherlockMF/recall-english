@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
+import { createPortal } from 'react-dom'
 import type { LearningTrack, SystemListSlug, VocabularyItem } from '../domain/types'
+import { type EditCategory } from '../lib/listMembership'
 import { categoryLabels, getItemStage } from '../lib/presentation'
 import { speakExample, speakWord } from '../lib/speech'
 import { Icon } from './Icon'
@@ -7,8 +9,8 @@ import { Icon } from './Icon'
 type LibraryFilter = 'all' | 'my-vocabulary' | SystemListSlug
 type VocabularyEditPatch = Pick<
   VocabularyItem,
-  'zhGloss' | 'enDefinition' | 'partOfSpeech' | 'examples' | 'collocations' | 'category'
->
+  'zhGloss' | 'enDefinition' | 'partOfSpeech' | 'examples' | 'collocations'
+> & { category: EditCategory; scenarioNote?: string }
 
 interface LibraryViewProps {
   items: VocabularyItem[]
@@ -27,7 +29,7 @@ const filters: { id: LibraryFilter; label: string }[] = [
   { id: 'business', label: '商业英语' },
   { id: 'finance', label: '金融英语' },
   { id: 'accounting', label: '会计英语' },
-  { id: 'my-vocabulary', label: '我的词库' },
+  { id: 'my-vocabulary', label: '优先学习' },
 ]
 
 const systemCategories: SystemListSlug[] = ['daily', 'business', 'finance', 'accounting']
@@ -127,11 +129,14 @@ export function LibraryView({
                     <h2>{item.expression}</h2>
                     {ipa && <span>/{ipa}/</span>}
                   </div>
-                  <p className="word-card-gloss">{item.zhGloss}</p>
-                  {item.enDefinition && <p className="word-card-definition">{item.enDefinition}</p>}
+                  <div className="word-card-sense">
+                    <p className="word-card-gloss">{item.zhGloss}</p>
+                    {item.enDefinition && <p className="word-card-definition">{item.enDefinition}</p>}
+                  </div>
                   <div className="word-card-example">
                     <span>IN CONTEXT</span>
                     <p>{item.examples[0]?.en || '补充一个真实例句后，将解锁使用练习。'}</p>
+                    {item.examples[0]?.zh && <p className="word-card-example-zh">{item.examples[0].zh}</p>}
                     {item.examples[0]?.en && (
                       <button
                         className="text-button"
@@ -146,7 +151,7 @@ export function LibraryView({
                     <span className={`stage-dot ${stage.key}`} />
                     <span>{item.status === 'paused' ? '已暂停' : stage.label}</span>
                     {inMyVocabulary ? (
-                      <span className="source-mark">已加入</span>
+                      <span className="source-mark">已优先</span>
                     ) : (
                       <button
                         className="text-button"
@@ -155,7 +160,7 @@ export function LibraryView({
                         }}
                         type="button"
                       >
-                        + 加入我的词库
+                        + 加入优先学习
                       </button>
                     )}
                   </div>
@@ -204,12 +209,22 @@ function EditWordDialog({ item, onClose, onSave }: EditWordDialogProps) {
   const [exampleEn, setExampleEn] = useState(item.examples[0]?.en ?? '')
   const [exampleZh, setExampleZh] = useState(item.examples[0]?.zh ?? '')
   const [collocations, setCollocations] = useState(item.collocations.join(', '))
-  const [category, setCategory] = useState<SystemListSlug>(
-    item.category === 'my-vocabulary' ? 'daily' : item.category,
+  const [category, setCategory] = useState<EditCategory>(
+    item.category === 'my-vocabulary' ? 'other' : item.category,
   )
+  const [scenarioNote, setScenarioNote] = useState(item.scenarioNote ?? '')
+  const [saveError, setSaveError] = useState('')
   const [saving, setSaving] = useState(false)
 
-  return (
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [])
+
+  const dialog = (
     <div className="dialog-backdrop" role="presentation" onMouseDown={(event) => {
       if (event.currentTarget === event.target) onClose()
     }}>
@@ -229,26 +244,49 @@ function EditWordDialog({ item, onClose, onSave }: EditWordDialogProps) {
             <label><span>例句中文</span><textarea onChange={(event) => setExampleZh(event.target.value)} rows={3} value={exampleZh} /></label>
           </div>
           <label><span>常用搭配</span><input onChange={(event) => setCollocations(event.target.value)} value={collocations} /></label>
-          <label><span>使用场景</span><select onChange={(event) => setCategory(event.target.value as SystemListSlug)} value={category}>
+          <label><span>使用场景</span><select onChange={(event) => setCategory(event.target.value as EditCategory)} value={category}>
             {systemCategories.map((value) => <option key={value} value={value}>{categoryLabels[value]}</option>)}
+            <option value="other">{categoryLabels.other}</option>
           </select></label>
+          {category === 'other' && (
+            <label>
+              <span>自定义场景备注</span>
+              <input
+                onChange={(event) => setScenarioNote(event.target.value)}
+                placeholder="例如：宿舍、社团、兼职"
+                value={scenarioNote}
+              />
+            </label>
+          )}
+          {saveError && <p className="form-note" role="alert">{saveError}</p>}
         </div>
         <div className="dialog-actions">
           <button className="secondary-button" onClick={onClose} type="button">取消</button>
           <button
             className="primary-button"
-            disabled={!zhGloss.trim() || saving}
+            disabled={!zhGloss.trim() || saving || (category === 'other' && !scenarioNote.trim())}
             onClick={async () => {
+              if (category === 'other' && !scenarioNote.trim()) {
+                setSaveError('选择「其他」时，请填写自定义场景备注。')
+                return
+              }
               setSaving(true)
-              await onSave({
-                zhGloss: zhGloss.trim(),
-                enDefinition: enDefinition.trim(),
-                partOfSpeech: partOfSpeech.trim() || 'expression',
-                examples: exampleEn.trim() ? [{ en: exampleEn.trim(), zh: exampleZh.trim() }] : [],
-                collocations: collocations.split(/[,，\n]/).map((value) => value.trim()).filter(Boolean),
-                category,
-              })
-              setSaving(false)
+              setSaveError('')
+              try {
+                await onSave({
+                  zhGloss: zhGloss.trim(),
+                  enDefinition: enDefinition.trim(),
+                  partOfSpeech: partOfSpeech.trim() || 'expression',
+                  examples: exampleEn.trim() ? [{ en: exampleEn.trim(), zh: exampleZh.trim() }] : [],
+                  collocations: collocations.split(/[,，\n]/).map((value) => value.trim()).filter(Boolean),
+                  category,
+                  scenarioNote: category === 'other' ? scenarioNote.trim() : undefined,
+                })
+              } catch (error) {
+                setSaveError(error instanceof Error ? error.message : '保存失败，请重试。')
+              } finally {
+                setSaving(false)
+              }
             }}
             type="button"
           >
@@ -258,4 +296,6 @@ function EditWordDialog({ item, onClose, onSave }: EditWordDialogProps) {
       </section>
     </div>
   )
+
+  return createPortal(dialog, document.body)
 }

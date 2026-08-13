@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import type { UserSettings } from '../domain/types'
+import type { SpeechAccent, UserSettings } from '../domain/types'
 import {
   clearDeepseekApiKey,
   getDeepseekApiKey,
@@ -15,6 +15,8 @@ interface SettingsDialogProps {
   onSave: (settings: UserSettings) => Promise<void>
   onExport: () => Promise<void>
   onImport: (content: string) => Promise<{ ok: boolean; message: string }>
+  onExportVocabulary: () => Promise<void>
+  onImportVocabulary: (content: string) => Promise<{ ok: boolean; message: string }>
 }
 
 export function SettingsDialog({
@@ -25,13 +27,17 @@ export function SettingsDialog({
   onSave,
   onExport,
   onImport,
+  onExportVocabulary,
+  onImportVocabulary,
 }: SettingsDialogProps) {
   const [newItems, setNewItems] = useState(settings.newItemsPerDay)
+  const [speechAccent, setSpeechAccent] = useState<SpeechAccent>(settings.speechAccent)
   const [apiKey, setApiKey] = useState(() => getDeepseekApiKey())
   const [message, setMessage] = useState('')
   const [saving, setSaving] = useState(false)
   const [persistentState, setPersistentState] = useState<'idle' | 'granted' | 'unavailable'>('idle')
-  const fileRef = useRef<HTMLInputElement>(null)
+  const backupFileRef = useRef<HTMLInputElement>(null)
+  const vocabularyFileRef = useRef<HTMLInputElement>(null)
 
   async function requestPersistentStorage() {
     if (!navigator.storage?.persist) {
@@ -70,6 +76,31 @@ export function SettingsDialog({
 
         <div className="settings-section">
           <div className="settings-copy">
+            <h3>发音口音</h3>
+            <p>练习反馈与「再听一次」默认使用的口音。词库页仍可临时切换 UK / US。</p>
+          </div>
+          <div className="accent-toggle" role="group" aria-label="默认发音口音">
+            <button
+              aria-pressed={speechAccent === 'uk'}
+              className={`mini-text-button${speechAccent === 'uk' ? ' is-active' : ''}`}
+              onClick={() => setSpeechAccent('uk')}
+              type="button"
+            >
+              UK 英式
+            </button>
+            <button
+              aria-pressed={speechAccent === 'us'}
+              className={`mini-text-button${speechAccent === 'us' ? ' is-active' : ''}`}
+              onClick={() => setSpeechAccent('us')}
+              type="button"
+            >
+              US 美式
+            </button>
+          </div>
+        </div>
+
+        <div className="settings-section">
+          <div className="settings-copy">
             <h3>DeepSeek 辅助</h3>
             <p>可选。用于语义判分、提示、造题与词条补全。Key 只存在本机，不会进入备份；未配置时自动使用本地规则。</p>
           </div>
@@ -98,12 +129,40 @@ export function SettingsDialog({
 
         <div className="settings-section">
           <div className="settings-copy">
-            <h3>本地数据</h3>
-            <p>{vocabularyCount} 个义项 · {attemptCount} 次真实回忆。数据只保存在这个浏览器中。</p>
+            <h3>词库</h3>
+            <p>导出/导入全部义项（内置种子 + 词典/手动录入）及分类归属。导入为合并，不覆盖学习进度。</p>
           </div>
           <div className="backup-actions">
-            <button className="secondary-button" onClick={() => void onExport()} type="button"><Icon name="download" size={18} /> 导出备份</button>
-            <button className="secondary-button" onClick={() => fileRef.current?.click()} type="button"><Icon name="upload" size={18} /> 导入备份</button>
+            <button className="secondary-button" onClick={() => void onExportVocabulary()} type="button"><Icon name="download" size={18} /> 导出词库</button>
+            <button className="secondary-button" onClick={() => vocabularyFileRef.current?.click()} type="button"><Icon name="upload" size={18} /> 导入词库</button>
+            <input
+              accept="application/json,.json"
+              className="sr-only"
+              onChange={async (event) => {
+                const file = event.target.files?.[0]
+                if (!file) return
+                if (!window.confirm('导入词库会合并到当前词库，不会替换学习进度。确认继续吗？')) {
+                  event.target.value = ''
+                  return
+                }
+                const result = await onImportVocabulary(await file.text())
+                setMessage(result.message)
+                event.target.value = ''
+              }}
+              ref={vocabularyFileRef}
+              type="file"
+            />
+          </div>
+        </div>
+
+        <div className="settings-section">
+          <div className="settings-copy">
+            <h3>学习备份</h3>
+            <p>{vocabularyCount} 个义项 · {attemptCount} 次真实回忆。导出含词条、进度与设置；导入会整库替换。数据只保存在这个浏览器中。</p>
+          </div>
+          <div className="backup-actions">
+            <button className="secondary-button" onClick={() => void onExport()} type="button"><Icon name="download" size={18} /> 导出学习备份</button>
+            <button className="secondary-button" onClick={() => backupFileRef.current?.click()} type="button"><Icon name="upload" size={18} /> 导入学习备份</button>
             <input
               accept="application/json,.json"
               className="sr-only"
@@ -118,7 +177,7 @@ export function SettingsDialog({
                 setMessage(result.message)
                 event.target.value = ''
               }}
-              ref={fileRef}
+              ref={backupFileRef}
               type="file"
             />
           </div>
@@ -141,11 +200,17 @@ export function SettingsDialog({
             disabled={saving}
             onClick={async () => {
               setSaving(true)
-              if (apiKey.trim()) setDeepseekApiKey(apiKey)
-              else clearDeepseekApiKey()
-              await onSave({ ...settings, newItemsPerDay: newItems })
-              setSaving(false)
-              onClose()
+              setMessage('')
+              try {
+                if (apiKey.trim()) setDeepseekApiKey(apiKey)
+                else clearDeepseekApiKey()
+                await onSave({ ...settings, newItemsPerDay: newItems, speechAccent })
+                onClose()
+              } catch (error) {
+                setMessage(error instanceof Error ? error.message : '保存设置失败，请重试。')
+              } finally {
+                setSaving(false)
+              }
             }}
             type="button"
           >

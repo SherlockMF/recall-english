@@ -49,12 +49,12 @@ export const SYSTEM_VOCABULARY_LISTS: VocabularyList[] = [
   },
 ]
 
-/** Personal list — not a system content library. */
+/** Personal priority list — not a system content library. */
 export const MY_VOCABULARY_LIST: VocabularyList = {
   id: LIST_IDS['my-vocabulary'],
-  name: 'My Vocabulary',
+  name: 'Priority Study',
   slug: 'my-vocabulary',
-  description: '你自己收藏与添加的表达',
+  description: '优先进入每日训练的表达',
   category: 'my-vocabulary',
   isSystem: false,
   createdAt: CREATED_AT,

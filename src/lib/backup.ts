@@ -26,6 +26,7 @@ import {
   putSettings,
   replaceUserData,
 } from './db'
+import { createInitialTracks } from './scheduler'
 
 type UnknownRecord = Record<string, unknown>
 
@@ -163,7 +164,7 @@ function validateUsagePrompt(value: unknown, path: string): UsagePrompt {
   return record as unknown as UsagePrompt
 }
 
-function validateWord(value: unknown, path: string): Word {
+export function validateWord(value: unknown, path: string): Word {
   const record = objectAt(value, path, [
     'id',
     'expression',
@@ -226,7 +227,7 @@ function validateWord(value: unknown, path: string): Word {
   return record as unknown as Word
 }
 
-function validateVocabularyList(value: unknown, path: string): VocabularyList {
+export function validateVocabularyList(value: unknown, path: string): VocabularyList {
   const record = objectAt(value, path, [
     'id',
     'name',
@@ -258,7 +259,7 @@ function validateVocabularyList(value: unknown, path: string): VocabularyList {
   return record as unknown as VocabularyList
 }
 
-function validateWordListItem(value: unknown, path: string): WordListItem {
+export function validateWordListItem(value: unknown, path: string): WordListItem {
   const record = objectAt(value, path, [
     'id',
     'wordId',
@@ -435,6 +436,7 @@ function validateSettings(value: unknown, path: string): UserSettings {
     'desiredRetention',
     'newItemsPerDay',
     'contentMix',
+    'speechAccent',
     'lastBackupAt',
   ])
   literalAt(record.id, `${path}.id`, ['primary'] as const)
@@ -448,6 +450,9 @@ function validateSettings(value: unknown, path: string): UserSettings {
     integer: true,
     min: 0,
   })
+  if (record.speechAccent !== undefined) {
+    literalAt(record.speechAccent, `${path}.speechAccent`, ['uk', 'us'] as const)
+  }
   const contentMix = objectAt(record.contentMix, `${path}.contentMix`, [
     'daily',
     'finance',
@@ -485,6 +490,7 @@ function validateSettings(value: unknown, path: string): UserSettings {
     : finance * 0.5
   return {
     ...(record as unknown as UserSettings),
+    speechAccent: record.speechAccent === 'us' ? 'us' : 'uk',
     contentMix: {
       daily: contentMix.daily as number,
       business: contentMix.business as number,
@@ -681,6 +687,19 @@ function preferWord(left: Word, right: Word): Word {
   return Date.parse(right.updatedAt) > Date.parse(left.updatedAt) ? right : left
 }
 
+/** Fills missing receptive/productive (and usage when prompts exist) so imported words stay learnable. */
+export function ensureCoreTracks(
+  words: Word[],
+  tracks: LearningTrack[],
+  now: Date = new Date(),
+): LearningTrack[] {
+  const existing = new Set(tracks.map((track) => `${track.itemId}\0${track.type}`))
+  const missing = createInitialTracks(words, now).filter(
+    (track) => !existing.has(`${track.itemId}\0${track.type}`),
+  )
+  return missing.length ? [...tracks, ...missing] : tracks
+}
+
 export function deduplicateBackupV2(backup: BackupV2): BackupV2 {
   const words: Word[] = []
   const wordsByIdentity = new Map<string, { index: number; id: string }>()
@@ -709,10 +728,22 @@ export function deduplicateBackupV2(backup: BackupV2): BackupV2 {
   }
 
   const canonicalWordIds = new Set(words.map((word) => word.id))
-  const listIds = new Set(backup.lists.map((list) => list.id))
+  const listIds = new Set<string>()
+  const listSlugs = new Set<string>()
+  for (const list of backup.lists) {
+    if (listIds.has(list.id)) {
+      fail('$.lists', `词表 ID ${list.id} 重复`)
+    }
+    if (listSlugs.has(list.slug)) {
+      fail('$.lists', `词表 slug ${list.slug} 重复`)
+    }
+    listIds.add(list.id)
+    listSlugs.add(list.slug)
+  }
 
   const memberships: WordListItem[] = []
   const membershipByKey = new Map<string, { index: number; id: string }>()
+  const membershipIds = new Set<string>()
   for (const sourceMembership of backup.memberships) {
     const wordId = itemIdMap.get(sourceMembership.wordId) ?? sourceMembership.wordId
     if (!canonicalWordIds.has(wordId)) {
@@ -724,12 +755,24 @@ export function deduplicateBackupV2(backup: BackupV2): BackupV2 {
     const membership = { ...sourceMembership, wordId }
     const key = `${membership.wordId}\u0000${membership.listId}`
     const existing = membershipByKey.get(key)
-    if (!existing) {
-      membershipByKey.set(key, { index: memberships.length, id: membership.id })
-      memberships.push(membership)
+    if (existing) {
+      if (existing.id !== membership.id) {
+        if (membershipIds.has(membership.id)) {
+          fail('$.memberships', `列表关联 ID ${membership.id} 重复`)
+        }
+        membershipIds.delete(existing.id)
+        membershipIds.add(membership.id)
+        membershipByKey.set(key, { index: existing.index, id: membership.id })
+      }
+      memberships[existing.index] = membership
       continue
     }
-    memberships[existing.index] = membership
+    if (membershipIds.has(membership.id)) {
+      fail('$.memberships', `列表关联 ID ${membership.id} 重复`)
+    }
+    membershipIds.add(membership.id)
+    membershipByKey.set(key, { index: memberships.length, id: membership.id })
+    memberships.push(membership)
   }
 
   const tracks: LearningTrack[] = []
@@ -909,17 +952,18 @@ export async function importBackup(input: unknown): Promise<BackupImportSummary>
     validateBackupV2(decoded)
     const backup = deduplicateBackupV2(decoded as BackupV2)
     const original = decoded as BackupV2
+    const tracks = ensureCoreTracks(backup.words, backup.tracks)
     await replaceUserData({
       words: backup.words,
       lists: backup.lists.length ? backup.lists : ALL_VOCABULARY_LISTS,
       memberships: backup.memberships,
-      tracks: backup.tracks,
+      tracks,
       attempts: backup.attempts,
       settings: backup.settings,
     })
     return {
       vocabulary: backup.words.length,
-      tracks: backup.tracks.length,
+      tracks: tracks.length,
       attempts: backup.attempts.length,
       duplicatesRemoved: {
         vocabulary: original.words.length - backup.words.length,
@@ -933,18 +977,19 @@ export async function importBackup(input: unknown): Promise<BackupImportSummary>
   const backup = deduplicateBackup(decoded as BackupV1)
   const words = backup.vocabulary.map((item) => stripHydrationFields(item))
   const memberships = membershipsFromV1Vocabulary(backup.vocabulary)
+  const tracks = ensureCoreTracks(words, backup.tracks)
   await replaceUserData({
     words,
     lists: ALL_VOCABULARY_LISTS,
     memberships,
-    tracks: backup.tracks,
+    tracks,
     attempts: backup.attempts,
     settings: backup.settings,
   })
 
   return {
     vocabulary: backup.vocabulary.length,
-    tracks: backup.tracks.length,
+    tracks: tracks.length,
     attempts: backup.attempts.length,
     duplicatesRemoved: {
       vocabulary: (decoded as BackupV1).vocabulary.length - backup.vocabulary.length,

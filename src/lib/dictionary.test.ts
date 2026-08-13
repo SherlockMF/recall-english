@@ -5,10 +5,15 @@ import { deleteDB } from 'idb'
 import {
   DATABASE_NAME,
   closeDatabase,
+  normalizeDictionaryQuery,
+  setDictionaryCache,
 } from './db'
 import {
   DICTIONARY_API_BASE_URL,
+  DICTIONARY_RESULT_VERSION,
   DICTIONARY_TIMEOUT_MS,
+  composeDictionaryResult,
+  isUsableDictionaryCache,
   lookupDictionary,
 } from './dictionary'
 
@@ -46,7 +51,34 @@ const dictionaryPayload = [
   },
 ]
 
-describe('Free Dictionary lookup', () => {
+const youdaoProfitPayload = {
+  expand_ec: {
+    word: [
+      {
+        pos: 'n.',
+        transList: [
+          {
+            trans: '利润率',
+            content: {
+              detailPos: 'n.',
+              sents: [
+                {
+                  sentSpeech: 'Our profit margin improved this quarter.',
+                  sentTrans: '我们的利润率本季提高了。',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  },
+  simple: {
+    word: [{ 'return-phrase': 'profit margin', ukphone: 'ˈprɒfɪt ˌmɑːdʒɪn' }],
+  },
+}
+
+describe('dictionary lookup (Chinese-first)', () => {
   beforeEach(async () => {
     vi.restoreAllMocks()
     vi.useRealTimers()
@@ -61,26 +93,138 @@ describe('Free Dictionary lookup', () => {
     await deleteDB(DATABASE_NAME)
   })
 
-  it('URL-encodes the query, normalizes audio to HTTPS, and then serves the cache first', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(response(dictionaryPayload))
+  it('composes Youdao senses as the picker cards with optional English assist', () => {
+    const result = composeDictionaryResult({
+      query: 'profit margin',
+      youdao: {
+        word: 'profit margin',
+        senses: [
+          {
+            partOfSpeech: 'noun',
+            zhGloss: '利润率',
+            exampleEn: 'Our profit margin improved this quarter.',
+            exampleZh: '我们的利润率本季提高了。',
+          },
+        ],
+        phonetic: 'ˈprɒfɪt ˌmɑːdʒɪn',
+      },
+      english: {
+        schemaVersion: DICTIONARY_RESULT_VERSION,
+        query: 'profit margin',
+        word: 'profit margin',
+        phonetic: '/ˈprɒfɪt ˌmɑːdʒɪn/',
+        meanings: [
+          {
+            partOfSpeech: 'noun',
+            definition: 'The amount by which revenue exceeds costs.',
+            synonyms: ['margin'],
+          },
+        ],
+        fetchedAt: '2026-01-01T00:00:00.000Z',
+      },
+    })
+
+    expect(result.meanings[0]).toMatchObject({
+      zhGloss: '利润率',
+      definition: 'The amount by which revenue exceeds costs.',
+      example: 'Our profit margin improved this quarter.',
+      exampleZh: '我们的利润率本季提高了。',
+    })
+    expect(result.audioUk).toContain('dict.youdao.com/dictvoice')
+  })
+
+  it('still succeeds when Free Dictionary fails but Youdao has Chinese senses', () => {
+    const result = composeDictionaryResult({
+      query: 'liquidity',
+      youdao: {
+        word: 'liquidity',
+        senses: [
+          { partOfSpeech: 'noun', zhGloss: '资产流动性，资产变现能力' },
+          { partOfSpeech: 'noun', zhGloss: '流动资产，现金' },
+        ],
+      },
+    })
+
+    expect(result.meanings).toHaveLength(2)
+    expect(result.meanings.every((item) => item.zhGloss)).toBe(true)
+  })
+
+  it('ignores pre-bilingual cache entries and rebuilds', async () => {
+    await setDictionaryCache(normalizeDictionaryQuery('profit margin'), {
+      query: 'profit margin',
+      word: 'profit margin',
+      meanings: [
+        {
+          partOfSpeech: 'noun',
+          definition: 'The amount by which revenue exceeds costs.',
+          synonyms: [],
+        },
+      ],
+      fetchedAt: '2020-01-01T00:00:00.000Z',
+    })
+
+    expect(isUsableDictionaryCache({
+      query: 'x',
+      word: 'x',
+      meanings: [{ partOfSpeech: 'noun', definition: 'x', synonyms: [] }],
+      fetchedAt: '2020-01-01T00:00:00.000Z',
+    })).toBe(false)
+
+    const fetchMock = vi.fn(async (url: string) => {
+      if (String(url).includes('/api/youdao/')) return response(youdaoProfitPayload)
+      return response(dictionaryPayload)
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const result = await lookupDictionary('profit margin')
+    expect(result.schemaVersion).toBe(DICTIONARY_RESULT_VERSION)
+    expect(result.meanings[0].zhGloss).toBe('利润率')
+  })
+
+  it('URL-encodes the query, prefers Youdao audio, and serves versioned cache', async () => {
+    const fetchMock = vi.fn(async (url: string) => {
+      if (String(url).includes('/api/youdao/')) return response(youdaoProfitPayload)
+      return response(dictionaryPayload)
+    })
     vi.stubGlobal('fetch', fetchMock)
 
     const first = await lookupDictionary('  profit margin  ')
     const second = await lookupDictionary('PROFIT MARGIN')
 
-    expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(fetchMock).toHaveBeenCalledTimes(2)
     expect(fetchMock).toHaveBeenCalledWith(
       `${DICTIONARY_API_BASE_URL}/profit%20margin`,
       expect.objectContaining({ signal: expect.any(AbortSignal) }),
     )
-    expect(first.audioUrl).toBe('https://audio.example.test/profit-margin.mp3')
-    expect(first.meanings[0]).toEqual({
+    expect(first.audioUrl).toBe('https://dict.youdao.com/dictvoice?audio=profit%20margin&type=1')
+    expect(first.meanings[0]).toMatchObject({
       partOfSpeech: 'noun',
+      zhGloss: '利润率',
       definition: 'The amount by which revenue exceeds costs.',
-      example: 'Our profit margin improved this quarter.',
-      synonyms: ['margin', 'profitability'],
     })
     expect(second).toEqual(first)
+  })
+
+  it('returns Youdao senses even when Free Dictionary 404s', async () => {
+    const fetchMock = vi.fn(async (url: string) => {
+      if (String(url).includes('/api/youdao/')) {
+        return response({
+          expand_ec: {
+            word: [
+              {
+                pos: 'n.',
+                transList: [{ trans: '流动性', content: { detailPos: 'n.' } }],
+              },
+            ],
+          },
+        })
+      }
+      return response({ title: 'No Definitions Found' }, 404)
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const result = await lookupDictionary('liquidity')
+    expect(result.meanings[0].zhGloss).toBe('流动性')
   })
 
   it('reports a missing word separately from offline mode', async () => {
@@ -96,7 +240,6 @@ describe('Free Dictionary lookup', () => {
     await expect(lookupDictionary('anotherword')).rejects.toMatchObject({
       code: 'offline',
     })
-    expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
   it('reports upstream 5xx failures with a recoverable message', async () => {

@@ -53,8 +53,12 @@ function dateValue(value: string | undefined, fallback: number) {
   return Number.isNaN(parsed) ? fallback : parsed
 }
 
-function utcDay(value: SchedulerDate) {
-  return validDate(value, new Date()).toISOString().slice(0, 10)
+function calendarDay(value: SchedulerDate) {
+  const date = validDate(value, new Date())
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
 }
 
 function trackId(itemId: string, type: TrackType) {
@@ -93,7 +97,7 @@ export function createInitialTracks(items: Array<Pick<Word, 'id' | 'usagePrompts
   })
 }
 
-/** Usage starts only after both directions have produced an unassisted `good` review. */
+/** Usage starts only after both directions have a recorded good review. */
 export function canUnlockUsage(itemId: string, tracks: LearningTrack[]) {
   return CORE_TRACK_TYPES.every((type) => {
     const track = tracks.find((candidate) => candidate.itemId === itemId && candidate.type === type)
@@ -101,27 +105,31 @@ export function canUnlockUsage(itemId: string, tracks: LearningTrack[]) {
   })
 }
 
-/** Returns a new array and makes newly eligible usage tracks immediately due. */
+/**
+ * Unlocks newly eligible usage tracks and re-locks usage when core mastery is lost.
+ * Newly unlocked tracks become due immediately.
+ */
 export function unlockEligibleUsageTracks(
   tracks: LearningTrack[],
   now: SchedulerDate = new Date(),
 ) {
   const unlockedAt = validDate(now, new Date())
   const nowValue = unlockedAt.getTime()
-  const eligibleItems = new Set(
-    tracks
-      .filter((track) => track.type === 'usage' && canUnlockUsage(track.itemId, tracks))
-      .map((track) => track.itemId),
-  )
 
   return tracks.map((track) => {
-    if (track.type !== 'usage' || track.unlocked || !eligibleItems.has(track.itemId)) return track
-    const currentDue = dateValue(track.due, nowValue)
-    return {
-      ...track,
-      unlocked: true,
-      due: new Date(Math.min(currentDue, nowValue)).toISOString(),
+    if (track.type !== 'usage') return track
+    const eligible = canUnlockUsage(track.itemId, tracks)
+    if (eligible) {
+      if (track.unlocked) return track
+      const currentDue = dateValue(track.due, nowValue)
+      return {
+        ...track,
+        unlocked: true,
+        due: new Date(Math.min(currentDue, nowValue)).toISOString(),
+      }
     }
+    if (!track.unlocked) return track
+    return { ...track, unlocked: false }
   })
 }
 
@@ -313,8 +321,8 @@ function introducedToday(attempts: ReviewAttempt[], activeItems: Map<string, Voc
     const previous = firstAttempts.get(attempt.itemId)
     if (previous === undefined || reviewedAt < previous) firstAttempts.set(attempt.itemId, reviewedAt)
   }
-  const today = utcDay(now)
-  return [...firstAttempts.values()].filter((value) => utcDay(value) === today).length
+  const today = calendarDay(now)
+  return [...firstAttempts.values()].filter((value) => calendarDay(value) === today).length
 }
 
 /**
@@ -516,6 +524,9 @@ export function scheduleReview(
   const result = scheduler.next(card, reviewedAt, FSRS_RATINGS[rating]).card
   const reviewedIso = reviewedAt.toISOString()
   const wasGood = rating === 'good'
+  // Only full misses reset mastery timestamps; hard still shortens interval via FSRS
+  // and demotes display while lastReview is newer than lastGoodAt.
+  const demoteMastery = rating === 'again'
 
   return {
     ...track,
@@ -528,8 +539,16 @@ export function scheduleReview(
     lapses: result.lapses,
     state: result.state,
     lastReview: result.last_review?.toISOString() ?? reviewedIso,
-    firstGoodAt: wasGood ? track.firstGoodAt ?? reviewedIso : track.firstGoodAt,
-    lastGoodAt: wasGood ? reviewedIso : track.lastGoodAt,
+    firstGoodAt: wasGood
+      ? track.firstGoodAt ?? reviewedIso
+      : demoteMastery
+        ? undefined
+        : track.firstGoodAt,
+    lastGoodAt: wasGood
+      ? reviewedIso
+      : demoteMastery
+        ? undefined
+        : track.lastGoodAt,
   }
 }
 

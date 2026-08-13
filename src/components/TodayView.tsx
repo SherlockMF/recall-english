@@ -1,12 +1,6 @@
-import type { SystemListSlug } from '../domain/types'
-import { categoryLabels, formatToday, greetingFor } from '../lib/presentation'
+import type { MapLearningProgress, LearningTrackSnapshot } from '../lib/learningTracks'
+import { formatToday, greetingFor } from '../lib/presentation'
 import { Icon } from './Icon'
-
-interface CategorySnapshot {
-  category: SystemListSlug
-  learned: number
-  total: number
-}
 
 interface TodayViewProps {
   now: Date
@@ -16,7 +10,8 @@ interface TodayViewProps {
   estimatedMinutes: number
   noHintRate: number | null
   usableThisWeek: number
-  categories: CategorySnapshot[]
+  tracks: LearningTrackSnapshot[]
+  mapProgress: MapLearningProgress
   recentWords: { expression: string; zhGloss: string; stage: string }[]
   onStart: () => void
   onStartExtension: () => void
@@ -30,12 +25,16 @@ export function TodayView({
   estimatedMinutes,
   noHintRate,
   usableThisWeek,
-  categories,
+  tracks,
+  mapProgress,
   recentWords,
   onStart,
   onStartExtension,
 }: TodayViewProps) {
   const totalTasks = dueCount + newCount * 2
+  const startedProgress = mapProgress.total
+    ? Math.min(100, Math.round((mapProgress.started / mapProgress.total) * 100))
+    : 0
 
   return (
     <div className="page-stack today-page">
@@ -96,24 +95,59 @@ export function TodayView({
           <div className="panel-heading">
             <div>
               <p className="eyebrow">LEARNING MAP</p>
-              <h2>三类英语，一起向前</h2>
+              <h2>先练到会用</h2>
             </div>
-            <span className="subtle-badge">本地进度</span>
+            <span className="subtle-badge">三条主线</span>
           </div>
+
+          <div
+            className="map-goal"
+            aria-label={`学习进度：已开始 ${mapProgress.started}，会使用 ${mapProgress.usable}，词库 ${mapProgress.total}`}
+          >
+            <div className="map-goal-copy">
+              <strong>学习进度</strong>
+              <span>已开始练习的表达 / 三条主线词库</span>
+            </div>
+            <div className="map-goal-meter">
+              <div className="map-goal-numbers">
+                <span>{mapProgress.started.toLocaleString('zh-CN')}</span>
+                <span>/ {mapProgress.total.toLocaleString('zh-CN')}</span>
+              </div>
+              <div className="progress-track map-goal-track">
+                <span style={{ width: `${startedProgress}%` }} />
+              </div>
+              <p className="map-goal-usable">
+                会使用 <strong>{mapProgress.usable.toLocaleString('zh-CN')}</strong>
+                <span>理解 + 表达 + 真实使用都过关</span>
+              </p>
+            </div>
+          </div>
+
           <div className="category-progress-list">
-            {categories.map(({ category, learned, total }) => {
-              const progress = total ? Math.min(100, Math.round((learned / total) * 100)) : 0
+            {tracks.map((track) => {
+              const progress = track.total
+                ? Math.min(100, Math.round((track.learned / track.total) * 100))
+                : 0
               return (
-                <div className="category-progress" key={category}>
-                  <div className={`category-icon ${category}`}><Icon name={category === 'daily' ? 'book' : category === 'finance' ? 'brain' : 'spark'} size={19} /></div>
+                <div className="category-progress" key={track.id}>
+                  <div className={`category-icon ${track.id}`}>
+                    <Icon name={track.icon} size={19} />
+                  </div>
                   <div className="category-progress-main">
-                    <div><strong>{categoryLabels[category]}</strong><span>{learned} / {total}</span></div>
+                    <div>
+                      <div className="category-progress-label">
+                        <strong>{track.label}</strong>
+                        <em>{track.purpose}</em>
+                      </div>
+                      <span>{track.learned} / {track.total}</span>
+                    </div>
                     <div className="progress-track"><span style={{ width: `${progress}%` }} /></div>
                   </div>
                 </div>
               )
             })}
           </div>
+          <p className="map-footnote">数字是学习进度，不是收藏量。细分词表在词库里查看。</p>
         </article>
 
         <article className="panel memory-panel">

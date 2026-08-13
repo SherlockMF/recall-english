@@ -2,13 +2,15 @@
   "name": "recall-english",
   "private": true,
   "version": "0.1.0",
+  "description": "Recall English — local-first active-recall English study for Malaysian campus, business, and finance/accounting.",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "test": "vitest run",
     "test:watch": "vitest",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seed:pack": "node scripts/buildBundledSeedPack.mjs"
   },
   "dependencies": {
     "idb": "^8.0.3",
@@ -20,6 +22,7 @@
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.3",
+    "@types/node": "^26.2.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.0.5",

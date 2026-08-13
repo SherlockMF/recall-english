@@ -1,8 +1,9 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
+import { macDesktopShortcut } from './scripts/macDesktopShortcut.ts'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), macDesktopShortcut()],
   server: {
     proxy: {
       '/api/deepseek': {
@@ -14,6 +15,11 @@ export default defineConfig({
         target: 'https://api.dictionaryapi.dev',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/dictionary/, ''),
+      },
+      '/api/youdao': {
+        target: 'https://dict.youdao.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/youdao/, ''),
       },
     },
   },
@@ -28,6 +34,11 @@ export default defineConfig({
         target: 'https://api.dictionaryapi.dev',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/dictionary/, ''),
+      },
+      '/api/youdao': {
+        target: 'https://dict.youdao.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/youdao/, ''),
       },
     },
   },

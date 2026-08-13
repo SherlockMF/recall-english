@@ -22,6 +22,7 @@ import {
   getDueLearningTracks,
   getSettings,
   initializeDatabase,
+  recordReview,
   replaceUserData,
   setDictionaryCache,
   writeBatch,
@@ -97,7 +98,7 @@ describe('IndexedDB persistence', () => {
     await deleteDB(DATABASE_NAME)
   })
 
-  it('seeds only while the words store is empty', async () => {
+  it('does not overwrite existing words when re-seeding the same ids', async () => {
     await initializeDatabase(
       [word()],
       [{
@@ -128,6 +129,64 @@ describe('IndexedDB persistence', () => {
     ])
     expect(await getAllLearningTracks()).toHaveLength(1)
     expect(await getSettings()).toEqual(DEFAULT_SETTINGS)
+  })
+
+  it('merges newly added seed words into an existing library', async () => {
+    await initializeDatabase(
+      [word()],
+      [{
+        id: 'membership-vocabulary-1-accounting',
+        wordId: 'vocabulary-1',
+        listId: LIST_IDS.accounting,
+        priority: 1,
+        sortOrder: 0,
+      }],
+      [track()],
+    )
+
+    const extra = word({
+      id: 'seed-pack-1',
+      expression: 'cash flow',
+      lemma: 'cash flow',
+      senseKey: 'core-cash-flow',
+      zhGloss: '现金流',
+    })
+    await initializeDatabase(
+      [word(), extra],
+      [
+        {
+          id: 'membership-vocabulary-1-accounting',
+          wordId: 'vocabulary-1',
+          listId: LIST_IDS.accounting,
+          priority: 1,
+          sortOrder: 0,
+        },
+        {
+          id: 'membership-seed-pack-1-finance',
+          wordId: 'seed-pack-1',
+          listId: LIST_IDS.finance,
+          priority: 1,
+          sortOrder: 1,
+        },
+      ],
+      [],
+    )
+
+    const vocabulary = await getAllVocabulary()
+    expect(vocabulary).toHaveLength(2)
+    expect(vocabulary).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: 'vocabulary-1', expression: 'asset' }),
+      expect.objectContaining({
+        id: 'seed-pack-1',
+        expression: 'cash flow',
+        listSlugs: ['finance'],
+      }),
+    ]))
+    expect(await getAllLearningTracks()).toEqual(expect.arrayContaining([
+      expect.objectContaining({ itemId: 'vocabulary-1' }),
+      expect.objectContaining({ itemId: 'seed-pack-1', type: 'receptive' }),
+      expect.objectContaining({ itemId: 'seed-pack-1', type: 'productive' }),
+    ]))
   })
 
   it('writes related records in a batch and queries due tracks', async () => {
@@ -199,5 +258,65 @@ describe('IndexedDB persistence', () => {
     await clearDatabase()
     expect(await getAllVocabulary()).toEqual([])
     expect(await getDictionaryCache('asset')).toBeUndefined()
+  })
+
+  it('applies reviews from IndexedDB state so stale snapshots cannot overwrite newer tracks', async () => {
+    await writeBatch({
+      words: [word()],
+      lists: ALL_VOCABULARY_LISTS,
+      memberships: [{
+        id: 'membership-vocabulary-1-accounting',
+        wordId: 'vocabulary-1',
+        listId: LIST_IDS.accounting,
+        priority: 1,
+        sortOrder: 0,
+      }],
+      tracks: [track({ reps: 0, state: 0 })],
+      settings: DEFAULT_SETTINGS,
+    })
+
+    const first = await recordReview({
+      trackId: 'track-1',
+      rating: 'good',
+      desiredRetention: 0.9,
+      attempt: {
+        id: 'attempt-first',
+        itemId: 'vocabulary-1',
+        trackType: 'receptive',
+        promptType: 'definition',
+        answer: '资产',
+        hintLevel: 0,
+        responseMs: 1_000,
+      },
+      reviewedAt: new Date('2026-08-10T01:00:00.000Z'),
+    })
+
+    const second = await recordReview({
+      trackId: 'track-1',
+      rating: 'good',
+      desiredRetention: 0.9,
+      attempt: {
+        id: 'attempt-second',
+        itemId: 'vocabulary-1',
+        trackType: 'receptive',
+        promptType: 'definition',
+        answer: '资产',
+        hintLevel: 0,
+        responseMs: 1_200,
+      },
+      reviewedAt: new Date('2026-08-10T02:00:00.000Z'),
+    })
+
+    const stored = await getAllLearningTracks()
+    expect(stored).toEqual([
+      expect.objectContaining({
+        id: 'track-1',
+        reps: 2,
+        lastGoodAt: '2026-08-10T02:00:00.000Z',
+      }),
+    ])
+    expect(first.attempt.id).toBe('attempt-first')
+    expect(second.attempt.id).toBe('attempt-second')
+    expect(await getAllReviewAttempts()).toHaveLength(2)
   })
 })

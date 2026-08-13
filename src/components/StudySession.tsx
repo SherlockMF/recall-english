@@ -5,6 +5,7 @@ import type {
   ReviewRating,
   SessionSummary,
   SessionTask,
+  SpeechAccent,
   VocabularyItem,
 } from '../domain/types'
 import { expressionHint, trackLabels } from '../lib/presentation'
@@ -24,6 +25,8 @@ interface StudySessionProps {
   items: VocabularyItem[]
   tracks: LearningTrack[]
   usableThisWeek: number
+  speechAccent?: SpeechAccent
+  onSpeechAccentChange?: (accent: SpeechAccent) => void
   evaluate: (
     task: SessionTask,
     item: VocabularyItem,
@@ -59,6 +62,8 @@ export function StudySession({
   items,
   tracks,
   usableThisWeek,
+  speechAccent = 'uk',
+  onSpeechAccentChange,
   evaluate,
   resolveHint,
   ensureUsageItem,
@@ -80,6 +85,8 @@ export function StudySession({
   const [grading, setGrading] = useState(false)
   const [hinting, setHinting] = useState(false)
   const [ensuringUsage, setEnsuringUsage] = useState(false)
+  const [usageEnsureError, setUsageEnsureError] = useState<string | null>(null)
+  const [accent, setAccent] = useState<SpeechAccent>(speechAccent)
   const [itemOverrides, setItemOverrides] = useState<Record<string, VocabularyItem>>({})
   const [summary, setSummary] = useState<SessionSummary>({
     total: 0,
@@ -92,6 +99,15 @@ export function StudySession({
   const startedAt = useRef(Date.now())
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null)
   const finishCalled = useRef(false)
+
+  useEffect(() => {
+    setAccent(speechAccent)
+  }, [speechAccent])
+
+  function chooseAccent(next: SpeechAccent) {
+    setAccent(next)
+    onSpeechAccentChange?.(next)
+  }
 
   const task = tasks[index]
   const item = useMemo(() => {
@@ -128,45 +144,62 @@ export function StudySession({
     if (item.usagePrompts.length >= 2) return
     let cancelled = false
     setEnsuringUsage(true)
+    setUsageEnsureError(null)
     void ensureUsageItem(item)
       .then((updated) => {
         if (!cancelled) {
           setItemOverrides((current) => ({ ...current, [updated.id]: updated }))
         }
       })
+      .catch((error) => {
+        if (!cancelled) {
+          setUsageEnsureError(error instanceof Error ? error.message : '使用题生成失败，请稍后重试。')
+        }
+      })
       .finally(() => {
         if (!cancelled) setEnsuringUsage(false)
       })
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+      setEnsuringUsage(false)
+    }
   }, [ensureUsageItem, item, task])
 
   async function showForgottenAnswer() {
-    if (!item || !task || grading) return
+    if (!item || !task || grading || ensuringUsage) return
+    if (task.trackType === 'usage' && item.usagePrompts.length === 0) return
     setGrading(true)
-    const result = await evaluate(task, item, '', 3, true, Math.max(0, Date.now() - startedAt.current))
-    setHintLevel(3)
-    setRevealed(true)
-    setEvaluation({ ...result, rating: 'again', matched: false })
-    setPhase('feedback')
-    setGrading(false)
-    void speakWord(item, 'uk')
+    try {
+      const result = await evaluate(task, item, '', 3, true, Math.max(0, Date.now() - startedAt.current))
+      setHintLevel(3)
+      setRevealed(true)
+      setEvaluation({ ...result, rating: 'again', matched: false })
+      setPhase('feedback')
+      void speakWord(item, accent)
+    } finally {
+      setGrading(false)
+    }
   }
 
   async function submitAnswer() {
-    if (!task || !item || !answer.trim() || grading) return
+    if (!task || !item || !answer.trim() || grading || ensuringUsage) return
+    if (task.trackType === 'usage' && item.usagePrompts.length === 0) return
     setGrading(true)
-    const result = await evaluate(
-      task,
-      item,
-      answer,
-      hintLevel,
-      false,
-      Math.max(0, Date.now() - startedAt.current),
-    )
-    setEvaluation(result)
-    setPhase('feedback')
-    setGrading(false)
-    void speakWord(item, 'uk')
+    try {
+      const result = await evaluate(
+        task,
+        item,
+        answer,
+        hintLevel,
+        false,
+        Math.max(0, Date.now() - startedAt.current),
+      )
+      setEvaluation(result)
+      setPhase('feedback')
+      void speakWord(item, accent)
+    } finally {
+      setGrading(false)
+    }
   }
 
   async function requestHint() {
@@ -315,6 +348,9 @@ export function StudySession({
               {ensuringUsage && task.trackType === 'usage' && (
                 <p className="field-help">正在生成使用题…</p>
               )}
+              {usageEnsureError && task.trackType === 'usage' && (
+                <p className="field-help" role="alert">{usageEnsureError}</p>
+              )}
 
               {hintLevel > 0 && (
                 <div className="hint-box">
@@ -327,6 +363,7 @@ export function StudySession({
                 <label htmlFor="recall-answer">{prompt.answerLabel}</label>
                 {isSentence ? (
                   <textarea
+                    disabled={ensuringUsage || grading}
                     id="recall-answer"
                     onChange={(event) => setAnswer(event.target.value)}
                     onKeyDown={(event) => {
@@ -340,6 +377,7 @@ export function StudySession({
                 ) : (
                   <input
                     autoComplete="off"
+                    disabled={ensuringUsage || grading}
                     id="recall-answer"
                     onChange={(event) => setAnswer(event.target.value)}
                     onKeyDown={(event) => { if (event.key === 'Enter') submitAnswer() }}
@@ -352,13 +390,24 @@ export function StudySession({
 
               <div className="recall-actions">
                 <div>
-                  <button className="hint-button" disabled={hintLevel >= 2 || hinting || grading} onClick={() => void requestHint()} type="button">
+                  <button className="hint-button" disabled={hintLevel >= 2 || hinting || grading || ensuringUsage} onClick={() => void requestHint()} type="button">
                     <Icon name="spark" size={17} /> {hinting ? '生成提示…' : hintLevel ? '再给一点提示' : '给一点提示'}
                   </button>
-                  <button className="forgot-button" disabled={grading} onClick={() => void showForgottenAnswer()} type="button">想不起来</button>
+                  <button
+                    className="forgot-button"
+                    disabled={
+                      grading
+                      || ensuringUsage
+                      || (task.trackType === 'usage' && item.usagePrompts.length === 0)
+                    }
+                    onClick={() => void showForgottenAnswer()}
+                    type="button"
+                  >
+                    想不起来
+                  </button>
                 </div>
-                <button className="primary-button" disabled={!answer.trim() || grading} onClick={() => void submitAnswer()} type="button">
-                  {grading ? '判分中…' : '提交回忆'} <Icon name="arrow" size={18} />
+                <button className="primary-button" disabled={!answer.trim() || grading || ensuringUsage} onClick={() => void submitAnswer()} type="button">
+                  {ensuringUsage ? '准备题目…' : grading ? '判分中…' : '提交回忆'} <Icon name="arrow" size={18} />
                 </button>
               </div>
             </>
@@ -369,7 +418,27 @@ export function StudySession({
                   <Icon name={evaluation?.rating === 'good' ? 'check' : evaluation?.rating === 'hard' ? 'refresh' : 'brain'} size={18} />
                   {evaluation?.rating === 'good' ? '无提示想起来了' : evaluation?.rating === 'hard' ? '接近了，再加固一次' : '现在忘记很正常'}
                 </span>
-                <button aria-label={`播放 ${item.expression}`} className="audio-button" onClick={() => void speakWord(item, 'uk')} type="button"><Icon name="volume" size={19} /> 再听一次</button>
+                <div className="speech-controls">
+                  <div className="accent-toggle" role="group" aria-label="发音口音">
+                    <button
+                      aria-pressed={accent === 'uk'}
+                      className={`mini-text-button${accent === 'uk' ? ' is-active' : ''}`}
+                      onClick={() => chooseAccent('uk')}
+                      type="button"
+                    >
+                      UK
+                    </button>
+                    <button
+                      aria-pressed={accent === 'us'}
+                      className={`mini-text-button${accent === 'us' ? ' is-active' : ''}`}
+                      onClick={() => chooseAccent('us')}
+                      type="button"
+                    >
+                      US
+                    </button>
+                  </div>
+                  <button aria-label={`播放 ${item.expression}`} className="audio-button" onClick={() => void speakWord(item, accent)} type="button"><Icon name="volume" size={19} /> 再听一次</button>
+                </div>
               </div>
 
               <div className="answer-reveal">

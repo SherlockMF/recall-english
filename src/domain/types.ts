@@ -119,18 +119,25 @@ export interface UserSettings {
   desiredRetention: number
   newItemsPerDay: number
   contentMix: Record<SystemListSlug, number>
+  /** Preferred UK/US accent for study playback. */
+  speechAccent: SpeechAccent
   lastBackupAt?: string
 }
 
 export interface DictionaryMeaning {
   partOfSpeech: string
   definition: string
+  /** Short Chinese gloss for this sense, when a bilingual source provided one. */
+  zhGloss?: string
   example?: string
+  exampleZh?: string
   synonyms: string[]
   antonyms?: string[]
 }
 
 export interface DictionaryResult {
+  /** Cache schema marker — ignore older entries that lack bilingual senses. */
+  schemaVersion?: number
   query: string
   word: string
   phonetic?: string
@@ -174,6 +181,16 @@ export interface BackupV2 {
   settings: UserSettings
 }
 
+/** Vocabulary-only pack (no learning progress). Distinct from BackupV1/V2. */
+export interface VocabularyPackV1 {
+  version: 1
+  kind: 'vocabulary-pack'
+  exportedAt: string
+  words: Word[]
+  lists: VocabularyList[]
+  memberships: WordListItem[]
+}
+
 export interface SessionTask {
   id: string
   itemId: string
@@ -206,6 +223,7 @@ export const DEFAULT_SETTINGS: UserSettings = {
   desiredRetention: 0.9,
   newItemsPerDay: 5,
   contentMix: { daily: 0.35, business: 0.25, finance: 0.2, accounting: 0.2 },
+  speechAccent: 'uk',
 }
 
 export function normalizeLemma(expression: string): string {

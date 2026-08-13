@@ -2,7 +2,12 @@ import { describe, expect, it } from 'vitest'
 
 import type { Word } from '../domain/types'
 import { listSlugsForFormerFinance } from './listAssignment'
-import { seedMemberships, seedWords } from './seedVocabulary'
+import {
+  bundledSeedWords,
+  handcraftedSeedWords,
+  seedMemberships,
+  seedWords,
+} from './seedVocabulary'
 import { ALL_VOCABULARY_LISTS, LIST_IDS } from './vocabularyLists'
 
 function expectText(value: string): void {
@@ -10,7 +15,7 @@ function expectText(value: string): void {
   expect(value.trim().length).toBeGreaterThan(0)
 }
 
-function expectCompleteItem(item: Word): void {
+function expectCompleteHandcraftedItem(item: Word): void {
   expectText(item.id)
   expectText(item.expression)
   expectText(item.lemma)
@@ -62,11 +67,14 @@ function expectCompleteItem(item: Word): void {
 }
 
 describe('seedWords', () => {
-  it('keeps historical seed ids and 240 senses', () => {
-    expect(seedWords).toHaveLength(240)
+  it('keeps historical handcrafted seed ids and merges bundled pack senses', () => {
+    expect(handcraftedSeedWords).toHaveLength(240)
+    expect(bundledSeedWords.length).toBeGreaterThan(700)
+    expect(seedWords).toHaveLength(handcraftedSeedWords.length + bundledSeedWords.length)
     expect(seedWords.some((item) => item.id === 'seed-daily-001')).toBe(true)
     expect(seedWords.some((item) => item.id === 'seed-finance-001')).toBe(true)
     expect(seedWords.some((item) => item.id === 'seed-business-001')).toBe(true)
+    expect(seedWords.every((item) => item.source === 'seed')).toBe(true)
   })
 
   it('splits former finance seed across finance and accounting lists', () => {
@@ -108,7 +116,16 @@ describe('seedWords', () => {
     expect(new Set(promptIds).size).toBe(promptIds.length)
   })
 
-  it('provides complete review and usage content for every item', () => {
-    seedWords.forEach(expectCompleteItem)
+  it('provides complete review and usage content for every handcrafted item', () => {
+    handcraftedSeedWords.forEach(expectCompleteHandcraftedItem)
+  })
+
+  it('gives bundled seed items usable prompts and memberships', () => {
+    for (const item of bundledSeedWords) {
+      expect(item.source).toBe('seed')
+      expect(item.examples.length).toBeGreaterThanOrEqual(1)
+      expect(item.usagePrompts.length).toBeGreaterThanOrEqual(2)
+      expect(seedMemberships.some((membership) => membership.wordId === item.id)).toBe(true)
+    }
   })
 })

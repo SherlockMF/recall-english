@@ -6,7 +6,9 @@
     "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
     "strict": true,
-    "noEmit": true
+    "noEmit": true,
+    "types": ["node"]
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "scripts/**/*.ts"],
+  "exclude": ["scripts/**/*.test.ts"]
 }

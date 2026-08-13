@@ -248,7 +248,7 @@ describe('backup import and export', () => {
     }))
 
     expect(summary.vocabulary).toBe(2)
-    expect(summary.tracks).toBe(2)
+    expect(summary.tracks).toBe(4)
     expect(summary.duplicatesRemoved.vocabulary).toBe(1)
     expect(summary.duplicatesRemoved.tracks).toBe(1)
     expect(await getAllVocabulary()).toEqual([
@@ -261,15 +261,82 @@ describe('backup import and export', () => {
         zhGloss: '有用的人或品质',
       }),
     ])
-    expect(await getAllLearningTracks()).toEqual([
-      expect.objectContaining({ id: 'track-1', itemId: 'vocabulary-1' }),
-      expect.objectContaining({ id: 'track-other', itemId: 'vocabulary-other-sense' }),
-    ])
+    expect(await getAllLearningTracks()).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: 'track-1', itemId: 'vocabulary-1', type: 'receptive' }),
+      expect.objectContaining({ itemId: 'vocabulary-1', type: 'productive' }),
+      expect.objectContaining({ id: 'track-other', itemId: 'vocabulary-other-sense', type: 'receptive' }),
+      expect.objectContaining({ itemId: 'vocabulary-other-sense', type: 'productive' }),
+    ]))
+    expect((await getAllLearningTracks())).toHaveLength(4)
     expect(await getAllReviewAttempts()).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ itemId: 'vocabulary-1' }),
         expect.objectContaining({ itemId: 'vocabulary-other-sense' }),
       ]),
     )
+  })
+
+  it('fills missing core tracks so imported words remain learnable', async () => {
+    const summary = await importBackup({
+      version: 2,
+      exportedAt: newer,
+      words: [word()],
+      lists: ALL_VOCABULARY_LISTS,
+      memberships: [{
+        id: 'membership-vocabulary-1-accounting',
+        wordId: 'vocabulary-1',
+        listId: LIST_IDS.accounting,
+        priority: 1,
+        sortOrder: 0,
+      }],
+      tracks: [],
+      attempts: [],
+      settings: DEFAULT_SETTINGS,
+    })
+
+    expect(summary.tracks).toBe(2)
+    const tracks = await getAllLearningTracks()
+    expect(tracks).toEqual(expect.arrayContaining([
+      expect.objectContaining({ itemId: 'vocabulary-1', type: 'receptive', unlocked: true }),
+      expect.objectContaining({ itemId: 'vocabulary-1', type: 'productive', unlocked: true }),
+    ]))
+  })
+
+  it('rejects V2 backups with duplicate list or membership ids', async () => {
+    await writeBatch({
+      words: [word()],
+      lists: ALL_VOCABULARY_LISTS,
+      memberships: [{
+        id: 'membership-vocabulary-1-accounting',
+        wordId: 'vocabulary-1',
+        listId: LIST_IDS.accounting,
+        priority: 1,
+        sortOrder: 0,
+      }],
+      settings: DEFAULT_SETTINGS,
+    })
+    const exported = await exportBackup()
+    const duplicateListId = {
+      ...exported,
+      lists: [
+        ...exported.lists,
+        { ...exported.lists[0], name: 'Dup' },
+      ],
+    }
+    await expect(importBackup(duplicateListId)).rejects.toThrow(/词表 ID/)
+
+    const otherList = exported.lists.find((list) => list.id !== exported.memberships[0].listId)
+    expect(otherList).toBeDefined()
+    const duplicateMembershipId = {
+      ...exported,
+      memberships: [
+        exported.memberships[0],
+        {
+          ...exported.memberships[0],
+          listId: otherList!.id,
+        },
+      ],
+    }
+    await expect(importBackup(duplicateMembershipId)).rejects.toThrow(/列表关联 ID/)
   })
 })

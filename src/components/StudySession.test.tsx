@@ -124,4 +124,55 @@ describe('StudySession', () => {
       expect.objectContaining({ hintLevel: 3 }),
     )
   })
+
+  it('blocks answering while usage prompts are still being generated', async () => {
+    const user = userEvent.setup()
+    let resolveEnsure!: (item: VocabularyItem) => void
+    const ensureUsageItem = vi.fn().mockImplementation(() => new Promise<VocabularyItem>((resolve) => {
+      resolveEnsure = resolve
+    }))
+    const usageTask: SessionTask = {
+      id: 'task-usage',
+      itemId: item.id,
+      trackId: `${item.id}:usage`,
+      trackType: 'usage',
+      isNew: false,
+      promptIndex: 0,
+    }
+    const usageTrack: LearningTrack = {
+      ...track,
+      id: `${item.id}:usage`,
+      type: 'usage',
+    }
+    const sparseItem: VocabularyItem = {
+      ...item,
+      usagePrompts: [],
+    }
+
+    render(
+      <StudySession
+        ensureUsageItem={ensureUsageItem}
+        evaluate={() => ({ rating: 'good', matched: true })}
+        initialTasks={[usageTask]}
+        items={[sparseItem]}
+        mode="extension"
+        onExit={vi.fn()}
+        onFinish={vi.fn()}
+        onRate={vi.fn()}
+        tracks={[usageTrack]}
+        usableThisWeek={0}
+      />,
+    )
+
+    expect(await screen.findByText('正在生成使用题…')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /准备题目/ })).toBeDisabled()
+    expect(screen.getByRole('button', { name: '想不起来' })).toBeDisabled()
+
+    resolveEnsure({
+      ...sparseItem,
+      usagePrompts: item.usagePrompts,
+    })
+    expect(await screen.findByRole('button', { name: '想不起来' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: /提交回忆/ })).toBeDisabled()
+  })
 })

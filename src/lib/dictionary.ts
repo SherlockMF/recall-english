@@ -7,9 +7,17 @@ import {
   normalizeDictionaryQuery,
   setDictionaryCache,
 } from './db'
+import {
+  buildBilingualMeanings,
+  lookupYoudao,
+  youdaoDictVoiceUrl,
+  type YoudaoLookupResult,
+} from './youdao'
 
 export const DICTIONARY_API_BASE_URL = '/api/dictionary/api/v2/entries/en'
 export const DICTIONARY_TIMEOUT_MS = 5_000
+/** Bump when cached meaning shape changes (e.g. bilingual senses). */
+export const DICTIONARY_RESULT_VERSION = 2
 
 export type DictionaryLookupErrorCode =
   | 'empty-query'
@@ -138,7 +146,6 @@ function readAccentedPhonetics(entries: UnknownRecord[]): {
         if (text && !ipaUs) ipaUs = text
         if (audio && !audioUs) audioUs = audio
       } else {
-        // Unlabeled accent: keep as generic fallback fields only — do not copy into both UK and US.
         if (text && !phonetic) phonetic = text
         if (audio && !audioUrl) audioUrl = audio
       }
@@ -172,6 +179,7 @@ export function parseDictionaryResponse(
   const accents = readAccentedPhonetics(entries)
 
   return {
+    schemaVersion: DICTIONARY_RESULT_VERSION,
     query,
     word: nonEmptyString(entries[0].word) ?? query,
     phonetic: accents.phonetic ?? accents.ipaUk ?? accents.ipaUs,
@@ -207,6 +215,78 @@ function responseError(response: Response): DictionaryLookupError {
   )
 }
 
+function withPreferredAudio(result: DictionaryResult): DictionaryResult {
+  const audioUk = youdaoDictVoiceUrl(result.word, 'uk') ?? result.audioUk
+  const audioUs = youdaoDictVoiceUrl(result.word, 'us') ?? result.audioUs
+  return {
+    ...result,
+    schemaVersion: DICTIONARY_RESULT_VERSION,
+    audioUk,
+    audioUs,
+    audioUrl: audioUk ?? result.audioUrl ?? audioUs,
+  }
+}
+
+export function isUsableDictionaryCache(result: DictionaryResult): boolean {
+  // Version gate only — bilingual enrichment is best-effort, not a cache validity rule.
+  return result.schemaVersion === DICTIONARY_RESULT_VERSION
+}
+
+export function composeDictionaryResult(input: {
+  query: string
+  youdao: YoudaoLookupResult
+  english?: DictionaryResult
+  fetchedAt?: string
+}): DictionaryResult {
+  const { query, youdao, english } = input
+  const word = english?.word || youdao.word || query
+  const meanings = buildBilingualMeanings(youdao.senses, english?.meanings ?? [])
+
+  if (meanings.length === 0) {
+    throw new DictionaryLookupError(
+      'not-found',
+      '没有找到这个英文词条。请检查拼写，或改用 AI 补全 / 手动填写。',
+    )
+  }
+
+  return withPreferredAudio({
+    schemaVersion: DICTIONARY_RESULT_VERSION,
+    query,
+    word,
+    phonetic: english?.phonetic ?? youdao.phonetic ?? youdao.ipaUk ?? youdao.ipaUs,
+    ipaUk: english?.ipaUk ?? youdao.ipaUk,
+    ipaUs: english?.ipaUs ?? youdao.ipaUs,
+    audioUk: english?.audioUk,
+    audioUs: english?.audioUs,
+    audioUrl: english?.audioUrl,
+    meanings,
+    fetchedAt: input.fetchedAt ?? new Date().toISOString(),
+  })
+}
+
+async function fetchFreeDictionary(
+  query: string,
+  signal: AbortSignal,
+): Promise<DictionaryResult> {
+  const response = await fetch(
+    `${DICTIONARY_API_BASE_URL}/${encodeURIComponent(query)}`,
+    { signal },
+  )
+  if (!response.ok) throw responseError(response)
+
+  let payload: unknown
+  try {
+    payload = await response.json()
+  } catch {
+    throw new DictionaryLookupError(
+      'invalid-response',
+      '词典服务返回了无效的 JSON。',
+    )
+  }
+
+  return parseDictionaryResponse(payload, query)
+}
+
 export async function lookupDictionary(
   rawQuery: string,
   options: DictionaryLookupOptions = {},
@@ -219,10 +299,14 @@ export async function lookupDictionary(
 
   if (!options.forceRefresh) {
     const cached = await getDictionaryCache(normalizedQuery)
-    if (cached) return cached.result
+    if (cached && isUsableDictionaryCache(cached.result)) {
+      return withPreferredAudio(cached.result)
+    }
   }
 
   if (browserIsOffline()) {
+    const cached = await getDictionaryCache(normalizedQuery)
+    if (cached) return withPreferredAudio(cached.result)
     throw new DictionaryLookupError('offline', '当前处于离线状态，且本地没有该词条。')
   }
   if (options.signal?.aborted) {
@@ -240,25 +324,26 @@ export async function lookupDictionary(
   options.signal?.addEventListener('abort', handleExternalAbort, { once: true })
 
   try {
-    const response = await fetch(
-      `${DICTIONARY_API_BASE_URL}/${encodeURIComponent(query)}`,
-      { signal: controller.signal },
-    )
-    if (!response.ok) throw responseError(response)
+    // Chinese senses are the learning unit; Free Dictionary is optional assist + IPA.
+    const [youdaoOutcome, englishOutcome] = await Promise.all([
+      lookupYoudao(query, { signal: controller.signal, timeoutMs }),
+      fetchFreeDictionary(query, controller.signal).then(
+        (value) => ({ ok: true as const, value }),
+        (error: unknown) => ({ ok: false as const, error }),
+      ),
+    ])
 
-    let payload: unknown
-    try {
-      payload = await response.json()
-    } catch {
-      throw new DictionaryLookupError(
-        'invalid-response',
-        '词典服务返回了无效的 JSON。',
-      )
+    if (!youdaoOutcome.senses.length && !englishOutcome.ok) {
+      throw englishOutcome.error
     }
 
-    const result = parseDictionaryResponse(payload, query)
-    await setDictionaryCache(normalizedQuery, result)
-    return result
+    const composed = composeDictionaryResult({
+      query,
+      youdao: youdaoOutcome,
+      english: englishOutcome.ok ? englishOutcome.value : undefined,
+    })
+    await setDictionaryCache(normalizedQuery, composed)
+    return composed
   } catch (error) {
     if (error instanceof DictionaryLookupError) throw error
     if (timedOut) {

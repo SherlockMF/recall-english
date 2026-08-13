@@ -7,6 +7,11 @@ import {
 
 import { ALL_VOCABULARY_LISTS, listIdForSlug } from '../data/vocabularyLists'
 import {
+  createInitialTracks,
+  scheduleReview,
+  unlockEligibleUsageTracks,
+} from './scheduler'
+import {
   DEFAULT_SETTINGS,
   hydrateWord,
   normalizeLemma,
@@ -16,6 +21,8 @@ import {
   type LearningTrack,
   type ListSlug,
   type ReviewAttempt,
+  type ReviewRating,
+  type SpeechAccent,
   type SystemListSlug,
   type TrackType,
   type UserSettings,
@@ -112,6 +119,20 @@ function createDefaultSettings(): UserSettings {
   return {
     ...DEFAULT_SETTINGS,
     contentMix: { ...DEFAULT_SETTINGS.contentMix },
+  }
+}
+
+function normalizeSpeechAccent(value: unknown): SpeechAccent {
+  return value === 'us' ? 'us' : 'uk'
+}
+
+export function normalizeUserSettings(raw: Partial<UserSettings> | UserSettings): UserSettings {
+  return {
+    ...createDefaultSettings(),
+    ...raw,
+    id: 'primary',
+    contentMix: normalizeContentMix(raw.contentMix),
+    speechAccent: normalizeSpeechAccent(raw.speechAccent),
   }
 }
 
@@ -358,6 +379,7 @@ export async function initializeDatabase(
   const wordStore = transaction.objectStore('words')
   const listStore = transaction.objectStore('vocabularyLists')
   const membershipStore = transaction.objectStore('wordListItems')
+  const trackStore = transaction.objectStore('tracks')
 
   for (const list of seedLists) {
     if (!(await listStore.get(list.id))) {
@@ -365,15 +387,40 @@ export async function initializeDatabase(
     }
   }
 
-  if ((await wordStore.count()) === 0) {
-    for (const word of seedWords) {
-      await wordStore.put(word)
-    }
-    for (const membership of seedMemberships) {
-      await membershipStore.put(membership)
-    }
-    const trackStore = transaction.objectStore('tracks')
+  const existingWords = await wordStore.getAll()
+  const existingIds = new Set(existingWords.map((word) => word.id))
+  const existingIdentities = new Set(existingWords.map((word) => lexicalIdentity(word)))
+  const isEmptyLibrary = existingWords.length === 0
+
+  const wordsToAdd = seedWords.filter((word) => (
+    !existingIds.has(word.id) && !existingIdentities.has(lexicalIdentity(word))
+  ))
+  for (const word of wordsToAdd) {
+    await wordStore.put(word)
+    existingIds.add(word.id)
+    existingIdentities.add(lexicalIdentity(word))
+  }
+
+  const existingMemberships = await membershipStore.getAll()
+  const membershipIds = new Set(existingMemberships.map((item) => item.id))
+  const membershipKeys = new Set(
+    existingMemberships.map((item) => `${item.wordId}\u0000${item.listId}`),
+  )
+  for (const membership of seedMemberships) {
+    if (!existingIds.has(membership.wordId)) continue
+    const key = `${membership.wordId}\u0000${membership.listId}`
+    if (membershipIds.has(membership.id) || membershipKeys.has(key)) continue
+    await membershipStore.put(membership)
+    membershipIds.add(membership.id)
+    membershipKeys.add(key)
+  }
+
+  if (isEmptyLibrary) {
     for (const track of seedTracks) {
+      await trackStore.put(track)
+    }
+  } else if (wordsToAdd.length > 0) {
+    for (const track of createInitialTracks(wordsToAdd)) {
       await trackStore.put(track)
     }
   }
@@ -390,6 +437,18 @@ export async function initializeDatabase(
   }
 
   await transaction.done
+}
+
+function lexicalIdentity(word: Pick<Word, 'expression' | 'senseKey'>): string {
+  return `${semanticPart(word.expression)}\u0000${semanticPart(word.senseKey)}`
+}
+
+function semanticPart(value: string): string {
+  return value
+    .normalize('NFKC')
+    .trim()
+    .toLocaleLowerCase('en-US')
+    .replace(/\s+/g, ' ')
 }
 
 function slugByListId(lists: VocabularyList[]): Map<string, ListSlug> {
@@ -568,6 +627,76 @@ export async function putLearningTracks(tracks: LearningTrack[]): Promise<void> 
   await writeBatch({ tracks })
 }
 
+export interface RecordReviewInput {
+  trackId: string
+  rating: ReviewRating
+  desiredRetention: number
+  attempt: Omit<ReviewAttempt, 'reviewedAt' | 'trackId' | 'rating'> & {
+    trackId?: string
+    rating?: ReviewRating
+    reviewedAt?: string
+  }
+  reviewedAt?: Date
+}
+
+export interface RecordReviewResult {
+  tracks: LearningTrack[]
+  changedTracks: LearningTrack[]
+  attempt: ReviewAttempt
+  reviewedAt: Date
+}
+
+/**
+ * Reads the latest tracks inside one IndexedDB transaction, applies FSRS + usage lock sync,
+ * then writes the attempt. Avoids cross-tab last-write-wins from stale React state.
+ */
+export async function recordReview(input: RecordReviewInput): Promise<RecordReviewResult> {
+  const database = await getDatabase()
+  const transaction = database.transaction(['tracks', 'attempts'], 'readwrite')
+  const trackStore = transaction.objectStore('tracks')
+  const existingTracks = await trackStore.getAll()
+  const currentTrack = existingTracks.find((track) => track.id === input.trackId)
+  if (!currentTrack) {
+    throw new Error('找不到当前学习轨道。')
+  }
+
+  const reviewedAt = input.reviewedAt ?? new Date()
+  const scheduledTrack = scheduleReview(
+    currentTrack,
+    input.rating,
+    reviewedAt,
+    input.desiredRetention,
+  )
+  const replacedTracks = existingTracks.map((track) => (
+    track.id === scheduledTrack.id ? scheduledTrack : track
+  ))
+  const nextTracks = unlockEligibleUsageTracks(replacedTracks, reviewedAt)
+  const changedTracks = nextTracks.filter((track, index) => {
+    const previous = existingTracks[index]
+    return track.id === scheduledTrack.id
+      || track.unlocked !== previous?.unlocked
+      || track.due !== previous?.due
+      || track.firstGoodAt !== previous?.firstGoodAt
+      || track.lastGoodAt !== previous?.lastGoodAt
+  })
+
+  const attempt: ReviewAttempt = {
+    ...input.attempt,
+    id: input.attempt.id,
+    trackId: input.trackId,
+    rating: input.rating,
+    reviewedAt: reviewedAt.toISOString(),
+  }
+
+  for (const track of changedTracks) {
+    await trackStore.put(track)
+  }
+  await transaction.objectStore('attempts').put(attempt)
+  await transaction.done
+
+  return { tracks: nextTracks, changedTracks, attempt, reviewedAt }
+}
+
 export async function deleteLearningTrack(id: string): Promise<void> {
   const database = await getDatabase()
   const transaction = database.transaction(['tracks', 'attempts'], 'readwrite')
@@ -607,17 +736,11 @@ export async function deleteReviewAttempt(id: string): Promise<void> {
 export async function getSettings(): Promise<UserSettings> {
   const stored = await (await getDatabase()).get('settings', 'primary')
   if (!stored) return createDefaultSettings()
-  return {
-    ...stored,
-    contentMix: normalizeContentMix(stored.contentMix),
-  }
+  return normalizeUserSettings(stored)
 }
 
 export async function putSettings(settings: UserSettings): Promise<void> {
-  await (await getDatabase()).put('settings', {
-    ...settings,
-    contentMix: normalizeContentMix(settings.contentMix),
-  })
+  await (await getDatabase()).put('settings', normalizeUserSettings(settings))
 }
 
 export async function getDictionaryCache(
@@ -686,10 +809,7 @@ export async function writeBatch(batch: DatabaseBatch): Promise<void> {
     await transaction.objectStore('attempts').put(attempt)
   }
   if (batch.settings) {
-    await transaction.objectStore('settings').put({
-      ...batch.settings,
-      contentMix: normalizeContentMix(batch.settings.contentMix),
-    })
+    await transaction.objectStore('settings').put(normalizeUserSettings(batch.settings))
   }
   for (const cacheEntry of batch.dictionaryCache ?? []) {
     const query = normalizeDictionaryQuery(cacheEntry.query)
@@ -722,7 +842,7 @@ export async function getUserDataSnapshot(): Promise<UserDataSnapshot> {
 
   const ensuredLists = lists.length > 0 ? lists : ALL_VOCABULARY_LISTS
   const settings = storedSettings
-    ? { ...storedSettings, contentMix: normalizeContentMix(storedSettings.contentMix) }
+    ? normalizeUserSettings(storedSettings)
     : createDefaultSettings()
 
   return {
@@ -770,10 +890,7 @@ export async function replaceUserData(data: {
   for (const membership of data.memberships) await membershipStore.put(membership)
   for (const track of data.tracks) await trackStore.put(track)
   for (const attempt of data.attempts) await attemptStore.put(attempt)
-  await settingsStore.put({
-    ...data.settings,
-    contentMix: normalizeContentMix(data.settings.contentMix),
-  })
+  await settingsStore.put(normalizeUserSettings(data.settings))
   await transaction.done
 }
 

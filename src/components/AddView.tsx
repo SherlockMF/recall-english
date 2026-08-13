@@ -5,6 +5,7 @@ import { hasDeepseekApiKey } from '../lib/llm/config'
 import type { EnrichCategory, EnrichmentDraft } from '../lib/llm/enrich'
 import { inferCategoryFromDictionary } from '../lib/inferCategory'
 import { categoryLabels } from '../lib/presentation'
+import { speakWord } from '../lib/speech'
 import { Icon } from './Icon'
 
 export type AddCategory = EnrichCategory
@@ -75,6 +76,8 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich }: AddViewProps) 
     setEnDefinition(meaning.definition)
     setPartOfSpeech(meaning.partOfSpeech || 'expression')
     setExampleEn(meaning.example ?? '')
+    setExampleZh(meaning.exampleZh ?? '')
+    setZhGloss(meaning.zhGloss ?? '')
     const inferred = inferCategoryFromDictionary(
       result.word,
       meaning.definition,
@@ -149,46 +152,56 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich }: AddViewProps) 
       return
     }
     setSaving(true)
-    const result = await onAdd({
-      expression: expression.trim(),
-      zhGloss: zhGloss.trim(),
-      enDefinition: enDefinition.trim(),
-      partOfSpeech: partOfSpeech.trim() || 'expression',
-      category,
-      scenarioNote: category === 'other' ? scenarioNote.trim() : undefined,
-      exampleEn: exampleEn.trim(),
-      exampleZh: exampleZh.trim(),
-      collocations: collocations.split(/[,，\n]/).map((item) => item.trim()).filter(Boolean),
-      ipaUk: dictionaryResult?.ipaUk,
-      ipaUs: dictionaryResult?.ipaUs,
-      audioUk: dictionaryResult?.audioUk,
-      audioUs: dictionaryResult?.audioUs,
-      source: dictionaryResult ? 'dictionary' : 'custom',
-    })
-    setSaving(false)
-    setSaveMessage(result.message)
-    if (result.ok) {
-      setQuery('')
-      setDictionaryResult(null)
-      setLookupState('idle')
-      setExpression('')
-      setZhGloss('')
-      setEnDefinition('')
-      setExampleEn('')
-      setExampleZh('')
-      setCollocations('')
-      setScenarioNote('')
-      setCategory('daily')
+    try {
+      const result = await onAdd({
+        expression: expression.trim(),
+        zhGloss: zhGloss.trim(),
+        enDefinition: enDefinition.trim(),
+        partOfSpeech: partOfSpeech.trim() || 'expression',
+        category,
+        scenarioNote: category === 'other' ? scenarioNote.trim() : undefined,
+        exampleEn: exampleEn.trim(),
+        exampleZh: exampleZh.trim(),
+        collocations: collocations.split(/[,，\n]/).map((item) => item.trim()).filter(Boolean),
+        ipaUk: dictionaryResult?.ipaUk,
+        ipaUs: dictionaryResult?.ipaUs,
+        audioUk: dictionaryResult?.audioUk,
+        audioUs: dictionaryResult?.audioUs,
+        source: dictionaryResult ? 'dictionary' : 'custom',
+      })
+      setSaveMessage(result.message)
+      if (result.ok) {
+        setQuery('')
+        setDictionaryResult(null)
+        setLookupState('idle')
+        setExpression('')
+        setZhGloss('')
+        setEnDefinition('')
+        setExampleEn('')
+        setExampleZh('')
+        setCollocations('')
+        setScenarioNote('')
+        setCategory('daily')
+      }
+    } catch (error) {
+      setSaveMessage(error instanceof Error ? error.message : '保存失败，请重试。')
+    } finally {
+      setSaving(false)
     }
   }
 
   async function handleBulkSave() {
     if (!bulkRows.length) return
     setSaving(true)
-    const result = await onBulkAdd(bulkRows, bulkCategory)
-    setSaving(false)
-    setSaveMessage(`已加入 ${result.added} 条，跳过 ${result.skipped} 条重复或无效内容。`)
-    if (result.added) setBulkText('')
+    try {
+      const result = await onBulkAdd(bulkRows, bulkCategory)
+      setSaveMessage(`已加入 ${result.added} 条，跳过 ${result.skipped} 条重复或无效内容。`)
+      if (result.added) setBulkText('')
+    } catch (error) {
+      setSaveMessage(error instanceof Error ? error.message : '批量保存失败，请重试。')
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -239,7 +252,7 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich }: AddViewProps) 
                   {enriching ? 'AI 补全中…' : 'AI 补全'}
                 </button>
               </div>
-              <p className="field-help">词典辅助：补英文释义/例句，并尽量推断使用场景。AI 补全：补中文义项、例句、搭配，并纠正拼写与场景。短语或离线时也可直接填表。</p>
+              <p className="field-help">词典辅助：补双语义项/例句与音标，并尽量推断使用场景。AI 补全：补中文义项、例句、搭配，并纠正拼写与场景。短语或离线时也可直接填表。</p>
               {lookupState === 'error' && <div className="inline-alert warning">{lookupMessage}</div>}
             </div>
 
@@ -247,18 +260,53 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich }: AddViewProps) 
               <div className="meaning-picker">
                 <div className="meaning-picker-title">
                   <span>选择这次要学的具体义项</span>
-                  {dictionaryResult.phonetic && <small>/{dictionaryResult.phonetic}/</small>}
+                  <div className="meaning-picker-meta">
+                    {dictionaryResult.phonetic && <small>/{dictionaryResult.phonetic}/</small>}
+                    <div className="accent-toggle" aria-label="发音">
+                      <button
+                        aria-label={`英式发音 ${dictionaryResult.word}`}
+                        className="mini-text-button"
+                        onClick={() => void speakWord({
+                          expression: dictionaryResult.word,
+                          audioUk: dictionaryResult.audioUk,
+                          audioUs: dictionaryResult.audioUs,
+                        }, 'uk')}
+                        type="button"
+                      >
+                        UK
+                      </button>
+                      <button
+                        aria-label={`美式发音 ${dictionaryResult.word}`}
+                        className="mini-text-button"
+                        onClick={() => void speakWord({
+                          expression: dictionaryResult.word,
+                          audioUk: dictionaryResult.audioUk,
+                          audioUs: dictionaryResult.audioUs,
+                        }, 'us')}
+                        type="button"
+                      >
+                        US
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 <div className="meaning-options">
                   {dictionaryResult.meanings.slice(0, 6).map((meaning, index) => (
                     <button
                       className={selectedMeaning === index ? 'meaning-option selected' : 'meaning-option'}
-                      key={`${meaning.partOfSpeech}-${meaning.definition}-${index}`}
+                      key={`${meaning.partOfSpeech}-${meaning.zhGloss ?? ''}-${meaning.definition}-${index}`}
                       onClick={() => applyMeaning(dictionaryResult, index)}
                       type="button"
                     >
                       <span>{meaning.partOfSpeech}</span>
-                      <p>{meaning.definition}</p>
+                      {meaning.zhGloss ? (
+                        <>
+                          <p className="meaning-zh">{meaning.zhGloss}</p>
+                          {meaning.definition && <p className="meaning-en">{meaning.definition}</p>}
+                        </>
+                      ) : (
+                        <p>{meaning.definition}</p>
+                      )}
                       {selectedMeaning === index && <Icon name="check" size={17} />}
                     </button>
                   ))}
