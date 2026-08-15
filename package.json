@@ -17,7 +17,15 @@
     "seed:v5": "npm run seed:slice && npm run seed:enrich-v1 && npm run seed:pack && npm run seed:quality",
     "seed:v51": "node scripts/buildV51Expansion.mjs && npm run seed:pack && npm run seed:quality",
     "seed:v52": "node scripts/buildV52Expansion.mjs && npm run seed:pack && npm run seed:quality",
-    "seed:upgrade": "node scripts/upgradeVocabularyQuality.mjs && npm run seed:pack && npm run seed:quality"
+    "seed:upgrade": "node scripts/upgradeVocabularyQuality.mjs && npm run seed:pack && npm run seed:quality",
+    "seed:upgrade2": "node scripts/upgradeVocabularyQualityRound2.mjs && npm run seed:pack && npm run seed:quality",
+    "seed:upgrade3": "node scripts/upgradeVocabularyQualityRound3.mjs && npm run seed:pack && npm run seed:quality",
+    "seed:upgrade4": "node scripts/upgradeVocabularyQualityRound4.mjs && npm run seed:pack && npm run seed:quality",
+    "seed:upgrade5": "node scripts/upgradeVocabularyQualityRound5.mjs && npm run seed:pack && npm run seed:quality",
+    "seed:upgrade6": "node scripts/upgradeVocabularyQualityRound6.mjs && npm run seed:pack && npm run seed:quality",
+    "seed:upgrade7": "node scripts/upgradeVocabularyQualityRound7.mjs && npm run seed:pack && npm run seed:quality",
+    "seed:upgrade8": "node scripts/upgradeVocabularyQualityRound8.mjs && npm run seed:pack && npm run seed:quality",
+    "seed:upgrade9": "node scripts/upgradeVocabularyQualityRound9.mjs && npm run seed:pack && npm run seed:quality"
   },
   "dependencies": {
     "idb": "^8.0.3",

@@ -76,7 +76,12 @@ function isWeakDefinition(def, expression) {
   if (/ideas linked to/i.test(d)) return true
   if (/concept expressed by the phrase/i.test(d)) return true
   if (/in a way that matters for .+ communication/i.test(d)) return true
+  if (/in (business|accounting|finance|daily) practice$/i.test(d)) return true
+  if (/especially in .+ situations$/i.test(d)) return true
   if (/^a (business|accounting|finance|everyday).*(term|expression)/i.test(d)) return true
+  if (/amount that must be paid or spent for \w+$/i.test(d)) return true
+  if (/amount of money charged or quoted for \w+$/i.test(d)) return true
+  if (/fees paid for \w+$/i.test(d)) return true
   if (d.includes(`“${expression}”`) || d.includes(`"${expression}"`)) {
     if (d.length < 90) return true
   }
@@ -84,9 +89,20 @@ function isWeakDefinition(def, expression) {
 }
 
 function isBankExample(en) {
-  return /In the worksheet we applied|Our memo explains why|Before signing, we confirmed|I handled .+ on campus this afternoon|I can explain .+ without reading the notes|Ops will follow up|Could you show me where to find|Once I understood|In the case study we applied|I sorted out the .+ on campus|When I need it, I say|I practised “/i.test(
+  return /In the worksheet we applied|Our memo explains why|Before signing, we confirmed|Before we sign, let’s confirm the|I handled .+ on campus this afternoon|I can explain .+ without reading the notes|Ops will follow up|Ops put the .+ on this week|Could you show me where to find|Could you help me with the|Once I understood|In the case study we applied|I sorted out the .+ on campus|When I need it, I say|I practised “|The portal shows the latest|Students practised calculating/i.test(
     String(en || ''),
   )
+}
+
+function isGenericColSet(cols, expression) {
+  const list = Array.isArray(cols) ? cols : []
+  if (list.length < 2) return true
+  const generic = list.filter((col) =>
+    /^(confirm|negotiate|follow up on|review|record|explain|analyse|monitor|report|check|ask about|use|discuss) the /i.test(
+      col,
+    ),
+  )
+  return generic.length >= 2 && !/\b(cost|price|rate|ratio|budget|capital|fund|loan|tax|audit|invoice|payment)\b/i.test(expression)
 }
 
 /** Head-noun compositional glosses for multi-word professional terms. */

@@ -50,8 +50,44 @@ for (const word of bundled) {
   if (/^(Business|Accounting|Finance|Daily|Common English)\s+sense\s+of\b/i.test(word.enDefinition || '') || /\bsense of\b/i.test(word.enDefinition || '')) {
     fail(word.id, 'placeholder_definition', word.enDefinition)
   }
-  if (/concept expressed by the phrase/i.test(word.enDefinition || '') || /in a way that matters for .+ communication/i.test(word.enDefinition || '')) {
-    fail(word.id, 'meta_wrap_definition', word.enDefinition)
+  if (/in (business|accounting|finance|daily) practice$/i.test(word.enDefinition || '')) {
+    fail(word.id, 'practice_fallback_definition', word.enDefinition)
+  }
+  if (
+    /used in (business|accounting|finance|daily) work$/i.test(word.enDefinition || '') ||
+    /as used in study and work$/i.test(word.enDefinition || '') ||
+    /the daily meaning of /i.test(word.enDefinition || '')
+  ) {
+    fail(word.id, 'work_fallback_definition', word.enDefinition)
+  }
+  if (/a measured level or proportion relating to/i.test(word.enDefinition || '')) {
+    fail(word.id, 'rate_relating_fallback', word.enDefinition)
+  }
+  if (
+    / relating to /i.test(word.enDefinition || '') &&
+    !/^of or relating to/i.test(word.enDefinition || '') &&
+    !/\(law\)/i.test(word.enDefinition || '') &&
+    !/property resulting from being or relating to/i.test(word.enDefinition || '')
+  ) {
+    fail(word.id, 'composed_relating_definition', word.enDefinition)
+  }
+  if (/in commercial or accounting use$/i.test(word.enDefinition || '')) {
+    fail(word.id, 'commercial_use_fallback', word.enDefinition)
+  }
+  if (/banking arrangement or institution role/i.test(word.enDefinition || '')) {
+    fail(word.id, 'bank_role_fallback', word.enDefinition)
+  }
+  if (/^costs attributable to /i.test(word.enDefinition || '')) {
+    fail(word.id, 'cost_attr_fallback', word.enDefinition)
+  }
+  if (/^an investor in /i.test(word.enDefinition || '')) {
+    fail(word.id, 'investor_in_fallback', word.enDefinition)
+  }
+  if (/used in business and finance$/i.test(word.enDefinition || '')) {
+    fail(word.id, 'business_finance_fallback', word.enDefinition)
+  }
+  if (/ in accounting and trade practice$/i.test(word.enDefinition || '')) {
+    fail(word.id, 'trade_practice_fallback', word.enDefinition)
   }
   if (/[\u4e00-\u9fff]/.test(word.enDefinition || '')) {
     fail(word.id, 'chinese_in_en_definition', word.enDefinition)
@@ -59,6 +95,14 @@ for (const word of bundled) {
   for (const example of word.examples || []) {
     if (/Please notice .+ in context/i.test(example.en || '')) {
       fail(word.id, 'template_example', example.en)
+    }
+    if (
+      !String(word.id).startsWith('v1-') &&
+      /Legal asked us to redefine the|The kickoff deck covers the|We escalated the .+ to the steering group|The deal model hinges on the|She explained the .+ in plain English|The briefing clarified the|We validated the .+ against source data|The memo defines the|Add the .+ to tomorrow.?s agenda|Two teams share ownership of the/i.test(
+        example.en || '',
+      )
+    ) {
+      fail(word.id, 'soft_bank_example', example.en)
     }
   }
   for (const prompt of word.usagePrompts || []) {
@@ -72,8 +116,14 @@ for (const word of bundled) {
   if (realCols.length < 2) {
     fail(word.id, 'fake_collocations', word.collocations)
   }
-  if ((word.acceptedZhAnswers || []).length > 6) {
-    flag(word.id, 'many_zh_answers', word.acceptedZhAnswers.length)
+  // Role / person collocations should not use pricing-hedge verbs
+  if (
+    !String(word.id).startsWith('v1-') &&
+    /\b(investor|clerk|manager|attorney|wholesaler|entrepreneur)\b/i.test(word.expression || '') &&
+    !/\b(fee|report|receipt|invoice|cost|rate)\b/i.test(word.expression || '') &&
+    (word.collocations || []).some((col) => /^(model|hedge|post|price|fund|value) (a |an |the )/i.test(col))
+  ) {
+    fail(word.id, 'person_col_mismatch', word.collocations)
   }
 }
 
