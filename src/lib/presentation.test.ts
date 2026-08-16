@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { LearningTrack, VocabularyItem } from '../domain/types'
-import { getItemStage, greetingFor } from './presentation'
+import { getItemStage, groupTracksByItemId, greetingFor } from './presentation'
 
 function atHour(hour: number) {
   return new Date(2026, 7, 13, hour, 0, 0)
@@ -87,5 +87,17 @@ describe('getItemStage', () => {
       }),
     ]
     expect(getItemStage(item, tracks).key).toBe('learning')
+  })
+
+  it('resolves stage from a pre-grouped item track list without scanning siblings', () => {
+    const other: LearningTrack = {
+      ...track('receptive'),
+      id: 'other:receptive',
+      itemId: 'other-word',
+    }
+    const itemTracks = [track('receptive', { reps: 0, state: 0 }), track('productive', { reps: 0, state: 0 })]
+    const byItem = groupTracksByItemId([...itemTracks, other])
+    expect(byItem.get(item.id)).toEqual(itemTracks)
+    expect(getItemStage(item, byItem.get(item.id) ?? []).key).toBe('new')
   })
 })

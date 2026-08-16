@@ -27,6 +27,7 @@ import {
   setDictionaryCache,
   writeBatch,
 } from './db'
+import { createSerialQueue } from './serialQueue'
 
 const timestamp = '2026-08-10T00:00:00.000Z'
 
@@ -353,5 +354,178 @@ describe('IndexedDB persistence', () => {
     expect(first.attempt.id).toBe('attempt-first')
     expect(second.attempt.id).toBe('attempt-second')
     expect(await getAllReviewAttempts()).toHaveLength(2)
+  })
+
+  it('creates initial tracks itself when seedTracks are omitted on an empty library', async () => {
+    const result = await initializeDatabase(
+      [word()],
+      [{
+        id: 'membership-vocabulary-1-accounting',
+        wordId: 'vocabulary-1',
+        listId: LIST_IDS.accounting,
+        priority: 1,
+        sortOrder: 0,
+      }],
+    )
+
+    expect(result).toMatchObject({ seeded: true, skipped: false })
+    expect(await getAllLearningTracks()).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: 'vocabulary-1:receptive' }),
+      expect.objectContaining({ id: 'vocabulary-1:productive' }),
+    ]))
+  })
+
+  it('skips heavy seed writes when revision matches and no new seed ids appear', async () => {
+    await initializeDatabase(
+      [word()],
+      [{
+        id: 'membership-vocabulary-1-accounting',
+        wordId: 'vocabulary-1',
+        listId: LIST_IDS.accounting,
+        priority: 1,
+        sortOrder: 0,
+      }],
+      [track()],
+      { ...DEFAULT_SETTINGS, seedContentRevision: 'ready-1' },
+    )
+
+    const result = await initializeDatabase(
+      [word(), word({
+        id: 'vocabulary-1',
+        expression: 'asset',
+        senseKey: 'finance-noun-resource',
+      })],
+      [{
+        id: 'membership-vocabulary-1-accounting',
+        wordId: 'vocabulary-1',
+        listId: LIST_IDS.accounting,
+        priority: 1,
+        sortOrder: 0,
+      }],
+      undefined,
+      { ...DEFAULT_SETTINGS, seedContentRevision: 'ready-1' },
+    )
+
+    expect(result).toMatchObject({ seeded: false, skipped: true })
+    expect(await getAllVocabulary()).toHaveLength(1)
+    expect(await getAllLearningTracks()).toHaveLength(1)
+  })
+
+  it('reviews only the current item tracks without rewriting the full library', async () => {
+    const distractorTracks = Array.from({ length: 40 }, (_, index) => track({
+      id: `noise-${index}`,
+      itemId: `noise-item-${index}`,
+      type: index % 2 === 0 ? 'receptive' : 'productive',
+      reps: 3,
+      state: 2,
+    }))
+    await writeBatch({
+      words: [word()],
+      lists: ALL_VOCABULARY_LISTS,
+      memberships: [{
+        id: 'membership-vocabulary-1-accounting',
+        wordId: 'vocabulary-1',
+        listId: LIST_IDS.accounting,
+        priority: 1,
+        sortOrder: 0,
+      }],
+      tracks: [
+        track({ id: 'track-receptive', type: 'receptive', reps: 0, state: 0 }),
+        track({ id: 'track-productive', type: 'productive', reps: 1, state: 1, firstGoodAt: timestamp, lastGoodAt: timestamp }),
+        track({ id: 'track-usage', type: 'usage', unlocked: false, reps: 0, state: 0 }),
+        ...distractorTracks,
+      ],
+      settings: DEFAULT_SETTINGS,
+    })
+
+    const result = await recordReview({
+      trackId: 'track-receptive',
+      rating: 'good',
+      desiredRetention: 0.9,
+      attempt: {
+        id: 'attempt-unlock',
+        itemId: 'vocabulary-1',
+        trackType: 'receptive',
+        promptType: 'definition',
+        answer: '资产',
+        hintLevel: 0,
+        responseMs: 900,
+      },
+      reviewedAt: new Date('2026-08-10T03:00:00.000Z'),
+    })
+
+    expect(result.tracks).toHaveLength(3)
+    expect(result.changedTracks.some((candidate) => candidate.id === 'track-usage' && candidate.unlocked)).toBe(true)
+    expect(result.tracks.every((candidate) => candidate.itemId === 'vocabulary-1')).toBe(true)
+
+    const stored = await getAllLearningTracks()
+    expect(stored).toHaveLength(43)
+    expect(stored.find((candidate) => candidate.id === 'noise-0')).toEqual(expect.objectContaining({
+      id: 'noise-0',
+      reps: 3,
+    }))
+    expect(stored.find((candidate) => candidate.id === 'track-usage')).toEqual(expect.objectContaining({
+      unlocked: true,
+    }))
+  })
+
+  it('serializes overlapping same-item reviews so usage unlock is not overwritten', async () => {
+    await writeBatch({
+      words: [word()],
+      lists: ALL_VOCABULARY_LISTS,
+      memberships: [{
+        id: 'membership-vocabulary-1-accounting',
+        wordId: 'vocabulary-1',
+        listId: LIST_IDS.accounting,
+        priority: 1,
+        sortOrder: 0,
+      }],
+      tracks: [
+        track({ id: 'track-receptive', type: 'receptive', reps: 0, state: 0 }),
+        track({ id: 'track-productive', type: 'productive', reps: 0, state: 0 }),
+        track({ id: 'track-usage', type: 'usage', unlocked: false, reps: 0, state: 0 }),
+      ],
+      settings: DEFAULT_SETTINGS,
+    })
+
+    const enqueue = createSerialQueue()
+    const first = enqueue(() => recordReview({
+      trackId: 'track-receptive',
+      rating: 'good',
+      desiredRetention: 0.9,
+      attempt: {
+        id: 'attempt-receptive',
+        itemId: 'vocabulary-1',
+        trackType: 'receptive',
+        promptType: 'definition',
+        answer: '资产',
+        hintLevel: 0,
+        responseMs: 800,
+      },
+      reviewedAt: new Date('2026-08-10T04:00:00.000Z'),
+    }))
+    const second = enqueue(() => recordReview({
+      trackId: 'track-productive',
+      rating: 'good',
+      desiredRetention: 0.9,
+      attempt: {
+        id: 'attempt-productive',
+        itemId: 'vocabulary-1',
+        trackType: 'productive',
+        promptType: 'expression',
+        answer: 'asset',
+        hintLevel: 0,
+        responseMs: 900,
+      },
+      reviewedAt: new Date('2026-08-10T04:00:01.000Z'),
+    }))
+
+    await Promise.all([first, second])
+    const stored = await getAllLearningTracks()
+    expect(stored.find((candidate) => candidate.id === 'track-usage')).toEqual(expect.objectContaining({
+      unlocked: true,
+    }))
+    expect(stored.find((candidate) => candidate.id === 'track-receptive')?.reps).toBeGreaterThan(0)
+    expect(stored.find((candidate) => candidate.id === 'track-productive')?.reps).toBeGreaterThan(0)
   })
 })

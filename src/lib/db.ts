@@ -369,13 +369,20 @@ export function getDatabase(): Promise<IDBPDatabase<RecallEnglishDatabase>> {
   return databasePromise
 }
 
+export interface InitializeDatabaseResult {
+  /** True when this call wrote the initial empty-library seed tracks. */
+  seeded: boolean
+  /** True when an existing library needed no word/membership/track writes. */
+  skipped: boolean
+}
+
 export async function initializeDatabase(
   seedWords: Word[] = [],
   seedMemberships: WordListItem[] = [],
-  seedTracks: LearningTrack[] = [],
+  seedTracks?: LearningTrack[],
   settings: UserSettings = createDefaultSettings(),
   seedLists: VocabularyList[] = ALL_VOCABULARY_LISTS,
-): Promise<void> {
+): Promise<InitializeDatabaseResult> {
   const database = await getDatabase()
   const transaction = database.transaction(
     ['words', 'vocabularyLists', 'wordListItems', 'tracks', 'settings'],
@@ -385,6 +392,7 @@ export async function initializeDatabase(
   const listStore = transaction.objectStore('vocabularyLists')
   const membershipStore = transaction.objectStore('wordListItems')
   const trackStore = transaction.objectStore('tracks')
+  const settingsStore = transaction.objectStore('settings')
 
   for (const list of seedLists) {
     if (!(await listStore.get(list.id))) {
@@ -392,18 +400,26 @@ export async function initializeDatabase(
     }
   }
 
-  const existingWords = await wordStore.getAll()
-  const existingIds = new Set(existingWords.map((word) => word.id))
-  const existingIdentities = new Set(existingWords.map((word) => lexicalIdentity(word)))
-  const isEmptyLibrary = existingWords.length === 0
-
-  const settingsStore = transaction.objectStore('settings')
   const existingSettings = await settingsStore.get('primary')
   const targetRevision = settings.seedContentRevision ?? SEED_CONTENT_REVISION
+  const wordCount = await wordStore.count()
+  const isEmptyLibrary = wordCount === 0
   const shouldRefreshSeedContent =
     !isEmptyLibrary &&
     (existingSettings?.seedContentRevision ?? '') !== targetRevision &&
     seedWords.length > 0
+
+  let existingIds = new Set<string>()
+  let existingIdentities = new Set<string>()
+  let existingWords: Word[] = []
+
+  if (isEmptyLibrary || shouldRefreshSeedContent) {
+    existingWords = await wordStore.getAll()
+    existingIds = new Set(existingWords.map((word) => word.id))
+    existingIdentities = new Set(existingWords.map((word) => lexicalIdentity(word)))
+  } else {
+    existingIds = new Set((await wordStore.getAllKeys()) as string[])
+  }
 
   if (shouldRefreshSeedContent) {
     const seedById = new Map(seedWords.map((word) => [word.id, word]))
@@ -417,8 +433,15 @@ export async function initializeDatabase(
     }
   }
 
-  const wordsToAdd = seedWords.filter((word) => (
-    !existingIds.has(word.id) && !existingIdentities.has(lexicalIdentity(word))
+  const candidateWords = seedWords.filter((word) => !existingIds.has(word.id))
+  if (candidateWords.length > 0 && existingIdentities.size === 0 && !isEmptyLibrary) {
+    // Cheap path: only load identities when new seed ids appear.
+    existingWords = await wordStore.getAll()
+    existingIdentities = new Set(existingWords.map((word) => lexicalIdentity(word)))
+  }
+
+  const wordsToAdd = candidateWords.filter((word) => (
+    !existingIdentities.has(lexicalIdentity(word))
   ))
   for (const word of wordsToAdd) {
     await wordStore.put(word)
@@ -426,24 +449,39 @@ export async function initializeDatabase(
     existingIdentities.add(lexicalIdentity(word))
   }
 
-  const existingMemberships = await membershipStore.getAll()
-  const membershipIds = new Set(existingMemberships.map((item) => item.id))
-  const membershipKeys = new Set(
-    existingMemberships.map((item) => `${item.wordId}\u0000${item.listId}`),
+  const existingMembershipKeys = new Set(
+    ((await membershipStore.getAllKeys()) as string[]),
   )
+  const membershipKeys = new Set(existingMembershipKeys)
+  // Legacy installs may use non-canonical membership ids; keep pair de-dupe.
+  let membershipPairs: Set<string> | undefined
+  const membershipsToAdd: WordListItem[] = []
   for (const membership of seedMemberships) {
     if (!existingIds.has(membership.wordId)) continue
+    if (membershipKeys.has(membership.id)) continue
+    if (!membershipPairs) {
+      const existingMemberships = await membershipStore.getAll()
+      membershipPairs = new Set(
+        existingMemberships.map((item) => `${item.wordId}\u0000${item.listId}`),
+      )
+    }
     const key = `${membership.wordId}\u0000${membership.listId}`
-    if (membershipIds.has(membership.id) || membershipKeys.has(key)) continue
+    if (membershipPairs.has(key)) continue
+    membershipsToAdd.push(membership)
+    membershipKeys.add(membership.id)
+    membershipPairs.add(key)
+  }
+  for (const membership of membershipsToAdd) {
     await membershipStore.put(membership)
-    membershipIds.add(membership.id)
-    membershipKeys.add(key)
   }
 
+  let seeded = false
   if (isEmptyLibrary) {
-    for (const track of seedTracks) {
+    const tracksToWrite = seedTracks ?? createInitialTracks(seedWords)
+    for (const track of tracksToWrite) {
       await trackStore.put(track)
     }
+    seeded = true
   } else if (wordsToAdd.length > 0) {
     for (const track of createInitialTracks(wordsToAdd)) {
       await trackStore.put(track)
@@ -464,6 +502,13 @@ export async function initializeDatabase(
   }
 
   await transaction.done
+
+  const skipped = !isEmptyLibrary
+    && !shouldRefreshSeedContent
+    && wordsToAdd.length === 0
+    && membershipsToAdd.length === 0
+
+  return { seeded, skipped }
 }
 
 function lexicalIdentity(word: Pick<Word, 'expression' | 'senseKey'>): string {
@@ -674,19 +719,23 @@ export interface RecordReviewResult {
 }
 
 /**
- * Reads the latest tracks inside one IndexedDB transaction, applies FSRS + usage lock sync,
- * then writes the attempt. Avoids cross-tab last-write-wins from stale React state.
+ * Reads only this item's tracks inside one IndexedDB transaction, applies FSRS + usage lock sync,
+ * then writes the attempt. Avoids full-table scans on large libraries and cross-tab last-write-wins
+ * from stale React state.
+ *
+ * `tracks` is the updated sibling set for this item only; callers should merge `changedTracks`
+ * into app state instead of replacing the full track list.
  */
 export async function recordReview(input: RecordReviewInput): Promise<RecordReviewResult> {
   const database = await getDatabase()
   const transaction = database.transaction(['tracks', 'attempts'], 'readwrite')
   const trackStore = transaction.objectStore('tracks')
-  const existingTracks = await trackStore.getAll()
-  const currentTrack = existingTracks.find((track) => track.id === input.trackId)
+  const currentTrack = await trackStore.get(input.trackId)
   if (!currentTrack) {
     throw new Error('找不到当前学习轨道。')
   }
 
+  const existingTracks = await trackStore.index('by-item').getAll(currentTrack.itemId)
   const reviewedAt = input.reviewedAt ?? new Date()
   const scheduledTrack = scheduleReview(
     currentTrack,
@@ -698,13 +747,16 @@ export async function recordReview(input: RecordReviewInput): Promise<RecordRevi
     track.id === scheduledTrack.id ? scheduledTrack : track
   ))
   const nextTracks = unlockEligibleUsageTracks(replacedTracks, reviewedAt)
-  const changedTracks = nextTracks.filter((track, index) => {
-    const previous = existingTracks[index]
-    return track.id === scheduledTrack.id
-      || track.unlocked !== previous?.unlocked
-      || track.due !== previous?.due
-      || track.firstGoodAt !== previous?.firstGoodAt
-      || track.lastGoodAt !== previous?.lastGoodAt
+  const previousById = new Map(existingTracks.map((track) => [track.id, track]))
+  // Always persist the reviewed track; also persist siblings whose unlock/due/good markers changed.
+  const changedTracks = nextTracks.filter((track) => {
+    if (track.id === scheduledTrack.id) return true
+    const previous = previousById.get(track.id)
+    if (!previous) return true
+    return track.unlocked !== previous.unlocked
+      || track.due !== previous.due
+      || track.firstGoodAt !== previous.firstGoodAt
+      || track.lastGoodAt !== previous.lastGoodAt
   })
 
   const attempt: ReviewAttempt = {

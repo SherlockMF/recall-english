@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AddView, type CustomItemDraft } from './components/AddView'
 import { AppShell, type AppTab } from './components/AppShell'
 import { LibraryView } from './components/LibraryView'
@@ -48,6 +48,7 @@ import { lookupDictionary } from './lib/dictionary'
 import { evaluateAssist } from './lib/llm/evaluateAssist'
 import { hasDeepseekApiKey } from './lib/llm/config'
 import { hintWithLlm } from './lib/llm/hints'
+import { createSerialQueue } from './lib/serialQueue'
 import { enrichWithLlm } from './lib/llm/enrich'
 import {
   buildFallbackUsagePrompts,
@@ -57,7 +58,7 @@ import {
   snapshotLearningTracks,
   snapshotMapLearningProgress,
 } from './lib/learningTracks'
-import { getItemStage } from './lib/presentation'
+import { getItemStage, groupTracksByItemId } from './lib/presentation'
 import {
   buildDailyQueue,
   createInitialTracks,
@@ -81,6 +82,7 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
   const [now, setNow] = useState(() => new Date())
+  const enqueueReviewWrite = useRef(createSerialQueue()).current
 
   const refreshData = useCallback(async () => {
     const snapshot = await getUserDataSnapshot()
@@ -94,11 +96,10 @@ function App() {
     let active = true
     async function boot() {
       try {
-        const initialTracks = createInitialTracks(seedWords, new Date())
         await initializeDatabase(
           seedWords,
           seedMemberships,
-          initialTracks,
+          undefined,
           DEFAULT_SETTINGS,
           ALL_VOCABULARY_LISTS,
         )
@@ -170,6 +171,8 @@ function App() {
     )).length
   }, [now, tracks])
 
+  const tracksByItemId = useMemo(() => groupTracksByItemId(tracks), [tracks])
+
   const learningTrackSnapshots = useMemo(() => {
     const learnedItemIds = new Set(
       tracks.filter((track) => track.reps > 0).map((track) => track.itemId),
@@ -179,10 +182,13 @@ function App() {
 
   const mapProgress = useMemo(() => {
     const stageByItemId = new Map(
-      items.map((item) => [item.id, getItemStage(item, tracks).key] as const),
+      items.map((item) => [
+        item.id,
+        getItemStage(item, tracksByItemId.get(item.id) ?? []).key,
+      ] as const),
     )
     return snapshotMapLearningProgress(items, stageByItemId)
-  }, [items, tracks])
+  }, [items, tracksByItemId])
 
   const recentWords = useMemo(() => {
     const seen = new Set<string>()
@@ -196,11 +202,11 @@ function App() {
         return [{
           expression: item.expression,
           zhGloss: item.zhGloss,
-          stage: getItemStage(item, tracks).label,
+          stage: getItemStage(item, tracksByItemId.get(item.id) ?? []).label,
         }]
       })
       .slice(0, 6)
-  }, [attempts, itemMap, tracks])
+  }, [attempts, itemMap, tracksByItemId])
 
   function startSession(mode: 'core' | 'extension') {
     const sessionNow = new Date()
@@ -216,6 +222,9 @@ function App() {
     hintLevel: HintLevel,
     revealed: boolean,
     responseMs: number,
+    options?: {
+      onInterim?: (result: EvaluationResult) => void
+    },
   ): Promise<EvaluationResult> {
     const result = await evaluateAssist({
       item,
@@ -225,6 +234,16 @@ function App() {
       responseMs,
       revealed,
       promptIndex: task.promptIndex,
+      onInterim: options?.onInterim
+        ? (interim) => {
+            options.onInterim?.({
+              rating: interim.rating,
+              matched: interim.matched,
+              message: interim.message,
+              feedbackZh: interim.feedbackZh,
+            })
+          }
+        : undefined,
     })
     return {
       rating: result.rating,
@@ -289,7 +308,7 @@ function App() {
       wasOverride: boolean
     },
   ) {
-    const result = await recordReview({
+    const result = await enqueueReviewWrite(() => recordReview({
       trackId: task.trackId,
       rating,
       desiredRetention: settings.desiredRetention,
@@ -303,8 +322,9 @@ function App() {
         responseMs: detail.responseMs,
         wasOverride: detail.wasOverride || undefined,
       },
-    })
-    setTracks(result.tracks)
+    }))
+    const changedById = new Map(result.changedTracks.map((track) => [track.id, track]))
+    setTracks((current) => current.map((track) => changedById.get(track.id) ?? track))
     setAttempts((current) => [...current, result.attempt])
     setNow(result.reviewedAt)
   }
@@ -545,7 +565,7 @@ function App() {
             onAddToMyVocabulary={addToMyVocabulary}
             onToggleStatus={toggleStatus}
             onUpdate={updateItem}
-            tracks={tracks}
+            tracksByItemId={tracksByItemId}
           />
         )}
       </AppShell>

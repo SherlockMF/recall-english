@@ -125,6 +125,137 @@ describe('StudySession', () => {
     )
   })
 
+  it('advances to the next card before a slow save finishes', async () => {
+    const user = userEvent.setup()
+    let resolveRate!: () => void
+    const onRate = vi.fn().mockImplementation(() => new Promise<void>((resolve) => {
+      resolveRate = resolve
+    }))
+    const secondTask: SessionTask = {
+      ...task,
+      id: 'task-2',
+      trackId: 'track-2',
+    }
+    const secondTrack: LearningTrack = {
+      ...track,
+      id: 'track-2',
+    }
+
+    render(
+      <StudySession
+        evaluate={() => ({ rating: 'good', matched: true })}
+        initialTasks={[task, secondTask]}
+        items={[item]}
+        mode="core"
+        onExit={vi.fn()}
+        onFinish={vi.fn()}
+        onRate={onRate}
+        tracks={[track, secondTrack]}
+        usableThisWeek={0}
+      />,
+    )
+
+    await user.type(screen.getByLabelText('你记得的中文意思'), '现金流')
+    await user.click(screen.getByRole('button', { name: /提交回忆/ }))
+    await user.click(screen.getByRole('button', { name: /想起来了/ }))
+
+    expect(await screen.findByText('2 / 2')).toBeInTheDocument()
+    expect(onRate).toHaveBeenCalledTimes(1)
+    expect(screen.queryByRole('button', { name: /想起来了/ })).not.toBeInTheDocument()
+
+    resolveRate()
+    await Promise.resolve()
+  })
+
+  it('shows rules feedback immediately while a slow evaluate is still refining', async () => {
+    const user = userEvent.setup()
+    let resolveEvaluate!: (result: { rating: 'hard'; matched: true; feedbackZh: string }) => void
+    const evaluate = vi.fn().mockImplementation((
+      _task: SessionTask,
+      _item: VocabularyItem,
+      _answer: string,
+      _hint: number,
+      _revealed: boolean,
+      _ms: number,
+      options?: { onInterim?: (result: { rating: 'again'; matched: false }) => void },
+    ) => {
+      options?.onInterim?.({ rating: 'again', matched: false })
+      return new Promise((resolve) => {
+        resolveEvaluate = resolve
+      })
+    })
+
+    render(
+      <StudySession
+        evaluate={evaluate}
+        initialTasks={[task]}
+        items={[item]}
+        mode="core"
+        onExit={vi.fn()}
+        onFinish={vi.fn()}
+        onRate={vi.fn()}
+        tracks={[track]}
+        usableThisWeek={0}
+      />,
+    )
+
+    await user.type(screen.getByLabelText('你记得的中文意思'), '资金流动')
+    await user.click(screen.getByRole('button', { name: /提交回忆/ }))
+
+    expect(await screen.findByText('现在忘记很正常')).toBeInTheDocument()
+    expect(screen.queryByText('判分中…')).not.toBeInTheDocument()
+
+    resolveEvaluate({ rating: 'hard', matched: true, feedbackZh: '意思接近了。' })
+    expect(await screen.findByText('意思接近了。')).toBeInTheDocument()
+    expect(screen.getByText('接近了，再加固一次')).toBeInTheDocument()
+  })
+
+  it('keeps a failed save visible and retries it without clearing later cards', async () => {
+    const user = userEvent.setup()
+    let shouldFail = true
+    const onRate = vi.fn().mockImplementation(async () => {
+      if (shouldFail) throw new Error('disk full')
+    })
+    const secondTask: SessionTask = {
+      ...task,
+      id: 'task-2',
+      trackId: 'track-2',
+    }
+    const secondTrack: LearningTrack = {
+      ...track,
+      id: 'track-2',
+    }
+
+    render(
+      <StudySession
+        evaluate={() => ({ rating: 'good', matched: true })}
+        initialTasks={[task, secondTask]}
+        items={[item]}
+        mode="core"
+        onExit={vi.fn()}
+        onFinish={vi.fn()}
+        onRate={onRate}
+        tracks={[track, secondTrack]}
+        usableThisWeek={0}
+      />,
+    )
+
+    await user.type(screen.getByLabelText('你记得的中文意思'), '现金流')
+    await user.click(screen.getByRole('button', { name: /提交回忆/ }))
+    await user.click(screen.getByRole('button', { name: /想起来了/ }))
+
+    expect(await screen.findByText(/1 条复习结果未保存/)).toBeInTheDocument()
+    expect(await screen.findByText('2 / 2')).toBeInTheDocument()
+
+    shouldFail = false
+    await user.click(screen.getByRole('button', { name: '重试保存' }))
+    expect(await screen.findByText('2 / 2')).toBeInTheDocument()
+    await vi.waitFor(() => {
+      expect(screen.queryByText(/复习结果未保存/)).not.toBeInTheDocument()
+    })
+    expect(onRate).toHaveBeenCalledTimes(2)
+  })
+
   it('blocks answering while usage prompts are still being generated', async () => {
     const user = userEvent.setup()
     let resolveEnsure!: (item: VocabularyItem) => void

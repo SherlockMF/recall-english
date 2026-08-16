@@ -276,8 +276,17 @@ async function fetchFreeDictionary(
 
   let payload: unknown
   try {
-    payload = await response.json()
-  } catch {
+    const text = await response.text()
+    const trimmed = text.trim()
+    if (trimmed.startsWith('<!DOCTYPE') || trimmed.startsWith('<html')) {
+      throw new DictionaryLookupError(
+        'invalid-response',
+        '词典代理未生效（收到了网页而不是词典数据）。请用分享包里的「启动 Recall English.command」或 node server.mjs 启动，不要直接打开 index.html。',
+      )
+    }
+    payload = JSON.parse(text)
+  } catch (error) {
+    if (error instanceof DictionaryLookupError) throw error
     throw new DictionaryLookupError(
       'invalid-response',
       '词典服务返回了无效的 JSON。',

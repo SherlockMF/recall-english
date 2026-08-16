@@ -1,6 +1,7 @@
 import type { HintLevel, ReviewRating, TrackType, VocabularyItem } from '../../domain/types'
 import { gradeAttempt } from '../grading'
 import { hasDeepseekApiKey } from './config'
+import { DEEPSEEK_GRADE_TIMEOUT_MS } from './constants'
 import { gradeWithLlm } from './gradeAssist'
 
 export interface AssistEvaluationResult {
@@ -19,6 +20,10 @@ export interface EvaluateAssistInput {
   responseMs: number
   revealed: boolean
   promptIndex?: number
+  /** Fired with the local rules result before a slow LLM call resolves. */
+  onInterim?: (result: AssistEvaluationResult) => void
+  /** Cap LLM wait for grading; defaults to DEEPSEEK_GRADE_TIMEOUT_MS. */
+  llmTimeoutMs?: number
 }
 
 export async function evaluateAssist(
@@ -46,23 +51,41 @@ export async function evaluateAssist(
     }
   }
 
-  if (!hasDeepseekApiKey()) {
-    return {
-      rating: 'again',
-      matched: false,
-      message: rule.matchKind,
-      source: 'rules',
-    }
+  const rulesMiss: AssistEvaluationResult = {
+    rating: 'again',
+    matched: false,
+    message: rule.matchKind,
+    source: 'rules',
   }
 
+  if (!hasDeepseekApiKey()) {
+    return rulesMiss
+  }
+
+  input.onInterim?.(rulesMiss)
+
+  const controller = new AbortController()
+  const timeoutMs = input.llmTimeoutMs ?? DEEPSEEK_GRADE_TIMEOUT_MS
+  let timer: ReturnType<typeof setTimeout> | undefined
+
   try {
-    const llm = await gradeWithLlm({
-      item: input.item,
-      trackType: input.trackType,
-      answer: input.answer,
-      hintLevel: input.hintLevel,
-      promptIndex: input.promptIndex,
+    const timedOut = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => {
+        controller.abort()
+        reject(new Error('grade-timeout'))
+      }, timeoutMs)
     })
+    const llm = await Promise.race([
+      gradeWithLlm({
+        item: input.item,
+        trackType: input.trackType,
+        answer: input.answer,
+        hintLevel: input.hintLevel,
+        promptIndex: input.promptIndex,
+        signal: controller.signal,
+      }),
+      timedOut,
+    ])
     return {
       rating: llm.rating,
       matched: llm.correct,
@@ -71,11 +94,8 @@ export async function evaluateAssist(
       source: 'llm',
     }
   } catch {
-    return {
-      rating: 'again',
-      matched: false,
-      message: rule.matchKind,
-      source: 'rules',
-    }
+    return rulesMiss
+  } finally {
+    if (timer) clearTimeout(timer)
   }
 }

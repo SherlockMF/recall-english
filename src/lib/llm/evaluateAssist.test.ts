@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { VocabularyItem } from '../../domain/types'
 import { clearDeepseekApiKey, setDeepseekApiKey } from './config'
-import { evaluateAssist } from './evaluateAssist'
+import { evaluateAssist, type AssistEvaluationResult } from './evaluateAssist'
 
 function item(overrides: Partial<VocabularyItem> = {}): VocabularyItem {
   return {
@@ -128,5 +128,69 @@ describe('evaluateAssist', () => {
 
     expect(result).toMatchObject({ rating: 'again', matched: false, source: 'reveal' })
     expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it('emits a rules interim result before a slow llm finishes', async () => {
+    setDeepseekApiKey('sk-test')
+    let resolveFetch!: (value: unknown) => void
+    vi.stubGlobal('fetch', vi.fn().mockImplementation(() => new Promise((resolve) => {
+      resolveFetch = resolve
+    })))
+    const interim: AssistEvaluationResult[] = []
+
+    const pending = evaluateAssist({
+      item: item(),
+      trackType: 'productive',
+      answer: 'money stream',
+      hintLevel: 0,
+      responseMs: 2_000,
+      revealed: false,
+      onInterim: (result) => { interim.push(result) },
+    })
+
+    await vi.waitFor(() => {
+      expect(interim).toEqual([
+        expect.objectContaining({ source: 'rules', matched: false, rating: 'again' }),
+      ])
+    })
+
+    resolveFetch({
+      ok: true,
+      json: async () => ({
+        choices: [{
+          message: {
+            content: JSON.stringify({
+              correct: true,
+              rating: 'hard',
+              feedbackZh: '接近了。',
+            }),
+          },
+        }],
+      }),
+    })
+
+    const result = await pending
+    expect(result).toMatchObject({ source: 'llm', matched: true, rating: 'hard' })
+  })
+
+  it('falls back to rules when llm exceeds the assist timeout', async () => {
+    vi.useFakeTimers()
+    setDeepseekApiKey('sk-test')
+    vi.stubGlobal('fetch', vi.fn().mockImplementation(() => new Promise(() => undefined)))
+
+    const pending = evaluateAssist({
+      item: item(),
+      trackType: 'productive',
+      answer: 'money stream',
+      hintLevel: 0,
+      responseMs: 2_000,
+      revealed: false,
+      llmTimeoutMs: 50,
+    })
+
+    await vi.advanceTimersByTimeAsync(50)
+    const result = await pending
+    expect(result).toMatchObject({ source: 'rules', matched: false, rating: 'again' })
+    vi.useRealTimers()
   })
 })

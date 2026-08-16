@@ -18,10 +18,23 @@ import {
 } from './dictionary'
 
 function response(body: unknown, status = 200): Response {
+  const text = typeof body === 'string' ? body : JSON.stringify(body)
+  let parsed: unknown = body
+  if (typeof body === 'string') {
+    try {
+      parsed = JSON.parse(body)
+    } catch {
+      parsed = body
+    }
+  }
   return {
     ok: status >= 200 && status < 300,
     status,
-    json: vi.fn().mockResolvedValue(body),
+    json: vi.fn().mockImplementation(async () => {
+      if (typeof parsed === 'string') throw new SyntaxError('Unexpected token')
+      return parsed
+    }),
+    text: vi.fn().mockResolvedValue(text),
   } as unknown as Response
 }
 

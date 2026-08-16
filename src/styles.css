@@ -1966,6 +1966,18 @@ p {
 .correction-field small.corrected { display: flex; align-items: center; gap: 4px; color: var(--green); }
 .override-note { margin: 12px 0 0; color: var(--muted); font-size: 9px; line-height: 1.5; }
 .save-error { margin: 10px 0 0; color: var(--danger, #c0392b); font-size: 11px; line-height: 1.5; }
+.study-save-error { margin: 0 0 12px; padding: 0 4px; }
+.save-error-panel {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+  color: var(--danger, #c0392b);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.save-error-panel .secondary-button {
+  justify-self: start;
+}
 
 .rating-block {
   padding-top: 20px;

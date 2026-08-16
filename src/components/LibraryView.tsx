@@ -14,7 +14,7 @@ type VocabularyEditPatch = Pick<
 
 interface LibraryViewProps {
   items: VocabularyItem[]
-  tracks: LearningTrack[]
+  tracksByItemId: ReadonlyMap<string, LearningTrack[]>
   onToggleStatus: (item: VocabularyItem) => Promise<void>
   onUpdate: (
     id: string,
@@ -36,7 +36,7 @@ const systemCategories: SystemListSlug[] = ['daily', 'business', 'finance', 'acc
 
 export function LibraryView({
   items,
-  tracks,
+  tracksByItemId,
   onToggleStatus,
   onUpdate,
   onAddToMyVocabulary,
@@ -103,7 +103,7 @@ export function LibraryView({
         <>
           <section className="word-card-grid">
             {filtered.slice(0, visibleCount).map((item) => {
-              const stage = getItemStage(item, tracks)
+              const stage = getItemStage(item, tracksByItemId.get(item.id) ?? [])
               const inMyVocabulary = item.listSlugs.includes('my-vocabulary')
               const ipa = item.ipaUk || item.ipaUs
               return (

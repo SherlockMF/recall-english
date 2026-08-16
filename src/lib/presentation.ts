@@ -33,6 +33,19 @@ export function formatToday(date: Date) {
 
 export type ItemStageKey = 'new' | 'learning' | 'usable' | 'solid'
 
+/** One-pass index so stage lookups stay O(tracks for item), not O(all tracks). */
+export function groupTracksByItemId(
+  tracks: readonly LearningTrack[],
+): Map<string, LearningTrack[]> {
+  const byItem = new Map<string, LearningTrack[]>()
+  for (const track of tracks) {
+    const current = byItem.get(track.itemId)
+    if (current) current.push(track)
+    else byItem.set(track.itemId, [track])
+  }
+  return byItem
+}
+
 function hasActiveGood(track: LearningTrack | undefined) {
   if (!track?.lastGoodAt) return false
   if (!track.lastReview) return true
@@ -45,11 +58,17 @@ function isSolidTrack(track: LearningTrack | undefined) {
   return new Date(track.lastGoodAt).getTime() - new Date(track.firstGoodAt).getTime() >= sevenDays
 }
 
+/**
+ * `tracks` may be the full library or a pre-filtered per-item list.
+ * Prefer `groupTracksByItemId` + `byItem.get(id) ?? []` on hot paths.
+ */
 export function getItemStage(
   item: VocabularyItem,
   tracks: LearningTrack[],
 ): { key: ItemStageKey; label: string } {
-  const itemTracks = tracks.filter((track) => track.itemId === item.id)
+  const itemTracks = tracks.length > 0 && tracks.every((track) => track.itemId === item.id)
+    ? tracks
+    : tracks.filter((track) => track.itemId === item.id)
   const receptive = itemTracks.find((track) => track.type === 'receptive')
   const productive = itemTracks.find((track) => track.type === 'productive')
   const usage = itemTracks.find((track) => track.type === 'usage')

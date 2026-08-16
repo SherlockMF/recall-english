@@ -7,6 +7,7 @@ export interface GradeAssistInput {
   answer: string
   hintLevel: number
   promptIndex?: number
+  signal?: AbortSignal
 }
 
 export interface GradeAssistResult {
@@ -24,6 +25,8 @@ function clampRating(rating: unknown, correct: boolean): ReviewRating {
 export async function gradeWithLlm(input: GradeAssistInput): Promise<GradeAssistResult> {
   const usage = input.item.usagePrompts[input.promptIndex ?? 0]
   const payload = await chatJson({
+    signal: input.signal,
+    timeoutMs: input.signal ? 60_000 : undefined,
     messages: [
       {
         role: 'system',
