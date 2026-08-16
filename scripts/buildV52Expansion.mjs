@@ -20,6 +20,7 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { toImportablePack, packMetaPayload } from './lib/packExport.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const quarantinePath = join(root, 'data/vocabulary-packs/_quarantine/core_econ_quarantine_pack.json')
@@ -422,8 +423,17 @@ const merged = {
   memberships: mergedMemberships,
 }
 
-writeFileSync(outExpansion, `${JSON.stringify(expansion)}\n`)
-writeFileSync(outMerged, `${JSON.stringify(merged)}\n`)
+writeFileSync(outExpansion, `${JSON.stringify(toImportablePack(expansion))}\n`)
+writeFileSync(
+  outExpansion.replace(/\.json$/, '.meta.json'),
+  `${JSON.stringify(packMetaPayload({
+    title: 'V5.2 expansion pack',
+    note: expansion.note,
+    exportedAt: expansion.exportedAt,
+    extra: { words: rebuiltWords.length },
+  }), null, 2)}\n`,
+)
+writeFileSync(outMerged, `${JSON.stringify(toImportablePack(merged))}\n`)
 
 console.log(JSON.stringify({
   basePath,

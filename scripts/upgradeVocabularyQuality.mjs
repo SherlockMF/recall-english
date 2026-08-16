@@ -9,6 +9,10 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import {
+  composeProfessionalDefinition,
+  isTemplateDefinition,
+} from './lib/professionalGloss.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const packPath = [
@@ -70,6 +74,7 @@ function isFakeCol(col, expression, pos) {
 function isWeakDefinition(def, expression) {
   const d = String(def || '')
   if (!d) return true
+  if (isTemplateDefinition(d)) return true
   if (/sense of/i.test(d)) return true
   if (/practical .+ line or phrase/i.test(d)) return true
   if (/carry out the action/i.test(d)) return true
@@ -319,33 +324,11 @@ const VERB_GLOSS = {
 }
 
 function composeDefinition(expression, partOfSpeech, listSlug) {
-  const raw = expression.trim()
-  const lower = raw.toLocaleLowerCase('en-US')
-  if (PHRASE_GLOSS[lower]) return PHRASE_GLOSS[lower]
-  if (VERB_GLOSS[lower]) return VERB_GLOSS[lower]
-
-  const parts = lower.split(/\s+/).filter(Boolean)
-  if (parts.length >= 2) {
-    const head = parts[parts.length - 1]
-    const mod = parts.slice(0, -1).join(' ')
-    const maker = HEAD_GLOSS[head]
-    if (maker) {
-      let gloss = maker(mod)
-      gloss = gloss.replace(/\bwar war\b/g, 'war')
-      if (head === 'war' && parts.length === 2) {
-        return `intense competition in which rivals repeatedly cut ${parts[0]}s to win customers`
-      }
-      return gloss
-    }
-    return `${withArticle(raw)} in ${listSlug} practice`
-  }
-
-  const pos = String(partOfSpeech || '').toLocaleLowerCase('en-US')
-  if (/\bverb\b/.test(pos) && !/phrase/.test(pos)) {
-    return `to ${lower}, especially in ${listSlug} situations`
-  }
-  if (/\badj/.test(pos)) return `describing something as ${lower} in ${listSlug} contexts`
-  return `${withArticle(raw)} in ${listSlug} practice`
+  return composeProfessionalDefinition({
+    expression,
+    partOfSpeech,
+    listSlug,
+  })
 }
 
 function pickCols(candidates, expression, partOfSpeech) {

@@ -52,19 +52,70 @@ function sanitizeZhFragment(value) {
     .trim()
 }
 
-function splitZhSenses(value) {
-  return sanitizeZhFragment(value)
-    .split(/[；;,，]/)
-    .map((part) => part.trim())
-    .filter((part) => part.length > 0 && !/^(vt|vi|n|adj|adv)$/i.test(part))
+function isSentenceLikeGloss(raw, word) {
+  const text = String(raw ?? '').trim()
+  const expression = String(word?.expression ?? '')
+  const pos = String(word?.partOfSpeech ?? '').toLocaleLowerCase('en-US')
+  if (/\bsentence\b/.test(pos)) return true
+  if (/[?？！!]$/.test(expression) || /[?？！!]$/.test(text)) return true
+  if (/^(can|could|would|will|do|did|is|are|may|sorry|please|how|what|why|when)\b/i.test(expression)) {
+    return true
+  }
+  // Full Chinese sentence with comma clause — keep intact.
+  if (/[，,].+[吗麼么呢吧？?]$/.test(text)) return true
+  return false
+}
+
+function splitZhSenses(value, word) {
+  const cleaned = sanitizeZhFragment(value)
+  if (isSentenceLikeGloss(cleaned, word)) {
+    return cleaned ? [cleaned] : []
+  }
+  // Do not split on commas/semicolons that sit inside brackets or quotes.
+  const parts = []
+  let buf = ''
+  let depth = 0
+  let quote = null
+  for (const ch of cleaned) {
+    if (quote) {
+      buf += ch
+      if (ch === quote || (quote === '“' && ch === '”') || (quote === '「' && ch === '」')) quote = null
+      continue
+    }
+    if (ch === '"' || ch === '“' || ch === '「' || ch === "'") {
+      quote = ch === '“' ? '“' : ch === '「' ? '「' : ch
+      buf += ch
+      continue
+    }
+    if (ch === '(' || ch === '（' || ch === '[') {
+      depth += 1
+      buf += ch
+      continue
+    }
+    if (ch === ')' || ch === '）' || ch === ']') {
+      depth = Math.max(0, depth - 1)
+      buf += ch
+      continue
+    }
+    if (depth === 0 && /[；;,，]/.test(ch)) {
+      const part = buf.trim()
+      if (part && !/^(vt|vi|n|adj|adv)$/i.test(part)) parts.push(part)
+      buf = ''
+      continue
+    }
+    buf += ch
+  }
+  const tail = buf.trim()
+  if (tail && !/^(vt|vi|n|adj|adv)$/i.test(tail)) parts.push(tail)
+  return parts
 }
 
 /** Sense-aligned answers only: primary gloss sense + near-synonym answers, not a full dictionary dump. */
-function senseAlignedZhAnswers(rawGloss, answers) {
-  const senses = splitZhSenses(rawGloss)
+function senseAlignedZhAnswers(rawGloss, answers, word) {
+  const senses = splitZhSenses(rawGloss, word)
   const primary = senses[0] || sanitizeZhFragment(rawGloss) || String(rawGloss ?? '').trim()
   const fromAnswers = (Array.isArray(answers) ? answers : [])
-    .flatMap(splitZhSenses)
+    .flatMap((answer) => splitZhSenses(answer, word))
     .filter((value) => value === primary || value.includes(primary) || primary.includes(value))
   const banned = /性交|强奸|嫖|淫|猥亵|肉欲|男风|白痴|耶稣受难|脱离肉体|精液|迷幻药|花柳病/
   return unique([primary, ...fromAnswers])
@@ -73,8 +124,8 @@ function senseAlignedZhAnswers(rawGloss, answers) {
     .slice(0, 4)
 }
 
-function primaryZhGloss(raw) {
-  const senses = splitZhSenses(raw)
+function primaryZhGloss(raw, word) {
+  const senses = splitZhSenses(raw, word)
   if (senses.length === 0) return sanitizeZhFragment(raw) || String(raw ?? '').trim()
   return senses[0]
 }
@@ -223,7 +274,7 @@ for (const word of pack.words) {
 
   try {
     const examples = requireExamples(word)
-    const zhGloss = primaryZhGloss(word.zhGloss)
+    const zhGloss = primaryZhGloss(word.zhGloss, word)
     const next = {
       id: word.id,
       expression: word.expression,
@@ -232,7 +283,7 @@ for (const word of pack.words) {
       zhGloss,
       enDefinition: cleanEnDefinition(word.enDefinition),
       partOfSpeech: word.partOfSpeech,
-      acceptedZhAnswers: senseAlignedZhAnswers(word.zhGloss, word.acceptedZhAnswers),
+      acceptedZhAnswers: senseAlignedZhAnswers(word.zhGloss, word.acceptedZhAnswers, word),
       acceptedEnVariants: unique([word.expression, ...(word.acceptedEnVariants ?? [])]),
       examples,
       collocations: requireCollocations(word),

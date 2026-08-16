@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "kind": "vocabulary-id-merge-map",
+  "exportedAt": "2026-08-16T11:06:25.000Z",
+  "merges": [
+    {
+      "expression": "general accounting",
+      "keepId": "econ-3d1bd2a93c7713",
+      "dropId": "econ-206f7025fed625",
+      "reason": "identical-sense-duplicate"
+    },
+    {
+      "expression": "loan capital",
+      "keepId": "econ-873ab6e6d64366",
+      "dropId": "econ-3311b09154eb63",
+      "reason": "identical-sense-duplicate"
+    },
+    {
+      "expression": "explicit costs",
+      "keepId": "econ-841b3cb61b79d5",
+      "dropId": "econ-ee4c3a37c5d1c5",
+      "reason": "identical-sense-duplicate"
+    }
+  ]
+}

@@ -9,7 +9,7 @@
 | **产品名** | Recall English |
 | **仓库** | `recall-english` |
 | **npm 包名** | `recall-english` |
-| **版本** | 0.1.0 |
+| **版本** | 0.1.0（词库 **V5.3**） |
 | **技术栈** | React 19 · Vite · TypeScript · IndexedDB (`idb`) · FSRS (`ts-fsrs`) |
 
 ## 功能概览
@@ -17,10 +17,10 @@
 - **三条学习轨道**：日常生活 · 商业英语 · 金融会计（词库内再分 Daily / Business / Finance / Accounting）
 - **主动回忆**：English → 中文、中文/场景 → English、真实使用；正式训练不提供选项
 - **FSRS 复习**：默认按约 90% 目标保持率安排间隔；提示或揭示答案会缩短下次间隔
-- **内置词库**：约 **7500** 个义项（手写核心 240 + V1 756 + V5.1/V5.2 从检疫池按需重建；中文按 sense 对齐，禁占位英文定义），可合并进已有本地库且不覆盖进度
+- **内置词库**：**7497** 个义项（手写 240 + bundled 7257；V5.3 审计修复、不扩词）。seedContentRevision 变更时按 Word.id 刷新种子正文（FSRS track 保留）
 - **查词与发音**：Free Dictionary API + 有道词典代理；UK / US 音频优先，缺失时回退 Web Speech
 - **可选 AI**：设置页配置 DeepSeek API Key 后，支持语义判分、分层提示、词条补全、usage 题懒生成；失败时回退本地规则（Key 仅存 `localStorage`，不进入备份）
-- **导入导出**：词库合并导入、学习备份整库替换；可请求浏览器持久存储
+- **导入导出**：词库合并导入、学习备份整库替换；可请求浏览器持久存储。可导入 pack **不含**顶层 `note`（说明在 `*.meta.json`）
 
 ## 快速开始
 
@@ -32,10 +32,20 @@ npm run dev
 浏览器打开 Vite 输出的本地地址即可。首次启动会把缺失的种子词写入 IndexedDB。
 
 ```bash
-npm test          # 单元 / 组件测试
-npm run build     # 生产构建
-npm run seed:pack # 从 data/vocabulary-packs/ 重建 bundledSeed*.json
+npm test                    # 单元 / 组件测试
+npm run build               # 生产构建
+npm run seed:pack           # 从 trusted_v5_2 重建 bundledSeed*.json
+npm run seed:quality        # 词库硬闸
+npm run seed:validate-sense # 义项一致性（strict）
 ```
+
+### 词库维护（V5.3）
+
+生产 SoT：`data/vocabulary-packs/trusted_v5_2_vocabulary_pack.json` + `src/data/seedVocabulary.ts`。不要手改 `bundledSeed*.json`。
+
+批次脚本：`seed:fix-p0` … `seed:fix-b8`。总报告：`data/vocabulary-packs/v53-wrapup-report.md`。
+
+时效性术语（SIBOR / OPIC / FHLBB / NAA）：**保留历史头词**，定义与中文标明历史地位及现行接替名称。
 
 ### macOS 桌面快捷方式
 

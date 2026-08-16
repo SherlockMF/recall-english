@@ -437,6 +437,7 @@ function validateSettings(value: unknown, path: string): UserSettings {
     'newItemsPerDay',
     'contentMix',
     'speechAccent',
+    'seedContentRevision',
     'lastBackupAt',
   ])
   literalAt(record.id, `${path}.id`, ['primary'] as const)
@@ -452,6 +453,12 @@ function validateSettings(value: unknown, path: string): UserSettings {
   })
   if (record.speechAccent !== undefined) {
     literalAt(record.speechAccent, `${path}.speechAccent`, ['uk', 'us'] as const)
+  }
+  if (record.seedContentRevision !== undefined) {
+    optionalStringAt(record.seedContentRevision, `${path}.seedContentRevision`)
+    if (typeof record.seedContentRevision === 'string' && record.seedContentRevision.trim().length === 0) {
+      fail(`${path}.seedContentRevision`, '必须是非空字符串')
+    }
   }
   const contentMix = objectAt(record.contentMix, `${path}.contentMix`, [
     'daily',

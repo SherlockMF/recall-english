@@ -260,9 +260,17 @@ function resolveListSlug(listId: string, packLists: VocabularyList[]) {
 }
 
 export function parseVocabularyPack(input: unknown): VocabularyPackV1 {
-  const decoded = decodeInput(input)
+  const decoded = stripImportMetadata(decodeInput(input))
   validateVocabularyPack(decoded)
   return deduplicatePack(decoded)
+}
+
+/** Design A: drop top-level pack `note` (and only that metadata) before strict schema checks. */
+function stripImportMetadata(value: unknown): unknown {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return value
+  if (!('note' in value)) return value
+  const { note: _note, ...rest } = value as Record<string, unknown>
+  return rest
 }
 
 export async function exportVocabularyPack(now = new Date()): Promise<VocabularyPackV1> {

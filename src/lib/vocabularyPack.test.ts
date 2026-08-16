@@ -315,4 +315,18 @@ describe('vocabulary pack import and export', () => {
       settings: DEFAULT_SETTINGS,
     })).toThrow(BackupValidationError)
   })
+
+  it('strips top-level note metadata so Design-A packs remain importable', () => {
+    const pack = parseVocabularyPack({
+      version: 1,
+      kind: 'vocabulary-pack',
+      exportedAt: newer,
+      note: 'human-readable only; must not block import',
+      words: [word({ id: 'custom-1', expression: 'invoice', senseKey: 'custom-invoice' })],
+      lists: ALL_VOCABULARY_LISTS,
+      memberships: [],
+    })
+    expect(pack.words).toHaveLength(1)
+    expect(pack).not.toHaveProperty('note')
+  })
 })

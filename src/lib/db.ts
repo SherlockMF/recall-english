@@ -6,6 +6,7 @@ import {
 } from 'idb'
 
 import { ALL_VOCABULARY_LISTS, listIdForSlug } from '../data/vocabularyLists'
+import { SEED_CONTENT_REVISION } from '../data/seedContentRevision'
 import {
   createInitialTracks,
   scheduleReview,
@@ -133,6 +134,10 @@ export function normalizeUserSettings(raw: Partial<UserSettings> | UserSettings)
     id: 'primary',
     contentMix: normalizeContentMix(raw.contentMix),
     speechAccent: normalizeSpeechAccent(raw.speechAccent),
+    seedContentRevision:
+      typeof raw.seedContentRevision === 'string' && raw.seedContentRevision.trim()
+        ? raw.seedContentRevision.trim()
+        : createDefaultSettings().seedContentRevision,
   }
 }
 
@@ -392,6 +397,26 @@ export async function initializeDatabase(
   const existingIdentities = new Set(existingWords.map((word) => lexicalIdentity(word)))
   const isEmptyLibrary = existingWords.length === 0
 
+  const settingsStore = transaction.objectStore('settings')
+  const existingSettings = await settingsStore.get('primary')
+  const targetRevision = settings.seedContentRevision ?? SEED_CONTENT_REVISION
+  const shouldRefreshSeedContent =
+    !isEmptyLibrary &&
+    (existingSettings?.seedContentRevision ?? '') !== targetRevision &&
+    seedWords.length > 0
+
+  if (shouldRefreshSeedContent) {
+    const seedById = new Map(seedWords.map((word) => [word.id, word]))
+    for (const local of existingWords) {
+      const seed = seedById.get(local.id)
+      if (!seed) continue
+      await wordStore.put({
+        ...seed,
+        createdAt: local.createdAt || seed.createdAt,
+      })
+    }
+  }
+
   const wordsToAdd = seedWords.filter((word) => (
     !existingIds.has(word.id) && !existingIdentities.has(lexicalIdentity(word))
   ))
@@ -425,14 +450,16 @@ export async function initializeDatabase(
     }
   }
 
-  const settingsStore = transaction.objectStore('settings')
-  const existingSettings = await settingsStore.get('primary')
   if (!existingSettings) {
-    await settingsStore.put(settings)
+    await settingsStore.put({
+      ...settings,
+      seedContentRevision: targetRevision,
+    })
   } else {
     await settingsStore.put({
       ...existingSettings,
       contentMix: normalizeContentMix(existingSettings.contentMix),
+      seedContentRevision: targetRevision,
     })
   }
 

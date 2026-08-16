@@ -98,6 +98,14 @@ for (const word of bundled) {
     }
     if (
       !String(word.id).startsWith('v1-') &&
+      /They chose to .+ after reviewing the risks|Do not .+ unless the contract allows it|Investors preferred a more .+ structure|Make sure the summary stays /i.test(
+        example.en || '',
+      )
+    ) {
+      fail(word.id, 'round9_hostile_template_example', example.en)
+    }
+    if (
+      !String(word.id).startsWith('v1-') &&
       /Legal asked us to redefine the|The kickoff deck covers the|We escalated the .+ to the steering group|The deal model hinges on the|She explained the .+ in plain English|The briefing clarified the|We validated the .+ against source data|The memo defines the|Add the .+ to tomorrow.?s agenda|Two teams share ownership of the/i.test(
         example.en || '',
       )
@@ -124,6 +132,80 @@ for (const word of bundled) {
     (word.collocations || []).some((col) => /^(model|hedge|post|price|fund|value) (a |an |the )/i.test(col))
   ) {
     fail(word.id, 'person_col_mismatch', word.collocations)
+  }
+
+  const variantsJoined = (word.acceptedEnVariants || []).join(' | ')
+  const knownBadVariant = [
+    /\bafioat\b/i,
+    /\bstock lone\b/i,
+    /\bstock ticket\b/i,
+    /\bstiffing order\b/i,
+    /\bresult's management\b/i,
+    /\bun-audit balance sheet\b/i,
+    /\bgenerally accounting\b/i,
+    /\bsecurities and exchanges commission\b/i,
+    /\bsuper annuation fund\b/i,
+    /\bnon-bear bond\b/i,
+    /\bestimate revenue\b/i,
+    /\bapproximate of the cost\b/i,
+    /\bamortization of bond issued expense\b/i,
+  ]
+  for (const pattern of knownBadVariant) {
+    if (pattern.test(variantsJoined)) {
+      fail(word.id, 'bad_accepted_en_variant', variantsJoined)
+      break
+    }
+  }
+
+  if (/[（(][^）)]*$/.test(String(word.zhGloss || '').trim())) {
+    fail(word.id, 'zh_unclosed_paren', word.zhGloss)
+  }
+
+  if (!String(word.id).startsWith('v1-')) {
+    const def = String(word.enDefinition || '')
+    if (/the market in which .+ is bought, sold, or priced/i.test(def)) {
+      fail(word.id, 'template_market_in_which', def)
+    }
+    if (/^credit related to /i.test(def) || /^a market associated with /i.test(def)) {
+      fail(word.id, 'weak_composed_professional_def', def)
+    }
+    if (/a person or party involved in /i.test(def)) {
+      fail(word.id, 'template_person_involved', def)
+    }
+    if (/the difference used to measure profitability of /i.test(def) && /margin/i.test(word.expression || '')) {
+      fail(word.id, 'template_margin_profitability', def)
+    }
+    if (/a fee paid for /i.test(def) && /commission/i.test(word.expression || '') && /委员会|理事会/.test(word.zhGloss || '')) {
+      fail(word.id, 'template_commission_as_fee', def)
+    }
+    if (/a debt security or bond arrangement related to /i.test(def) && /保证金|保函|保险|保单/.test(word.zhGloss || '')) {
+      fail(word.id, 'template_bond_as_debt', def)
+    }
+  }
+
+  const pos = String(word.partOfSpeech || '').toLocaleLowerCase('en-US')
+  const nonNoun =
+    /\badverb\b|\bpronoun\b|\bpreposition\b|\bconjunction\b|\bmodal\b|\binterjection\b|\bnumeral\b/.test(pos) ||
+    (/\bverb\b/.test(pos) && !/phrase/.test(pos)) ||
+    /\badjective\b|\badj\b/.test(pos)
+  if (nonNoun) {
+    const expr = String(word.expression || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    for (const example of word.examples || []) {
+      const en = String(example.en || '')
+      if (/Pair the .+ with a collocation|weekly drill recycles the |Before the quiz, revise the |Our notes group the |workbook asks you to translate the |Write one sentence that uses the /i.test(en)) {
+        fail(word.id, 'pos_hostile_drill_example', en)
+      }
+      if (
+        (/\badverb\b|\bpronoun\b|\bpreposition\b|\bconjunction\b|\bmodal\b/.test(pos) ||
+          (/\bverb\b/.test(pos) && !/noun/.test(pos))) &&
+        new RegExp(`\\bthe ${expr}\\b`, 'i').test(en)
+      ) {
+        // allow "confirm the order" style where expression is the verb governing a noun
+        if (!(/\bverb\b/.test(pos) && new RegExp(`\\b${expr} the\\b`, 'i').test(en))) {
+          fail(word.id, 'pos_hostile_article_example', en)
+        }
+      }
+    }
   }
 }
 

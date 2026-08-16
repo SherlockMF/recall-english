@@ -128,7 +128,42 @@ describe('IndexedDB persistence', () => {
       }),
     ])
     expect(await getAllLearningTracks()).toHaveLength(1)
-    expect(await getSettings()).toEqual(DEFAULT_SETTINGS)
+    expect(await getSettings()).toEqual(expect.objectContaining({
+      ...DEFAULT_SETTINGS,
+      seedContentRevision: DEFAULT_SETTINGS.seedContentRevision,
+    }))
+  })
+
+  it('refreshes seed word bodies when seedContentRevision changes', async () => {
+    await initializeDatabase(
+      [word({ enDefinition: 'old definition' })],
+      [{
+        id: 'membership-vocabulary-1-accounting',
+        wordId: 'vocabulary-1',
+        listId: LIST_IDS.accounting,
+        priority: 1,
+        sortOrder: 0,
+      }],
+      [track()],
+      { ...DEFAULT_SETTINGS, seedContentRevision: '5.2.0' },
+    )
+
+    await initializeDatabase(
+      [word({ enDefinition: 'V5.3 refreshed definition', zhGloss: '资产（修订）' })],
+      [],
+      [],
+      { ...DEFAULT_SETTINGS, seedContentRevision: '5.3.0' },
+    )
+
+    expect(await getAllVocabulary()).toEqual([
+      expect.objectContaining({
+        id: 'vocabulary-1',
+        enDefinition: 'V5.3 refreshed definition',
+        zhGloss: '资产（修订）',
+      }),
+    ])
+    expect(await getAllLearningTracks()).toHaveLength(1)
+    expect(await getSettings()).toEqual(expect.objectContaining({ seedContentRevision: '5.3.0' }))
   })
 
   it('merges newly added seed words into an existing library', async () => {

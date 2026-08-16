@@ -41255,13 +41255,6 @@
     "sortOrder": 2023
   },
   {
-    "id": "membership-econ-206f7025fed625-accounting",
-    "wordId": "econ-206f7025fed625",
-    "listId": "list-accounting",
-    "priority": 8,
-    "sortOrder": 2024
-  },
-  {
     "id": "membership-econ-0da19cb367526f-accounting",
     "wordId": "econ-0da19cb367526f",
     "listId": "list-accounting",
@@ -46470,8 +46463,8 @@
     "sortOrder": 1480
   },
   {
-    "id": "membership-econ-3311b09154eb63-finance",
-    "wordId": "econ-3311b09154eb63",
+    "id": "membership-econ-873ab6e6d64366-finance",
+    "wordId": "econ-873ab6e6d64366",
     "listId": "list-finance",
     "priority": 8,
     "sortOrder": 1481
@@ -48738,13 +48731,6 @@
     "sortOrder": 655
   },
   {
-    "id": "membership-econ-ee4c3a37c5d1c5-finance",
-    "wordId": "econ-ee4c3a37c5d1c5",
-    "listId": "list-finance",
-    "priority": 6,
-    "sortOrder": 656
-  },
-  {
     "id": "membership-econ-7af1775114d96b-finance",
     "wordId": "econ-7af1775114d96b",
     "listId": "list-finance",
@@ -49401,13 +49387,6 @@
     "listId": "list-finance",
     "priority": 6,
     "sortOrder": 971
-  },
-  {
-    "id": "membership-econ-873ab6e6d64366-finance",
-    "wordId": "econ-873ab6e6d64366",
-    "listId": "list-finance",
-    "priority": 6,
-    "sortOrder": 972
   },
   {
     "id": "membership-econ-e1ac72e5fab9ba-finance",

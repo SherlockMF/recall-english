@@ -26,8 +26,8 @@ describe('App integration', () => {
     expect(screen.getByText('金融会计')).toBeInTheDocument()
     expect(screen.getByText('0 / 3041')).toBeInTheDocument()
     expect(screen.getByText('0 / 2351')).toBeInTheDocument()
-    expect(screen.getByText('0 / 2116')).toBeInTheDocument()
-    expect(screen.getByLabelText('学习进度：已开始 0，会使用 0，词库 7500')).toBeInTheDocument()
+    expect(screen.getByText('0 / 2113')).toBeInTheDocument()
+    expect(screen.getByLabelText('学习进度：已开始 0，会使用 0，词库 7497')).toBeInTheDocument()
     expect(screen.getByText('学习进度')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /开始今天的训练/ }))
@@ -48,6 +48,6 @@ describe('App integration', () => {
     const libraryButtons = screen.getAllByRole('button', { name: '词库' })
     await user.click(libraryButtons[0])
     expect(await screen.findByText('词库不是收藏夹，是你的表达工具箱。')).toBeInTheDocument()
-    await waitFor(() => expect(screen.getByText('7500')).toBeInTheDocument(), { timeout: 20_000 })
+    await waitFor(() => expect(screen.getByText('7497')).toBeInTheDocument(), { timeout: 20_000 })
   }, 30_000)
 })

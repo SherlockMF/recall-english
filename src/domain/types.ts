@@ -121,6 +121,11 @@ export interface UserSettings {
   contentMix: Record<SystemListSlug, number>
   /** Preferred UK/US accent for study playback. */
   speechAccent: SpeechAccent
+  /**
+   * When this differs from the app’s bundled `SEED_CONTENT_REVISION`,
+   * `initializeDatabase` refreshes seed Word bodies by id (tracks kept).
+   */
+  seedContentRevision?: string
   lastBackupAt?: string
 }
 
@@ -224,6 +229,7 @@ export const DEFAULT_SETTINGS: UserSettings = {
   newItemsPerDay: 5,
   contentMix: { daily: 0.35, business: 0.25, finance: 0.2, accounting: 0.2 },
   speechAccent: 'uk',
+  seedContentRevision: '5.3.0',
 }
 
 export function normalizeLemma(expression: string): string {

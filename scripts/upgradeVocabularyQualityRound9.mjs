@@ -75,6 +75,13 @@ function semanticClass(expression, partOfSpeech) {
   const pos = String(partOfSpeech || '').toLocaleLowerCase('en-US')
 
   if (/\bverb\b/.test(pos) && !/phrase/.test(pos)) return 'verb'
+  if (/\badverb\b|\badv\b/.test(pos)) return 'adverb'
+  if (/\bpronoun\b/.test(pos)) return 'pronoun'
+  if (/\bpreposition\b|\bprep\b/.test(pos)) return 'preposition'
+  if (/\bconjunction\b|\bconj\b/.test(pos)) return 'conjunction'
+  if (/\bnumeral\b|\bnumber\b/.test(pos)) return 'numeral'
+  if (/\bmodal\b/.test(pos)) return 'modal'
+  if (/\binterjection\b/.test(pos)) return 'interjection'
   if (/\badj/.test(pos) || isLikelyAdjective(x)) return 'adjective'
   if (/[.?!]$/.test(x)) return 'utterance'
   if (/^(assess|raise|compare|calculate|prepare|review|monitor|negotiate|appoint|issue|record|disclose|hedge|fund|price)\b/i.test(lower)) {
@@ -169,6 +176,13 @@ function buildCollocations(expression, partOfSpeech, id) {
 
   if (klass === 'utterance') return [`say “${x}”`, `ask “${x}”`, `practise “${x}”`]
   if (klass === 'verb') return pickCols([`${x} carefully`, `decide whether to ${x}`, `refuse to ${x}`], x, partOfSpeech)
+  if (klass === 'adverb') return pickCols([`speak ${x}`, `work ${x}`, `answer ${x}`], x, partOfSpeech)
+  if (klass === 'pronoun') return pickCols([`by ${x}`, `ask ${x}`, `help ${x}`], x, partOfSpeech)
+  if (klass === 'preposition') return pickCols([`${x} work`, `${x} that`, `go ${x}`], x, partOfSpeech)
+  if (klass === 'conjunction') return pickCols([`${x} otherwise`, `not ${x}`, `${x} required`], x, partOfSpeech)
+  if (klass === 'numeral') return pickCols([`${x} units`, `about ${x}`, `page ${x}`], x, partOfSpeech)
+  if (klass === 'modal') return pickCols([`${x} not`, `you ${x}`, `${x} have`], x, partOfSpeech)
+  if (klass === 'interjection') return pickCols([`say “${x}”`, `start with “${x}”`], x, partOfSpeech)
   if (klass === 'adjective') {
     const a = /^[aeiou]/i.test(x) ? 'an' : 'a'
     return pickCols([`${a} ${x} decision`, `remain ${x}`, `sound ${x}`], x, partOfSpeech)
@@ -249,14 +263,56 @@ function buildExamples(expression, zh, id, partOfSpeech) {
   }
   if (klass === 'verb') {
     return [
-      { en: `They chose to ${x} after reviewing the risks.`, zh: `评估风险后，他们选择「${zh}」。` },
-      { en: `Do not ${x} unless the contract allows it.`, zh: `除非合同允许，否则不要「${zh}」。` },
+      { en: `Please ${x} the delivery date in writing.`, zh: `请书面${zh}交货日期。` },
+      { en: `We need to ${x} before the deadline.`, zh: `截止日期前我们需要${zh}。` },
+    ]
+  }
+  if (klass === 'adverb') {
+    return [
+      { en: `She finished the task ${x}.`, zh: `她${zh}完成了任务。` },
+      { en: `We ${x} agree with the plan.`, zh: `我们${zh}同意该计划。` },
+    ]
+  }
+  if (klass === 'pronoun') {
+    return [
+      { en: `I completed the form ${x}.`, zh: `我${zh}填完了表格。` },
+      { en: `Did you check this ${x}?`, zh: `这是你${zh}核对的吗？` },
+    ]
+  }
+  if (klass === 'preposition') {
+    return [
+      { en: `Put the file ${x} the folder.`, zh: `把文件放在文件夹${zh}。` },
+      { en: `${x} rent, we pay utilities.`, zh: `${zh}房租，我们还付水电。` },
+    ]
+  }
+  if (klass === 'conjunction') {
+    return [
+      { en: `We will continue ${x} costs rise further.`, zh: `${zh}成本继续上升，否则我们会继续。` },
+      { en: `Save the file ${x} you leave.`, zh: `${zh}离开前请保存文件。` },
+    ]
+  }
+  if (klass === 'numeral') {
+    return [
+      { en: `We ordered ${x} units.`, zh: `我们订了${zh}件。` },
+      { en: `About ${x} people joined.`, zh: `大约${zh}人参加。` },
+    ]
+  }
+  if (klass === 'modal') {
+    return [
+      { en: `You ${x} submit the form today.`, zh: `你${zh}今天提交表格。` },
+      { en: `We ${x} review the contract again.`, zh: `我们${zh}再审一遍合同。` },
+    ]
+  }
+  if (klass === 'interjection') {
+    return [
+      { en: `${x}, I almost forgot the file.`, zh: `${zh}，我差点忘了文件。` },
+      { en: `${x}! That was close.`, zh: `${zh}！好险。` },
     ]
   }
   if (klass === 'adjective') {
     return [
-      { en: `Investors preferred a more ${x} structure.`, zh: `投资者更偏好「${zh}」的结构。` },
-      { en: `Make sure the summary stays ${x}.`, zh: `确保摘要保持「${zh}」。` },
+      { en: `We need ${art} ${x} option for this shipment.`, zh: `这票货我们需要一个${zh}的方案。` },
+      { en: `Keep the summary ${x} and easy to scan.`, zh: `请让摘要保持${zh}并便于扫读。` },
     ]
   }
   if (klass === 'directive') {

@@ -10,6 +10,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { toImportablePack, packMetaPayload } from './lib/packExport.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const sourcePath = join(root, 'data/vocabulary-packs/all_batches_combined_vocabulary_pack.json')
@@ -88,8 +89,17 @@ const quarantine = {
 }
 
 mkdirSync(quarantineDir, { recursive: true })
-writeFileSync(trustedPath, `${JSON.stringify(trusted)}\n`)
-writeFileSync(quarantinePath, `${JSON.stringify(quarantine)}\n`)
+writeFileSync(trustedPath, `${JSON.stringify(toImportablePack(trusted))}\n`)
+writeFileSync(quarantinePath, `${JSON.stringify(toImportablePack(quarantine))}\n`)
+writeFileSync(
+  quarantinePath.replace(/\.json$/, '.meta.json'),
+  `${JSON.stringify(packMetaPayload({
+    title: 'Quarantine core/econ pack',
+    note: quarantine.note,
+    exportedAt,
+    extra: { words: quarantineWords.length },
+  }), null, 2)}\n`,
+)
 writeFileSync(
   join(quarantineDir, 'README.md'),
   `# Quarantine — core / econ

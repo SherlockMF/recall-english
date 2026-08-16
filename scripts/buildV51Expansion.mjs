@@ -10,6 +10,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createRequire } from 'node:module'
+import { toImportablePack, packMetaPayload } from './lib/packExport.mjs'
 
 const require = createRequire(import.meta.url)
 // Reuse enrichment helpers by inlining minimal copies (keep script self-contained).
@@ -411,8 +412,17 @@ const merged = {
   memberships: mergedMemberships,
 }
 
-writeFileSync(outExpansion, `${JSON.stringify(expansion)}\n`)
-writeFileSync(outMerged, `${JSON.stringify(merged)}\n`)
+writeFileSync(outExpansion, `${JSON.stringify(toImportablePack(expansion))}\n`)
+writeFileSync(
+  outExpansion.replace(/\.json$/, '.meta.json'),
+  `${JSON.stringify(packMetaPayload({
+    title: 'V5.1 expansion pack',
+    note: expansion.note,
+    exportedAt: expansion.exportedAt,
+    extra: { words: rebuiltWords.length },
+  }), null, 2)}\n`,
+)
+writeFileSync(outMerged, `${JSON.stringify(toImportablePack(merged))}\n`)
 
 console.log(JSON.stringify({
   selected: selected.length,
