@@ -35,17 +35,20 @@ npm run dev
 
 ```bash
 npm test                    # 单元 / 组件测试
+npm run lint                # oxlint 静态检查
 npm run build               # 生产构建
-npm run seed:pack           # 从 trusted_v5_2 重建 bundledSeed*.json
+npm run seed:pack           # 从 trusted_v5_2 重建 public/data/bundledSeed*.json
 npm run seed:quality        # 词库硬闸
 npm run seed:validate-sense # 义项一致性（strict）
 ```
 
 ### 词库维护（V5.3）
 
-生产 SoT：`data/vocabulary-packs/trusted_v5_2_vocabulary_pack.json` + `src/data/seedVocabulary.ts`。不要手改 `bundledSeed*.json`。
+生产 SoT：`data/vocabulary-packs/trusted_v5_2_vocabulary_pack.json` + `src/data/seedVocabulary.ts`。不要手改 `public/data/bundledSeed*.json`。
 
-批次脚本：`seed:fix-p0` … `seed:fix-b8`。总报告：`data/vocabulary-packs/v53-wrapup-report.md`。
+历史批次脚本（`seed:fix-p0` … `seed:fix-b8`、`seed:upgrade*` 等）已归档至 `scripts/archive/`，仅作追溯；日常维护只用 `seed:pack` / `seed:quality` / `seed:validate-sense`。总报告：`data/vocabulary-packs/v53-wrapup-report.md`。
+
+种子词库以静态资源形式放在 `public/data/`，只在空库或 seedContentRevision 变化时按需加载，不进入 JS bundle。
 
 时效性术语（SIBOR / OPIC / FHLBB / NAA）：**保留历史头词**，定义与中文标明历史地位及现行接替名称。
 
@@ -58,11 +61,12 @@ npm run seed:validate-sense # 义项一致性（strict）
 ```
 src/
   components/   # 今日学习、词库、添加、设置、学习会话
-  data/         # 种子词、列表定义、打包词库 JSON
+  data/         # 种子词（手写部分）、列表定义
   domain/       # 领域类型
   lib/          # DB、调度、词典、备份、发音、词包等
+public/data/             # 打包词库 JSON（按需加载的静态资源）
 data/vocabulary-packs/   # 词包源文件（需时 npm run seed:pack）
-scripts/                 # 词包构建、macOS 快捷方式等
+scripts/                 # 词包构建、质量闸、macOS 快捷方式等
 ```
 
 开发服务器通过 Vite 代理访问 DeepSeek、Free Dictionary、有道，避免浏览器 CORS 限制。

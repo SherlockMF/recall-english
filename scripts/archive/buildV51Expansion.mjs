@@ -10,7 +10,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createRequire } from 'node:module'
-import { toImportablePack, packMetaPayload } from './lib/packExport.mjs'
+import { toImportablePack, packMetaPayload } from '../lib/packExport.mjs'
 
 const require = createRequire(import.meta.url)
 // Reuse enrichment helpers by inlining minimal copies (keep script self-contained).

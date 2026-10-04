@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url'
 import {
   composeProfessionalDefinition,
   isWeakComposedDefinition,
-} from './lib/professionalGloss.mjs'
+} from '../lib/professionalGloss.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const packPath = join(root, 'data/vocabulary-packs/trusted_v5_2_vocabulary_pack.json')

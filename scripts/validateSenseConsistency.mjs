@@ -21,11 +21,6 @@ function normalize(value) {
     .toLocaleLowerCase('en-US')
     .replace(/\s+/g, ' ')
 }
-
-function unique(values) {
-  return [...new Set(values.map((v) => String(v ?? '').trim()).filter(Boolean))]
-}
-
 function posClass(pos) {
   const p = String(pos || '').toLocaleLowerCase('en-US')
   if (/\badverb\b|\badv\b/.test(p)) return 'adverb'
@@ -43,21 +38,9 @@ function posClass(pos) {
 function defLooksVerbal(def) {
   return /^(to |the act of |the process of )/i.test(String(def || '').trim())
 }
-
-function defLooksAdjective(def) {
-  return /^(of or relating to|describing|characterised by|characterized by|having the quality)/i.test(
-    String(def || '').trim(),
-  )
-}
-
 function zhLooksAdjective(zh) {
   return /的$/.test(String(zh || '').trim())
 }
-
-function zhLooksVerbal(zh) {
-  return /^(把|使|进行|加以)/.test(String(zh || '').trim()) || /化$/.test(String(zh || '').trim())
-}
-
 const hard = []
 const soft = []
 
@@ -184,7 +167,6 @@ const report = {
   bundledWords: bundled.length,
   hard: hard.length,
   soft: soft.length,
-  collisions: collisions.length,
   hardByRule: Object.entries(hard.reduce((acc, row) => {
     acc[row.rule] = (acc[row.rule] || 0) + 1
     return acc
@@ -195,7 +177,8 @@ const report = {
   }, {})).sort((a, b) => b[1] - a[1]),
   hardSample: hard.slice(0, 40),
   collisionSample: collisions.slice(0, 20),
-  collisions,
+  collisions: collisions.length,
+  collisionList: collisions,
   hardFindings: hard,
   softFindings: soft.slice(0, 200),
 }

@@ -12,7 +12,6 @@ import {
   type UsagePrompt,
   type UserSettings,
   type VocabularyExample,
-  type VocabularyItem,
   type VocabularyList,
   type VocabularySource,
   type VocabularyStatus,

@@ -39,7 +39,6 @@ import {
   getUserDataSnapshot,
   getWordListItemsForWord,
   initializeDatabase,
-  putLearningTracks,
   putSettings,
   putStudyTimeEntry,
   putWord,

@@ -492,7 +492,6 @@ describe('StudySession', () => {
   })
 
   it('blocks answering while usage prompts are still being generated', async () => {
-    const user = userEvent.setup()
     let resolveEnsure!: (item: VocabularyItem) => void
     const ensureUsageItem = vi.fn().mockImplementation(() => new Promise<VocabularyItem>((resolve) => {
       resolveEnsure = resolve

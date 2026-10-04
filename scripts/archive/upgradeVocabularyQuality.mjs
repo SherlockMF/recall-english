@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url'
 import {
   composeProfessionalDefinition,
   isTemplateDefinition,
-} from './lib/professionalGloss.mjs'
+} from '../lib/professionalGloss.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const packPath = [

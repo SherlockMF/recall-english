@@ -28,8 +28,6 @@ import {
   parseBackup,
   parseBackupV2,
   parseBackupV3,
-  validateBackup,
-  validateBackupV2,
 } from './backup'
 
 const older = '2026-08-09T00:00:00.000Z'

@@ -1,0 +1,31 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "react-hooks", "react-perf", "promise", "node", "unicorn"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2024": true
+  },
+  "globals": {
+    "describe": "readonly",
+    "it": "readonly",
+    "expect": "readonly",
+    "vi": "readonly",
+    "beforeEach": "readonly",
+    "afterEach": "readonly"
+  },
+  "ignorePatterns": ["dist", "public", "scripts/archive", "node_modules", "*.cjs"],
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "unicorn/prefer-string-starts-ends-with": "warn",
+    "react/set-state-in-effect": "warn",
+    "react/refs": "warn",
+    "react/no-array-index-key": "warn",
+    "react-hooks/exhaustive-deps": "warn"
+  }
+}
