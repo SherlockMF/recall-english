@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import type {
   HintLevel,
   LearningTrack,
@@ -15,7 +15,7 @@ import { expressionHint, trackLabels } from '../lib/presentation'
 import { speakWord } from '../lib/speech'
 import { escapeRegExp } from '../lib/text'
 import { localStudyDate } from '../lib/studyTime'
-import { useStudyTimer } from '../lib/useStudyTimer'
+import { useStudyTimer, type StudyTimerApi } from '../lib/useStudyTimer'
 import { Icon } from './Icon'
 
 export interface EvaluationResult {
@@ -384,7 +384,7 @@ export function StudySession({
         <div className="completion-card">
           <h1>今天的时间目标已达到</h1>
           <p>已保存当前题。你可以结束，或自愿再学 5 分钟；每日新词上限保持不变。</p>
-          <p>本轮有效学习 {Math.floor(timer.elapsedMs / 60_000)} 分 {Math.floor(timer.elapsedMs / 1000) % 60} 秒</p>
+          <p><SessionElapsedText timer={timer} /></p>
           {timer.error && <p role="alert">学习时间未保存：{timer.error}<button onClick={() => void timer.flush()} type="button">重试保存时间</button></p>}
           {rebuildError && <p role="alert">{rebuildError}</p>}
           <button className="primary-button" disabled={flushingExit} onClick={() => void completeSession()} type="button">结束学习</button>
@@ -413,7 +413,7 @@ export function StudySession({
             </div>
           )}
           <div className="completion-weekly">
-            <Icon name="spark" size={18} /> 本轮有效学习 {Math.floor(timer.elapsedMs / 60_000)} 分 {Math.floor(timer.elapsedMs / 1000) % 60} 秒
+            <Icon name="spark" size={18} /> <SessionElapsedText timer={timer} />
           </div>
           {learningStats && <p>双向可回忆 {learningStats.recallCount} 个 · 保持已验证 {learningStats.retainedCount} 个 · 应用通过 {learningStats.applicationCount} 个</p>}
           {timer.error && <p role="alert">学习时间未保存：{timer.error}<button onClick={() => void timer.flush()} type="button">重试保存时间</button></p>}
@@ -449,14 +449,13 @@ export function StudySession({
           <div className="study-progress-copy"><span>{mode === 'core' ? '今日学习' : '继续学习'}</span><span>{index + 1} / {tasks.length}</span></div>
           <div className="study-progress"><span style={{ width: `${progress}%` }} /></div>
         </div>
-        <span className="study-time"><Icon name="clock" size={17} /> {Math.floor(timer.elapsedMs / 60_000)}:{String(Math.floor(timer.elapsedMs / 1000) % 60).padStart(2, '0')} / {Math.ceil(budgetMs / 60_000)} min</span>
+        <SessionClock timer={timer} budgetMs={budgetMs} />
         <button className="mini-text-button" onClick={() => { if (!paused) timer.setRunning(false); setPaused(!paused) }} type="button">{paused ? '恢复学习' : '暂停'}</button>
       </header>
 
       <main className="study-main">
         {(paused || timer.idle) && <p className="study-timer-notice" role="status">{paused ? '学习已暂停，恢复后继续计时。' : '120 秒无操作，已自动暂停计时；操作后恢复。'}</p>}
-        {timer.elapsedMs >= budgetMs && <p className="study-timer-notice" role="status">已达到本轮时间目标，完成当前题后选择结束或继续。</p>}
-        {usedTodayMs + timer.elapsedMs > dailyMinutes * 60_000 && <p className="field-help">今日已超出目标 {Math.floor((usedTodayMs + timer.elapsedMs - dailyMinutes * 60_000) / 60_000)} 分钟</p>}
+        <ElapsedBudgetNotices timer={timer} budgetMs={budgetMs} usedTodayMs={usedTodayMs} dailyMinutes={dailyMinutes} />
         {timer.error && <div className="save-error-panel" role="alert"><p>学习时间未保存，已暂停：{timer.error}</p><button className="secondary-button" onClick={() => void timer.flush()} type="button">重试保存时间</button></div>}
         {failedSaves.length > 0 && (
           <div className="save-error-panel study-save-error" role="alert">
@@ -717,4 +716,35 @@ function normalize(value: string) {
 function answerMatches(value: string, target: string, alternatives: string[]) {
   const candidate = normalize(value)
   return [target, ...alternatives].some((answer) => normalize(answer) === candidate)
+}
+
+
+/** Live mm:ss clock; isolated so timer ticks never re-render the session tree. */
+function SessionClock({ timer, budgetMs }: { timer: StudyTimerApi; budgetMs: number }) {
+  const elapsedMs = useSyncExternalStore(timer.subscribeElapsed, timer.getElapsed)
+  return (
+    <span className="study-time">
+      <Icon name="clock" size={17} /> {Math.floor(elapsedMs / 60_000)}:{String(Math.floor(elapsedMs / 1000) % 60).padStart(2, '0')} / {Math.ceil(budgetMs / 60_000)} min
+    </span>
+  )
+}
+
+function SessionElapsedText({ timer }: { timer: StudyTimerApi }) {
+  const elapsedMs = useSyncExternalStore(timer.subscribeElapsed, timer.getElapsed)
+  return <>本轮有效学习 {Math.floor(elapsedMs / 60_000)} 分 {Math.floor(elapsedMs / 1000) % 60} 秒</>
+}
+
+function ElapsedBudgetNotices({ timer, budgetMs, usedTodayMs, dailyMinutes }: {
+  timer: StudyTimerApi
+  budgetMs: number
+  usedTodayMs: number
+  dailyMinutes: number
+}) {
+  const elapsedMs = useSyncExternalStore(timer.subscribeElapsed, timer.getElapsed)
+  return (
+    <>
+      {elapsedMs >= budgetMs && <p className="study-timer-notice" role="status">已达到本轮时间目标，完成当前题后选择结束或继续。</p>}
+      {usedTodayMs + elapsedMs > dailyMinutes * 60_000 && <p className="field-help">今日已超出目标 {Math.floor((usedTodayMs + elapsedMs - dailyMinutes * 60_000) / 60_000)} 分钟</p>}
+    </>
+  )
 }

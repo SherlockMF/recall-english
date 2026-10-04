@@ -25,5 +25,5 @@ it('reconciles a synchronous stop when React batches a quick grading transition 
   await act(async () => { await result.current.grade() })
   expect(result.current.feedback).toBe(true)
   await act(async () => { await vi.advanceTimersByTimeAsync(15_000) })
-  expect(result.current.timer.elapsedMs).toBe(45_000)
+  expect(result.current.timer.getElapsed()).toBe(45_000)
 })

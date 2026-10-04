@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import type { StudyTimeEntry } from '../domain/types'
 import { StudyClock } from './studyTime'
 
+export type StudyTimerApi = ReturnType<typeof useStudyTimer>
+
 interface TimerInput {
   sessionId: string
   entries?: StudyTimeEntry[]
@@ -23,18 +25,38 @@ export function useStudyTimer({ sessionId, entries, enabled, save }: TimerInput)
   const focused = useRef(document.hasFocus())
   const saved = useRef(new Map<string, number>())
   const saving = useRef<Promise<boolean> | null>(null)
-  const [elapsedMs, setElapsedMs] = useState(0)
+  // Elapsed time lives outside React state: it changes every 250ms, and
+  // pushing it through setState would re-render the whole session tree.
+  // The clock leaf components subscribe via subscribeElapsed instead.
+  const elapsedRef = useRef(0)
+  const elapsedListeners = useRef(new Set<() => void>())
   const [idle, setIdle] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   function isEnabled() { return enabledRef.current && !errorRef.current && focused.current && document.visibilityState === 'visible' }
+  function notifyElapsed() {
+    for (const listener of elapsedListeners.current) listener()
+  }
+  function getElapsed(): number {
+    return elapsedRef.current
+  }
+  function subscribeElapsed(listener: () => void): () => void {
+    elapsedListeners.current.add(listener)
+    return () => {
+      elapsedListeners.current.delete(listener)
+    }
+  }
   function sample() {
     const total = clock.sample(Date.now(), performance.now(), isEnabled())
+    const elapsed = total - initialTotal.current
     if (mounted.current) {
-      setElapsedMs(total - initialTotal.current)
+      if (elapsedRef.current !== elapsed) {
+        elapsedRef.current = elapsed
+        notifyElapsed()
+      }
       setIdle(clock.idle)
     }
-    return total - initialTotal.current
+    return elapsed
   }
 
   async function flush(): Promise<boolean> {
@@ -122,5 +144,14 @@ export function useStudyTimer({ sessionId, entries, enabled, save }: TimerInput)
     }
   }, [])
 
-  return { elapsedMs, idle, error, sample, flush, setRunning }
+  return {
+    elapsedMs: elapsedRef.current,
+    idle,
+    error,
+    sample,
+    flush,
+    setRunning,
+    getElapsed,
+    subscribeElapsed,
+  }
 }
