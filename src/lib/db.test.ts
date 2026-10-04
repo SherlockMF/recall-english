@@ -1,6 +1,6 @@
 import 'fake-indexeddb/auto'
 
-import { deleteDB } from 'idb'
+import { deleteDB, openDB } from 'idb'
 
 import {
   DEFAULT_SETTINGS,
@@ -13,6 +13,7 @@ import { ALL_VOCABULARY_LISTS, LIST_IDS } from '../data/vocabularyLists'
 import {
   DATABASE_NAME,
   clearDatabase,
+  clearUserData,
   closeDatabase,
   deleteVocabularyItem,
   getAllLearningTracks,
@@ -21,7 +22,11 @@ import {
   getDictionaryCache,
   getDueLearningTracks,
   getSettings,
+  getDatabase,
+  getUserDataSnapshot,
   initializeDatabase,
+  normalizeUserSettings,
+  putStudyTimeEntry,
   recordReview,
   replaceUserData,
   setDictionaryCache,
@@ -97,6 +102,165 @@ describe('IndexedDB persistence', () => {
   afterEach(async () => {
     await closeDatabase()
     await deleteDB(DATABASE_NAME)
+  })
+
+  it('migrates the core budget without adding extension time and bounds settings', () => {
+    expect(normalizeUserSettings({ coreMinutes: 20, extensionMinutes: 40, newItemsPerDay: 0 }))
+      .toMatchObject({ dailyMinutes: 20, newItemsPerDay: 0 })
+    expect(normalizeUserSettings({ dailyMinutes: 180, newItemsPerDay: 150 }))
+      .toMatchObject({ dailyMinutes: 120, newItemsPerDay: 100 })
+    expect(normalizeUserSettings({ dailyMinutes: 4.5, newItemsPerDay: -1 }))
+      .toMatchObject({ dailyMinutes: 5, newItemsPerDay: 0 })
+    expect(normalizeUserSettings({ dailyMinutes: NaN, newItemsPerDay: NaN }))
+      .toMatchObject({ dailyMinutes: 15, newItemsPerDay: 5 })
+  })
+
+  it('upgrades V2 without changing learning records or inventing study time', async () => {
+    const previous = await openDB(DATABASE_NAME, 2, {
+      upgrade(database) {
+        database.createObjectStore('words', { keyPath: 'id' })
+        database.createObjectStore('tracks', { keyPath: 'id' })
+        database.createObjectStore('attempts', { keyPath: 'id' })
+        database.createObjectStore('settings', { keyPath: 'id' })
+        database.createObjectStore('vocabularyLists', { keyPath: 'id' })
+        database.createObjectStore('wordListItems', { keyPath: 'id' })
+      },
+    })
+    await previous.put('words', word())
+    await previous.put('tracks', track({ reps: 8, stability: 12 }))
+    await previous.put('attempts', attempt())
+    const { dailyMinutes: _dailyMinutes, ...legacySettings } = DEFAULT_SETTINGS
+    await previous.put('settings', { ...legacySettings, coreMinutes: 20 })
+    previous.close()
+
+    const snapshot = await getUserDataSnapshot()
+    expect((await getDatabase()).version).toBe(3)
+    expect(snapshot.settings.dailyMinutes).toBe(20)
+    expect(snapshot.tracks).toEqual([track({ reps: 8, stability: 12 })])
+    expect(snapshot.attempts).toEqual([attempt()])
+    expect(snapshot.timeEntries).toEqual([])
+  })
+
+  it('upgrades V1 vocabulary and settings directly to V3 while preserving review IDs', async () => {
+    const previous = await openDB(DATABASE_NAME, 1, {
+      upgrade(database) {
+        database.createObjectStore('vocabulary', { keyPath: 'id' })
+        database.createObjectStore('tracks', { keyPath: 'id' })
+        database.createObjectStore('attempts', { keyPath: 'id' })
+        database.createObjectStore('settings', { keyPath: 'id' })
+      },
+    })
+    await previous.put('vocabulary', { ...word(), category: 'finance' })
+    await previous.put('tracks', track({ reps: 5 }))
+    await previous.put('attempts', attempt())
+    const { dailyMinutes: _dailyMinutes, ...legacySettings } = DEFAULT_SETTINGS
+    await previous.put('settings', {
+      ...legacySettings, coreMinutes: 25,
+      contentMix: { daily: 0.4, business: 0.25, finance: 0.35 },
+    })
+    previous.close()
+
+    const snapshot = await getUserDataSnapshot()
+    expect(snapshot.words[0].id).toBe('vocabulary-1')
+    expect(snapshot.vocabulary[0].listSlugs).toEqual(['accounting'])
+    expect(snapshot.tracks).toEqual([track({ reps: 5 })])
+    expect(snapshot.attempts).toEqual([attempt()])
+    expect(snapshot.settings.dailyMinutes).toBe(25)
+    expect(snapshot.settings.contentMix).toEqual({ daily: 0.4, business: 0.25, finance: 0.175, accounting: 0.175 })
+    expect(snapshot.timeEntries).toEqual([])
+  })
+
+  it('refreshes old seed bodies after a V2 upgrade when the content revision is unknown', async () => {
+    const previous = await openDB(DATABASE_NAME, 2, {
+      upgrade(database) {
+        database.createObjectStore('words', { keyPath: 'id' })
+        database.createObjectStore('tracks', { keyPath: 'id' })
+        database.createObjectStore('attempts', { keyPath: 'id' })
+        database.createObjectStore('settings', { keyPath: 'id' })
+      },
+    })
+    await previous.put('words', word({ zhGloss: 'old seed body' }))
+    await previous.put('tracks', track({ reps: 12, stability: 40 }))
+    const { dailyMinutes: _dailyMinutes, seedContentRevision: _revision, ...legacySettings } = DEFAULT_SETTINGS
+    await previous.put('settings', legacySettings)
+    previous.close()
+
+    await initializeDatabase([word({ zhGloss: 'refreshed seed body' })])
+    const snapshot = await getUserDataSnapshot()
+    expect(snapshot.words[0].zhGloss).toBe('refreshed seed body')
+    expect(snapshot.tracks).toEqual([track({ reps: 12, stability: 40 })])
+    expect(snapshot.settings.seedContentRevision).toBe(DEFAULT_SETTINGS.seedContentRevision)
+  })
+
+  it('upserts cumulative study time without double counting or decreasing saved time', async () => {
+    const entry = { id: 'session-1:2026-08-10', sessionId: 'session-1', localDate: '2026-08-10', activeMs: 5_000, updatedAt: timestamp }
+    await putStudyTimeEntry(entry)
+    await Promise.all([
+      putStudyTimeEntry({ ...entry, activeMs: 15_000 }),
+      putStudyTimeEntry({ ...entry, activeMs: 10_000 }),
+      putStudyTimeEntry(entry),
+    ])
+    expect((await getUserDataSnapshot()).timeEntries).toEqual([{ ...entry, activeMs: 15_000 }])
+    await clearUserData()
+    expect((await getUserDataSnapshot()).timeEntries).toEqual([])
+  })
+
+  it('replaces and clears the study-time ledger with the rest of the user data', async () => {
+    const entry = { id: 'session-1:2026-08-10', sessionId: 'session-1', localDate: '2026-08-10', activeMs: 5_000, updatedAt: timestamp }
+    await writeBatch({ timeEntries: [entry] })
+    await replaceUserData({ words: [], lists: [], memberships: [], tracks: [], attempts: [], settings: DEFAULT_SETTINGS })
+    expect((await getUserDataSnapshot()).timeEntries).toEqual([])
+    await replaceUserData({ words: [], lists: [], memberships: [], tracks: [], attempts: [], timeEntries: [entry], settings: DEFAULT_SETTINGS })
+    expect((await getUserDataSnapshot()).timeEntries).toEqual([entry])
+    await clearDatabase()
+    expect((await getUserDataSnapshot()).timeEntries).toEqual([])
+  })
+
+  it('saves a repeated attempt only once and preserves the frozen submission time', async () => {
+    await writeBatch({ tracks: [track()] })
+    const input = {
+      trackId: 'track-1', rating: 'good' as const, desiredRetention: 0.9,
+      attempt: attempt({ evidenceVersion: 1, sessionId: 'session-1', retryCount: 0, evaluationSource: 'rules', correctness: 'correct', matchKind: 'exact', suggestedRating: 'good' }),
+      reviewedAt: new Date(timestamp),
+    }
+    const first = await recordReview(input)
+    const again = await recordReview({ ...input, rating: 'again', reviewedAt: new Date('2026-08-11T00:00:00.000Z') })
+    expect(again.attempt).toEqual(first.attempt)
+    expect(again.changedTracks).toEqual([])
+    expect(again.reviewedAt).toEqual(new Date(timestamp))
+    expect(await getAllLearningTracks()).toEqual(first.tracks)
+    expect(await getAllReviewAttempts()).toEqual([first.attempt])
+  })
+
+  it('unlocks application from saved objective success even when the response was slow', async () => {
+    await writeBatch({
+      tracks: [
+        track(),
+        track({ id: 'productive-1', type: 'productive' }),
+        track({ id: 'usage-1', type: 'usage', unlocked: false }),
+      ],
+      attempts: [attempt({ evidenceVersion: 1, sessionId: 'session-1', retryCount: 0, evaluationSource: 'rules', correctness: 'correct', matchKind: 'exact', suggestedRating: 'good' })],
+    })
+    const result = await recordReview({
+      trackId: 'productive-1', rating: 'hard', desiredRetention: 0.9,
+      attempt: attempt({ id: 'productive-success', trackType: 'productive', evidenceVersion: 1, sessionId: 'session-1', retryCount: 0, evaluationSource: 'rules', correctness: 'correct', matchKind: 'exact', suggestedRating: 'hard' }),
+      reviewedAt: new Date(timestamp),
+    })
+    expect(result.tracks.find((candidate) => candidate.id === 'usage-1')?.unlocked).toBe(true)
+  })
+
+  it('does not unlock application from overridden self-ratings', async () => {
+    await writeBatch({ tracks: [
+      track({ firstGoodAt: timestamp, lastGoodAt: timestamp }),
+      track({ id: 'productive-1', type: 'productive', firstGoodAt: timestamp, lastGoodAt: timestamp }),
+      track({ id: 'usage-1', type: 'usage', unlocked: false }),
+    ] })
+    const result = await recordReview({
+      trackId: 'productive-1', rating: 'good', desiredRetention: 0.9,
+      attempt: attempt({ wasOverride: true, evidenceVersion: 1, sessionId: 'session-1', retryCount: 0, evaluationSource: 'rules', correctness: 'unverified', matchKind: 'incorrect', suggestedRating: 'again' }),
+      reviewedAt: new Date(timestamp),
+    })
+    expect(result.tracks.find((candidate) => candidate.id === 'usage-1')?.unlocked).toBe(false)
   })
 
   it('does not overwrite existing words when re-seeding the same ids', async () => {
@@ -435,6 +599,11 @@ describe('IndexedDB persistence', () => {
         track({ id: 'track-usage', type: 'usage', unlocked: false, reps: 0, state: 0 }),
         ...distractorTracks,
       ],
+      attempts: [attempt({
+        id: 'productive-proof', trackId: 'track-productive', trackType: 'productive',
+        evidenceVersion: 1, sessionId: 'session-before', retryCount: 0,
+        evaluationSource: 'rules', correctness: 'correct', matchKind: 'exact', suggestedRating: 'good',
+      })],
       settings: DEFAULT_SETTINGS,
     })
 
@@ -450,6 +619,8 @@ describe('IndexedDB persistence', () => {
         answer: '资产',
         hintLevel: 0,
         responseMs: 900,
+        evidenceVersion: 1, sessionId: 'session-1', retryCount: 0,
+        evaluationSource: 'rules', correctness: 'correct', matchKind: 'exact', suggestedRating: 'good',
       },
       reviewedAt: new Date('2026-08-10T03:00:00.000Z'),
     })
@@ -501,6 +672,8 @@ describe('IndexedDB persistence', () => {
         answer: '资产',
         hintLevel: 0,
         responseMs: 800,
+        evidenceVersion: 1, sessionId: 'session-1', retryCount: 0,
+        evaluationSource: 'rules', correctness: 'correct', matchKind: 'exact', suggestedRating: 'good',
       },
       reviewedAt: new Date('2026-08-10T04:00:00.000Z'),
     }))
@@ -516,6 +689,8 @@ describe('IndexedDB persistence', () => {
         answer: 'asset',
         hintLevel: 0,
         responseMs: 900,
+        evidenceVersion: 1, sessionId: 'session-1', retryCount: 0,
+        evaluationSource: 'rules', correctness: 'correct', matchKind: 'exact', suggestedRating: 'good',
       },
       reviewedAt: new Date('2026-08-10T04:00:01.000Z'),
     }))

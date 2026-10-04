@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { SpeechAccent, UserSettings } from '../domain/types'
 import {
   clearDeepseekApiKey,
@@ -30,7 +30,8 @@ export function SettingsDialog({
   onExportVocabulary,
   onImportVocabulary,
 }: SettingsDialogProps) {
-  const [newItems, setNewItems] = useState(settings.newItemsPerDay)
+  const [newItems, setNewItems] = useState(String(settings.newItemsPerDay))
+  const [dailyMinutes, setDailyMinutes] = useState(String(settings.dailyMinutes ?? settings.coreMinutes))
   const [speechAccent, setSpeechAccent] = useState<SpeechAccent>(settings.speechAccent)
   const [apiKey, setApiKey] = useState(() => getDeepseekApiKey())
   const [message, setMessage] = useState('')
@@ -38,6 +39,12 @@ export function SettingsDialog({
   const [persistentState, setPersistentState] = useState<'idle' | 'granted' | 'unavailable'>('idle')
   const backupFileRef = useRef<HTMLInputElement>(null)
   const vocabularyFileRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    setDailyMinutes(String(settings.dailyMinutes ?? settings.coreMinutes))
+    setNewItems(String(settings.newItemsPerDay))
+    setSpeechAccent(settings.speechAccent)
+  }, [settings.dailyMinutes, settings.coreMinutes, settings.newItemsPerDay, settings.speechAccent])
 
   async function requestPersistentStorage() {
     if (!navigator.storage?.persist) {
@@ -61,16 +68,19 @@ export function SettingsDialog({
         <div className="settings-section">
           <div className="settings-copy">
             <h3>每日节奏</h3>
-            <p>核心训练固定为 15 分钟。系统会根据真实回忆率，在你的范围内减少新内容。</p>
+            <p>回忆与应用共用当天时间，可分多次完成。先复习，再根据剩余时间与延迟回忆表现安排新表达。</p>
           </div>
-          <label className="range-setting">
-            <span><strong>每天最多 {newItems} 个新表达</strong><small>可选范围 3–8</small></span>
-            <input aria-label="每天最多的新表达" max="8" min="3" onChange={(event) => setNewItems(Number(event.target.value))} type="range" value={newItems} />
-            <div><span>3</span><span>稳步</span><span>8</span></div>
+          <label className="text-setting">
+            <span>每日学习分钟 <small>5—120 分钟</small></span>
+            <input aria-label="每日学习分钟" type="number" min="5" max="120" step="1" value={dailyMinutes} onChange={(event) => setDailyMinutes(event.target.value)} />
+          </label>
+          <label className="text-setting">
+            <span>每日新表达上限 <small>0—100 个；0 表示只复习</small></span>
+            <input aria-label="每日新表达上限" type="number" min="0" max="100" step="1" value={newItems} onChange={(event) => setNewItems(event.target.value)} />
           </label>
           <div className="retention-setting">
             <span><Icon name="brain" size={20} /></span>
-            <div><strong>目标保持率 90%</strong><p>FSRS 会把容易忘的内容安排得更近，不需要手动调间隔。</p></div>
+            <div><strong>目标保持率 {Math.round(settings.desiredRetention * 100)}%</strong><p>这是 FSRS 安排复习的目标，不代表已经达到的掌握程度。</p></div>
           </div>
         </div>
 
@@ -102,7 +112,7 @@ export function SettingsDialog({
         <div className="settings-section">
           <div className="settings-copy">
             <h3>DeepSeek 辅助</h3>
-            <p>可选。用于语义判分、提示、造题与词条补全。Key 只存在本机，不会进入备份；未配置时自动使用本地规则。</p>
+            <p>可选。用于语义判分、提示、造题与词条补全；开放造句需主动点击 AI 验证。Key 只存在本机，不会进入备份；未验证的造句不会计为已通过。</p>
           </div>
           <label className="text-setting">
             <span>API Key</span>
@@ -158,7 +168,7 @@ export function SettingsDialog({
         <div className="settings-section">
           <div className="settings-copy">
             <h3>学习备份</h3>
-            <p>{vocabularyCount} 个义项 · {attemptCount} 次真实回忆。导出含词条、进度与设置；导入会整库替换。数据只保存在这个浏览器中。</p>
+            <p>{vocabularyCount} 个义项 · {attemptCount} 次作答。导出含词条、进度、证据、学习计时与设置；导入会整库替换。数据只保存在这个浏览器中。</p>
           </div>
           <div className="backup-actions">
             <button className="secondary-button" onClick={() => void onExport()} type="button"><Icon name="download" size={18} /> 导出学习备份</button>
@@ -199,12 +209,18 @@ export function SettingsDialog({
             className="primary-button"
             disabled={saving}
             onClick={async () => {
+              const minutes = Number(dailyMinutes)
+              const limit = Number(newItems)
+              if (!dailyMinutes.trim() || !newItems.trim() || !Number.isInteger(minutes) || minutes < 5 || minutes > 120 || !Number.isInteger(limit) || limit < 0 || limit > 100) {
+                setMessage('学习时长须为 5—120 的整数，新表达上限须为 0—100 的整数。')
+                return
+              }
               setSaving(true)
               setMessage('')
               try {
                 if (apiKey.trim()) setDeepseekApiKey(apiKey)
                 else clearDeepseekApiKey()
-                await onSave({ ...settings, newItemsPerDay: newItems, speechAccent })
+                await onSave({ ...settings, dailyMinutes: minutes, newItemsPerDay: limit, speechAccent })
                 onClose()
               } catch (error) {
                 setMessage(error instanceof Error ? error.message : '保存设置失败，请重试。')

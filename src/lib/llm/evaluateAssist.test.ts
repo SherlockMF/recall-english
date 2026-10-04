@@ -86,6 +86,7 @@ describe('evaluateAssist', () => {
       responseMs: 8_000,
       revealed: false,
       promptIndex: 0,
+      verifySentence: true,
     })
 
     expect(result.source).toBe('llm')
@@ -94,7 +95,7 @@ describe('evaluateAssist', () => {
     expect(result.feedbackZh).toContain('意思对')
   })
 
-  it('keeps again when llm fails after a rule miss', async () => {
+  it('keeps the rules rating but leaves correctness unverified when AI fails', async () => {
     setDeepseekApiKey('sk-test')
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')))
 
@@ -110,6 +111,35 @@ describe('evaluateAssist', () => {
     expect(result.source).toBe('rules')
     expect(result.matched).toBe(false)
     expect(result.rating).toBe('again')
+    expect(result.correctness).toBe('unverified')
+  })
+
+  it('keeps local sentence matches unverified and never requests AI automatically', async () => {
+    setDeepseekApiKey('sk-test')
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    const result = await evaluateAssist({ item: item(), trackType: 'usage', answer: 'Our cash flow is tight this month.', hintLevel: 0, responseMs: 1000, revealed: false })
+    expect(result).toMatchObject({ source: 'rules', correctness: 'unverified', matchKind: 'exact' })
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it('does not call a Chinese synonym miss a demonstrated failure', async () => {
+    const result = await evaluateAssist({ item: item(), trackType: 'receptive', answer: '资金流动', hintLevel: 0, responseMs: 1000, revealed: false })
+    expect(result.correctness).toBe('unverified')
+  })
+
+  it.each([
+    { correct: 'false', rating: 'good', feedbackZh: 'ok' },
+    { correct: true, rating: 'again', feedbackZh: 'ok' },
+    { correct: false, rating: 'good', feedbackZh: 'ok' },
+    { correct: true, rating: 'unknown', feedbackZh: 'ok' },
+    { correct: true, rating: ['good'], feedbackZh: 'ok' },
+  ])('rejects malformed or contradictory AI grades: %j', async (payload) => {
+    setDeepseekApiKey('sk-test')
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({ choices: [{ message: { content: JSON.stringify(payload) } }] }) }))
+    const result = await evaluateAssist({ item: item(), trackType: 'usage', answer: 'Our cash flow is tight this month.', hintLevel: 0, responseMs: 1000, revealed: false, verifySentence: true })
+    expect(result.correctness).toBe('unverified')
+    expect(result.source).toBe('rules')
   })
 
   it('returns reveal again without calling llm', async () => {
@@ -150,7 +180,7 @@ describe('evaluateAssist', () => {
 
     await vi.waitFor(() => {
       expect(interim).toEqual([
-        expect.objectContaining({ source: 'rules', matched: false, rating: 'again' }),
+        expect.objectContaining({ source: 'rules', matched: false, rating: 'again', correctness: 'unverified' }),
       ])
     })
 
@@ -190,7 +220,7 @@ describe('evaluateAssist', () => {
 
     await vi.advanceTimersByTimeAsync(50)
     const result = await pending
-    expect(result).toMatchObject({ source: 'rules', matched: false, rating: 'again' })
+    expect(result).toMatchObject({ source: 'rules', matched: false, rating: 'again', correctness: 'unverified' })
     vi.useRealTimers()
   })
 })

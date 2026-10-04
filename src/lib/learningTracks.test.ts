@@ -42,4 +42,11 @@ describe('learningTracks', () => {
     ]))
     expect(progress).toEqual({ started: 3, usable: 2, total: 3 })
   })
+
+  it('counts shared recall and retained evidence for basic learning-map progress', () => {
+    const items = ['a', 'b', 'c'].map((id) => ({ id, listSlugs: ['daily'] as const }))
+    expect(snapshotMapLearningProgress(items, new Map([
+      ['a', 'learning'], ['b', 'recall'], ['c', 'retained'],
+    ]))).toEqual({ started: 3, usable: 2, total: 3 })
+  })
 })

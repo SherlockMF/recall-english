@@ -3,7 +3,7 @@ import { AddView, type CustomItemDraft } from './components/AddView'
 import { AppShell, type AppTab } from './components/AppShell'
 import { LibraryView } from './components/LibraryView'
 import { SettingsDialog } from './components/SettingsDialog'
-import { StudySession, type EvaluationResult } from './components/StudySession'
+import { StudySession, type EvaluationResult, type RateDetail } from './components/StudySession'
 import { TodayView } from './components/TodayView'
 import { seedMemberships, seedWords } from './data/seedVocabulary'
 import { ALL_VOCABULARY_LISTS, listIdForSlug } from './data/vocabularyLists'
@@ -16,8 +16,8 @@ import {
   type ListSlug,
   type ReviewAttempt,
   type ReviewRating,
-  type SessionSummary,
   type SessionTask,
+  type StudyTimeEntry,
   type SystemListSlug,
   type UserSettings,
   type VocabularyItem,
@@ -40,6 +40,7 @@ import {
   initializeDatabase,
   putLearningTracks,
   putSettings,
+  putStudyTimeEntry,
   putWord,
   recordReview,
   writeBatch,
@@ -58,17 +59,16 @@ import {
   snapshotLearningTracks,
   snapshotMapLearningProgress,
 } from './lib/learningTracks'
-import { getItemStage, groupTracksByItemId } from './lib/presentation'
+import { deriveLearningStats } from './lib/learningStats'
 import {
-  buildDailyQueue,
+  buildDailyPlan,
   createInitialTracks,
-  getAdaptiveNewItemTarget,
+  type DailyPlan,
 } from './lib/scheduler'
 
 interface ActiveSession {
   id: string
-  mode: 'core' | 'extension'
-  tasks: SessionTask[]
+  plan: DailyPlan
 }
 
 function App() {
@@ -76,11 +76,13 @@ function App() {
   const [items, setItems] = useState<VocabularyItem[]>([])
   const [tracks, setTracks] = useState<LearningTrack[]>([])
   const [attempts, setAttempts] = useState<ReviewAttempt[]>([])
+  const [timeEntries, setTimeEntries] = useState<StudyTimeEntry[]>([])
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_SETTINGS)
   const [session, setSession] = useState<ActiveSession | null>(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
+  const [sessionError, setSessionError] = useState('')
   const [now, setNow] = useState(() => new Date())
   const enqueueReviewWrite = useRef(createSerialQueue()).current
 
@@ -89,6 +91,7 @@ function App() {
     setItems(snapshot.vocabulary)
     setTracks(snapshot.tracks)
     setAttempts(snapshot.attempts)
+    setTimeEntries(snapshot.timeEntries)
     setSettings(snapshot.settings)
   }, [])
 
@@ -121,57 +124,9 @@ function App() {
     return () => window.clearInterval(interval)
   }, [])
 
-  const activeItems = useMemo(() => items.filter((item) => item.status === 'active'), [items])
   const itemMap = useMemo(() => new Map(items.map((item) => [item.id, item])), [items])
-  const activeItemIds = useMemo(() => new Set(activeItems.map((item) => item.id)), [activeItems])
-
-  const dueCount = useMemo(() => {
-    const nowValue = now.getTime()
-    return tracks.filter((track) => (
-      activeItemIds.has(track.itemId)
-      && track.unlocked
-      && track.type !== 'usage'
-      && track.reps > 0
-      && new Date(track.due).getTime() <= nowValue
-    )).length
-  }, [activeItemIds, now, tracks])
-
-  const usageDue = useMemo(() => {
-    const nowValue = now.getTime()
-    return tracks.filter((track) => (
-      activeItemIds.has(track.itemId)
-      && track.unlocked
-      && track.type === 'usage'
-      && new Date(track.due).getTime() <= nowValue
-    )).length
-  }, [activeItemIds, now, tracks])
-
-  const newCount = useMemo(
-    () => getAdaptiveNewItemTarget(settings, items, tracks, attempts, now),
-    [attempts, items, now, settings, tracks],
-  )
-
-  const recentAttempts = useMemo(() => {
-    const weekAgo = now.getTime() - 7 * 24 * 60 * 60 * 1000
-    return attempts.filter((attempt) => (
-      attempt.trackType !== 'usage' && new Date(attempt.reviewedAt).getTime() >= weekAgo
-    ))
-  }, [attempts, now])
-
-  const noHintRate = recentAttempts.length
-    ? Math.round((recentAttempts.filter((attempt) => attempt.rating === 'good' && attempt.hintLevel === 0).length / recentAttempts.length) * 100)
-    : null
-
-  const usableThisWeek = useMemo(() => {
-    const weekAgo = now.getTime() - 7 * 24 * 60 * 60 * 1000
-    return tracks.filter((track) => (
-      track.type === 'usage'
-      && track.firstGoodAt
-      && new Date(track.firstGoodAt).getTime() >= weekAgo
-    )).length
-  }, [now, tracks])
-
-  const tracksByItemId = useMemo(() => groupTracksByItemId(tracks), [tracks])
+  const stats = useMemo(() => deriveLearningStats({ items, tracks, attempts, timeEntries, now }), [items, tracks, attempts, timeEntries, now])
+  const dailyPlan = useMemo(() => buildDailyPlan({ settings, items, tracks, attempts, timeEntries, now }), [settings, items, tracks, attempts, timeEntries, now])
 
   const learningTrackSnapshots = useMemo(() => {
     const learnedItemIds = new Set(
@@ -184,11 +139,11 @@ function App() {
     const stageByItemId = new Map(
       items.map((item) => [
         item.id,
-        getItemStage(item, tracksByItemId.get(item.id) ?? []).key,
+        stats.evidenceByItemId.get(item.id)?.key ?? 'new',
       ] as const),
     )
     return snapshotMapLearningProgress(items, stageByItemId)
-  }, [items, tracksByItemId])
+  }, [items, stats.evidenceByItemId])
 
   const recentWords = useMemo(() => {
     const seen = new Set<string>()
@@ -202,20 +157,47 @@ function App() {
         return [{
           expression: item.expression,
           zhGloss: item.zhGloss,
-          stage: getItemStage(item, tracksByItemId.get(item.id) ?? []).label,
+          stage: stats.evidenceByItemId.get(item.id)?.label ?? '未开始',
         }]
       })
       .slice(0, 6)
-  }, [attempts, itemMap, tracksByItemId])
+  }, [attempts, itemMap, stats.evidenceByItemId])
 
-  function startSession(mode: 'core' | 'extension') {
-    const sessionNow = new Date()
-    const tasks = buildDailyQueue(settings, items, tracks, attempts, sessionNow, mode)
-    setNow(sessionNow)
-    setSession({ id: makeId('session'), mode, tasks })
+  function startSession() {
+    const current = new Date()
+    if (current.toDateString() !== now.toDateString()) {
+      void rebuildSession()
+      return
+    }
+    setSession({ id: makeId('session'), plan: dailyPlan })
   }
 
-  async function evaluateTask(
+  async function rebuildSession(additionalMinutes = 0) {
+    try {
+      const snapshot = await getUserDataSnapshot()
+      const current = new Date()
+      const plan = buildDailyPlan({ settings: snapshot.settings, items: snapshot.vocabulary, tracks: snapshot.tracks, attempts: snapshot.attempts, timeEntries: snapshot.timeEntries, now: current, additionalMinutes })
+      setItems(snapshot.vocabulary)
+      setTracks(snapshot.tracks)
+      setAttempts(snapshot.attempts)
+      setTimeEntries(snapshot.timeEntries)
+      setSettings(snapshot.settings)
+      setNow(current)
+      setSessionError('')
+      setSession({ id: makeId('session'), plan })
+      return true
+    } catch (error) {
+      setSessionError(error instanceof Error ? error.message : '暂时无法读取学习计划，请重试。')
+      return false
+    }
+  }
+
+  const saveStudyTime = useCallback(async (entry: StudyTimeEntry) => {
+    const saved = await putStudyTimeEntry(entry)
+    setTimeEntries((current) => [...current.filter((candidate) => candidate.id !== saved.id), saved])
+  }, [])
+
+  const evaluateTask = useCallback(async (
     task: SessionTask,
     item: VocabularyItem,
     answer: string,
@@ -224,8 +206,9 @@ function App() {
     responseMs: number,
     options?: {
       onInterim?: (result: EvaluationResult) => void
+      verifySentence?: boolean
     },
-  ): Promise<EvaluationResult> {
+  ): Promise<EvaluationResult> => {
     const result = await evaluateAssist({
       item,
       trackType: task.trackType,
@@ -234,30 +217,17 @@ function App() {
       responseMs,
       revealed,
       promptIndex: task.promptIndex,
-      onInterim: options?.onInterim
-        ? (interim) => {
-            options.onInterim?.({
-              rating: interim.rating,
-              matched: interim.matched,
-              message: interim.message,
-              feedbackZh: interim.feedbackZh,
-            })
-          }
-        : undefined,
+      verifySentence: options?.verifySentence,
+      onInterim: options?.onInterim,
     })
-    return {
-      rating: result.rating,
-      matched: result.matched,
-      message: result.message,
-      feedbackZh: result.feedbackZh,
-    }
-  }
+    return result
+  }, [])
 
-  async function resolveHint(
+  const resolveHint = useCallback(async (
     task: SessionTask,
     item: VocabularyItem,
     hintLevel: HintLevel,
-  ) {
+  ) => {
     if (!hasDeepseekApiKey()) {
       throw new Error('no-key')
     }
@@ -267,9 +237,9 @@ function App() {
       hintLevel,
       promptIndex: task.promptIndex,
     })
-  }
+  }, [])
 
-  async function ensureUsageItem(item: VocabularyItem) {
+  const ensureUsageItem = useCallback(async (item: VocabularyItem) => {
     if (item.usagePrompts.length >= 2) return item
     let prompts = item.usagePrompts
     try {
@@ -291,7 +261,7 @@ function App() {
       candidate.id === updated.id ? { ...updated, listSlugs: candidate.listSlugs, category: candidate.category } : candidate
     )))
     return updated
-  }
+  }, [])
 
   async function enrichDraft(expression: string, category: SystemListSlug | 'other', existingDefinition?: string) {
     return enrichWithLlm({ expression, category, existingDefinition })
@@ -300,20 +270,15 @@ function App() {
   async function handleRate(
     task: SessionTask,
     rating: ReviewRating,
-    detail: {
-      answer: string
-      hintLevel: HintLevel
-      responseMs: number
-      promptType: string
-      wasOverride: boolean
-    },
+    detail: RateDetail,
   ) {
     const result = await enqueueReviewWrite(() => recordReview({
       trackId: task.trackId,
       rating,
+      reviewedAt: new Date(detail.reviewedAt),
       desiredRetention: settings.desiredRetention,
       attempt: {
-        id: makeId('attempt'),
+        id: detail.attemptId,
         itemId: task.itemId,
         trackType: task.trackType,
         promptType: detail.promptType,
@@ -321,12 +286,20 @@ function App() {
         hintLevel: detail.hintLevel,
         responseMs: detail.responseMs,
         wasOverride: detail.wasOverride || undefined,
+        evidenceVersion: detail.evidenceVersion,
+        sessionId: detail.sessionId,
+        retryCount: detail.retryCount,
+        promptId: detail.promptId,
+        evaluationSource: detail.evaluationSource,
+        correctness: detail.correctness,
+        matchKind: detail.matchKind,
+        suggestedRating: detail.suggestedRating,
       },
     }))
-    const changedById = new Map(result.changedTracks.map((track) => [track.id, track]))
+    const changedById = new Map(result.tracks.map((track) => [track.id, track]))
     setTracks((current) => current.map((track) => changedById.get(track.id) ?? track))
-    setAttempts((current) => [...current, result.attempt])
-    setNow(result.reviewedAt)
+    setAttempts((current) => [...current.filter((attempt) => attempt.id !== result.attempt.id), result.attempt])
+    setNow(new Date())
   }
 
   async function addCustomItem(draft: CustomItemDraft) {
@@ -527,6 +500,10 @@ function App() {
 
   return (
     <>
+      {sessionError && <div className="session-open-error" role="alert">
+        <span>{sessionError}</span>
+        <button type="button" onClick={() => setSessionError('')}>关闭提示后重试</button>
+      </div>}
       <AppShell
         activeTab={tab}
         onChangeTab={(nextTab) => {
@@ -537,18 +514,14 @@ function App() {
       >
         {tab === 'today' && (
           <TodayView
-            dueCount={dueCount}
-            estimatedMinutes={Math.min(settings.coreMinutes, Math.max(3, Math.ceil((dueCount * 0.35) + (newCount * 1.3))))}
+            plan={dailyPlan}
+            stats={stats}
             mapProgress={mapProgress}
-            newCount={newCount}
-            noHintRate={noHintRate}
             now={now}
-            onStart={() => startSession('core')}
-            onStartExtension={() => startSession('extension')}
+            onStart={startSession}
+            onContinue={() => void rebuildSession(5)}
             recentWords={recentWords}
             tracks={learningTrackSnapshots}
-            usageDue={usageDue}
-            usableThisWeek={usableThisWeek}
           />
         )}
         {tab === 'add' && (
@@ -565,7 +538,7 @@ function App() {
             onAddToMyVocabulary={addToMyVocabulary}
             onToggleStatus={toggleStatus}
             onUpdate={updateItem}
-            tracksByItemId={tracksByItemId}
+            evidenceByItemId={stats.evidenceByItemId}
           />
         )}
       </AppShell>
@@ -574,16 +547,26 @@ function App() {
         <StudySession
           ensureUsageItem={ensureUsageItem}
           evaluate={evaluateTask}
-          initialTasks={session.tasks}
+          initialTasks={session.plan.tasks}
           items={items}
           key={session.id}
-          mode={session.mode}
+          mode="core"
+          sessionId={session.id}
+          dailyMinutes={settings.dailyMinutes}
+          usedTodayMs={session.plan.usedMs}
+          initialBudgetMs={session.plan.remainingMs}
+          timeEntries={timeEntries}
+          onSaveTime={saveStudyTime}
+          onContinue={() => rebuildSession(5)}
+          onDayChange={() => rebuildSession()}
+          canVerifySentence={hasDeepseekApiKey()}
+          learningStats={stats}
           onExit={() => {
             setSession(null)
             setTab('today')
             setNow(new Date())
           }}
-          onFinish={(_summary: SessionSummary) => undefined}
+          onFinish={() => { void refreshData().catch((error) => setSessionError(error instanceof Error ? error.message : '读取学习结果失败。')) }}
           onRate={handleRate}
           onSpeechAccentChange={(accent) => {
             void saveSettings({ ...settings, speechAccent: accent })
@@ -591,7 +574,7 @@ function App() {
           resolveHint={resolveHint}
           speechAccent={settings.speechAccent}
           tracks={tracks}
-          usableThisWeek={usableThisWeek}
+          usableThisWeek={stats.applicationCount}
         />
       )}
 

@@ -24,6 +24,7 @@ import {
   type ReviewAttempt,
   type ReviewRating,
   type SpeechAccent,
+  type StudyTimeEntry,
   type SystemListSlug,
   type TrackType,
   type UserSettings,
@@ -35,7 +36,7 @@ import {
 } from '../domain/types'
 
 export const DATABASE_NAME = 'recall-english'
-export const DATABASE_VERSION = 2
+export const DATABASE_VERSION = 3
 
 export interface RecallEnglishDatabase extends DBSchema {
   words: {
@@ -84,6 +85,13 @@ export interface RecallEnglishDatabase extends DBSchema {
     key: UserSettings['id']
     value: UserSettings
   }
+  timeEntries: {
+    key: string
+    value: StudyTimeEntry
+    indexes: {
+      'by-session-date': [string, string]
+    }
+  }
   dictionaryCache: {
     key: string
     value: DictionaryCache
@@ -100,6 +108,7 @@ export interface DatabaseBatch {
   deleteMembershipIds?: string[]
   tracks?: LearningTrack[]
   attempts?: ReviewAttempt[]
+  timeEntries?: StudyTimeEntry[]
   settings?: UserSettings
   dictionaryCache?: DictionaryCache[]
 }
@@ -111,6 +120,7 @@ export interface UserDataSnapshot {
   vocabulary: VocabularyItem[]
   tracks: LearningTrack[]
   attempts: ReviewAttempt[]
+  timeEntries: StudyTimeEntry[]
   settings: UserSettings
 }
 
@@ -132,13 +142,21 @@ export function normalizeUserSettings(raw: Partial<UserSettings> | UserSettings)
     ...createDefaultSettings(),
     ...raw,
     id: 'primary',
+    dailyMinutes: boundedInteger(raw.dailyMinutes ?? raw.coreMinutes, 5, 120, DEFAULT_SETTINGS.dailyMinutes),
+    newItemsPerDay: boundedInteger(raw.newItemsPerDay, 0, 100, DEFAULT_SETTINGS.newItemsPerDay),
     contentMix: normalizeContentMix(raw.contentMix),
     speechAccent: normalizeSpeechAccent(raw.speechAccent),
     seedContentRevision:
       typeof raw.seedContentRevision === 'string' && raw.seedContentRevision.trim()
         ? raw.seedContentRevision.trim()
-        : createDefaultSettings().seedContentRevision,
+        : undefined,
   }
+}
+
+function boundedInteger(value: unknown, min: number, max: number, fallback: number): number {
+  return typeof value === 'number' && Number.isFinite(value)
+    ? Math.min(max, Math.max(min, Math.round(value)))
+    : fallback
 }
 
 export function normalizeDictionaryQuery(query: string): string {
@@ -152,12 +170,12 @@ function normalizeContentMix(raw: Record<string, number> | undefined): Record<Sy
   const business = Number(raw.business)
   const finance = Number(raw.finance)
   const accounting = Number(raw.accounting)
-  const legacyFinance = Number.isFinite(finance) ? finance : defaults.finance
+  const legacyFinanceMix = !Number.isFinite(accounting) && Number.isFinite(finance)
   return {
     daily: Number.isFinite(daily) ? daily : defaults.daily,
     business: Number.isFinite(business) ? business : defaults.business,
-    finance: Number.isFinite(finance) ? finance : legacyFinance * 0.5,
-    accounting: Number.isFinite(accounting) ? accounting : legacyFinance * 0.5,
+    finance: legacyFinanceMix ? finance * 0.5 : Number.isFinite(finance) ? finance : defaults.finance,
+    accounting: legacyFinanceMix ? finance * 0.5 : Number.isFinite(accounting) ? accounting : defaults.accounting,
   }
 }
 
@@ -313,6 +331,11 @@ function createStores(
     database.createObjectStore('settings', { keyPath: 'id' })
   }
 
+  if (!database.objectStoreNames.contains('timeEntries')) {
+    const store = database.createObjectStore('timeEntries', { keyPath: 'id' })
+    store.createIndex('by-session-date', ['sessionId', 'localDate'], { unique: true })
+  }
+
   if (!database.objectStoreNames.contains('dictionaryCache')) {
     const store = database.createObjectStore('dictionaryCache', { keyPath: 'query' })
     store.createIndex('by-cached-at', 'cachedAt')
@@ -359,6 +382,9 @@ export function getDatabase(): Promise<IDBPDatabase<RecallEnglishDatabase>> {
         } else {
           createStores(database, oldVersion)
         }
+        const settingsStore = transaction.objectStore('settings')
+        const settings = await settingsStore.get('primary')
+        if (settings) await settingsStore.put(normalizeUserSettings(settings))
       },
     })
     databasePromise.catch(() => {
@@ -490,13 +516,12 @@ export async function initializeDatabase(
 
   if (!existingSettings) {
     await settingsStore.put({
-      ...settings,
+      ...normalizeUserSettings(settings),
       seedContentRevision: targetRevision,
     })
   } else {
     await settingsStore.put({
-      ...existingSettings,
-      contentMix: normalizeContentMix(existingSettings.contentMix),
+      ...normalizeUserSettings(existingSettings),
       seedContentRevision: targetRevision,
     })
   }
@@ -730,13 +755,24 @@ export async function recordReview(input: RecordReviewInput): Promise<RecordRevi
   const database = await getDatabase()
   const transaction = database.transaction(['tracks', 'attempts'], 'readwrite')
   const trackStore = transaction.objectStore('tracks')
+  const existingAttempt = await transaction.objectStore('attempts').get(input.attempt.id)
+  if (existingAttempt) {
+    const tracks = await trackStore.index('by-item').getAll(existingAttempt.itemId)
+    await transaction.done
+    return {
+      tracks,
+      changedTracks: [],
+      attempt: existingAttempt,
+      reviewedAt: new Date(existingAttempt.reviewedAt),
+    }
+  }
   const currentTrack = await trackStore.get(input.trackId)
   if (!currentTrack) {
     throw new Error('找不到当前学习轨道。')
   }
 
   const existingTracks = await trackStore.index('by-item').getAll(currentTrack.itemId)
-  const reviewedAt = input.reviewedAt ?? new Date()
+  const reviewedAt = input.reviewedAt ?? new Date(input.attempt.reviewedAt ?? Date.now())
   const scheduledTrack = scheduleReview(
     currentTrack,
     input.rating,
@@ -746,7 +782,15 @@ export async function recordReview(input: RecordReviewInput): Promise<RecordRevi
   const replacedTracks = existingTracks.map((track) => (
     track.id === scheduledTrack.id ? scheduledTrack : track
   ))
-  const nextTracks = unlockEligibleUsageTracks(replacedTracks, reviewedAt)
+  const attempt: ReviewAttempt = {
+    ...input.attempt,
+    id: input.attempt.id,
+    trackId: input.trackId,
+    rating: input.rating,
+    reviewedAt: reviewedAt.toISOString(),
+  }
+  const itemAttempts = await transaction.objectStore('attempts').index('by-item').getAll(currentTrack.itemId)
+  const nextTracks = unlockEligibleUsageTracks(replacedTracks, reviewedAt, [...itemAttempts, attempt])
   const previousById = new Map(existingTracks.map((track) => [track.id, track]))
   // Always persist the reviewed track; also persist siblings whose unlock/due/good markers changed.
   const changedTracks = nextTracks.filter((track) => {
@@ -758,14 +802,6 @@ export async function recordReview(input: RecordReviewInput): Promise<RecordRevi
       || track.firstGoodAt !== previous.firstGoodAt
       || track.lastGoodAt !== previous.lastGoodAt
   })
-
-  const attempt: ReviewAttempt = {
-    ...input.attempt,
-    id: input.attempt.id,
-    trackId: input.trackId,
-    rating: input.rating,
-    reviewedAt: reviewedAt.toISOString(),
-  }
 
   for (const track of changedTracks) {
     await trackStore.put(track)
@@ -810,6 +846,23 @@ export async function putReviewAttempts(attempts: ReviewAttempt[]): Promise<void
 
 export async function deleteReviewAttempt(id: string): Promise<void> {
   await (await getDatabase()).delete('attempts', id)
+}
+
+export async function getAllStudyTimeEntries(): Promise<StudyTimeEntry[]> {
+  return (await getDatabase()).getAll('timeEntries')
+}
+
+export async function putStudyTimeEntry(entry: StudyTimeEntry): Promise<StudyTimeEntry> {
+  const database = await getDatabase()
+  const transaction = database.transaction('timeEntries', 'readwrite')
+  const existing = await transaction.store.index('by-session-date').get([entry.sessionId, entry.localDate])
+  // Checkpoints contain cumulative time; a delayed checkpoint must never add or remove time.
+  const saved = existing && existing.activeMs >= entry.activeMs
+    ? existing
+    : { ...entry, id: existing?.id ?? entry.id }
+  await transaction.store.put(saved)
+  await transaction.done
+  return saved
 }
 
 export async function getSettings(): Promise<UserSettings> {
@@ -863,6 +916,7 @@ export async function writeBatch(batch: DatabaseBatch): Promise<void> {
       'wordListItems',
       'tracks',
       'attempts',
+      'timeEntries',
       'settings',
       'dictionaryCache',
     ],
@@ -887,6 +941,9 @@ export async function writeBatch(batch: DatabaseBatch): Promise<void> {
   for (const attempt of batch.attempts ?? []) {
     await transaction.objectStore('attempts').put(attempt)
   }
+  for (const entry of batch.timeEntries ?? []) {
+    await transaction.objectStore('timeEntries').put(entry)
+  }
   if (batch.settings) {
     await transaction.objectStore('settings').put(normalizeUserSettings(batch.settings))
   }
@@ -906,15 +963,16 @@ export async function writeBatch(batch: DatabaseBatch): Promise<void> {
 export async function getUserDataSnapshot(): Promise<UserDataSnapshot> {
   const database = await getDatabase()
   const transaction = database.transaction(
-    ['words', 'vocabularyLists', 'wordListItems', 'tracks', 'attempts', 'settings'],
+    ['words', 'vocabularyLists', 'wordListItems', 'tracks', 'attempts', 'timeEntries', 'settings'],
     'readonly',
   )
-  const [words, lists, memberships, tracks, attempts, storedSettings] = await Promise.all([
+  const [words, lists, memberships, tracks, attempts, timeEntries, storedSettings] = await Promise.all([
     transaction.objectStore('words').getAll(),
     transaction.objectStore('vocabularyLists').getAll(),
     transaction.objectStore('wordListItems').getAll(),
     transaction.objectStore('tracks').getAll(),
     transaction.objectStore('attempts').getAll(),
+    transaction.objectStore('timeEntries').getAll(),
     transaction.objectStore('settings').get('primary'),
   ])
   await transaction.done
@@ -931,6 +989,7 @@ export async function getUserDataSnapshot(): Promise<UserDataSnapshot> {
     vocabulary: hydrateWords(words, memberships, ensuredLists),
     tracks,
     attempts,
+    timeEntries,
     settings,
   }
 }
@@ -941,11 +1000,12 @@ export async function replaceUserData(data: {
   memberships: WordListItem[]
   tracks: LearningTrack[]
   attempts: ReviewAttempt[]
+  timeEntries?: StudyTimeEntry[]
   settings: UserSettings
 }): Promise<void> {
   const database = await getDatabase()
   const transaction = database.transaction(
-    ['words', 'vocabularyLists', 'wordListItems', 'tracks', 'attempts', 'settings'],
+    ['words', 'vocabularyLists', 'wordListItems', 'tracks', 'attempts', 'timeEntries', 'settings'],
     'readwrite',
   )
   const wordStore = transaction.objectStore('words')
@@ -953,6 +1013,7 @@ export async function replaceUserData(data: {
   const membershipStore = transaction.objectStore('wordListItems')
   const trackStore = transaction.objectStore('tracks')
   const attemptStore = transaction.objectStore('attempts')
+  const timeStore = transaction.objectStore('timeEntries')
   const settingsStore = transaction.objectStore('settings')
 
   await Promise.all([
@@ -961,6 +1022,7 @@ export async function replaceUserData(data: {
     membershipStore.clear(),
     trackStore.clear(),
     attemptStore.clear(),
+    timeStore.clear(),
     settingsStore.clear(),
   ])
 
@@ -969,6 +1031,7 @@ export async function replaceUserData(data: {
   for (const membership of data.memberships) await membershipStore.put(membership)
   for (const track of data.tracks) await trackStore.put(track)
   for (const attempt of data.attempts) await attemptStore.put(attempt)
+  for (const entry of data.timeEntries ?? []) await timeStore.put(entry)
   await settingsStore.put(normalizeUserSettings(data.settings))
   await transaction.done
 }
@@ -976,7 +1039,7 @@ export async function replaceUserData(data: {
 export async function clearUserData(): Promise<void> {
   const database = await getDatabase()
   const transaction = database.transaction(
-    ['words', 'vocabularyLists', 'wordListItems', 'tracks', 'attempts', 'settings'],
+    ['words', 'vocabularyLists', 'wordListItems', 'tracks', 'attempts', 'timeEntries', 'settings'],
     'readwrite',
   )
   await Promise.all([
@@ -985,6 +1048,7 @@ export async function clearUserData(): Promise<void> {
     transaction.objectStore('wordListItems').clear(),
     transaction.objectStore('tracks').clear(),
     transaction.objectStore('attempts').clear(),
+    transaction.objectStore('timeEntries').clear(),
     transaction.objectStore('settings').clear(),
   ])
   await transaction.done
@@ -999,6 +1063,7 @@ export async function clearDatabase(): Promise<void> {
       'wordListItems',
       'tracks',
       'attempts',
+      'timeEntries',
       'settings',
       'dictionaryCache',
     ],
@@ -1010,6 +1075,7 @@ export async function clearDatabase(): Promise<void> {
     transaction.objectStore('wordListItems').clear(),
     transaction.objectStore('tracks').clear(),
     transaction.objectStore('attempts').clear(),
+    transaction.objectStore('timeEntries').clear(),
     transaction.objectStore('settings').clear(),
     transaction.objectStore('dictionaryCache').clear(),
   ])

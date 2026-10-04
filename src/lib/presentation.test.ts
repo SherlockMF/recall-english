@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { LearningTrack, VocabularyItem } from '../domain/types'
+import type { LearningTrack, ReviewAttempt, VocabularyItem } from '../domain/types'
 import { getItemStage, groupTracksByItemId, greetingFor } from './presentation'
 
 function atHour(hour: number) {
@@ -99,5 +99,16 @@ describe('getItemStage', () => {
     const byItem = groupTracksByItemId([...itemTracks, other])
     expect(byItem.get(item.id)).toEqual(itemTracks)
     expect(getItemStage(item, byItem.get(item.id) ?? []).key).toBe('new')
+  })
+
+  it('uses the shared answer evidence and labels basic recall without requiring usage', () => {
+    const attempts: ReviewAttempt[] = (['receptive', 'productive'] as const).map((type) => ({
+      id: type, itemId: item.id, trackId: `${item.id}:${type}`, trackType: type, promptType: type,
+      answer: 'equity', rating: 'hard', hintLevel: 0, responseMs: 60000,
+      reviewedAt: '2026-09-01T00:00:00.000Z', evidenceVersion: 1, retryCount: 0,
+      evaluationSource: 'rules', correctness: 'correct', matchKind: 'exact',
+    }))
+    expect(getItemStage(item, [], attempts, new Date('2026-09-02T00:00:00.000Z')))
+      .toEqual({ key: 'usable', label: '双向可回忆' })
   })
 })

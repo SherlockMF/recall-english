@@ -5,6 +5,7 @@ import { deleteDB } from 'idb'
 import {
   DEFAULT_SETTINGS,
   type BackupV1,
+  type BackupV3,
   type LearningTrack,
   type ReviewAttempt,
   type Word,
@@ -17,6 +18,7 @@ import {
   getAllReviewAttempts,
   getAllVocabulary,
   getSettings,
+  getUserDataSnapshot,
   writeBatch,
 } from './db'
 import {
@@ -25,6 +27,7 @@ import {
   importBackup,
   parseBackup,
   parseBackupV2,
+  parseBackupV3,
   validateBackup,
   validateBackupV2,
 } from './backup'
@@ -118,7 +121,7 @@ describe('backup import and export', () => {
     await deleteDB(DATABASE_NAME)
   })
 
-  it('exports a validated V2 snapshot and records the backup time', async () => {
+  it('exports a validated V3 snapshot and records the backup time', async () => {
     await writeBatch({
       words: [word()],
       lists: ALL_VOCABULARY_LISTS,
@@ -137,13 +140,68 @@ describe('backup import and export', () => {
     const exported = await exportBackup(new Date(newer))
 
     expect(exported).toMatchObject({
-      version: 2,
+      version: 3,
       exportedAt: newer,
       settings: { lastBackupAt: newer },
     })
     expect(exported.words).toHaveLength(1)
     expect(exported.memberships).toHaveLength(1)
     expect((await getSettings()).lastBackupAt).toBe(newer)
+    expect(exported.timeEntries).toEqual([])
+  })
+
+  it('round-trips V3 budgets, study time and evidence without altering FSRS or IDs', async () => {
+    const evidence = attempt({
+      evidenceVersion: 1, sessionId: 'session-1', retryCount: 0, promptId: 'prompt-1',
+      evaluationSource: 'rules', correctness: 'correct', matchKind: 'exact', suggestedRating: 'good',
+    })
+    const timeEntry = { id: 'session-1:2026-08-10', sessionId: 'session-1', localDate: '2026-08-10', activeMs: 123_000, updatedAt: newer }
+    await writeBatch({
+      words: [word()], lists: ALL_VOCABULARY_LISTS, tracks: [track({ reps: 12, stability: 40 })],
+      attempts: [evidence], timeEntries: [timeEntry], settings: { ...DEFAULT_SETTINGS, dailyMinutes: 20 },
+    })
+    const exported = await exportBackup(new Date(newer))
+    const parsed = parseBackupV3(JSON.stringify(exported))
+    expect(parsed.timeEntries).toEqual([timeEntry])
+    await importBackup(parsed)
+    const snapshot = await getUserDataSnapshot()
+    expect(snapshot.settings.dailyMinutes).toBe(20)
+    expect(snapshot.timeEntries).toEqual([timeEntry])
+    expect(snapshot.attempts).toEqual([evidence])
+    expect(snapshot.tracks).toContainEqual(track({ reps: 12, stability: 40 }))
+  })
+
+  it('imports V1 and V2 settings from coreMinutes and leaves legacy evidence unknown', async () => {
+    const { dailyMinutes: _dailyMinutes, ...legacySettings } = DEFAULT_SETTINGS
+    const legacy = { ...backupV1(), settings: { ...legacySettings, coreMinutes: 20, extensionMinutes: 35 } }
+    await importBackup(legacy)
+    expect((await getUserDataSnapshot()).settings.dailyMinutes).toBe(20)
+    expect((await getUserDataSnapshot()).timeEntries).toEqual([])
+    expect(await getAllReviewAttempts()).toEqual([attempt()])
+    const exported = await exportBackup()
+    const { timeEntries: _timeEntries, ...base } = exported
+    await importBackup({ ...base, version: 2, settings: legacy.settings })
+    expect((await getUserDataSnapshot()).settings.dailyMinutes).toBe(20)
+    expect((await getUserDataSnapshot()).timeEntries).toEqual([])
+  })
+
+  it.each([
+    ['invalid time', (backup: BackupV3) => ({ ...backup, timeEntries: [{ ...backup.timeEntries[0], activeMs: -1 }] })],
+    ['invalid local date', (backup: BackupV3) => ({ ...backup, timeEntries: [{ ...backup.timeEntries[0], localDate: '2026-02-30' }] })],
+    ['duplicate session day', (backup: BackupV3) => ({ ...backup, timeEntries: [...backup.timeEntries, { ...backup.timeEntries[0], id: 'duplicate' }] })],
+    ['unknown evidence source', (backup: BackupV3) => ({ ...backup, attempts: [{ ...backup.attempts[0], evaluationSource: 'maybe' }] })],
+    ['partial evidence', (backup: BackupV3) => ({ ...backup, attempts: [{ ...backup.attempts[0], evidenceVersion: 1 }] })],
+    ['invalid new quota', (backup: BackupV3) => ({ ...backup, settings: { ...backup.settings, newItemsPerDay: 101 } })],
+    ['fractional budget', (backup: BackupV3) => ({ ...backup, settings: { ...backup.settings, dailyMinutes: 15.5 } })],
+  ])('rejects %s atomically', async (_name, mutate) => {
+    await writeBatch({
+      words: [word()], lists: ALL_VOCABULARY_LISTS, tracks: [track()], attempts: [attempt()],
+      timeEntries: [{ id: 'session-1:2026-08-10', sessionId: 'session-1', localDate: '2026-08-10', activeMs: 5_000, updatedAt: newer }],
+    })
+    const exported = await exportBackup()
+    const before = await getUserDataSnapshot()
+    await expect(importBackup(mutate(exported))).rejects.toThrow(BackupValidationError)
+    expect(await getUserDataSnapshot()).toEqual(before)
   })
 
   it('strictly rejects unknown or malformed fields before replacing stored data', async () => {
@@ -185,8 +243,10 @@ describe('backup import and export', () => {
     })
 
     const exported = await exportBackup()
+    const { timeEntries: _timeEntries, ...v2Base } = exported
     const malformedV2 = {
-      ...exported,
+      ...v2Base,
+      version: 2,
       memberships: [{
         ...exported.memberships[0],
         wordId: 'missing-word',

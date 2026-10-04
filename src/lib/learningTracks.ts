@@ -1,4 +1,5 @@
 import type { ListSlug, SystemListSlug } from '../domain/types'
+import type { LearningEvidenceKey } from './learningEvidence'
 
 /** Today-page learning tracks: taxonomy lists stay fine-grained in Library. */
 export type LearningTrackId = 'daily' | 'business' | 'professional'
@@ -49,7 +50,7 @@ export interface LearningTrackSnapshot extends LearningTrackDef {
 export interface MapLearningProgress {
   /** Items with any review reps (> 未开始). */
   started: number
-  /** Items at stage 会使用 or 已稳固. */
+  /** Items with 双向可回忆 or 保持已验证 evidence. */
   usable: number
   /** Unique items in the three tracks. */
   total: number
@@ -87,7 +88,7 @@ export function countUniqueInTracks(
 
 export function snapshotMapLearningProgress(
   items: Array<{ id: string; listSlugs: readonly ListSlug[] }>,
-  stageByItemId: ReadonlyMap<string, 'new' | 'learning' | 'usable' | 'solid'>,
+  stageByItemId: ReadonlyMap<string, LearningEvidenceKey | 'usable' | 'solid'>,
   tracks: readonly LearningTrackDef[] = LEARNING_TRACKS,
 ): MapLearningProgress {
   const lists = new Set(tracks.flatMap((track) => track.lists))
@@ -102,7 +103,7 @@ export function snapshotMapLearningProgress(
   for (const id of ids) {
     const stage = stageByItemId.get(id) ?? 'new'
     if (stage !== 'new') started += 1
-    if (stage === 'usable' || stage === 'solid') usable += 1
+    if (stage === 'recall' || stage === 'retained' || stage === 'usable' || stage === 'solid') usable += 1
   }
 
   return { started, usable, total: ids.size }

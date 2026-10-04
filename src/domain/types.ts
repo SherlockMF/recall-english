@@ -110,10 +110,29 @@ export interface ReviewAttempt {
   responseMs: number
   reviewedAt: string
   wasOverride?: boolean
+  /** Absent on legacy attempts: do not infer objective learning evidence from ratings. */
+  evidenceVersion?: 1
+  sessionId?: string
+  retryCount?: number
+  promptId?: string
+  evaluationSource?: 'rules' | 'llm' | 'reveal'
+  correctness?: 'correct' | 'incorrect' | 'unverified'
+  matchKind?: 'exact' | 'variant' | 'minor-typo' | 'checkpoint' | 'incorrect'
+  suggestedRating?: ReviewRating
+}
+
+export interface StudyTimeEntry {
+  id: string
+  sessionId: string
+  localDate: string
+  activeMs: number
+  updatedAt: string
 }
 
 export interface UserSettings {
   id: 'primary'
+  dailyMinutes: number
+  /** Legacy settings retained for backup compatibility. */
   coreMinutes: number
   extensionMinutes: number
   desiredRetention: number
@@ -186,6 +205,11 @@ export interface BackupV2 {
   settings: UserSettings
 }
 
+export interface BackupV3 extends Omit<BackupV2, 'version'> {
+  version: 3
+  timeEntries: StudyTimeEntry[]
+}
+
 /** Vocabulary-only pack (no learning progress). Distinct from BackupV1/V2. */
 export interface VocabularyPackV1 {
   version: 1
@@ -223,6 +247,7 @@ export const SYSTEM_LIST_ORDER: readonly SystemListSlug[] = [
 
 export const DEFAULT_SETTINGS: UserSettings = {
   id: 'primary',
+  dailyMinutes: 15,
   coreMinutes: 15,
   extensionMinutes: 15,
   desiredRetention: 0.9,

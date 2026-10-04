@@ -1,4 +1,5 @@
-import type { LearningTrack, ListSlug, TrackType, VocabularyItem } from '../domain/types'
+import type { LearningTrack, ListSlug, ReviewAttempt, TrackType, VocabularyItem } from '../domain/types'
+import { deriveLearningEvidence } from './learningEvidence'
 
 export const categoryLabels: Record<ListSlug | 'other', string> = {
   daily: '日常生活',
@@ -12,7 +13,7 @@ export const categoryLabels: Record<ListSlug | 'other', string> = {
 export const trackLabels: Record<TrackType, string> = {
   receptive: '理解意思',
   productive: '主动表达',
-  usage: '真实使用',
+  usage: '场景应用',
 }
 
 export function greetingFor(date: Date) {
@@ -46,41 +47,19 @@ export function groupTracksByItemId(
   return byItem
 }
 
-function hasActiveGood(track: LearningTrack | undefined) {
-  if (!track?.lastGoodAt) return false
-  if (!track.lastReview) return true
-  return new Date(track.lastReview).getTime() <= new Date(track.lastGoodAt).getTime()
-}
-
-function isSolidTrack(track: LearningTrack | undefined) {
-  if (!hasActiveGood(track) || !track?.firstGoodAt || !track.lastGoodAt) return false
-  const sevenDays = 7 * 24 * 60 * 60 * 1000
-  return new Date(track.lastGoodAt).getTime() - new Date(track.firstGoodAt).getTime() >= sevenDays
-}
-
 /**
- * `tracks` may be the full library or a pre-filtered per-item list.
- * Prefer `groupTracksByItemId` + `byItem.get(id) ?? []` on hot paths.
+ * Compatibility stage keys for older callers; all state comes from saved learning evidence.
+ * Prefer the shared LearningStats.evidenceByItemId projection on hot paths.
  */
 export function getItemStage(
   item: VocabularyItem,
   tracks: LearningTrack[],
+  attempts: ReviewAttempt[] = [],
+  now: Date = new Date(),
 ): { key: ItemStageKey; label: string } {
-  const itemTracks = tracks.length > 0 && tracks.every((track) => track.itemId === item.id)
-    ? tracks
-    : tracks.filter((track) => track.itemId === item.id)
-  const receptive = itemTracks.find((track) => track.type === 'receptive')
-  const productive = itemTracks.find((track) => track.type === 'productive')
-  const usage = itemTracks.find((track) => track.type === 'usage')
-
-  if (!receptive?.reps && !productive?.reps) return { key: 'new', label: '未开始' }
-  if (isSolidTrack(receptive) && isSolidTrack(productive) && hasActiveGood(usage)) {
-    return { key: 'solid', label: '已稳固' }
-  }
-  if (hasActiveGood(receptive) && hasActiveGood(productive) && hasActiveGood(usage)) {
-    return { key: 'usable', label: '会使用' }
-  }
-  return { key: 'learning', label: '学习中' }
+  const evidence = deriveLearningEvidence(item, tracks, attempts, now)
+  const key = evidence.key === 'recall' ? 'usable' : evidence.key === 'retained' ? 'solid' : evidence.key
+  return { key, label: evidence.label }
 }
 
 export function expressionHint(expression: string, level: number) {

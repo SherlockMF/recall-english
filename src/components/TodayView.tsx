@@ -1,37 +1,33 @@
 import type { MapLearningProgress, LearningTrackSnapshot } from '../lib/learningTracks'
+import type { DailyPlan } from '../lib/scheduler'
+import type { LearningStats } from '../lib/learningStats'
 import { formatToday, greetingFor } from '../lib/presentation'
 import { Icon } from './Icon'
 
 interface TodayViewProps {
   now: Date
-  dueCount: number
-  newCount: number
-  usageDue: number
-  estimatedMinutes: number
-  noHintRate: number | null
-  usableThisWeek: number
+  plan: DailyPlan
+  stats: LearningStats
   tracks: LearningTrackSnapshot[]
   mapProgress: MapLearningProgress
   recentWords: { expression: string; zhGloss: string; stage: string }[]
   onStart: () => void
-  onStartExtension: () => void
+  onContinue: () => void
 }
 
 export function TodayView({
   now,
-  dueCount,
-  newCount,
-  usageDue,
-  estimatedMinutes,
-  noHintRate,
-  usableThisWeek,
+  plan,
+  stats,
   tracks,
   mapProgress,
   recentWords,
   onStart,
-  onStartExtension,
+  onContinue,
 }: TodayViewProps) {
-  const totalTasks = dueCount + newCount * 2
+  const noHintRate = stats.delayedRecall.rate === null ? null : Math.round(stats.delayedRecall.rate * 100)
+  const usedMinutes = Math.round(plan.usedMs / 6000) / 10
+  const remainingMinutes = Math.round(plan.remainingMs / 6000) / 10
   const startedProgress = mapProgress.total
     ? Math.min(100, Math.round((mapProgress.started / mapProgress.total) * 100))
     : 0
@@ -44,11 +40,11 @@ export function TodayView({
           <h1>{greetingFor(now)}，今天也把英语真正想起来。</h1>
           <p className="page-intro">先完成到期复习，再认识少量值得长期记住的新表达。</p>
         </div>
-        <div className="weekly-callout" aria-label={`本周新增 ${usableThisWeek} 个会用的表达`}>
+        <div className="weekly-callout" aria-label={`${stats.retainedCount} 个表达的保持已验证`}>
           <span className="callout-orbit"><Icon name="spark" size={17} /></span>
           <div>
-            <strong>{usableThisWeek}</strong>
-            <span>本周真正会用</span>
+            <strong>{stats.retainedCount}</strong>
+            <span>保持已验证</span>
           </div>
         </div>
       </section>
@@ -56,33 +52,35 @@ export function TodayView({
       <section className="today-hero" aria-labelledby="today-session-title">
         <div className="hero-copy">
           <div className="session-kicker"><span /> TODAY'S RECALL</div>
-          <h2 id="today-session-title">15 分钟核心训练</h2>
-          <p>
-            {dueCount > 0
-              ? `有 ${dueCount} 个到期回忆，之后学习 ${newCount} 个新表达。`
-              : `今天没有积压，可以专心学习 ${newCount} 个新表达。`}
-          </p>
+          <h2 id="today-session-title">{plan.dailyMinutes} 分钟每日计划</h2>
+          <p>已学习 {usedMinutes} 分钟 · 今日剩余 {remainingMinutes} 分钟</p>
+          <p>本次 {plan.totalTasks} 道练习，包含 {plan.newItemCount} 个新表达。回忆与应用共用当天预算。</p>
 
           <div className="session-metrics">
-            <div><span>到期</span><strong>{dueCount}</strong></div>
-            <div><span>新表达</span><strong>{newCount}</strong></div>
-            <div><span>使用题</span><strong>{usageDue}</strong></div>
+            <div><span>复习题</span><strong>{plan.reviewTaskCount}</strong></div>
+            <div><span>新表达</span><strong>{plan.newItemCount}</strong></div>
+            <div><span>应用题</span><strong>{plan.usageTaskCount}</strong></div>
+          </div>
+          <div className="plan-explanation">
+            <p>今日已引入 {plan.introducedToday} 个新表达 · 剩余额度 {plan.remainingNewItems} 个</p>
+            {plan.overflowDueCount > 0 && <p>仍有 {plan.overflowDueCount} 道到期练习未安排</p>}
+            {plan.reasons.map((reason) => <p key={reason}>{reason}</p>)}
           </div>
 
           <div className="hero-actions">
-            <button className="primary-button large" onClick={onStart} type="button">
-              开始今天的训练 <Icon name="arrow" size={19} />
+            <button className="primary-button large" disabled={plan.totalTasks === 0} onClick={onStart} type="button">
+              {plan.totalTasks === 0 ? '当前计划已完成' : '开始今天的训练'} <Icon name="arrow" size={19} />
             </button>
-            <button className="text-button" onClick={onStartExtension} type="button">
-              我有更多时间，加练 15 分钟
+            <button className="text-button" onClick={onContinue} type="button">
+              继续学习 5 分钟
             </button>
           </div>
         </div>
 
-        <div className="time-orb-wrap" aria-label={`预计 ${estimatedMinutes} 分钟，共约 ${totalTasks} 道回忆`}>
+        <div className="time-orb-wrap" aria-label={`预计 ${plan.estimatedMinutes} 分钟，共 ${plan.totalTasks} 道练习`}>
           <div className="time-orb">
             <span className="orb-small">预计</span>
-            <strong>{estimatedMinutes}</strong>
+            <strong>{plan.estimatedMinutes}</strong>
             <span>分钟</span>
           </div>
           <div className="orbit-dot one" />
@@ -95,14 +93,14 @@ export function TodayView({
           <div className="panel-heading">
             <div>
               <p className="eyebrow">LEARNING MAP</p>
-              <h2>先练到会用</h2>
+              <h2>看见学习证据</h2>
             </div>
             <span className="subtle-badge">三条主线</span>
           </div>
 
           <div
             className="map-goal"
-            aria-label={`学习进度：已开始 ${mapProgress.started}，会使用 ${mapProgress.usable}，词库 ${mapProgress.total}`}
+            aria-label={`学习进度：已开始 ${mapProgress.started}，双向可回忆 ${mapProgress.usable}，词库 ${mapProgress.total}`}
           >
             <div className="map-goal-copy">
               <strong>学习进度</strong>
@@ -117,8 +115,8 @@ export function TodayView({
                 <span style={{ width: `${startedProgress}%` }} />
               </div>
               <p className="map-goal-usable">
-                会使用 <strong>{mapProgress.usable.toLocaleString('zh-CN')}</strong>
-                <span>理解 + 表达 + 真实使用都过关</span>
+                双向可回忆 <strong>{mapProgress.usable.toLocaleString('zh-CN')}</strong>
+                <span>理解意思与主动表达分别有无提示成功证据</span>
               </p>
             </div>
           </div>
@@ -147,7 +145,7 @@ export function TodayView({
               )
             })}
           </div>
-          <p className="map-footnote">数字是学习进度，不是收藏量。细分词表在词库里查看。</p>
+          <p className="map-footnote">应用已有验证的表达 {stats.applicationCount} 个。保持与应用分别统计；词库中可展开查看依据。</p>
         </article>
 
         <article className="panel memory-panel">
@@ -160,17 +158,17 @@ export function TodayView({
           </div>
           <div className="memory-score">
             <strong>{noHintRate === null ? '—' : `${noHintRate}%`}</strong>
-            <span>近 7 天无提示想起率</span>
+            <span>近 7 天延迟回忆正确率</span>
           </div>
           <p className="memory-note">
-            {noHintRate === null
-              ? '完成第一轮训练后，这里会显示真实的延迟回忆表现。'
-              : noHintRate >= 90
-                ? '保持得很好。系统会谨慎增加新的表达。'
-                : noHintRate >= 85
-                  ? '节奏合适，继续把到期内容放在最前面。'
-                  : '先减少新词，把容易忘的表达重新练牢。'}
+            {stats.delayedRecall.total < 10
+              ? '可判定样本不足 10 条，暂不根据表现调整新词。首次学习、即时重试、提示与自评不计入此指标。'
+              : noHintRate !== null && noHintRate < 80
+                ? '根据同一组延迟回忆样本减少新词，先安排复习。'
+                : '继续优先完成复习，新词安排始终受每日上限约束。'}
           </p>
+          <p className="quiet-copy">{stats.delayedRecall.correct} / {stats.delayedRecall.total} 次可判定延迟回忆正确</p>
+          <p className="quiet-copy">今日练习 {stats.practicedItems} 个表达 · {stats.taskCount} 道不同题 · {stats.attemptCount} 次作答</p>
         </article>
       </section>
 

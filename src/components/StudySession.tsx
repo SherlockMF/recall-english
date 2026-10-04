@@ -6,10 +6,15 @@ import type {
   SessionSummary,
   SessionTask,
   SpeechAccent,
+  StudyTimeEntry,
   VocabularyItem,
 } from '../domain/types'
+import type { GradeMatchKind } from '../lib/grading'
+import type { LearningStats } from '../lib/learningStats'
 import { expressionHint, trackLabels } from '../lib/presentation'
 import { speakWord } from '../lib/speech'
+import { localStudyDate } from '../lib/studyTime'
+import { useStudyTimer } from '../lib/useStudyTimer'
 import { Icon } from './Icon'
 
 export interface EvaluationResult {
@@ -17,14 +22,27 @@ export interface EvaluationResult {
   matched: boolean
   message?: string
   feedbackZh?: string
+  source?: 'rules' | 'llm' | 'reveal'
+  correctness?: 'correct' | 'incorrect' | 'unverified'
+  matchKind?: GradeMatchKind
 }
 
-interface RateDetail {
+export interface RateDetail {
   answer: string
   hintLevel: HintLevel
   responseMs: number
   promptType: string
   wasOverride: boolean
+  attemptId: string
+  reviewedAt: string
+  evidenceVersion: 1
+  sessionId: string
+  retryCount: number
+  promptId?: string
+  evaluationSource: 'rules' | 'llm' | 'reveal'
+  correctness: 'correct' | 'incorrect' | 'unverified'
+  matchKind: GradeMatchKind
+  suggestedRating: ReviewRating
 }
 
 interface FailedSave {
@@ -42,6 +60,16 @@ interface StudySessionProps {
   items: VocabularyItem[]
   tracks: LearningTrack[]
   usableThisWeek: number
+  learningStats?: LearningStats
+  sessionId?: string
+  dailyMinutes?: number
+  usedTodayMs?: number
+  initialBudgetMs?: number
+  timeEntries?: StudyTimeEntry[]
+  onSaveTime?: (entry: StudyTimeEntry) => Promise<void>
+  onContinue?: () => boolean | void | Promise<boolean | void>
+  onDayChange?: () => boolean | void | Promise<boolean | void>
+  canVerifySentence?: boolean
   speechAccent?: SpeechAccent
   onSpeechAccentChange?: (accent: SpeechAccent) => void
   evaluate: (
@@ -53,50 +81,34 @@ interface StudySessionProps {
     responseMs: number,
     options?: {
       onInterim?: (result: EvaluationResult) => void
+      verifySentence?: boolean
     },
   ) => EvaluationResult | Promise<EvaluationResult>
-  resolveHint?: (
-    task: SessionTask,
-    item: VocabularyItem,
-    hintLevel: HintLevel,
-  ) => Promise<string>
+  resolveHint?: (task: SessionTask, item: VocabularyItem, hintLevel: HintLevel) => Promise<string>
   ensureUsageItem?: (item: VocabularyItem) => Promise<VocabularyItem>
-  onRate: (
-    task: SessionTask,
-    rating: ReviewRating,
-    detail: {
-      answer: string
-      hintLevel: HintLevel
-      responseMs: number
-      promptType: string
-      wasOverride: boolean
-    },
-  ) => Promise<void>
+  onRate: (task: SessionTask, rating: ReviewRating, detail: RateDetail) => Promise<void>
   onExit: () => void
   onFinish: (summary: SessionSummary) => void
 }
 
+type Submission = Pick<RateDetail, 'answer' | 'hintLevel' | 'responseMs' | 'reviewedAt' | 'attemptId' | 'promptId' | 'promptType'>
+
 export function StudySession({
-  mode,
-  initialTasks,
-  items,
-  tracks,
-  usableThisWeek,
-  speechAccent = 'uk',
-  onSpeechAccentChange,
-  evaluate,
-  resolveHint,
-  ensureUsageItem,
-  onRate,
-  onExit,
-  onFinish,
+  mode, initialTasks, items, tracks, usableThisWeek, learningStats,
+  sessionId: suppliedSessionId, dailyMinutes = 15, usedTodayMs = 0, initialBudgetMs,
+  timeEntries, onSaveTime, onContinue, onDayChange, canVerifySentence = false,
+  speechAccent = 'uk', onSpeechAccentChange, evaluate, resolveHint, ensureUsageItem,
+  onRate, onExit, onFinish,
 }: StudySessionProps) {
+  const sessionId = useRef(suppliedSessionId ?? crypto.randomUUID()).current
+  const sessionDay = useRef(localStudyDate()).current
+  const budgetMs = useRef(initialBudgetMs ?? Math.max(0, dailyMinutes * 60_000 - usedTodayMs)).current
   const [tasks, setTasks] = useState(initialTasks)
   const [index, setIndex] = useState(0)
   const [answer, setAnswer] = useState('')
   const [hintLevel, setHintLevel] = useState<HintLevel>(0)
   const [hintText, setHintText] = useState('')
-  const [phase, setPhase] = useState<'question' | 'feedback' | 'complete'>(initialTasks.length ? 'question' : 'complete')
+  const [phase, setPhase] = useState<'question' | 'feedback' | 'budget' | 'complete'>(initialTasks.length ? 'question' : 'complete')
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null)
   const [revealed, setRevealed] = useState(false)
   const [correction, setCorrection] = useState('')
@@ -108,278 +120,279 @@ export function StudySession({
   const [usageEnsureError, setUsageEnsureError] = useState<string | null>(null)
   const [accent, setAccent] = useState<SpeechAccent>(speechAccent)
   const [itemOverrides, setItemOverrides] = useState<Record<string, VocabularyItem>>({})
-  const [summary, setSummary] = useState<SessionSummary>({
-    total: 0,
-    noHintGood: 0,
-    again: 0,
-    usageCompleted: 0,
-    usableThisWeek,
-  })
+  const [summary, setSummary] = useState<SessionSummary>({ total: 0, noHintGood: 0, again: 0, usageCompleted: 0, usableThisWeek })
   const [failedWords, setFailedWords] = useState<string[]>([])
-  const startedAt = useRef(Date.now())
+  const [pendingWrites, setPendingWrites] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const [verificationRequested, setVerificationRequested] = useState(false)
+  const [rebuildMode, setRebuildMode] = useState<'day' | 'continue' | null>(null)
+  const [rebuildError, setRebuildError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null)
   const finishCalled = useRef(false)
   const submittedTaskIds = useRef(new Set<string>())
+  const savedItemIds = useRef(new Set<string>())
+  const savedQuestionIds = useRef(new Set<string>())
   const mountedRef = useRef(true)
-  const inflightRef = useRef(new Set<Promise<void>>())
+  const requestId = useRef(0)
+  const submission = useRef<Submission | null>(null)
+  const questionStartedMs = useRef(0)
   const failedSavesRef = useRef<FailedSave[]>([])
-  const savingKeysRef = useRef(new Set<string>())
-  const [pendingWrites, setPendingWrites] = useState(0)
+  const savingRef = useRef(false)
+  const verificationRef = useRef(false)
+  const timer = useStudyTimer({
+    sessionId, entries: timeEntries, save: onSaveTime,
+    enabled: (phase === 'question' || phase === 'feedback') && !grading && !hinting && !ensuringUsage
+      && !paused && !flushingExit && rebuildMode !== 'day' && pendingWrites === 0 && failedSaves.length === 0,
+  })
 
   useEffect(() => {
     mountedRef.current = true
-    return () => {
-      mountedRef.current = false
-    }
+    return () => { mountedRef.current = false; requestId.current += 1 }
   }, [])
-
-  useEffect(() => {
-    setAccent(speechAccent)
-  }, [speechAccent])
+  useEffect(() => { setAccent(speechAccent) }, [speechAccent])
 
   function updateFailedSaves(next: FailedSave[]) {
     failedSavesRef.current = next
     if (mountedRef.current) setFailedSaves(next)
   }
+  function chooseAccent(next: SpeechAccent) { setAccent(next); onSpeechAccentChange?.(next) }
+  function isCurrent(id: number) { return mountedRef.current && requestId.current === id }
 
-  function chooseAccent(next: SpeechAccent) {
-    setAccent(next)
-    onSpeechAccentChange?.(next)
+  async function completeSession() {
+    timer.setRunning(false)
+    if (await timer.flush()) setPhase('complete')
   }
 
-  async function persistRating(entry: Omit<FailedSave, 'message'> & { message?: string }) {
-    if (savingKeysRef.current.has(entry.key)) return
-    savingKeysRef.current.add(entry.key)
-    if (mountedRef.current) setPendingWrites((count) => count + 1)
+  async function afterSaved(entry: FailedSave) {
+    if (submittedTaskIds.current.has(entry.task.id)) return
+    submittedTaskIds.current.add(entry.task.id)
+    savedItemIds.current.add(entry.task.itemId)
+    if ((entry.task.retryCount ?? 0) === 0) savedQuestionIds.current.add(entry.task.id)
+    setSummary((current) => ({
+      ...current,
+      total: current.total + 1,
+      noHintGood: current.noHintGood + (entry.detail.correctness === 'correct' && entry.detail.hintLevel === 0 && !entry.detail.wasOverride ? 1 : 0),
+      again: current.again + (entry.rating === 'again' ? 1 : 0),
+      usageCompleted: current.usageCompleted + (entry.task.trackType === 'usage' && entry.detail.correctness === 'correct' && !entry.detail.wasOverride ? 1 : 0),
+    }))
+    if (entry.rating === 'again') setFailedWords((words) => words.includes(entry.label) ? words : [...words, entry.label])
+    if (localStudyDate() !== sessionDay && onDayChange) { await rebuildSession('day'); return }
+    if (timer.sample() >= budgetMs) { setPhase('budget'); return }
+    let nextTasks = tasks
+    if (entry.rating === 'again' && (entry.task.retryCount ?? 0) < 2) {
+      const retry = { ...entry.task, id: `${entry.task.id}-retry-${(entry.task.retryCount ?? 0) + 1}`, isNew: false, retryCount: (entry.task.retryCount ?? 0) + 1 }
+      nextTasks = [...tasks]
+      nextTasks.splice(Math.min(nextTasks.length, index + 4), 0, retry)
+      setTasks(nextTasks)
+    }
+    if (index + 1 >= nextTasks.length) { await completeSession(); return }
+    setIndex((value) => value + 1)
+    setAnswer(''); setCorrection(''); setHintLevel(0); setHintText('')
+    setRevealed(false); setEvaluation(null); setVerificationRequested(false)
+    verificationRef.current = false
+    submission.current = null
+    questionStartedMs.current = timer.sample()
+    setPhase('question')
+  }
 
-    const work = (async () => {
-      await onRate(entry.task, entry.rating, entry.detail)
-      updateFailedSaves(failedSavesRef.current.filter((item) => item.key !== entry.key))
-    })()
-    inflightRef.current.add(work)
+  async function persistRating(entry: FailedSave) {
+    if (savingRef.current) return
+    savingRef.current = true
+    setPendingWrites(1)
+    timer.setRunning(false)
     try {
-      await work
+      await onRate(entry.task, entry.rating, entry.detail)
+      if (!(await timer.flush())) throw new Error('作答已保存；请重试保存学习时间后继续。')
+      updateFailedSaves([])
+      await afterSaved(entry)
     } catch (error) {
-      const message = error instanceof Error ? error.message : '保存复习结果失败，请重试'
-      updateFailedSaves([
-        ...failedSavesRef.current.filter((item) => item.key !== entry.key),
-        { ...entry, message },
-      ])
+      updateFailedSaves([{ ...entry, message: error instanceof Error ? error.message : '保存复习结果失败，请重试' }])
     } finally {
-      inflightRef.current.delete(work)
-      savingKeysRef.current.delete(entry.key)
-      if (mountedRef.current) setPendingWrites((count) => Math.max(0, count - 1))
+      savingRef.current = false
+      if (mountedRef.current) setPendingWrites(0)
     }
   }
-
   async function retryFailedSaves() {
-    const pending = [...failedSavesRef.current]
-    for (const entry of pending) {
-      await persistRating(entry)
-    }
+    const entry = failedSavesRef.current[0]
+    if (entry) await persistRating(entry)
   }
-
   async function requestExit() {
+    if (flushingExit || savingRef.current || failedSavesRef.current.length) return
+    requestId.current += 1
+    setGrading(false)
+    setHinting(false)
+    setFlushingExit(true)
+    timer.setRunning(false)
+    try { if (await timer.flush()) onExit() }
+    finally { if (mountedRef.current) setFlushingExit(false) }
+  }
+  async function continueSession() {
+    await rebuildSession('continue')
+  }
+  async function rebuildSession(kind: 'day' | 'continue') {
     if (flushingExit) return
     setFlushingExit(true)
+    setRebuildMode(kind)
+    setRebuildError(null)
+    timer.setRunning(false)
     try {
-      await Promise.allSettled([...inflightRef.current])
-      if (failedSavesRef.current.length > 0) return
-      onExit()
+      if (!(await timer.flush())) return
+      const result = await (kind === 'day' ? onDayChange?.() : onContinue?.())
+      if (result === false) throw new Error('重新安排学习失败，请重试。')
+    } catch (error) {
+      if (mountedRef.current) setRebuildError(error instanceof Error ? error.message : '重新安排学习失败，请重试。')
     } finally {
       if (mountedRef.current) setFlushingExit(false)
     }
   }
 
   const task = tasks[index]
-  const item = useMemo(() => {
-    if (!task) return undefined
-    return itemOverrides[task.itemId] ?? items.find((candidate) => candidate.id === task.itemId)
-  }, [itemOverrides, items, task])
+  const item = useMemo(() => task ? itemOverrides[task.itemId] ?? items.find((candidate) => candidate.id === task.itemId) : undefined, [itemOverrides, items, task])
   const track = useMemo(() => tracks.find((candidate) => candidate.id === task?.trackId), [tracks, task?.trackId])
   const usagePrompt = item?.usagePrompts[task?.promptIndex ?? 0]
   const isSentence = task?.trackType === 'usage' && usagePrompt?.type === 'sentence'
-  const needsCorrection = phase === 'feedback'
-    && evaluation?.rating === 'again'
-    && !isSentence
-    && task?.trackType !== 'receptive'
-  const correctionTarget = task?.trackType === 'usage' && usagePrompt?.answer
-    ? usagePrompt.answer
-    : item?.expression ?? ''
+  const needsCorrection = phase === 'feedback' && evaluation?.rating === 'again' && !isSentence && task?.trackType !== 'receptive'
+  const correctionTarget = task?.trackType === 'usage' && usagePrompt?.answer ? usagePrompt.answer : item?.expression ?? ''
   const correctionComplete = !needsCorrection || answerMatches(correction, correctionTarget, item?.acceptedEnVariants ?? [])
 
   useEffect(() => {
-    startedAt.current = Date.now()
-    const timer = window.setTimeout(() => inputRef.current?.focus(), 80)
-    return () => window.clearTimeout(timer)
-  }, [index, phase])
-
+    const focusTimer = window.setTimeout(() => inputRef.current?.focus(), 80)
+    return () => window.clearTimeout(focusTimer)
+  }, [index])
   useEffect(() => {
-    if (phase === 'complete' && !finishCalled.current) {
+    if (phase === 'complete' && !finishCalled.current && !savingRef.current && failedSaves.length === 0) {
       finishCalled.current = true
-      onFinish(summary)
+      onFinish({ ...summary, usableThisWeek })
     }
-  }, [onFinish, phase, summary])
+  }, [onFinish, phase, summary, usableThisWeek, pendingWrites, failedSaves.length])
 
   useEffect(() => {
-    if (!task || !item || task.trackType !== 'usage' || !ensureUsageItem) return
-    if (item.usagePrompts.length >= 2) return
+    if (!task || !item || task.trackType !== 'usage' || !ensureUsageItem || item.usagePrompts.length > 0) return
     let cancelled = false
-    setEnsuringUsage(true)
-    setUsageEnsureError(null)
-    void ensureUsageItem(item)
-      .then((updated) => {
-        if (!cancelled) {
-          setItemOverrides((current) => ({ ...current, [updated.id]: updated }))
-        }
-      })
-      .catch((error) => {
-        if (!cancelled) {
-          setUsageEnsureError(error instanceof Error ? error.message : '使用题生成失败，请稍后重试。')
-        }
-      })
-      .finally(() => {
-        if (!cancelled) setEnsuringUsage(false)
-      })
-    return () => {
-      cancelled = true
-      setEnsuringUsage(false)
-    }
+    timer.setRunning(false)
+    setEnsuringUsage(true); setUsageEnsureError(null)
+    void ensureUsageItem(item).then((updated) => {
+      if (!cancelled) setItemOverrides((current) => ({ ...current, [updated.id]: updated }))
+    }).catch((error) => {
+      if (!cancelled) setUsageEnsureError(error instanceof Error ? error.message : '使用题生成失败，请稍后重试。')
+    }).finally(() => { if (!cancelled) setEnsuringUsage(false) })
+    return () => { cancelled = true; setEnsuringUsage(false) }
   }, [ensureUsageItem, item, task])
 
-  async function showForgottenAnswer() {
-    if (!item || !task || grading || ensuringUsage) return
-    if (task.trackType === 'usage' && item.usagePrompts.length === 0) return
-    setGrading(true)
-    try {
-      const result = await evaluate(task, item, '', 3, true, Math.max(0, Date.now() - startedAt.current))
-      setHintLevel(3)
-      setRevealed(true)
-      setEvaluation({ ...result, rating: 'again', matched: false })
-      setPhase('feedback')
-      void speakWord(item, accent)
-    } finally {
-      setGrading(false)
+  function freezeSubmission(reveal: boolean): Submission {
+    const frozen = {
+      answer: reveal ? '' : answer,
+      hintLevel,
+      responseMs: Math.max(0, Math.round(timer.sample() - questionStartedMs.current)),
+      reviewedAt: new Date().toISOString(),
+      attemptId: crypto.randomUUID(),
+      promptId: task.trackType === 'usage' ? usagePrompt?.id : undefined,
+      promptType: task.trackType === 'usage' ? usagePrompt?.type ?? 'usage' : task.trackType,
     }
+    submission.current = frozen
+    return frozen
   }
 
-  async function submitAnswer() {
-    if (!task || !item || !answer.trim() || grading || ensuringUsage) return
+  async function runEvaluation(reveal: boolean, verifySentence = false) {
+    if (!task || !item || grading || hinting || ensuringUsage || savingRef.current || paused || timer.error) return
     if (task.trackType === 'usage' && item.usagePrompts.length === 0) return
+    const frozen = verifySentence ? submission.current : freezeSubmission(reveal)
+    if (!frozen) return
+    if (verifySentence) {
+      if (verificationRef.current) return
+      verificationRef.current = true
+      setVerificationRequested(true)
+    }
+    const id = ++requestId.current
     setGrading(true)
+    timer.setRunning(false)
     let showedInterim = false
     try {
-      const result = await evaluate(
-        task,
-        item,
-        answer,
-        hintLevel,
-        false,
-        Math.max(0, Date.now() - startedAt.current),
-        {
-          onInterim: (interim) => {
-            showedInterim = true
-            setEvaluation(interim)
-            setPhase('feedback')
-            setGrading(false)
-            void speakWord(item, accent)
-          },
+      const result = await evaluate(task, item, frozen.answer, frozen.hintLevel, reveal, frozen.responseMs, {
+        verifySentence,
+        onInterim: verifySentence ? undefined : (interim) => {
+          if (!isCurrent(id)) return
+          showedInterim = true
+          setEvaluation(interim); setPhase('feedback'); setGrading(false)
+          void speakWord(item, accent)
         },
-      )
-      setEvaluation(result)
+      })
+      if (!isCurrent(id)) return
+      setHintLevel(reveal ? 3 : frozen.hintLevel)
+      setRevealed(reveal)
+      setEvaluation(reveal ? { ...result, rating: 'again', matched: false, source: 'reveal', correctness: 'incorrect', matchKind: 'incorrect' } : result)
       setPhase('feedback')
-      if (!showedInterim) void speakWord(item, accent)
-    } finally {
-      setGrading(false)
-    }
+      if (!showedInterim && !verifySentence) void speakWord(item, accent)
+    } catch {
+      if (isCurrent(id)) {
+        setEvaluation({ rating: 'again', matched: false, source: 'rules', correctness: 'unverified', matchKind: 'incorrect', feedbackZh: '当前无法验证，已保留本次回答。' })
+        setPhase('feedback')
+      }
+    } finally { if (isCurrent(id)) setGrading(false) }
   }
+  async function showForgottenAnswer() { await runEvaluation(true) }
+  async function submitAnswer() { if (answer.trim() && phase === 'question') await runEvaluation(false) }
 
   async function requestHint() {
-    if (!task || !item || hintLevel >= 2 || hinting) return
+    if (!task || !item || hintLevel >= 2 || hinting || grading || paused) return
+    const id = ++requestId.current
     const nextLevel = Math.min(2, hintLevel + 1) as HintLevel
     setHinting(true)
+    timer.setRunning(false)
     let text = buildHint(task, item, nextLevel, usagePrompt)
-    if (resolveHint) {
-      try {
-        text = await resolveHint(task, item, nextLevel)
-      } catch {
-        // keep local hint
-      }
-    }
-    setHintLevel(nextLevel)
-    setHintText(text)
-    setHinting(false)
+    if (resolveHint) { try { text = await resolveHint(task, item, nextLevel) } catch { /* Local hint remains available. */ } }
+    if (isCurrent(id)) { setHintLevel(nextLevel); setHintText(text); setHinting(false) }
   }
 
   async function chooseRating(selected: ReviewRating) {
-    if (!task || !item || !evaluation || !correctionComplete) return
+    if (!task || !item || !evaluation || !submission.current || !correctionComplete || savingRef.current || failedSaves.length || grading || timer.error || paused) return
     if (submittedTaskIds.current.has(task.id)) return
-
+    requestId.current += 1
     let rating = selected
     if (revealed) rating = 'again'
-    else if (hintLevel > 0 && rating === 'good') rating = 'hard'
-    else if (needsCorrection && rating === 'good') rating = 'hard'
-
-    submittedTaskIds.current.add(task.id)
-
-    const entry = {
-      key: task.id,
-      label: item.expression,
-      task,
-      rating,
-      detail: {
-        answer,
-        hintLevel,
-        responseMs: Math.max(0, Date.now() - startedAt.current),
-        promptType: task.trackType === 'usage' ? usagePrompt?.type ?? 'usage' : task.trackType,
-        wasOverride: rating !== evaluation.rating,
-      } satisfies RateDetail,
+    else if ((hintLevel > 0 || needsCorrection) && rating === 'good') rating = 'hard'
+    const detail: RateDetail = {
+      ...submission.current,
+      wasOverride: rating !== evaluation.rating,
+      evidenceVersion: 1,
+      sessionId,
+      retryCount: task.retryCount ?? 0,
+      evaluationSource: evaluation.source ?? 'rules',
+      correctness: evaluation.correctness ?? 'unverified',
+      matchKind: evaluation.matchKind ?? 'incorrect',
+      suggestedRating: evaluation.rating,
     }
-
-    const nextSummary: SessionSummary = {
-      ...summary,
-      total: summary.total + 1,
-      noHintGood: summary.noHintGood + (rating === 'good' && hintLevel === 0 ? 1 : 0),
-      again: summary.again + (rating === 'again' ? 1 : 0),
-      usageCompleted: summary.usageCompleted + (task.trackType === 'usage' && rating !== 'again' ? 1 : 0),
-    }
-    setSummary(nextSummary)
-    if (rating === 'again') {
-      setFailedWords((words) => words.includes(item.expression) ? words : [...words, item.expression])
-    }
-
-    let nextTasks = tasks
-    if (rating === 'again' && (task.retryCount ?? 0) < 2) {
-      const retry: SessionTask = {
-        ...task,
-        id: `${task.id}-retry-${(task.retryCount ?? 0) + 1}`,
-        isNew: false,
-        retryCount: (task.retryCount ?? 0) + 1,
-      }
-      nextTasks = [...tasks]
-      const insertionIndex = Math.min(nextTasks.length, index + 4)
-      nextTasks.splice(insertionIndex, 0, retry)
-      setTasks(nextTasks)
-    }
-
-    if (index + 1 >= nextTasks.length) {
-      setPhase('complete')
-    } else {
-      setIndex((value) => value + 1)
-      setAnswer('')
-      setCorrection('')
-      setHintLevel(0)
-      setHintText('')
-      setRevealed(false)
-      setEvaluation(null)
-      setPhase('question')
-    }
-
-    void persistRating(entry)
+    await persistRating({ key: detail.attemptId, label: item.expression, task, rating, detail, message: '' })
   }
 
+  if (rebuildMode === 'day') {
+    return (
+      <div className="study-overlay complete-overlay"><div className="completion-card">
+        <h1>已进入新的一天</h1>
+        <p>当前题已保存，将按今天的时间与新词额度重新安排学习。</p>
+        {rebuildError && <p role="alert">{rebuildError}</p>}
+        {timer.error && <p role="alert">学习时间未保存：{timer.error}</p>}
+        <button className="primary-button" disabled={flushingExit} onClick={() => void rebuildSession('day')} type="button">{flushingExit ? '正在安排…' : '重新安排今日学习'}</button>
+        <button aria-label="退出训练" className="secondary-button" disabled={flushingExit} onClick={() => void requestExit()} type="button">回到今天</button>
+      </div></div>
+    )
+  }
+  if (phase === 'budget') {
+    return (
+      <div className="study-overlay complete-overlay">
+        <div className="completion-card">
+          <h1>今天的时间目标已达到</h1>
+          <p>已保存当前题。你可以结束，或自愿再学 5 分钟；每日新词上限保持不变。</p>
+          <p>本轮有效学习 {Math.floor(timer.elapsedMs / 60_000)} 分 {Math.floor(timer.elapsedMs / 1000) % 60} 秒</p>
+          {timer.error && <p role="alert">学习时间未保存：{timer.error}<button onClick={() => void timer.flush()} type="button">重试保存时间</button></p>}
+          {rebuildError && <p role="alert">{rebuildError}</p>}
+          <button className="primary-button" disabled={flushingExit} onClick={() => void completeSession()} type="button">结束学习</button>
+          {onContinue && <button className="secondary-button" disabled={flushingExit} onClick={() => void continueSession()} type="button">继续 5 分钟</button>}
+        </div>
+      </div>
+    )
+  }
   if (phase === 'complete') {
-    const recallRate = summary.total ? Math.round((summary.noHintGood / summary.total) * 100) : 0
     return (
       <div className="study-overlay complete-overlay">
         <div className="completion-card">
@@ -388,9 +401,9 @@ export function StudySession({
           <h1>{summary.total ? '今天的记忆已经重新连上。' : '现在没有需要完成的训练。'}</h1>
           <p>{summary.total ? '真正困难的内容已经安排在更合适的时间再次出现。' : '稍后再来，或先添加一个你想记住的表达。'}</p>
           <div className="completion-stats">
-            <div><strong>{recallRate}%</strong><span>无提示想起</span></div>
-            <div><strong>{failedWords.length}</strong><span>需要再练</span></div>
-            <div><strong>{summary.usageCompleted}</strong><span>完成使用题</span></div>
+            <div><strong>{savedItemIds.current.size}</strong><span>本轮练习表达</span></div>
+            <div><strong>{savedQuestionIds.current.size}</strong><span>本轮题量</span></div>
+            <div><strong>{summary.total}</strong><span>已保存作答次数（含重试）</span></div>
           </div>
           {failedWords.length > 0 && (
             <div className="failed-word-strip">
@@ -399,8 +412,10 @@ export function StudySession({
             </div>
           )}
           <div className="completion-weekly">
-            <Icon name="spark" size={18} /> 本周已有 {summary.usableThisWeek} 个表达进入“会使用”阶段
+            <Icon name="spark" size={18} /> 本轮有效学习 {Math.floor(timer.elapsedMs / 60_000)} 分 {Math.floor(timer.elapsedMs / 1000) % 60} 秒
           </div>
+          {learningStats && <p>双向可回忆 {learningStats.recallCount} 个 · 保持已验证 {learningStats.retainedCount} 个 · 应用通过 {learningStats.applicationCount} 个</p>}
+          {timer.error && <p role="alert">学习时间未保存：{timer.error}<button onClick={() => void timer.flush()} type="button">重试保存时间</button></p>}
           {failedSaves.length > 0 && (
             <div className="save-error-panel" role="alert">
               <p>{failedSaves.length} 条复习结果未保存（{failedSaves.map((item) => item.label).join('、')}）。{failedSaves[0]?.message}</p>
@@ -428,21 +443,27 @@ export function StudySession({
   return (
     <div className="study-overlay">
       <header className="study-header">
-        <button aria-label="退出训练" className="icon-button" disabled={flushingExit} onClick={() => void requestExit()} type="button"><Icon name="close" size={20} /></button>
+        <button aria-label="退出训练" className="icon-button" disabled={flushingExit || pendingWrites > 0 || failedSaves.length > 0} onClick={() => void requestExit()} type="button"><Icon name="close" size={20} /></button>
         <div className="study-progress-wrap">
-          <div className="study-progress-copy"><span>{mode === 'core' ? '核心训练' : '加练时间'}</span><span>{index + 1} / {tasks.length}</span></div>
+          <div className="study-progress-copy"><span>{mode === 'core' ? '今日学习' : '继续学习'}</span><span>{index + 1} / {tasks.length}</span></div>
           <div className="study-progress"><span style={{ width: `${progress}%` }} /></div>
         </div>
-        <span className="study-time"><Icon name="clock" size={17} /> {mode === 'core' ? '15 min' : '+15 min'}</span>
+        <span className="study-time"><Icon name="clock" size={17} /> {Math.floor(timer.elapsedMs / 60_000)}:{String(Math.floor(timer.elapsedMs / 1000) % 60).padStart(2, '0')} / {Math.ceil(budgetMs / 60_000)} min</span>
+        <button className="mini-text-button" onClick={() => { if (!paused) timer.setRunning(false); setPaused(!paused) }} type="button">{paused ? '恢复学习' : '暂停'}</button>
       </header>
 
       <main className="study-main">
+        {(paused || timer.idle) && <p className="study-timer-notice" role="status">{paused ? '学习已暂停，恢复后继续计时。' : '120 秒无操作，已自动暂停计时；操作后恢复。'}</p>}
+        {timer.elapsedMs >= budgetMs && <p className="study-timer-notice" role="status">已达到本轮时间目标，完成当前题后选择结束或继续。</p>}
+        {usedTodayMs + timer.elapsedMs > dailyMinutes * 60_000 && <p className="field-help">今日已超出目标 {Math.floor((usedTodayMs + timer.elapsedMs - dailyMinutes * 60_000) / 60_000)} 分钟</p>}
+        {timer.error && <div className="save-error-panel" role="alert"><p>学习时间未保存，已暂停：{timer.error}</p><button className="secondary-button" onClick={() => void timer.flush()} type="button">重试保存时间</button></div>}
         {failedSaves.length > 0 && (
           <div className="save-error-panel study-save-error" role="alert">
-            <p>{failedSaves.length} 条复习结果未保存（{failedSaves.map((item) => item.label).join('、')}）。</p>
+            <p>{failedSaves.length} 条复习结果未保存（{failedSaves.map((item) => item.label).join('、')}）。{failedSaves[0]?.message}</p>
             <button className="secondary-button" disabled={flushingExit || pendingWrites > 0} onClick={() => void retryFailedSaves()} type="button">重试保存</button>
           </div>
         )}
+        <fieldset className="study-controls" disabled={paused || Boolean(timer.error) || pendingWrites > 0 || failedSaves.length > 0}>
         <section className={phase === 'feedback' ? 'recall-card feedback' : 'recall-card'} aria-live="polite">
           {phase === 'question' ? (
             <>
@@ -477,7 +498,7 @@ export function StudySession({
                 <label htmlFor="recall-answer">{prompt.answerLabel}</label>
                 {isSentence ? (
                   <textarea
-                    disabled={ensuringUsage || grading}
+                    disabled={ensuringUsage || grading || hinting}
                     id="recall-answer"
                     onChange={(event) => setAnswer(event.target.value)}
                     onKeyDown={(event) => {
@@ -491,7 +512,7 @@ export function StudySession({
                 ) : (
                   <input
                     autoComplete="off"
-                    disabled={ensuringUsage || grading}
+                    disabled={ensuringUsage || grading || hinting}
                     id="recall-answer"
                     onChange={(event) => setAnswer(event.target.value)}
                     onKeyDown={(event) => { if (event.key === 'Enter') submitAnswer() }}
@@ -511,6 +532,7 @@ export function StudySession({
                     className="forgot-button"
                     disabled={
                       grading
+                      || hinting
                       || ensuringUsage
                       || (task.trackType === 'usage' && item.usagePrompts.length === 0)
                     }
@@ -520,7 +542,7 @@ export function StudySession({
                     想不起来
                   </button>
                 </div>
-                <button className="primary-button" disabled={!answer.trim() || grading || ensuringUsage} onClick={() => void submitAnswer()} type="button">
+                <button className="primary-button" disabled={!answer.trim() || grading || hinting || ensuringUsage} onClick={() => void submitAnswer()} type="button">
                   {ensuringUsage ? '准备题目…' : grading ? '判分中…' : '提交回忆'} <Icon name="arrow" size={18} />
                 </button>
               </div>
@@ -530,7 +552,7 @@ export function StudySession({
               <div className="feedback-topline">
                 <span className={`feedback-signal ${evaluation?.rating}`}>
                   <Icon name={evaluation?.rating === 'good' ? 'check' : evaluation?.rating === 'hard' ? 'refresh' : 'brain'} size={18} />
-                  {evaluation?.rating === 'good' ? '无提示想起来了' : evaluation?.rating === 'hard' ? '接近了，再加固一次' : '现在忘记很正常'}
+                  {evaluation?.correctness === 'unverified' ? '本次结果尚未验证' : evaluation?.correctness === 'correct' ? (evaluation.matchKind === 'minor-typo' ? '意思正确，有轻微拼写错误' : hintLevel > 0 ? '借助提示答对了' : '无提示回忆正确') : evaluation?.rating === 'good' ? '无提示想起来了' : evaluation?.rating === 'hard' ? '接近了，再加固一次' : '现在忘记很正常'}
                 </span>
                 <div className="speech-controls">
                   <div className="accent-toggle" role="group" aria-label="发音口音">
@@ -567,8 +589,14 @@ export function StudySession({
 
               {evaluation?.feedbackZh && (
                 <div className="ai-feedback">
-                  <span>AI 反馈</span>
+                  <span>{evaluation.source === 'llm' ? 'AI 辅助反馈' : '验证说明'}</span>
                   <p>{evaluation.feedbackZh}</p>
+                </div>
+              )}
+              {isSentence && !revealed && (
+                <div className="sentence-verification">
+                  <p>{evaluation?.source === 'llm' && evaluation.correctness !== 'unverified' ? '已完成 AI 辅助检查；这不等同于真实场景迁移能力。' : '本地只检查范句或关键词，造句能力仍待验证。'}</p>
+                  {canVerifySentence ? <button className="secondary-button" disabled={verificationRequested || grading} onClick={() => void runEvaluation(false, true)} type="button">{grading ? 'AI 验证中…' : verificationRequested ? '本次 AI 验证已请求' : '请 AI 验证本句'}</button> : <p className="field-help">配置 DeepSeek Key 后，可按需验证本句。</p>}
                 </div>
               )}
 
@@ -605,13 +633,13 @@ export function StudySession({
               <div className="rating-block">
                 <p>这次实际想起到什么程度？</p>
                 <div className="rating-buttons">
-                  <button className={evaluation?.rating === 'again' ? 'rating-button again recommended' : 'rating-button again'} disabled={!correctionComplete} onClick={() => void chooseRating('again')} type="button">
+                  <button className={evaluation?.rating === 'again' ? 'rating-button again recommended' : 'rating-button again'} disabled={grading || !correctionComplete} onClick={() => void chooseRating('again')} type="button">
                     <strong>忘记了</strong><span>很快再练</span>
                   </button>
-                  <button className={evaluation?.rating === 'hard' ? 'rating-button hard recommended' : 'rating-button hard'} disabled={revealed || !correctionComplete} onClick={() => void chooseRating('hard')} type="button">
+                  <button className={evaluation?.rating === 'hard' ? 'rating-button hard recommended' : 'rating-button hard'} disabled={grading || revealed || !correctionComplete} onClick={() => void chooseRating('hard')} type="button">
                     <strong>有点模糊</strong><span>缩短间隔</span>
                   </button>
-                  <button className={evaluation?.rating === 'good' ? 'rating-button good recommended' : 'rating-button good'} disabled={revealed || hintLevel > 0 || needsCorrection} onClick={() => void chooseRating('good')} type="button">
+                  <button className={evaluation?.rating === 'good' ? 'rating-button good recommended' : 'rating-button good'} disabled={grading || revealed || hintLevel > 0 || needsCorrection} onClick={() => void chooseRating('good')} type="button">
                     <strong>想起来了</strong><span>正常间隔</span>
                   </button>
                 </div>
@@ -619,6 +647,7 @@ export function StudySession({
             </>
           )}
         </section>
+        </fieldset>
       </main>
     </div>
   )

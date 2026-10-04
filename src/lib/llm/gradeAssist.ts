@@ -16,12 +16,6 @@ export interface GradeAssistResult {
   feedbackZh: string
 }
 
-function clampRating(rating: unknown, correct: boolean): ReviewRating {
-  if (!correct) return 'again'
-  if (rating === 'good' || rating === 'hard' || rating === 'again') return rating
-  return correct ? 'hard' : 'again'
-}
-
 export async function gradeWithLlm(input: GradeAssistInput): Promise<GradeAssistResult> {
   const usage = input.item.usagePrompts[input.promptIndex ?? 0]
   const payload = await chatJson({
@@ -57,12 +51,20 @@ export async function gradeWithLlm(input: GradeAssistInput): Promise<GradeAssist
     ],
   })
 
-  if (!payload || typeof payload !== 'object') {
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
     throw new Error('invalid grade payload')
   }
   const record = payload as Record<string, unknown>
-  const correct = Boolean(record.correct)
-  let rating = clampRating(record.rating, correct)
+  if (typeof record.correct !== 'boolean'
+    || typeof record.rating !== 'string'
+    || !['again', 'hard', 'good'].includes(String(record.rating))
+    || typeof record.feedbackZh !== 'string'
+    || (record.correct && record.rating === 'again')
+    || (!record.correct && record.rating !== 'again')) {
+    throw new Error('invalid grade payload')
+  }
+  const correct = record.correct
+  let rating = record.rating as ReviewRating
   if (correct && input.hintLevel >= 2) rating = 'again'
   else if (correct && input.hintLevel === 1 && rating === 'good') rating = 'hard'
   const feedbackZh = typeof record.feedbackZh === 'string' && record.feedbackZh.trim()

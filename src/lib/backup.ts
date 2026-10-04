@@ -1,11 +1,13 @@
 import {
   type BackupV1,
   type BackupV2,
+  type BackupV3,
   type HintLevel,
   type LearningTrack,
   type ListSlug,
   type ReviewAttempt,
   type ReviewRating,
+  type StudyTimeEntry,
   type TrackType,
   type UsagePrompt,
   type UserSettings,
@@ -23,6 +25,7 @@ import { ALL_VOCABULARY_LISTS, listIdForSlug } from '../data/vocabularyLists'
 import { listSlugsForSeedCategory } from '../data/listAssignment'
 import {
   getUserDataSnapshot,
+  normalizeUserSettings,
   putSettings,
   replaceUserData,
 } from './db'
@@ -398,6 +401,14 @@ function validateReviewAttempt(value: unknown, path: string): ReviewAttempt {
     'responseMs',
     'reviewedAt',
     'wasOverride',
+    'evidenceVersion',
+    'sessionId',
+    'retryCount',
+    'promptId',
+    'evaluationSource',
+    'correctness',
+    'matchKind',
+    'suggestedRating',
   ])
   stringAt(record.id, `${path}.id`, true)
   stringAt(record.trackId, `${path}.trackId`, true)
@@ -425,12 +436,32 @@ function validateReviewAttempt(value: unknown, path: string): ReviewAttempt {
   if (record.wasOverride !== undefined) {
     booleanAt(record.wasOverride, `${path}.wasOverride`)
   }
+  if (record.evidenceVersion !== undefined) literalAt(record.evidenceVersion, `${path}.evidenceVersion`, [1])
+  const requiresEvidence = record.evidenceVersion === 1
+  if (requiresEvidence || record.sessionId !== undefined) stringAt(record.sessionId, `${path}.sessionId`, true)
+  if (requiresEvidence || record.retryCount !== undefined) {
+    finiteNumberAt(record.retryCount, `${path}.retryCount`, { integer: true, min: 0 })
+  }
+  if (record.promptId !== undefined) stringAt(record.promptId, `${path}.promptId`, true)
+  if (requiresEvidence || record.evaluationSource !== undefined) {
+    literalAt(record.evaluationSource, `${path}.evaluationSource`, ['rules', 'llm', 'reveal'])
+  }
+  if (requiresEvidence || record.correctness !== undefined) {
+    literalAt(record.correctness, `${path}.correctness`, ['correct', 'incorrect', 'unverified'])
+  }
+  if (requiresEvidence || record.matchKind !== undefined) {
+    literalAt(record.matchKind, `${path}.matchKind`, ['exact', 'variant', 'minor-typo', 'checkpoint', 'incorrect'])
+  }
+  if (requiresEvidence || record.suggestedRating !== undefined) {
+    literalAt(record.suggestedRating, `${path}.suggestedRating`, ['again', 'hard', 'good'])
+  }
   return record as unknown as ReviewAttempt
 }
 
-function validateSettings(value: unknown, path: string): UserSettings {
+function validateSettings(value: unknown, path: string, requireDailyMinutes = false): UserSettings {
   const record = objectAt(value, path, [
     'id',
+    'dailyMinutes',
     'coreMinutes',
     'extensionMinutes',
     'desiredRetention',
@@ -441,6 +472,9 @@ function validateSettings(value: unknown, path: string): UserSettings {
     'lastBackupAt',
   ])
   literalAt(record.id, `${path}.id`, ['primary'] as const)
+  if (requireDailyMinutes || record.dailyMinutes !== undefined) {
+    finiteNumberAt(record.dailyMinutes, `${path}.dailyMinutes`, { integer: true, min: 5, max: 120 })
+  }
   finiteNumberAt(record.coreMinutes, `${path}.coreMinutes`, { min: 0 })
   finiteNumberAt(record.extensionMinutes, `${path}.extensionMinutes`, { min: 0 })
   finiteNumberAt(record.desiredRetention, `${path}.desiredRetention`, {
@@ -450,6 +484,7 @@ function validateSettings(value: unknown, path: string): UserSettings {
   finiteNumberAt(record.newItemsPerDay, `${path}.newItemsPerDay`, {
     integer: true,
     min: 0,
+    ...(requireDailyMinutes ? { max: 100 } : {}),
   })
   if (record.speechAccent !== undefined) {
     literalAt(record.speechAccent, `${path}.speechAccent`, ['uk', 'us'] as const)
@@ -495,7 +530,7 @@ function validateSettings(value: unknown, path: string): UserSettings {
   const normalizedFinance = contentMix.accounting !== undefined
     ? finance
     : finance * 0.5
-  return {
+  return normalizeUserSettings({
     ...(record as unknown as UserSettings),
     speechAccent: record.speechAccent === 'us' ? 'us' : 'uk',
     contentMix: {
@@ -504,7 +539,7 @@ function validateSettings(value: unknown, path: string): UserSettings {
       finance: normalizedFinance,
       accounting: normalizedAccounting,
     },
-  }
+  })
 }
 
 export function validateBackup(value: unknown): asserts value is BackupV1 {
@@ -525,6 +560,30 @@ export function validateBackup(value: unknown): asserts value is BackupV1 {
 }
 
 export function validateBackupV2(value: unknown): asserts value is BackupV2 {
+  validateModernBackup(value, 2)
+}
+
+export function validateBackupV3(value: unknown): asserts value is BackupV3 {
+  validateModernBackup(value, 3)
+}
+
+function validateStudyTimeEntry(value: unknown, path: string): StudyTimeEntry {
+  const record = objectAt(value, path, ['id', 'sessionId', 'localDate', 'activeMs', 'updatedAt'])
+  stringAt(record.id, `${path}.id`, true)
+  stringAt(record.sessionId, `${path}.sessionId`, true)
+  stringAt(record.localDate, `${path}.localDate`, true)
+  const date = new Date(`${record.localDate}T00:00:00.000Z`)
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(record.localDate)
+    || Number.isNaN(date.getTime())
+    || date.toISOString().slice(0, 10) !== record.localDate) {
+    fail(`${path}.localDate`, '必须是有效的 YYYY-MM-DD 本地日期')
+  }
+  finiteNumberAt(record.activeMs, `${path}.activeMs`, { min: 0 })
+  dateAt(record.updatedAt, `${path}.updatedAt`)
+  return record as unknown as StudyTimeEntry
+}
+
+function validateModernBackup(value: unknown, version: 2 | 3): void {
   const record = objectAt(value, '$', [
     'version',
     'exportedAt',
@@ -534,15 +593,28 @@ export function validateBackupV2(value: unknown): asserts value is BackupV2 {
     'tracks',
     'attempts',
     'settings',
+    ...(version === 3 ? ['timeEntries'] : []),
   ])
-  if (record.version !== 2) fail('$.version', '仅支持版本 2')
+  if (record.version !== version) fail('$.version', `仅支持版本 ${version}`)
   dateAt(record.exportedAt, '$.exportedAt')
   arrayAt(record.words, '$.words', validateWord)
   arrayAt(record.lists, '$.lists', validateVocabularyList)
   arrayAt(record.memberships, '$.memberships', validateWordListItem)
   arrayAt(record.tracks, '$.tracks', validateLearningTrack)
   arrayAt(record.attempts, '$.attempts', validateReviewAttempt)
-  validateSettings(record.settings, '$.settings')
+  validateSettings(record.settings, '$.settings', version === 3)
+  if (version === 3) {
+    const entries = arrayAt(record.timeEntries, '$.timeEntries', validateStudyTimeEntry)
+    const ids = new Set<string>()
+    const sessionDates = new Set<string>()
+    for (const entry of entries) {
+      const sessionDate = JSON.stringify([entry.sessionId, entry.localDate])
+      if (ids.has(entry.id)) fail('$.timeEntries', `时间记录 ID ${entry.id} 重复`)
+      if (sessionDates.has(sessionDate)) fail('$.timeEntries', '同一会话和日期的时间记录重复')
+      ids.add(entry.id)
+      sessionDates.add(sessionDate)
+    }
+  }
 }
 
 function decodeBackup(input: unknown): unknown {
@@ -707,7 +779,7 @@ export function ensureCoreTracks(
   return missing.length ? [...tracks, ...missing] : tracks
 }
 
-export function deduplicateBackupV2(backup: BackupV2): BackupV2 {
+export function deduplicateBackupV2<T extends BackupV2 | BackupV3>(backup: T): T {
   const words: Word[] = []
   const wordsByIdentity = new Map<string, { index: number; id: string }>()
   const wordIdentityById = new Map<string, string>()
@@ -860,7 +932,7 @@ export function deduplicateBackupV2(backup: BackupV2): BackupV2 {
 export function parseBackup(input: unknown): BackupV1 {
   const decoded = decodeBackup(input)
   validateBackup(decoded)
-  return deduplicateBackup(decoded)
+  return deduplicateBackup({ ...decoded, settings: validateSettings(decoded.settings, '$.settings') })
 }
 
 function stripHydrationFields(item: BackupV1['vocabulary'][number] | Word): Word {
@@ -921,7 +993,7 @@ function membershipsFromV1Vocabulary(
   return memberships
 }
 
-export async function exportBackup(now = new Date()): Promise<BackupV2> {
+export async function exportBackup(now = new Date()): Promise<BackupV3> {
   const snapshot = await getUserDataSnapshot()
   const exportedAt = now.toISOString()
   const settings: UserSettings = {
@@ -932,13 +1004,14 @@ export async function exportBackup(now = new Date()): Promise<BackupV2> {
   await putSettings(settings)
 
   return {
-    version: 2,
+    version: 3,
     exportedAt,
     words: snapshot.words,
     lists: snapshot.lists.length ? snapshot.lists : ALL_VOCABULARY_LISTS,
     memberships: snapshot.memberships,
     tracks: snapshot.tracks,
     attempts: snapshot.attempts,
+    timeEntries: snapshot.timeEntries,
     settings,
   }
 }
@@ -950,15 +1023,21 @@ export async function exportBackupJson(space = 2): Promise<string> {
 export function parseBackupV2(input: unknown): BackupV2 {
   const decoded = decodeBackup(input)
   validateBackupV2(decoded)
-  return deduplicateBackupV2(decoded)
+  return deduplicateBackupV2({ ...decoded, settings: validateSettings(decoded.settings, '$.settings') })
+}
+
+export function parseBackupV3(input: unknown): BackupV3 {
+  const decoded = decodeBackup(input)
+  validateBackupV3(decoded)
+  return deduplicateBackupV2({ ...decoded, settings: validateSettings(decoded.settings, '$.settings', true) })
 }
 
 export async function importBackup(input: unknown): Promise<BackupImportSummary> {
   const decoded = decodeBackup(input)
-  if (decoded && typeof decoded === 'object' && (decoded as { version?: number }).version === 2) {
-    validateBackupV2(decoded)
-    const backup = deduplicateBackupV2(decoded as BackupV2)
-    const original = decoded as BackupV2
+  const version = decoded && typeof decoded === 'object' ? (decoded as { version?: number }).version : undefined
+  if (version === 2 || version === 3) {
+    const backup = version === 3 ? parseBackupV3(decoded) : parseBackupV2(decoded)
+    const original = decoded as BackupV2 | BackupV3
     const tracks = ensureCoreTracks(backup.words, backup.tracks)
     await replaceUserData({
       words: backup.words,
@@ -966,6 +1045,7 @@ export async function importBackup(input: unknown): Promise<BackupImportSummary>
       memberships: backup.memberships,
       tracks,
       attempts: backup.attempts,
+      timeEntries: backup.version === 3 ? backup.timeEntries : [],
       settings: backup.settings,
     })
     return {
@@ -980,8 +1060,7 @@ export async function importBackup(input: unknown): Promise<BackupImportSummary>
     }
   }
 
-  validateBackup(decoded)
-  const backup = deduplicateBackup(decoded as BackupV1)
+  const backup = parseBackup(decoded)
   const words = backup.vocabulary.map((item) => stripHydrationFields(item))
   const memberships = membershipsFromV1Vocabulary(backup.vocabulary)
   const tracks = ensureCoreTracks(words, backup.tracks)

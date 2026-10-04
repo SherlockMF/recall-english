@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
-import type { LearningTrack, SystemListSlug, VocabularyItem } from '../domain/types'
+import type { SystemListSlug, VocabularyItem } from '../domain/types'
 import { type EditCategory } from '../lib/listMembership'
-import { categoryLabels, getItemStage } from '../lib/presentation'
+import { categoryLabels } from '../lib/presentation'
+import type { LearningEvidence } from '../lib/learningEvidence'
+import { LearningEvidenceDetails } from './LearningEvidenceDetails'
 import { speakExample, speakWord } from '../lib/speech'
 import { Icon } from './Icon'
 
@@ -14,7 +16,7 @@ type VocabularyEditPatch = Pick<
 
 interface LibraryViewProps {
   items: VocabularyItem[]
-  tracksByItemId: ReadonlyMap<string, LearningTrack[]>
+  evidenceByItemId: ReadonlyMap<string, LearningEvidence>
   onToggleStatus: (item: VocabularyItem) => Promise<void>
   onUpdate: (
     id: string,
@@ -36,7 +38,7 @@ const systemCategories: SystemListSlug[] = ['daily', 'business', 'finance', 'acc
 
 export function LibraryView({
   items,
-  tracksByItemId,
+  evidenceByItemId,
   onToggleStatus,
   onUpdate,
   onAddToMyVocabulary,
@@ -103,7 +105,7 @@ export function LibraryView({
         <>
           <section className="word-card-grid">
             {filtered.slice(0, visibleCount).map((item) => {
-              const stage = getItemStage(item, tracksByItemId.get(item.id) ?? [])
+              const evidence = evidenceByItemId.get(item.id)
               const inMyVocabulary = item.listSlugs.includes('my-vocabulary')
               const ipa = item.ipaUk || item.ipaUs
               return (
@@ -148,8 +150,8 @@ export function LibraryView({
                     )}
                   </div>
                   <div className="word-card-bottom">
-                    <span className={`stage-dot ${stage.key}`} />
-                    <span>{item.status === 'paused' ? '已暂停' : stage.label}</span>
+                    <span className={`stage-dot ${evidence?.key ?? 'new'}`} />
+                    <span>{evidence?.label ?? '未开始'}{item.status === 'paused' ? ' · 已暂停' : ''}</span>
                     {inMyVocabulary ? (
                       <span className="source-mark">已优先</span>
                     ) : (
@@ -164,6 +166,7 @@ export function LibraryView({
                       </button>
                     )}
                   </div>
+                  {evidence && <LearningEvidenceDetails evidence={evidence} />}
                 </article>
               )
             })}

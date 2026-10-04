@@ -1,5 +1,5 @@
 import type { HintLevel, ReviewRating, TrackType, VocabularyItem } from '../../domain/types'
-import { gradeAttempt } from '../grading'
+import { gradeAttempt, type GradeMatchKind } from '../grading'
 import { hasDeepseekApiKey } from './config'
 import { DEEPSEEK_GRADE_TIMEOUT_MS } from './constants'
 import { gradeWithLlm } from './gradeAssist'
@@ -10,6 +10,8 @@ export interface AssistEvaluationResult {
   message?: string
   feedbackZh?: string
   source: 'rules' | 'llm' | 'reveal'
+  correctness: 'correct' | 'incorrect' | 'unverified'
+  matchKind: GradeMatchKind
 }
 
 export interface EvaluateAssistInput {
@@ -24,13 +26,14 @@ export interface EvaluateAssistInput {
   onInterim?: (result: AssistEvaluationResult) => void
   /** Cap LLM wait for grading; defaults to DEEPSEEK_GRADE_TIMEOUT_MS. */
   llmTimeoutMs?: number
+  verifySentence?: boolean
 }
 
 export async function evaluateAssist(
   input: EvaluateAssistInput,
 ): Promise<AssistEvaluationResult> {
   if (input.revealed) {
-    return { rating: 'again', matched: false, source: 'reveal' }
+    return { rating: 'again', matched: false, source: 'reveal', correctness: 'incorrect', matchKind: 'incorrect' }
   }
 
   const rule = gradeAttempt({
@@ -42,27 +45,22 @@ export async function evaluateAssist(
     promptIndex: input.promptIndex,
   })
 
-  if (rule.correct) {
-    return {
-      rating: rule.rating,
-      matched: true,
-      message: rule.matchKind,
-      source: 'rules',
-    }
-  }
-
+  const isSentence = input.trackType === 'usage'
+    && input.item.usagePrompts[input.promptIndex ?? 0]?.type === 'sentence'
   const rulesMiss: AssistEvaluationResult = {
-    rating: 'again',
-    matched: false,
+    rating: rule.rating,
+    matched: rule.correct,
     message: rule.matchKind,
     source: 'rules',
+    matchKind: rule.matchKind,
+    correctness: isSentence ? 'unverified' : rule.correct ? 'correct' : input.trackType === 'receptive' ? 'unverified' : 'incorrect',
   }
 
-  if (!hasDeepseekApiKey()) {
+  if ((isSentence && !input.verifySentence) || (!isSentence && rule.correct) || !hasDeepseekApiKey()) {
     return rulesMiss
   }
 
-  input.onInterim?.(rulesMiss)
+  input.onInterim?.({ ...rulesMiss, correctness: 'unverified' })
 
   const controller = new AbortController()
   const timeoutMs = input.llmTimeoutMs ?? DEEPSEEK_GRADE_TIMEOUT_MS
@@ -92,9 +90,11 @@ export async function evaluateAssist(
       message: 'llm',
       feedbackZh: llm.feedbackZh,
       source: 'llm',
+      correctness: llm.correct ? 'correct' : 'incorrect',
+      matchKind: llm.correct ? 'variant' : 'incorrect',
     }
   } catch {
-    return rulesMiss
+    return { ...rulesMiss, correctness: 'unverified' }
   } finally {
     if (timer) clearTimeout(timer)
   }

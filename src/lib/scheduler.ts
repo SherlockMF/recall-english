@@ -4,18 +4,20 @@ import type {
   ReviewAttempt,
   ReviewRating,
   SessionTask,
+  StudyTimeEntry,
   TrackType,
   UserSettings,
   VocabularyItem,
   Word,
 } from '../domain/types'
+import { isExplicitFailure, isValidRecallSuccess } from './learningEvidence'
+import { activeMsForDate, introducedItemIdsToday, deriveDelayedRecall, localDateKey } from './learningStats'
 
 export type SessionMode = 'core' | 'extension'
 export type SchedulerDate = Date | string | number
 
-const DAY_MS = 24 * 60 * 60 * 1000
-const CORE_TASK_MINUTES = 0.75
-const USAGE_TASK_MINUTES = 2
+export const CORE_TASK_MINUTES = 0.75
+export const USAGE_TASK_MINUTES = 2
 const CATEGORY_ORDER = ['daily', 'business', 'finance', 'accounting'] as const
 const CORE_TRACK_TYPES: readonly TrackType[] = ['receptive', 'productive']
 
@@ -35,12 +37,6 @@ interface BudgetSelection {
   spent: number
 }
 
-interface CorePlan {
-  tasks: QueueCandidate[]
-  overflowDue: QueueCandidate[]
-  newItems: VocabularyItem[]
-}
-
 function validDate(value: SchedulerDate | undefined, fallback: Date) {
   if (value === undefined) return new Date(fallback)
   const parsed = value instanceof Date ? new Date(value) : new Date(value)
@@ -51,14 +47,6 @@ function dateValue(value: string | undefined, fallback: number) {
   if (!value) return fallback
   const parsed = new Date(value).getTime()
   return Number.isNaN(parsed) ? fallback : parsed
-}
-
-function calendarDay(value: SchedulerDate) {
-  const date = validDate(value, new Date())
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
 }
 
 function trackId(itemId: string, type: TrackType) {
@@ -97,8 +85,32 @@ export function createInitialTracks(items: Array<Pick<Word, 'id' | 'usagePrompts
   })
 }
 
-/** Usage starts only after both directions have a recorded good review. */
-export function canUnlockUsage(itemId: string, tracks: LearningTrack[]) {
+/** Existing unlocked tracks retain historical eligibility; new unlocks require answer evidence. */
+export function canUnlockUsage(
+  itemId: string,
+  tracks: LearningTrack[],
+  attempts?: ReviewAttempt[],
+  now: SchedulerDate = new Date(),
+) {
+  if (attempts !== undefined) {
+    const nowMs = validDate(now, new Date()).getTime()
+    const history = attempts.filter((attempt) => attempt.itemId === itemId
+      && dateValue(attempt.reviewedAt, Number.POSITIVE_INFINITY) <= nowMs)
+      .sort((left, right) => Date.parse(left.reviewedAt) - Date.parse(right.reviewedAt))
+    const states = CORE_TRACK_TYPES.map((type) => {
+      let success = false
+      let unresolvedFailure = false
+      for (const attempt of history) {
+        if (attempt.trackType !== type) continue
+        if (isExplicitFailure(attempt)) { success = false; unresolvedFailure = true }
+        else if (isValidRecallSuccess(attempt)) { success = true; unresolvedFailure = false }
+      }
+      return { success, unresolvedFailure }
+    })
+    return states.every((state) => state.success)
+      || (Boolean(tracks.find((track) => track.itemId === itemId && track.type === 'usage')?.unlocked)
+        && states.every((state) => !state.unresolvedFailure))
+  }
   return CORE_TRACK_TYPES.every((type) => {
     const track = tracks.find((candidate) => candidate.itemId === itemId && candidate.type === type)
     return Boolean(track?.firstGoodAt || track?.lastGoodAt)
@@ -112,13 +124,27 @@ export function canUnlockUsage(itemId: string, tracks: LearningTrack[]) {
 export function unlockEligibleUsageTracks(
   tracks: LearningTrack[],
   now: SchedulerDate = new Date(),
+  attempts?: ReviewAttempt[],
 ) {
   const unlockedAt = validDate(now, new Date())
   const nowValue = unlockedAt.getTime()
+  const tracksByItem = new Map<string, LearningTrack[]>()
+  const attemptsByItem = new Map<string, ReviewAttempt[]>()
+  for (const track of tracks) {
+    const group = tracksByItem.get(track.itemId)
+    if (group) group.push(track)
+    else tracksByItem.set(track.itemId, [track])
+  }
+  for (const attempt of attempts ?? []) {
+    const group = attemptsByItem.get(attempt.itemId)
+    if (group) group.push(attempt)
+    else attemptsByItem.set(attempt.itemId, [attempt])
+  }
 
   return tracks.map((track) => {
     if (track.type !== 'usage') return track
-    const eligible = canUnlockUsage(track.itemId, tracks)
+    const eligible = canUnlockUsage(track.itemId, tracksByItem.get(track.itemId) ?? [],
+      attempts === undefined ? undefined : attemptsByItem.get(track.itemId) ?? [], unlockedAt)
     if (eligible) {
       if (track.unlocked) return track
       const currentDue = dateValue(track.due, nowValue)
@@ -249,7 +275,6 @@ function separateItems(candidates: QueueCandidate[]) {
     let index = remaining.findIndex(
       (candidate) => candidate.phase === currentPhase && candidate.task.itemId !== previousItem,
     )
-    if (index < 0) index = remaining.findIndex((candidate) => candidate.task.itemId !== previousItem)
     if (index < 0) index = 0
     ordered.push(remaining.splice(index, 1)[0])
   }
@@ -259,17 +284,18 @@ function separateItems(candidates: QueueCandidate[]) {
 function takeBudget(candidates: QueueCandidate[], minutes: number): BudgetSelection {
   const ordered = separateItems(candidates)
   if (minutes <= 0) return { selected: [], remaining: ordered, spent: 0 }
+  const selected: QueueCandidate[] = []
+  const remaining: QueueCandidate[] = []
   let spent = 0
-  let count = 0
-  while (count < ordered.length && spent + ordered[count].minutes <= minutes + Number.EPSILON) {
-    spent += ordered[count].minutes
-    count += 1
+  for (const candidate of ordered) {
+    if (spent + candidate.minutes <= minutes + Number.EPSILON) {
+      selected.push(candidate)
+      spent += candidate.minutes
+    } else {
+      remaining.push(candidate)
+    }
   }
-  return {
-    selected: ordered.slice(0, count),
-    remaining: ordered.slice(count),
-    spent,
-  }
+  return { selected, remaining, spent }
 }
 
 function trackCandidate(
@@ -313,180 +339,133 @@ function newItemCandidates(
   }).filter((candidate): candidate is QueueCandidate => Boolean(candidate)))
 }
 
-function introducedToday(attempts: ReviewAttempt[], activeItems: Map<string, VocabularyItem>, now: Date) {
-  const firstAttempts = new Map<string, number>()
-  for (const attempt of attempts) {
-    if (!activeItems.has(attempt.itemId)) continue
-    const reviewedAt = dateValue(attempt.reviewedAt, Number.POSITIVE_INFINITY)
-    const previous = firstAttempts.get(attempt.itemId)
-    if (previous === undefined || reviewedAt < previous) firstAttempts.set(attempt.itemId, reviewedAt)
-  }
-  const today = calendarDay(now)
-  return [...firstAttempts.values()].filter((value) => calendarDay(value) === today).length
+export interface DailyPlanInput {
+  settings: UserSettings
+  items: VocabularyItem[]
+  tracks: LearningTrack[]
+  attempts: ReviewAttempt[]
+  timeEntries: StudyTimeEntry[]
+  now: SchedulerDate
+  /** Grants this many more minutes from the current used total, without raising the new-item cap. */
+  additionalMinutes?: number
 }
 
-/**
- * Adapts the configured daily target to recent unaided performance and today's due workload.
- * The result is the total target for the day; queue construction subtracts items already started today.
- */
+export interface DailyPlan {
+  tasks: SessionTask[]
+  localDate: string
+  dailyMinutes: number
+  usedMs: number
+  remainingMs: number
+  estimatedMinutes: number
+  newItemCount: number
+  reviewItemCount: number
+  reviewTaskCount: number
+  usageTaskCount: number
+  totalTasks: number
+  introducedToday: number
+  remainingNewItems: number
+  overflowDueCount: number
+  reasons: string[]
+}
+
+/** The adaptive suggestion can reduce the configured hard cap, never increase it. */
 export function getAdaptiveNewItemTarget(
   settings: UserSettings,
-  items: VocabularyItem[],
-  tracks: LearningTrack[],
+  _items: VocabularyItem[],
+  _tracks: LearningTrack[],
   attempts: ReviewAttempt[],
   now: SchedulerDate = new Date(),
 ) {
-  const reviewedAt = validDate(now, new Date())
-  const nowValue = reviewedAt.getTime()
-  const activeItems = activeItemMap(items)
-  const taskCapacity = Math.max(0, Math.floor(settings.coreMinutes / CORE_TASK_MINUTES))
-  const dueCount = tracks.filter((track) => (
-    activeItems.has(track.itemId)
-    && track.unlocked
-    && isCoreTrack(track)
-    && track.state !== State.New
-    && dateValue(track.due, Number.NEGATIVE_INFINITY) <= nowValue
-  )).length
-  const capacityForNewItems = Math.max(0, Math.floor((taskCapacity - dueCount) / 2))
-  const baseline = Math.max(0, Math.floor(settings.newItemsPerDay))
-  if (baseline === 0 || capacityForNewItems === 0) return 0
-
-  const windowStart = nowValue - 7 * DAY_MS
-  const recent = attempts.filter((attempt) => {
-    const attemptAt = dateValue(attempt.reviewedAt, Number.NEGATIVE_INFINITY)
-    return !attempt.wasOverride
-      && activeItems.has(attempt.itemId)
-      && attempt.trackType !== 'usage'
-      && attemptAt >= windowStart
-      && attemptAt <= nowValue
-  })
-
-  let target = baseline
-  if (recent.length >= 10) {
-    const recalled = recent.filter((attempt) => attempt.rating !== 'again').length / recent.length
-    const unaidedGood = recent.filter(
-      (attempt) => attempt.rating === 'good' && attempt.hintLevel === 0,
-    ).length / recent.length
-    if (recalled < 0.65 || unaidedGood < 0.4) {
-      target = Math.floor(baseline * 0.5)
-    } else if (recalled < 0.8 || unaidedGood < 0.6) {
-      target = Math.max(1, Math.floor(baseline * 0.75))
-    } else if (recalled >= 0.9 && unaidedGood >= 0.8 && dueCount <= taskCapacity * 0.25) {
-      target = baseline + 1
-    }
-  }
-
-  return Math.min(target, baseline + 2, capacityForNewItems)
+  const baseline = Math.min(100, Math.max(0, Math.floor(settings.newItemsPerDay)))
+  const sample = deriveDelayedRecall(attempts, validDate(now, new Date()))
+  if (sample.total < 10 || sample.rate === null) return baseline
+  if (sample.rate < 0.65) return Math.floor(baseline * 0.5)
+  if (sample.rate < 0.8) return Math.floor(baseline * 0.75)
+  return baseline
 }
 
-function planCore(
-  settings: UserSettings,
-  items: VocabularyItem[],
-  tracks: LearningTrack[],
-  attempts: ReviewAttempt[],
-  now: Date,
-): CorePlan {
+/** A single projection for both Today and session start, based only on saved facts. */
+export function buildDailyPlan(input: DailyPlanInput): DailyPlan {
+  const { settings, items, attempts, timeEntries } = input
+  const now = validDate(input.now, new Date())
   const nowValue = now.getTime()
+  const localDate = localDateKey(now)
+  const dailyMinutes = Math.max(0, settings.dailyMinutes ?? settings.coreMinutes ?? 15)
+  const usedMs = activeMsForDate(timeEntries, localDate)
+  const remainingMs = input.additionalMinutes !== undefined && input.additionalMinutes > 0
+    ? input.additionalMinutes * 60_000
+    : Math.max(0, dailyMinutes * 60_000 - usedMs)
+  const introducedIds = introducedItemIdsToday(attempts, now)
+  const introduced = introducedIds.size
+  const dailyTarget = getAdaptiveNewItemTarget(settings, items, input.tracks, attempts, now)
+  const remainingNewItems = Math.max(0, dailyTarget - introduced)
+  const tracks = unlockEligibleUsageTracks(input.tracks, now, attempts)
   const activeItems = activeItemMap(items)
-  const attemptedItems = new Set(attempts.map((attempt) => attempt.itemId))
+  const tracksByItem = new Map<string, LearningTrack[]>()
+  for (const track of tracks) {
+    const group = tracksByItem.get(track.itemId)
+    if (group) group.push(track)
+    else tracksByItem.set(track.itemId, [track])
+  }
+  const validAttempts = attempts.filter((attempt) => dateValue(attempt.reviewedAt, Number.POSITIVE_INFINITY) <= nowValue)
+  const attemptedItems = new Set(validAttempts.map((attempt) => attempt.itemId))
+  const attemptedDirections = new Set(validAttempts.map((attempt) => `${attempt.itemId}:${attempt.trackType}`))
   const freshItems = [...activeItems.values()].filter(
-    (item) => isFreshItem(item.id, tracks, attemptedItems),
+    (item) => isFreshItem(item.id, tracksByItem.get(item.id) ?? [], attemptedItems),
   )
   const freshIds = new Set(freshItems.map((item) => item.id))
-  const due = tracks
-    .filter((track) => (
-      activeItems.has(track.itemId)
-      && track.unlocked
-      && isCoreTrack(track)
-      && !freshIds.has(track.itemId)
-      && dateValue(track.due, Number.NEGATIVE_INFINITY) <= nowValue
-    ))
-    .map((track) => trackCandidate(track, activeItems.get(track.itemId)!, 0, 'core', nowValue))
-  const dueSelection = takeBudget(due, Math.max(0, settings.coreMinutes))
-  if (dueSelection.remaining.length > 0) {
-    return { tasks: dueSelection.selected, overflowDue: dueSelection.remaining, newItems: [] }
+  const due = tracks.filter((track) => {
+    if (!activeItems.has(track.itemId) || !track.unlocked || freshIds.has(track.itemId)) return false
+    if (track.type === 'usage' && activeItems.get(track.itemId)!.usagePrompts.length === 0) return false
+    const unfinishedDirection = isCoreTrack(track) && track.reps === 0
+      && !attemptedDirections.has(`${track.itemId}:${track.type}`)
+    return unfinishedDirection || dateValue(track.due, Number.NEGATIVE_INFINITY) <= nowValue
+  }).map((track) => trackCandidate(track, activeItems.get(track.itemId)!, 0, 'core', nowValue))
+  const dueSelection = takeBudget(due, remainingMs / 60_000)
+  const newSlots = dueSelection.remaining.length > 0 ? 0
+    : Math.floor(Math.max(0, remainingMs / 60_000 - dueSelection.spent) / (2 * CORE_TASK_MINUTES))
+  const introducedItems = items.filter((item) => introducedIds.has(item.id))
+  const newItems = selectNewItems(freshItems, Math.min(newSlots, remainingNewItems), settings, categoryCounts(introducedItems))
+  const newCandidates = newItemCandidates(newItems, tracks, 1, 'core', nowValue)
+  const selected = [...dueSelection.selected, ...separateItems(newCandidates)]
+  const newIds = new Set(newItems.map((item) => item.id))
+  const tasks = selected.map((candidate) => ({ ...candidate.task, isNew: newIds.has(candidate.task.itemId) }))
+  const estimatedMinutes = selected.reduce((sum, candidate) => sum + candidate.minutes, 0)
+  const reasons: string[] = []
+  if (dailyTarget < settings.newItemsPerDay) {
+    const sample = deriveDelayedRecall(attempts, now)
+    reasons.push(`近 7 天延迟回忆正确率 ${Math.round((sample.rate ?? 0) * 100)}%（${sample.total} 次），今日新表达建议由 ${settings.newItemsPerDay} 调整为 ${dailyTarget}。`)
   }
-
-  const remainingMinutes = Math.max(0, settings.coreMinutes - dueSelection.spent)
-  const timeSlots = Math.floor(remainingMinutes / (2 * CORE_TASK_MINUTES))
-  const dailyTarget = getAdaptiveNewItemTarget(settings, items, tracks, attempts, now)
-  const remainingTarget = Math.max(0, dailyTarget - introducedToday(attempts, activeItems, now))
-  const selectedNewItems = selectNewItems(
-    freshItems,
-    Math.min(timeSlots, remainingTarget),
-    settings,
-  )
-  const newTasks = newItemCandidates(selectedNewItems, tracks, 1, 'core', nowValue)
+  if (remainingMs <= 0) reasons.push('今日学习时间已用完，可结束或明确继续 5 分钟。')
+  if (dueSelection.remaining.length > 0) reasons.push(`剩余时间优先复习，仍有 ${dueSelection.remaining.length} 道到期或未完成题目未安排。`)
+  if (remainingNewItems === 0) reasons.push(settings.newItemsPerDay === 0
+    ? '今日新表达上限为 0，只安排已学内容。' : '今日新表达额度已用完；其他方向与重试不重复计新表达。')
+  if (newSlots < remainingNewItems && dueSelection.remaining.length === 0) reasons.push('按剩余时间减少新表达，每个新表达预留两个回忆方向。')
+  if (remainingMs > 0 && dueSelection.remaining.length === 0 && newItems.length < Math.min(newSlots, remainingNewItems)) {
+    reasons.push('可学的新表达不足，按现有内容安排，不为填满时间重复出题。')
+  }
+  if (tasks.length === 0 && remainingMs > 0 && remainingNewItems === 0) reasons.push('当前没有到期或未完成的练习。')
   return {
-    tasks: separateItems([...dueSelection.selected, ...newTasks]),
-    overflowDue: [],
-    newItems: selectedNewItems,
+    tasks, localDate, dailyMinutes, usedMs, remainingMs, estimatedMinutes,
+    newItemCount: newItems.length,
+    reviewItemCount: new Set(tasks.filter((task) => !task.isNew).map((task) => task.itemId)).size,
+    reviewTaskCount: tasks.filter((task) => !task.isNew && task.trackType !== 'usage').length,
+    usageTaskCount: tasks.filter((task) => task.trackType === 'usage').length,
+    totalTasks: tasks.length, introducedToday: introduced, remainingNewItems,
+    overflowDueCount: dueSelection.remaining.length, reasons,
   }
 }
 
-/** Builds a deterministic, time-bounded daily queue for the requested session mode. */
+/** @deprecated Session modes share one plan; callers with saved time should use buildDailyPlan. */
 export function buildDailyQueue(
   settings: UserSettings,
   items: VocabularyItem[],
   tracks: LearningTrack[],
   attempts: ReviewAttempt[],
   now: SchedulerDate,
-  mode: SessionMode,
+  _mode: SessionMode,
 ): SessionTask[] {
-  const reviewedAt = validDate(now, new Date())
-  const corePlan = planCore(settings, items, tracks, attempts, reviewedAt)
-  if (mode === 'core') return corePlan.tasks.map((candidate) => candidate.task)
-
-  const nowValue = reviewedAt.getTime()
-  const activeItems = activeItemMap(items)
-  const extensionMinutes = Math.max(0, settings.extensionMinutes)
-  const dueUsage = tracks
-    .filter((track) => (
-      track.type === 'usage'
-      && activeItems.has(track.itemId)
-      && (track.unlocked || canUnlockUsage(track.itemId, tracks))
-      && dateValue(track.due, Number.NEGATIVE_INFINITY) <= nowValue
-    ))
-    .map((track) => trackCandidate(track, activeItems.get(track.itemId)!, 0, 'extension', nowValue))
-  const usageSelection = takeBudget(dueUsage, extensionMinutes)
-  if (usageSelection.remaining.length > 0) {
-    return usageSelection.selected.map((candidate) => candidate.task)
-  }
-
-  let spent = usageSelection.spent
-  const overflow = corePlan.overflowDue.map((candidate) => ({
-    ...candidate,
-    phase: 1,
-    task: { ...candidate.task, id: candidate.task.id.replace(/^core:/, 'extension:') },
-  }))
-  const overflowSelection = takeBudget(overflow, extensionMinutes - spent)
-  spent += overflowSelection.spent
-  if (overflowSelection.remaining.length > 0) {
-    return separateItems([...usageSelection.selected, ...overflowSelection.selected])
-      .map((candidate) => candidate.task)
-  }
-
-  const attemptedItems = new Set(attempts.map((attempt) => attempt.itemId))
-  const coreNewIds = new Set(corePlan.newItems.map((item) => item.id))
-  const extraCandidates = [...activeItems.values()].filter((item) => (
-    !coreNewIds.has(item.id) && isFreshItem(item.id, tracks, attemptedItems)
-  ))
-  const extraSlots = Math.min(
-    3,
-    Math.floor(Math.max(0, extensionMinutes - spent) / (2 * CORE_TASK_MINUTES)),
-  )
-  const extraItems = selectNewItems(
-    extraCandidates,
-    extraSlots,
-    settings,
-    categoryCounts(corePlan.newItems),
-  )
-  const extraTasks = newItemCandidates(extraItems, tracks, 2, 'extension', nowValue)
-  return separateItems([
-    ...usageSelection.selected,
-    ...overflowSelection.selected,
-    ...extraTasks,
-  ]).map((candidate) => candidate.task)
+  return buildDailyPlan({ settings, items, tracks, attempts, timeEntries: [], now }).tasks
 }
 
 const FSRS_RATINGS: Record<ReviewRating, Grade> = {
@@ -524,8 +503,7 @@ export function scheduleReview(
   const result = scheduler.next(card, reviewedAt, FSRS_RATINGS[rating]).card
   const reviewedIso = reviewedAt.toISOString()
   const wasGood = rating === 'good'
-  // Only full misses reset mastery timestamps; hard still shortens interval via FSRS
-  // and demotes display while lastReview is newer than lastGoodAt.
+  // These legacy timestamps remain for compatibility; answer evidence determines displayed ability.
   const demoteMastery = rating === 'again'
 
   return {
