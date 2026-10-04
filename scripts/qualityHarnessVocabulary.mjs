@@ -7,7 +7,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-const bundled = JSON.parse(readFileSync(join(root, 'src/data/bundledSeedWords.json'), 'utf8'))
+const bundled = JSON.parse(readFileSync(join(root, 'public/data/bundledSeedWords.json'), 'utf8'))
 const trustedPath = [
   join(root, 'data/vocabulary-packs/trusted_v5_2_vocabulary_pack.json'),
   join(root, 'data/vocabulary-packs/trusted_v5_1_vocabulary_pack.json'),

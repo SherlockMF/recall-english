@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const pack = JSON.parse(readFileSync(join(root, 'data/vocabulary-packs/all_batches_combined_vocabulary_pack.json'), 'utf8'))
-const bundled = JSON.parse(readFileSync(join(root, 'src/data/bundledSeedWords.json'), 'utf8'))
+const bundled = JSON.parse(readFileSync(join(root, 'public/data/bundledSeedWords.json'), 'utf8'))
 const byExpr = new Map(bundled.map((w) => [w.expression.toLocaleLowerCase('en-US'), w]))
 
 /** Expected Chinese sense fragments for common terms — flag if none appear in gloss/answers. */

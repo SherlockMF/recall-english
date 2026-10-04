@@ -402,6 +402,31 @@ export interface InitializeDatabaseResult {
   skipped: boolean
 }
 
+export interface LibrarySeedStatus {
+  /** True when the bundled seed pack must be loaded before initializing. */
+  needsBundledSeed: boolean
+}
+
+/**
+ * Cheap read-only probe so callers can skip loading the bundled seed pack
+ * when a healthy library already matches the current seed revision. Seed
+ * writes and the revision stamp commit in one transaction, so a matching
+ * stamp guarantees the bundled seed has already been applied.
+ */
+export async function getLibrarySeedStatus(
+  settings: UserSettings = createDefaultSettings(),
+): Promise<LibrarySeedStatus> {
+  const database = await getDatabase()
+  const transaction = database.transaction(['words', 'settings'], 'readonly')
+  const wordCount = await transaction.objectStore('words').count()
+  const stored = await transaction.objectStore('settings').get('primary')
+  const targetRevision = settings.seedContentRevision ?? SEED_CONTENT_REVISION
+  const isEmptyLibrary = wordCount === 0
+  const revisionChanged =
+    !isEmptyLibrary && (stored?.seedContentRevision ?? '') !== targetRevision
+  return { needsBundledSeed: isEmptyLibrary || revisionChanged }
+}
+
 export async function initializeDatabase(
   seedWords: Word[] = [],
   seedMemberships: WordListItem[] = [],
@@ -452,7 +477,7 @@ export async function initializeDatabase(
     for (const local of existingWords) {
       const seed = seedById.get(local.id)
       if (!seed) continue
-      await wordStore.put({
+      wordStore.put({
         ...seed,
         createdAt: local.createdAt || seed.createdAt,
       })
@@ -469,10 +494,11 @@ export async function initializeDatabase(
   const wordsToAdd = candidateWords.filter((word) => (
     !existingIdentities.has(lexicalIdentity(word))
   ))
+  // Issue all puts without awaiting: requests queue inside the open
+  // transaction, which is far faster than serializing on each request.
   for (const word of wordsToAdd) {
-    await wordStore.put(word)
+    wordStore.put(word)
     existingIds.add(word.id)
-    existingIdentities.add(lexicalIdentity(word))
   }
 
   const existingMembershipKeys = new Set(
@@ -498,19 +524,19 @@ export async function initializeDatabase(
     membershipPairs.add(key)
   }
   for (const membership of membershipsToAdd) {
-    await membershipStore.put(membership)
+    membershipStore.put(membership)
   }
 
   let seeded = false
   if (isEmptyLibrary) {
     const tracksToWrite = seedTracks ?? createInitialTracks(seedWords)
     for (const track of tracksToWrite) {
-      await trackStore.put(track)
+      trackStore.put(track)
     }
     seeded = true
   } else if (wordsToAdd.length > 0) {
     for (const track of createInitialTracks(wordsToAdd)) {
-      await trackStore.put(track)
+      trackStore.put(track)
     }
   }
 
@@ -1026,13 +1052,14 @@ export async function replaceUserData(data: {
     settingsStore.clear(),
   ])
 
-  for (const list of data.lists) await listStore.put(list)
-  for (const word of data.words) await wordStore.put(word)
-  for (const membership of data.memberships) await membershipStore.put(membership)
-  for (const track of data.tracks) await trackStore.put(track)
-  for (const attempt of data.attempts) await attemptStore.put(attempt)
-  for (const entry of data.timeEntries ?? []) await timeStore.put(entry)
-  await settingsStore.put(normalizeUserSettings(data.settings))
+  // Queue all puts in the open transaction instead of awaiting each one.
+  for (const list of data.lists) listStore.put(list)
+  for (const word of data.words) wordStore.put(word)
+  for (const membership of data.memberships) membershipStore.put(membership)
+  for (const track of data.tracks) trackStore.put(track)
+  for (const attempt of data.attempts) attemptStore.put(attempt)
+  for (const entry of data.timeEntries ?? []) timeStore.put(entry)
+  settingsStore.put(normalizeUserSettings(data.settings))
   await transaction.done
 }
 

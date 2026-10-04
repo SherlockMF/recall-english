@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs'
 
 const pack = JSON.parse(readFileSync('data/vocabulary-packs/all_batches_combined_vocabulary_pack.json', 'utf8'))
-const bundled = JSON.parse(readFileSync('src/data/bundledSeedWords.json', 'utf8'))
-const mem = JSON.parse(readFileSync('src/data/bundledSeedMemberships.json', 'utf8'))
+const bundled = JSON.parse(readFileSync('public/data/bundledSeedWords.json', 'utf8'))
+const mem = JSON.parse(readFileSync('public/data/bundledSeedMemberships.json', 'utf8'))
 const seedTs = readFileSync('src/data/seedVocabulary.ts', 'utf8')
 
 function find(expr) {

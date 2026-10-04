@@ -2,7 +2,12 @@ import { describe, expect, it } from 'vitest'
 import { hydrateWords } from '../lib/db'
 import { snapshotLearningTracks, snapshotMapLearningProgress } from '../lib/learningTracks'
 import { ALL_VOCABULARY_LISTS } from './vocabularyLists'
-import { bundledSeedWords, seedMemberships, seedWords } from './seedVocabulary'
+import { handcraftedSeedWords, loadSeedPack } from './seedVocabulary'
+
+const bundled = await loadSeedPack()
+const bundledSeedWords = bundled.words.slice(handcraftedSeedWords.length)
+const seedWords = bundled.words
+const seedMemberships = bundled.memberships
 
 describe('vocabulary V5 trusted library', () => {
   it('keeps V5.3 production size at 7497 after identical-sense dedupe', () => {

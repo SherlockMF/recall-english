@@ -2,7 +2,7 @@
  * Build bundled seed JSON from the trusted V1 vocabulary pack (Vocabulary V5.0).
  *
  * Source: data/vocabulary-packs/trusted_v1_vocabulary_pack.json
- * Output: src/data/bundledSeedWords.json + bundledSeedMemberships.json
+ * Output: public/data/bundledSeedWords.json + bundledSeedMemberships.json
  *
  * Skips pack entries whose expression already exists in the handcrafted seed
  * (seedVocabulary.ts), so the curated 240 stay authoritative.
@@ -328,8 +328,8 @@ const memberships = pack.memberships
     return membership
   })
 
-const wordsOut = join(root, 'src/data/bundledSeedWords.json')
-const membershipsOut = join(root, 'src/data/bundledSeedMemberships.json')
+const wordsOut = join(root, 'public/data/bundledSeedWords.json')
+const membershipsOut = join(root, 'public/data/bundledSeedMemberships.json')
 writeFileSync(wordsOut, `${JSON.stringify(words, null, 2)}\n`)
 writeFileSync(membershipsOut, `${JSON.stringify(memberships, null, 2)}\n`)
 

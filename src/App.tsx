@@ -5,7 +5,7 @@ import { LibraryView } from './components/LibraryView'
 import { SettingsDialog } from './components/SettingsDialog'
 import { StudySession, type EvaluationResult, type RateDetail } from './components/StudySession'
 import { TodayView } from './components/TodayView'
-import { seedMemberships, seedWords } from './data/seedVocabulary'
+import { handcraftedSeedMemberships, handcraftedSeedWords, loadSeedPack } from './data/seedVocabulary'
 import { ALL_VOCABULARY_LISTS, listIdForSlug } from './data/vocabularyLists'
 import {
   DEFAULT_SETTINGS,
@@ -35,6 +35,7 @@ import {
 } from './lib/vocabularyPack'
 import {
   addWordToList,
+  getLibrarySeedStatus,
   getUserDataSnapshot,
   getWordListItemsForWord,
   initializeDatabase,
@@ -99,9 +100,15 @@ function App() {
     let active = true
     async function boot() {
       try {
+        // Returning users skip the ~12 MB seed pack: it is only fetched when
+        // the library is empty or the stored seed revision has changed.
+        const { needsBundledSeed } = await getLibrarySeedStatus()
+        const seed = needsBundledSeed
+          ? await loadSeedPack()
+          : { words: handcraftedSeedWords, memberships: handcraftedSeedMemberships }
         await initializeDatabase(
-          seedWords,
-          seedMemberships,
+          seed.words,
+          seed.memberships,
           undefined,
           DEFAULT_SETTINGS,
           ALL_VOCABULARY_LISTS,

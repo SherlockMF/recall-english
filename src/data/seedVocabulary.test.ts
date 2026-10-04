@@ -2,13 +2,13 @@ import { describe, expect, it } from 'vitest'
 
 import type { Word } from '../domain/types'
 import { listSlugsForFormerFinance } from './listAssignment'
-import {
-  bundledSeedWords,
-  handcraftedSeedWords,
-  seedMemberships,
-  seedWords,
-} from './seedVocabulary'
+import { handcraftedSeedWords, loadSeedPack } from './seedVocabulary'
 import { ALL_VOCABULARY_LISTS, LIST_IDS } from './vocabularyLists'
+
+const bundled = await loadSeedPack()
+const bundledSeedWords = bundled.words.slice(handcraftedSeedWords.length)
+const seedWords = bundled.words
+const seedMemberships = bundled.memberships
 
 function expectText(value: string): void {
   expect(typeof value).toBe('string')

@@ -13,8 +13,8 @@ function loadJson(rel) {
 }
 
 const pack = loadJson('data/vocabulary-packs/all_batches_combined_vocabulary_pack.json')
-const bundled = loadJson('src/data/bundledSeedWords.json')
-const memberships = loadJson('src/data/bundledSeedMemberships.json')
+const bundled = loadJson('public/data/bundledSeedWords.json')
+const memberships = loadJson('public/data/bundledSeedMemberships.json')
 
 const POS_DEBRIS = /\b(?:n|v|vt|vi|adj|adv|prep|conj|pron|art|num|int|pl)\.\s*/i
 const BRACKET_TAG = /\[[^\]]{1,12}\]/
