@@ -673,21 +673,9 @@ export async function addWordToList(
   return membership
 }
 
-/** @deprecated Use getWord */
-export async function getVocabularyItem(id: string): Promise<VocabularyItem | undefined> {
-  const snapshot = await getUserDataSnapshot()
-  return snapshot.vocabulary.find((item) => item.id === id)
-}
-
-/** @deprecated Use getAllWords + hydrate */
+/** Snapshot of every hydrated vocabulary item (words + memberships + lists). */
 export async function getAllVocabulary(): Promise<VocabularyItem[]> {
   return (await getUserDataSnapshot()).vocabulary
-}
-
-/** @deprecated Use putWord */
-export async function putVocabularyItem(item: VocabularyItem | Word): Promise<void> {
-  const { listSlugs: _listSlugs, category: _category, ...word } = item as VocabularyItem
-  await putWord(word)
 }
 
 export async function putVocabularyItems(items: Array<VocabularyItem | Word>): Promise<void> {

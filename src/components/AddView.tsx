@@ -5,6 +5,7 @@ import { hasDeepseekApiKey } from '../lib/llm/config'
 import type { EnrichCategory, EnrichmentDraft } from '../lib/llm/enrich'
 import { inferCategoryFromDictionary } from '../lib/inferCategory'
 import { categoryLabels } from '../lib/presentation'
+import { splitListValues } from '../lib/text'
 import { speakWord } from '../lib/speech'
 import { Icon } from './Icon'
 
@@ -162,7 +163,7 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich }: AddViewProps) 
         scenarioNote: category === 'other' ? scenarioNote.trim() : undefined,
         exampleEn: exampleEn.trim(),
         exampleZh: exampleZh.trim(),
-        collocations: collocations.split(/[,，\n]/).map((item) => item.trim()).filter(Boolean),
+        collocations: splitListValues(collocations),
         ipaUk: dictionaryResult?.ipaUk,
         ipaUs: dictionaryResult?.ipaUs,
         audioUk: dictionaryResult?.audioUk,

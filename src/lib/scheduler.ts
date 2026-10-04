@@ -456,18 +456,6 @@ export function buildDailyPlan(input: DailyPlanInput): DailyPlan {
   }
 }
 
-/** @deprecated Session modes share one plan; callers with saved time should use buildDailyPlan. */
-export function buildDailyQueue(
-  settings: UserSettings,
-  items: VocabularyItem[],
-  tracks: LearningTrack[],
-  attempts: ReviewAttempt[],
-  now: SchedulerDate,
-  _mode: SessionMode,
-): SessionTask[] {
-  return buildDailyPlan({ settings, items, tracks, attempts, timeEntries: [], now }).tasks
-}
-
 const FSRS_RATINGS: Record<ReviewRating, Grade> = {
   again: Rating.Again,
   hard: Rating.Hard,

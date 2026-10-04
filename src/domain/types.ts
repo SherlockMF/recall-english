@@ -1,7 +1,5 @@
 export type SystemListSlug = 'daily' | 'business' | 'finance' | 'accounting'
 export type ListSlug = SystemListSlug | 'my-vocabulary'
-/** @deprecated Prefer ListSlug; kept as alias for study UI filters. */
-export type VocabularyCategory = ListSlug
 export type VocabularySource = 'seed' | 'dictionary' | 'custom'
 export type VocabularyStatus = 'active' | 'paused'
 export type TrackType = 'receptive' | 'productive' | 'usage'

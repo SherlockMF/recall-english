@@ -212,12 +212,6 @@ export function parseYoudaoPayload(payload: unknown, query = ''): YoudaoLookupRe
     phonetic: phonetics.phonetic,
   }
 }
-
-/** @deprecated Prefer parseYoudaoPayload — kept for existing call sites/tests. */
-export function parseYoudaoExpandEc(payload: unknown): YoudaoSense[] {
-  return parseYoudaoPayload(payload).senses
-}
-
 /**
  * Sense picker is Chinese-first: each Youdao sense becomes one card.
  * English definitions attach only when the POS mapping is unambiguous (1 Chinese ↔ 1 English).
@@ -262,15 +256,6 @@ export function buildBilingualMeanings(
     }
   })
 }
-
-/** @deprecated Prefer buildBilingualMeanings(youdao, english). */
-export function mergeYoudaoMeanings(
-  englishMeanings: DictionaryMeaning[],
-  youdaoSenses: YoudaoSense[],
-): DictionaryMeaning[] {
-  return buildBilingualMeanings(youdaoSenses, englishMeanings)
-}
-
 export function youdaoDictVoiceUrl(
   expression: string,
   accent: SpeechAccent,
@@ -310,13 +295,9 @@ export async function lookupYoudao(
   try {
     const response = await fetch(
       `${YOUDAO_API_BASE_URL}?doctype=json&jsonversion=4&q=${encodeURIComponent(cleaned)}`,
-      {
-        signal: controller.signal,
-        headers: {
-          Accept: 'application/json',
-          'User-Agent': 'Mozilla/5.0 (compatible; RecallEnglish/1.0)',
-        },
-      },
+      // No User-Agent here: browsers forbid overriding it and the extra header
+      // can break CORS-preflight for a cross-origin proxy.
+      { signal: controller.signal, headers: { Accept: 'application/json' } },
     )
     if (!response.ok) return { word: cleaned, senses: [] }
     const payload: unknown = await response.json()
@@ -327,12 +308,4 @@ export async function lookupYoudao(
     clearTimeout(timeoutId)
     options.signal?.removeEventListener('abort', onAbort)
   }
-}
-
-/** @deprecated Prefer lookupYoudao. */
-export async function lookupYoudaoExpandEc(
-  query: string,
-  options: { signal?: AbortSignal; timeoutMs?: number } = {},
-): Promise<YoudaoSense[]> {
-  return (await lookupYoudao(query, options)).senses
 }

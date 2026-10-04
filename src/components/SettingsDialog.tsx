@@ -5,6 +5,7 @@ import {
   getDeepseekApiKey,
   setDeepseekApiKey,
 } from '../lib/llm/config'
+import { useEscapeToClose } from '../lib/useEscapeToClose'
 import { Icon } from './Icon'
 
 interface SettingsDialogProps {
@@ -36,15 +37,51 @@ export function SettingsDialog({
   const [apiKey, setApiKey] = useState(() => getDeepseekApiKey())
   const [message, setMessage] = useState('')
   const [saving, setSaving] = useState(false)
+  const [backupBusy, setBackupBusy] = useState(false)
   const [persistentState, setPersistentState] = useState<'idle' | 'granted' | 'unavailable'>('idle')
   const backupFileRef = useRef<HTMLInputElement>(null)
   const vocabularyFileRef = useRef<HTMLInputElement>(null)
+
+  useEscapeToClose(onClose)
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [])
 
   useEffect(() => {
     setDailyMinutes(String(settings.dailyMinutes ?? settings.coreMinutes))
     setNewItems(String(settings.newItemsPerDay))
     setSpeechAccent(settings.speechAccent)
   }, [settings.dailyMinutes, settings.coreMinutes, settings.newItemsPerDay, settings.speechAccent])
+
+  async function runBackupAction(action: () => Promise<void>) {
+    setBackupBusy(true)
+    setMessage('')
+    try {
+      await action()
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : '操作失败，请重试。')
+    } finally {
+      setBackupBusy(false)
+    }
+  }
+
+  async function importFromFile(file: File, importAction: (content: string) => Promise<{ ok: boolean; message: string }>) {
+    setBackupBusy(true)
+    setMessage('')
+    try {
+      const result = await importAction(await file.text())
+      setMessage(result.message)
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : '导入失败，请重试。')
+    } finally {
+      setBackupBusy(false)
+    }
+  }
 
   async function requestPersistentStorage() {
     if (!navigator.storage?.persist) {
@@ -143,21 +180,17 @@ export function SettingsDialog({
             <p>导出/导入全部义项（内置种子 + 词典/手动录入）及分类归属。导入为合并，不覆盖学习进度。</p>
           </div>
           <div className="backup-actions">
-            <button className="secondary-button" onClick={() => void onExportVocabulary()} type="button"><Icon name="download" size={18} /> 导出词库</button>
-            <button className="secondary-button" onClick={() => vocabularyFileRef.current?.click()} type="button"><Icon name="upload" size={18} /> 导入词库</button>
+            <button className="secondary-button" disabled={backupBusy} onClick={() => void runBackupAction(onExportVocabulary)} type="button"><Icon name="download" size={18} /> 导出词库</button>
+            <button className="secondary-button" disabled={backupBusy} onClick={() => vocabularyFileRef.current?.click()} type="button"><Icon name="upload" size={18} /> 导入词库</button>
             <input
               accept="application/json,.json"
               className="sr-only"
               onChange={async (event) => {
                 const file = event.target.files?.[0]
-                if (!file) return
-                if (!window.confirm('导入词库会合并到当前词库，不会替换学习进度。确认继续吗？')) {
-                  event.target.value = ''
-                  return
-                }
-                const result = await onImportVocabulary(await file.text())
-                setMessage(result.message)
                 event.target.value = ''
+                if (!file) return
+                if (!window.confirm('导入词库会合并到当前词库，不会替换学习进度。确认继续吗？')) return
+                await importFromFile(file, onImportVocabulary)
               }}
               ref={vocabularyFileRef}
               type="file"
@@ -171,21 +204,17 @@ export function SettingsDialog({
             <p>{vocabularyCount} 个义项 · {attemptCount} 次作答。导出含词条、进度、证据、学习计时与设置；导入会整库替换。数据只保存在这个浏览器中。</p>
           </div>
           <div className="backup-actions">
-            <button className="secondary-button" onClick={() => void onExport()} type="button"><Icon name="download" size={18} /> 导出学习备份</button>
-            <button className="secondary-button" onClick={() => backupFileRef.current?.click()} type="button"><Icon name="upload" size={18} /> 导入学习备份</button>
+            <button className="secondary-button" disabled={backupBusy} onClick={() => void runBackupAction(onExport)} type="button"><Icon name="download" size={18} /> 导出学习备份</button>
+            <button className="secondary-button" disabled={backupBusy} onClick={() => backupFileRef.current?.click()} type="button"><Icon name="upload" size={18} /> 导入学习备份</button>
             <input
               accept="application/json,.json"
               className="sr-only"
               onChange={async (event) => {
                 const file = event.target.files?.[0]
-                if (!file) return
-                if (!window.confirm('导入会用备份中的进度替换当前本地数据。确认继续吗？')) {
-                  event.target.value = ''
-                  return
-                }
-                const result = await onImport(await file.text())
-                setMessage(result.message)
                 event.target.value = ''
+                if (!file) return
+                if (!window.confirm('导入会用备份中的进度替换当前本地数据。确认继续吗？')) return
+                await importFromFile(file, onImport)
               }}
               ref={backupFileRef}
               type="file"

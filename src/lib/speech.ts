@@ -137,10 +137,3 @@ export async function speakWord(
 export async function speakExample(text: string, accent: SpeechAccent = 'uk'): Promise<void> {
   await speakText(text, accent)
 }
-
-/** @deprecated Prefer speakWord with an explicit accent. */
-export async function speakVocabulary(
-  item: Pick<Word, 'expression' | 'audioUk' | 'audioUs'> & { audioUrl?: string },
-): Promise<void> {
-  await speakText(item.expression, 'uk', item.audioUk ?? item.audioUrl)
-}

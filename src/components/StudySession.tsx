@@ -13,6 +13,7 @@ import type { GradeMatchKind } from '../lib/grading'
 import type { LearningStats } from '../lib/learningStats'
 import { expressionHint, trackLabels } from '../lib/presentation'
 import { speakWord } from '../lib/speech'
+import { escapeRegExp } from '../lib/text'
 import { localStudyDate } from '../lib/studyTime'
 import { useStudyTimer } from '../lib/useStudyTimer'
 import { Icon } from './Icon'
@@ -716,8 +717,4 @@ function normalize(value: string) {
 function answerMatches(value: string, target: string, alternatives: string[]) {
   const candidate = normalize(value)
   return [target, ...alternatives].some((answer) => normalize(answer) === candidate)
-}
-
-function escapeRegExp(value: string) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }

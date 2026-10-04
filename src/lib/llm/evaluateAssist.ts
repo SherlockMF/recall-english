@@ -93,7 +93,10 @@ export async function evaluateAssist(
       correctness: llm.correct ? 'correct' : 'incorrect',
       matchKind: llm.correct ? 'variant' : 'incorrect',
     }
-  } catch {
+  } catch (error) {
+    if (!(error instanceof Error && error.message === 'grade-timeout')) {
+      console.warn('LLM 判分失败，保留规则判分结果（correctness=unverified）。', error)
+    }
     return { ...rulesMiss, correctness: 'unverified' }
   } finally {
     if (timer) clearTimeout(timer)

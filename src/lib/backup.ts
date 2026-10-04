@@ -11,7 +11,6 @@ import {
   type TrackType,
   type UsagePrompt,
   type UserSettings,
-  type VocabularyCategory,
   type VocabularyExample,
   type VocabularyItem,
   type VocabularyList,

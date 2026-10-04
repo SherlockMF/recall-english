@@ -3,13 +3,12 @@ import { DEFAULT_SETTINGS } from '../domain/types'
 import type {
   LearningTrack,
   ReviewAttempt,
+  ListSlug,
   TrackType,
   UserSettings,
-  VocabularyCategory,
   VocabularyItem,
 } from '../domain/types'
 import {
-  buildDailyQueue,
   buildDailyPlan,
   canUnlockUsage,
   createInitialTracks,
@@ -23,7 +22,7 @@ const NOW = new Date('2026-08-10T00:00:00.000Z')
 
 function makeItem(
   id: string,
-  category: VocabularyCategory = 'daily',
+  category: ListSlug = 'daily',
   overrides: Partial<VocabularyItem> = {},
 ): VocabularyItem {
   return {
@@ -150,7 +149,7 @@ describe('createInitialTracks and usage unlocking', () => {
   })
 })
 
-describe('buildDailyQueue', () => {
+describe('buildDailyPlan task queue', () => {
   it('puts overdue core work first, separates the same item, and mixes new categories', () => {
     const items = [
       makeItem('due-a'),
@@ -168,18 +167,11 @@ describe('buildDailyQueue', () => {
       makeTrack('due-b', 'productive', { due: '2026-08-12T00:00:00.000Z' }),
       ...freshTracks,
     ]
-    const queue = buildDailyQueue(
-      settings({
+    const queue = buildDailyPlan({ settings: settings({
         coreMinutes: 10,
         newItemsPerDay: 3,
         contentMix: { daily: 0.25, business: 0.25, finance: 0.25, accounting: 0.25 },
-      }),
-      items,
-      tracks,
-      [],
-      NOW,
-      'core',
-    )
+      }), items: items, tracks: tracks, attempts: [], timeEntries: [], now: NOW }).tasks
 
     expect(queue.slice(0, 3).map((task) => task.trackId)).toEqual([
       'due-a:receptive',
@@ -199,7 +191,7 @@ describe('buildDailyQueue', () => {
     }
   })
 
-  it('uses the same daily budget and hard new-item limit for both legacy session modes', () => {
+  it('uses the same daily budget and hard new-item limit for both kinds of practice', () => {
     const usageItem = makeItem('usage-item', 'daily', {
       usagePrompts: [{
         id: 'usage-prompt',
@@ -230,34 +222,20 @@ describe('buildDailyQueue', () => {
       ...createInitialTracks(freshItems, NOW),
     ]
 
-    const queue = buildDailyQueue(
-      settings({ dailyMinutes: 10, coreMinutes: 0.75, extensionMinutes: 10, newItemsPerDay: 2 }),
-      items,
-      tracks,
-      [],
-      NOW,
-      'extension',
-    )
+    const queue = buildDailyPlan({ settings: settings({ dailyMinutes: 10, coreMinutes: 0.75, extensionMinutes: 10, newItemsPerDay: 2 }), items: items, tracks: tracks, attempts: [], timeEntries: [], now: NOW }).tasks
 
     expect(queue.slice(0, 3).map((task) => task.itemId)).toEqual(['due-a', 'due-b', 'usage-item'])
     const extraTasks = queue.filter((task) => task.isNew)
     expect(new Set(extraTasks.map((task) => task.itemId)).size).toBe(2)
     expect(extraTasks).toHaveLength(4)
-    expect(queue).toEqual(buildDailyQueue(settings({ dailyMinutes: 10, newItemsPerDay: 2 }), items, tracks, [], NOW, 'core'))
+    expect(queue).toEqual(buildDailyPlan({ settings: settings({ dailyMinutes: 10, newItemsPerDay: 2 }), items: items, tracks: tracks, attempts: [], timeEntries: [], now: NOW }).tasks)
   })
 
   it('uses lower numeric priority first within a content category', () => {
     const first = makeItem('priority-one', 'daily', { priority: 1 })
     const later = makeItem('priority-two', 'daily', { priority: 2 })
     const items = [later, first]
-    const queue = buildDailyQueue(
-      settings({ coreMinutes: 3, newItemsPerDay: 1, contentMix: { daily: 1, business: 0, finance: 0, accounting: 0 } }),
-      items,
-      createInitialTracks(items, NOW),
-      [],
-      NOW,
-      'core',
-    )
+    const queue = buildDailyPlan({ settings: settings({ coreMinutes: 3, newItemsPerDay: 1, contentMix: { daily: 1, business: 0, finance: 0, accounting: 0 } }), items: items, tracks: createInitialTracks(items, NOW), attempts: [], timeEntries: [], now: NOW }).tasks
 
     expect(new Set(queue.map((task) => task.itemId))).toEqual(new Set(['priority-one']))
   })
@@ -275,8 +253,8 @@ describe('buildDailyQueue', () => {
       reviewedAt: earlierSameLocalDay.toISOString(),
     })]
 
-    const queue = buildDailyQueue(
-      settings({
+    const queue = buildDailyPlan({
+      settings: settings({
         coreMinutes: 10,
         newItemsPerDay: 2,
         contentMix: { daily: 1, business: 0, finance: 0, accounting: 0 },
@@ -284,9 +262,9 @@ describe('buildDailyQueue', () => {
       items,
       tracks,
       attempts,
+      timeEntries: [],
       now,
-      'core',
-    )
+    }).tasks
 
     const freshQueued = new Set(
       queue

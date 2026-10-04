@@ -1,6 +1,7 @@
 import type { Word, WordListItem } from '../domain/types'
 import { listSlugsForSeedCategory } from './listAssignment'
 import { listIdForSlug } from './vocabularyLists'
+import { escapeRegExp, uniqueStrings } from '../lib/text'
 
 type SeedCategory = 'daily' | 'finance' | 'business'
 
@@ -25,14 +26,6 @@ const categoryContext: Record<SeedCategory, string> = {
   business: 'startup or business',
 }
 
-function unique(values: string[]): string[] {
-  return [...new Set(values.map((value) => value.trim()).filter(Boolean))]
-}
-
-function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
-
 function makeCloze(sentence: string, expression: string): string {
   return sentence.replace(new RegExp(escapeRegExp(expression), 'i'), '_____')
 }
@@ -54,8 +47,8 @@ function buildCategory(category: SeedCategory, rows: SeedRow[]): Word[] {
       zhGloss: row.zh,
       enDefinition: row.definition,
       partOfSpeech: row.partOfSpeech,
-      acceptedZhAnswers: unique([row.zh, ...(row.zhAnswers ?? [])]),
-      acceptedEnVariants: unique([row.expression, ...(row.variants ?? [])]),
+      acceptedZhAnswers: uniqueStrings([row.zh, ...(row.zhAnswers ?? [])]),
+      acceptedEnVariants: uniqueStrings([row.expression, ...(row.variants ?? [])]),
       examples: [firstExample, secondExample],
       collocations: row.collocations,
       source: 'seed',
@@ -68,7 +61,7 @@ function buildCategory(category: SeedCategory, rows: SeedRow[]): Word[] {
           prompt: 'Complete the sentence: ' + makeCloze(firstExample.en, row.expression),
           answer: row.expression,
           modelAnswer: firstExample.en,
-          checkpoints: unique([row.expression, row.collocations[0]]),
+          checkpoints: uniqueStrings([row.expression, row.collocations[0]]),
         },
         {
           id: id + '-sentence',

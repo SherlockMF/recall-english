@@ -4,6 +4,8 @@ import type { SystemListSlug, VocabularyItem } from '../domain/types'
 import { type EditCategory } from '../lib/listMembership'
 import { categoryLabels } from '../lib/presentation'
 import type { LearningEvidence } from '../lib/learningEvidence'
+import { splitListValues } from '../lib/text'
+import { useEscapeToClose } from '../lib/useEscapeToClose'
 import { LearningEvidenceDetails } from './LearningEvidenceDetails'
 import { speakExample, speakWord } from '../lib/speech'
 import { Icon } from './Icon'
@@ -219,6 +221,8 @@ function EditWordDialog({ item, onClose, onSave }: EditWordDialogProps) {
   const [saveError, setSaveError] = useState('')
   const [saving, setSaving] = useState(false)
 
+  useEscapeToClose(onClose)
+
   useEffect(() => {
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
@@ -281,7 +285,7 @@ function EditWordDialog({ item, onClose, onSave }: EditWordDialogProps) {
                   enDefinition: enDefinition.trim(),
                   partOfSpeech: partOfSpeech.trim() || 'expression',
                   examples: exampleEn.trim() ? [{ en: exampleEn.trim(), zh: exampleZh.trim() }] : [],
-                  collocations: collocations.split(/[,，\n]/).map((value) => value.trim()).filter(Boolean),
+                  collocations: splitListValues(collocations),
                   category,
                   scenarioNote: category === 'other' ? scenarioNote.trim() : undefined,
                 })

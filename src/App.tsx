@@ -51,6 +51,8 @@ import { evaluateAssist } from './lib/llm/evaluateAssist'
 import { hasDeepseekApiKey } from './lib/llm/config'
 import { hintWithLlm } from './lib/llm/hints'
 import { createSerialQueue } from './lib/serialQueue'
+import { showToast } from './lib/toast'
+import { escapeRegExp, uniqueStrings } from './lib/text'
 import { enrichWithLlm } from './lib/llm/enrich'
 import {
   buildFallbackUsagePrompts,
@@ -325,9 +327,15 @@ function App() {
   }
 
   async function addToMyVocabulary(item: VocabularyItem) {
-    await addWordToList(item.id, 'my-vocabulary', item.priority)
-    await refreshData()
-    return { ok: true as const, message: `已加入优先学习：${item.expression}` }
+    try {
+      await addWordToList(item.id, 'my-vocabulary', item.priority)
+      await refreshData()
+      return { ok: true as const, message: `已加入优先学习：${item.expression}` }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '加入优先学习失败。'
+      showToast(message, 'error')
+      return { ok: false as const, message }
+    }
   }
 
   async function bulkAdd(
@@ -375,7 +383,12 @@ function App() {
       status: item.status === 'active' ? 'paused' : 'active',
       updatedAt: new Date().toISOString(),
     })
-    await putWord(updatedWord)
+    try {
+      await putWord(updatedWord)
+    } catch (error) {
+      showToast(error instanceof Error ? `保存暂停状态失败：${error.message}` : '保存暂停状态失败。', 'error')
+      return
+    }
     setItems((current) => current.map((candidate) => (
       candidate.id === item.id
         ? { ...candidate, ...updatedWord, listSlugs: candidate.listSlugs, category: candidate.category }
@@ -448,15 +461,19 @@ function App() {
   }
 
   async function downloadBackup() {
-    const json = await exportBackupJson()
-    const blob = new Blob([json], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const anchor = document.createElement('a')
-    anchor.href = url
-    anchor.download = `recall-english-${new Date().toISOString().slice(0, 10)}.json`
-    anchor.click()
-    URL.revokeObjectURL(url)
-    await refreshData()
+    try {
+      const json = await exportBackupJson()
+      const blob = new Blob([json], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const anchor = document.createElement('a')
+      anchor.href = url
+      anchor.download = `recall-english-${new Date().toISOString().slice(0, 10)}.json`
+      anchor.click()
+      URL.revokeObjectURL(url)
+      await refreshData()
+    } catch (error) {
+      showToast(error instanceof Error ? `导出学习备份失败：${error.message}` : '导出学习备份失败。', 'error')
+    }
   }
 
   async function restoreBackup(content: string) {
@@ -476,14 +493,18 @@ function App() {
   }
 
   async function downloadVocabularyPack() {
-    const json = await exportVocabularyPackJson()
-    const blob = new Blob([json], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const anchor = document.createElement('a')
-    anchor.href = url
-    anchor.download = `recall-english-vocabulary-${new Date().toISOString().slice(0, 10)}.json`
-    anchor.click()
-    URL.revokeObjectURL(url)
+    try {
+      const json = await exportVocabularyPackJson()
+      const blob = new Blob([json], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const anchor = document.createElement('a')
+      anchor.href = url
+      anchor.download = `recall-english-vocabulary-${new Date().toISOString().slice(0, 10)}.json`
+      anchor.click()
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      showToast(error instanceof Error ? `导出词库失败：${error.message}` : '导出词库失败。', 'error')
+    }
   }
 
   async function restoreVocabularyPack(content: string) {
@@ -718,10 +739,6 @@ function buildUsagePrompts(expression: string, examples: VocabularyItem['example
   ]
 }
 
-function uniqueStrings(values: string[]) {
-  return [...new Set(values.map((value) => value.trim()).filter(Boolean))]
-}
-
 function normalizeText(value: string) {
   return value.normalize('NFKC').toLocaleLowerCase().replace(/[\p{P}\p{S}\s]+/gu, '')
 }
@@ -737,10 +754,6 @@ function slugify(value: string) {
 function makeId(prefix: string) {
   const uuid = globalThis.crypto?.randomUUID?.()
   return `${prefix}-${uuid ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`}`
-}
-
-function escapeRegExp(value: string) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
 export default App
