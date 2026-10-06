@@ -27,6 +27,7 @@ import {
   putSettings,
   replaceUserData,
 } from './db'
+import { stringifyOffMainThread } from './jsonWorker'
 import { createInitialTracks } from './scheduler'
 
 type UnknownRecord = Record<string, unknown>
@@ -1024,7 +1025,8 @@ export async function markBackupExported(now = new Date()): Promise<void> {
 }
 
 export async function exportBackupJson(space = 2): Promise<string> {
-  return JSON.stringify(await exportBackup(), null, space)
+  const backup = await exportBackup()
+  return stringifyOffMainThread(backup, space)
 }
 
 export function parseBackupV2(input: unknown): BackupV2 {

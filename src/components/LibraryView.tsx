@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { SystemListSlug, VocabularyItem } from '../domain/types'
 import { type EditCategory } from '../lib/listMembership'
@@ -6,6 +6,7 @@ import { categoryLabels } from '../lib/presentation'
 import type { LearningEvidence } from '../lib/learningEvidence'
 import { splitListValues } from '../lib/text'
 import { useEscapeToClose } from '../lib/useEscapeToClose'
+import { useFocusTrap } from '../lib/useFocusTrap'
 import { LearningEvidenceDetails } from './LearningEvidenceDetails'
 import { speakExample, speakWord } from '../lib/speech'
 import { Icon } from './Icon'
@@ -222,8 +223,10 @@ function EditWordDialog({ item, onClose, onSave }: EditWordDialogProps) {
   const [scenarioNote, setScenarioNote] = useState(item.scenarioNote ?? '')
   const [saveError, setSaveError] = useState('')
   const [saving, setSaving] = useState(false)
+  const dialogRef = useRef<HTMLElement>(null)
 
   useEscapeToClose(onClose)
+  useFocusTrap(dialogRef)
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow
@@ -237,7 +240,7 @@ function EditWordDialog({ item, onClose, onSave }: EditWordDialogProps) {
     <div className="dialog-backdrop" role="presentation" onMouseDown={(event) => {
       if (event.currentTarget === event.target) onClose()
     }}>
-      <section aria-labelledby="edit-word-title" aria-modal="true" className="dialog-card edit-dialog" role="dialog">
+      <section ref={dialogRef} aria-labelledby="edit-word-title" aria-modal="true" className="dialog-card edit-dialog" role="dialog">
         <div className="dialog-heading">
           <div><p className="eyebrow">EDIT ONE SENSE</p><h2 id="edit-word-title">编辑 {item.expression}</h2></div>
           <button aria-label="关闭" className="icon-button" onClick={onClose} type="button"><Icon name="close" size={20} /></button>

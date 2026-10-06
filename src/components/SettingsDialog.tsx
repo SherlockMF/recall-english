@@ -6,6 +6,7 @@ import {
   setDeepseekApiKey,
 } from '../lib/llm/config'
 import { useEscapeToClose } from '../lib/useEscapeToClose'
+import { useFocusTrap } from '../lib/useFocusTrap'
 import { Icon } from './Icon'
 
 interface SettingsDialogProps {
@@ -41,10 +42,12 @@ export function SettingsDialog({
   const [persistentState, setPersistentState] = useState<'idle' | 'granted' | 'unavailable'>('idle')
   const backupFileRef = useRef<HTMLInputElement>(null)
   const vocabularyFileRef = useRef<HTMLInputElement>(null)
+  const dialogRef = useRef<HTMLElement>(null)
 
   useEscapeToClose(() => {
     if (!backupBusy && !saving) onClose()
   })
+  useFocusTrap(dialogRef)
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow
@@ -98,7 +101,7 @@ export function SettingsDialog({
     <div className="dialog-backdrop" role="presentation" onMouseDown={(event) => {
       if (event.currentTarget === event.target) onClose()
     }}>
-      <section aria-labelledby="settings-title" aria-modal="true" className="dialog-card settings-dialog" role="dialog">
+      <section ref={dialogRef} aria-labelledby="settings-title" aria-modal="true" className="dialog-card settings-dialog" role="dialog">
         <div className="dialog-heading">
           <div><p className="eyebrow">LOCAL & PRIVATE</p><h2 id="settings-title">学习设置</h2></div>
           <button aria-label="关闭设置" className="icon-button" onClick={onClose} type="button"><Icon name="close" size={20} /></button>
