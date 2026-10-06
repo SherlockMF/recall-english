@@ -274,6 +274,7 @@ export function StudySession({
     setEnsuringUsage(true); setUsageEnsureError(null)
     void ensureUsageItem(item).then((updated) => {
       if (!cancelled) setItemOverrides((current) => ({ ...current, [updated.id]: updated }))
+      return updated
     }).catch((error) => {
       if (!cancelled) setUsageEnsureError(error instanceof Error ? error.message : '使用题生成失败，请稍后重试。')
     }).finally(() => { if (!cancelled) setEnsuringUsage(false) })

@@ -270,9 +270,9 @@ export function composeProfessionalDefinition(word) {
 
   // Structural patterns before naive last-token head split
   if (
-    /letter of credit$/.test(lower) ||
-    /documentary credit$/.test(lower) ||
-    (/credit$/.test(lower) && /信用证|信用状/.test(zh))
+    lower.endsWith('letter of credit') ||
+    lower.endsWith('documentary credit') ||
+    (lower.endsWith('credit') && /信用证|信用状/.test(zh))
   ) {
     return finalizeDefinition(composeLetterOfCredit(lower), expression, listSlug)
   }
@@ -282,9 +282,9 @@ export function composeProfessionalDefinition(word) {
     return finalizeDefinition(`the cost of ${rest}`, expression, listSlug)
   }
 
-  if (/ of production$/.test(lower)) {
+  if (lower.endsWith(' of production')) {
     const lead = lower.replace(/ of production$/, '')
-    if (/cost$/.test(lead) || lead === 'expense') {
+    if (lead.endsWith('cost') || lead === 'expense') {
       return finalizeDefinition(`the ${lead} incurred in producing goods`, expression, listSlug)
     }
     if (lead === 'means') {
@@ -302,7 +302,7 @@ export function composeProfessionalDefinition(word) {
   if (/^terms of trade$/.test(lower)) {
     return 'the relative prices of a country’s exports compared with its imports'
   }
-  if (/^accounting for /.test(lower)) {
+  if (lower.startsWith('accounting for ')) {
     return finalizeDefinition(
       `accounting methods and records for ${lower.replace(/^accounting for /, '')}`,
       expression,
@@ -496,7 +496,7 @@ function composeByLegacyHead({ head, mod, lower, zh, hints, expression, listSlug
     }
     return `an order related to ${mod}`
   }
-  if (head === 'tax' || head === 'taxes' || / tax$/.test(lower)) {
+  if (head === 'tax' || head === 'taxes' || lower.endsWith(' tax')) {
     if (/after tax|before tax|earnings after/.test(lower)) {
       return `earnings measured ${mod.includes('after') ? 'after' : 'before'} tax`
     }

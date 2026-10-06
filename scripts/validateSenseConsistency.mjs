@@ -39,7 +39,7 @@ function defLooksVerbal(def) {
   return /^(to |the act of |the process of )/i.test(String(def || '').trim())
 }
 function zhLooksAdjective(zh) {
-  return /的$/.test(String(zh || '').trim())
+  return String(zh || '').trim().endsWith('的')
 }
 const hard = []
 const soft = []
@@ -80,7 +80,7 @@ for (const item of bundled) {
   if (answers.length >= 8) {
     warn(item, 'accepted_zh_answers_unusually_many', String(answers.length))
   }
-  if (pos === 'adjective' && answers.some((a) => /地$/.test(String(a))) && !answers.some((a) => /的$/.test(String(a)))) {
+  if (pos === 'adjective' && answers.some((a) => String(a).endsWith('地')) && !answers.some((a) => String(a).endsWith('的'))) {
     warn(item, 'adj_answers_look_adverbial', answers.join(' / '))
   }
   // POS vs definition rough clash
@@ -102,7 +102,7 @@ for (const item of bundled) {
   if (answers.some((a) => /[（(][^）)]*$/.test(String(a)))) fail(item, 'answer_unclosed_paren', answers.join(' | '))
 
   // Cross-POS zh answers: adjective sense with adverb-only answers etc.
-  if (pos === 'adjective' && answers.some((a) => /地$/.test(String(a).trim())) && answers.every((a) => /地$/.test(String(a).trim()))) {
+  if (pos === 'adjective' && answers.some((a) => String(a).trim().endsWith('地')) && answers.every((a) => String(a).trim().endsWith('地'))) {
     fail(item, 'adj_answers_all_adverbial', answers.join(' | '))
   }
 

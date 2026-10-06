@@ -153,7 +153,7 @@ function cleanEnDefinition(value) {
     .split(/\n+/)
     .map((part) => stripEnPosPrefix(part))
     .filter(Boolean)
-  const first = parts[0] || stripEnPosPrefix(text)
+  const first = parts.find(Boolean) || stripEnPosPrefix(text)
   if (!first) throw new Error('Empty English definition after cleanup')
   return first.length > 400 ? `${first.slice(0, 397)}...` : first
 }

@@ -326,11 +326,11 @@ function lexicalCollocations(expression, partOfSpeech) {
     return [`${x} carefully`, `need to ${x}`, `decide when to ${x}`]
   }
 
-  if (/equation$/.test(lower)) return [`apply the ${x}`, `balance the ${x}`, `state the ${x}`]
-  if (/policy$/.test(lower)) return [`adopt ${ax}`, `change the ${x}`, `disclose the ${x}`]
-  if (/estimate$/.test(lower)) return [`make ${ax}`, `revise ${ax}`, `accounting ${x}`]
-  if (/^accrued /.test(lower)) return [`recognise ${ax}`, `reverse ${ax}`, `period-end ${x}`]
-  if (/^prepaid /.test(lower)) return [`recognise ${ax}`, `amortise ${ax}`, `release ${ax}`]
+  if (lower.endsWith('equation')) return [`apply the ${x}`, `balance the ${x}`, `state the ${x}`]
+  if (lower.endsWith('policy')) return [`adopt ${ax}`, `change the ${x}`, `disclose the ${x}`]
+  if (lower.endsWith('estimate')) return [`make ${ax}`, `revise ${ax}`, `accounting ${x}`]
+  if (lower.startsWith('accrued ')) return [`recognise ${ax}`, `reverse ${ax}`, `period-end ${x}`]
+  if (lower.startsWith('prepaid ')) return [`recognise ${ax}`, `amortise ${ax}`, `release ${ax}`]
   if (/moq|minimum order/.test(lower)) return [`meet the ${x}`, `negotiate the ${x}`, `below the ${x}`]
   if (/provision|allowance|write-?down|impairment/.test(lower)) {
     return [`recognise ${ax}`, `reverse ${ax}`, `measure ${ax}`]

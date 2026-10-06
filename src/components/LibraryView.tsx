@@ -163,6 +163,7 @@ export function LibraryView({
                         onClick={() => {
                           void onAddToMyVocabulary(item).then((result) => {
                             if (result.ok) setActionMessage(result.message)
+                            return result
                           })
                         }}
                         type="button"

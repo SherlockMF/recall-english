@@ -22,10 +22,14 @@
   "ignorePatterns": ["dist", "public", "scripts/archive", "node_modules", "*.cjs"],
   "rules": {
     "react/react-in-jsx-scope": "off",
+    "react-hooks/exhaustive-deps": "warn",
     "unicorn/prefer-string-starts-ends-with": "warn",
     "react/set-state-in-effect": "warn",
     "react/refs": "warn",
     "react/no-array-index-key": "warn",
-    "react-hooks/exhaustive-deps": "warn"
+    "unicorn/no-array-sort": "off",
+    "react-perf/jsx-no-new-function-as-prop": "off",
+    "react-perf/jsx-no-new-array-as-prop": "off",
+    "react-perf/jsx-no-new-object-as-prop": "off"
   }
 }

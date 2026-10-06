@@ -23,6 +23,7 @@ export function stringifyOffMainThread(value: unknown, space?: number): Promise<
       worker.terminate()
       reject(new Error(event.message || '导出序列化失败。'))
     }
+    // oxlint-disable-next-line require-post-message-target-origin -- worker-scope postMessage has no targetOrigin parameter
     worker.postMessage({ value, space })
   })
 }
