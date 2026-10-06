@@ -1,6 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 
-import { exportBackupJson } from '../lib/backup'
+import { exportBackupJson, markBackupExported } from '../lib/backup'
 import { showToast } from '../lib/toast'
 
 interface ErrorBoundaryProps {
@@ -58,6 +58,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       anchor.download = `recall-english-recovery-${new Date().toISOString().slice(0, 10)}.json`
       anchor.click()
       URL.revokeObjectURL(url)
+      await markBackupExported()
     } catch (error) {
       showToast(
         error instanceof Error ? `导出失败：${error.message}` : '导出失败，请尝试刷新页面。',

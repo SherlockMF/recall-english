@@ -999,7 +999,6 @@ export async function exportBackup(now = new Date()): Promise<BackupV3> {
     contentMix: { ...snapshot.settings.contentMix },
     lastBackupAt: exportedAt,
   }
-  await putSettings(settings)
 
   return {
     version: 3,
@@ -1012,6 +1011,16 @@ export async function exportBackup(now = new Date()): Promise<BackupV3> {
     timeEntries: snapshot.timeEntries,
     settings,
   }
+}
+
+/**
+ * Stamps lastBackupAt in the stored settings. Callers should invoke it only
+ * after the download was actually triggered, so an aborted export does not
+ * leave a misleading "backed up" mark.
+ */
+export async function markBackupExported(now = new Date()): Promise<void> {
+  const { settings } = await getUserDataSnapshot()
+  await putSettings({ ...settings, lastBackupAt: now.toISOString() })
 }
 
 export async function exportBackupJson(space = 2): Promise<string> {

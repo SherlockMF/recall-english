@@ -1,4 +1,5 @@
 import type { ReviewRating, TrackType, VocabularyItem } from '../../domain/types'
+import { DEEPSEEK_TIMEOUT_MS } from './constants'
 import { chatJson } from './client'
 
 export interface GradeAssistInput {
@@ -20,7 +21,9 @@ export async function gradeWithLlm(input: GradeAssistInput): Promise<GradeAssist
   const usage = input.item.usagePrompts[input.promptIndex ?? 0]
   const payload = await chatJson({
     signal: input.signal,
-    timeoutMs: input.signal ? 60_000 : undefined,
+    // The grading race in evaluateAssist aborts long before this; the timeout
+    // only backstops a lost abort, so it shares the shared chat constant.
+    timeoutMs: input.signal ? DEEPSEEK_TIMEOUT_MS : undefined,
     messages: [
       {
         role: 'system',

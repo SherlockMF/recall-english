@@ -35,9 +35,36 @@ export interface ChatJsonOptions {
   messages: ChatMessage[]
   signal?: AbortSignal
   timeoutMs?: number
+  /** Extra attempts after a retryable failure (429 / 5xx / network). Default 0. */
+  retries?: number
+}
+
+function isRetryable(error: unknown): boolean {
+  if (!(error instanceof LlmError)) return false
+  if (error.code === 'network') return true
+  if (error.code !== 'http') return false
+  return error.status === 429 || (error.status !== undefined && error.status >= 500)
 }
 
 export async function chatJson(options: ChatJsonOptions): Promise<unknown> {
+  const attempts = Math.max(0, options.retries ?? 0) + 1
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    if (attempt > 0) {
+      await new Promise((resolve) => setTimeout(resolve, 400 * attempt))
+      if (options.signal?.aborted) {
+        throw new LlmError('aborted', '请求已取消。')
+      }
+    }
+    try {
+      return await chatJsonOnce(options)
+    } catch (error) {
+      if (attempt === attempts - 1 || !isRetryable(error)) throw error
+    }
+  }
+  throw new LlmError('network', 'DeepSeek 请求失败。')
+}
+
+async function chatJsonOnce(options: ChatJsonOptions): Promise<unknown> {
   const apiKey = getDeepseekApiKey()
   if (!apiKey) {
     throw new LlmError('missing-key', '未配置 DeepSeek API Key。')

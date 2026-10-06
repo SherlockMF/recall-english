@@ -24,7 +24,7 @@ import {
   type Word,
   type WordListItem,
 } from './domain/types'
-import { exportBackupJson, importBackup } from './lib/backup'
+import { exportBackupJson, importBackup, markBackupExported } from './lib/backup'
 import {
   resolveListSlugsForEdit,
   type EditCategory,
@@ -61,7 +61,7 @@ import {
   snapshotLearningTracks,
   snapshotMapLearningProgress,
 } from './lib/learningTracks'
-import { deriveLearningStats } from './lib/learningStats'
+import { deriveLearningStats, localDateKey } from './lib/learningStats'
 import {
   buildDailyPlan,
   createInitialTracks,
@@ -133,7 +133,11 @@ function App() {
   }, [])
 
   const itemMap = useMemo(() => new Map(items.map((item) => [item.id, item])), [items])
-  const stats = useMemo(() => deriveLearningStats({ items, tracks, attempts, timeEntries, now }), [items, tracks, attempts, timeEntries, now])
+  // Stats only change at local-day granularity, so keying the memo on the
+  // day keeps the per-minute clock tick from re-deriving 7.5k-item stats.
+  // buildDailyPlan below keeps the full `now` for due-time scheduling.
+  const statsDayKey = localDateKey(now)
+  const stats = useMemo(() => deriveLearningStats({ items, tracks, attempts, timeEntries, now }), [items, tracks, attempts, timeEntries, statsDayKey])
   const dailyPlan = useMemo(() => buildDailyPlan({ settings, items, tracks, attempts, timeEntries, now }), [settings, items, tracks, attempts, timeEntries, now])
 
   const learningTrackSnapshots = useMemo(() => {
@@ -469,6 +473,8 @@ function App() {
       anchor.download = `recall-english-${new Date().toISOString().slice(0, 10)}.json`
       anchor.click()
       URL.revokeObjectURL(url)
+      // Stamp only after the download fired, not while building the export.
+      await markBackupExported()
       await refreshData()
     } catch (error) {
       showToast(error instanceof Error ? `导出学习备份失败：${error.message}` : '导出学习备份失败。', 'error')
@@ -527,10 +533,6 @@ function App() {
 
   return (
     <>
-      {sessionError && <div className="session-open-error" role="alert">
-        <span>{sessionError}</span>
-        <button type="button" onClick={() => setSessionError('')}>关闭提示后重试</button>
-      </div>}
       <AppShell
         activeTab={tab}
         onChangeTab={(nextTab) => {
@@ -539,6 +541,10 @@ function App() {
         }}
         onOpenSettings={() => setSettingsOpen(true)}
       >
+        {sessionError && <div className="session-open-error" role="alert">
+          <span>{sessionError}</span>
+          <button type="button" onClick={() => setSessionError('')}>关闭提示后重试</button>
+        </div>}
         {tab === 'today' && (
           <TodayView
             plan={dailyPlan}

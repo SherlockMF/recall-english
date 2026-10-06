@@ -48,6 +48,7 @@ function parseCategory(value: unknown, fallback: EnrichCategory): EnrichCategory
 export async function enrichWithLlm(input: EnrichAssistInput): Promise<EnrichmentDraft> {
   const payload = await chatJson({
     timeoutMs: DEEPSEEK_ENRICH_TIMEOUT_MS,
+    retries: 1,
     messages: [
       {
         role: 'system',

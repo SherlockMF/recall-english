@@ -412,6 +412,11 @@ export interface LibrarySeedStatus {
  * when a healthy library already matches the current seed revision. Seed
  * writes and the revision stamp commit in one transaction, so a matching
  * stamp guarantees the bundled seed has already been applied.
+ *
+ * Invariant: every code path that removes seed words (or restores a backup
+ * whose revision equals the current one while carrying fewer words) must
+ * invalidate the stored seedContentRevision, otherwise missing bundled
+ * words would never be re-seeded. There is currently no delete-word path.
  */
 export async function getLibrarySeedStatus(
   settings: UserSettings = createDefaultSettings(),
@@ -918,49 +923,40 @@ export async function clearDictionaryCache(): Promise<void> {
 }
 
 export async function writeBatch(batch: DatabaseBatch): Promise<void> {
-  const database = await getDatabase()
-  const transaction = database.transaction(
-    [
-      'words',
-      'vocabularyLists',
-      'wordListItems',
-      'tracks',
-      'attempts',
-      'timeEntries',
-      'settings',
-      'dictionaryCache',
-    ],
-    'readwrite',
-  )
+  // Only open stores the batch actually touches; a wider transaction would
+  // block concurrent readers/writers of unrelated stores.
+  const stores = new Set<
+    'words' | 'vocabularyLists' | 'wordListItems' | 'tracks' | 'attempts' | 'timeEntries' | 'settings' | 'dictionaryCache'
+  >()
+  if (batch.words?.length) stores.add('words')
+  if (batch.lists?.length) stores.add('vocabularyLists')
+  if (batch.memberships?.length || batch.deleteMembershipIds?.length) stores.add('wordListItems')
+  if (batch.tracks?.length) stores.add('tracks')
+  if (batch.attempts?.length) stores.add('attempts')
+  if (batch.timeEntries?.length) stores.add('timeEntries')
+  if (batch.settings) stores.add('settings')
+  if (batch.dictionaryCache?.length) stores.add('dictionaryCache')
+  if (stores.size === 0) return
 
-  for (const word of batch.words ?? []) {
-    await transaction.objectStore('words').put(word)
-  }
-  for (const list of batch.lists ?? []) {
-    await transaction.objectStore('vocabularyLists').put(list)
-  }
-  for (const membership of batch.memberships ?? []) {
-    await transaction.objectStore('wordListItems').put(membership)
-  }
+  const database = await getDatabase()
+  const transaction = database.transaction([...stores], 'readwrite')
+
+  for (const word of batch.words ?? []) transaction.objectStore('words').put(word)
+  for (const list of batch.lists ?? []) transaction.objectStore('vocabularyLists').put(list)
+  for (const membership of batch.memberships ?? []) transaction.objectStore('wordListItems').put(membership)
   for (const membershipId of batch.deleteMembershipIds ?? []) {
-    await transaction.objectStore('wordListItems').delete(membershipId)
+    transaction.objectStore('wordListItems').delete(membershipId)
   }
-  for (const track of batch.tracks ?? []) {
-    await transaction.objectStore('tracks').put(track)
-  }
-  for (const attempt of batch.attempts ?? []) {
-    await transaction.objectStore('attempts').put(attempt)
-  }
-  for (const entry of batch.timeEntries ?? []) {
-    await transaction.objectStore('timeEntries').put(entry)
-  }
+  for (const track of batch.tracks ?? []) transaction.objectStore('tracks').put(track)
+  for (const attempt of batch.attempts ?? []) transaction.objectStore('attempts').put(attempt)
+  for (const entry of batch.timeEntries ?? []) transaction.objectStore('timeEntries').put(entry)
   if (batch.settings) {
-    await transaction.objectStore('settings').put(normalizeUserSettings(batch.settings))
+    transaction.objectStore('settings').put(normalizeUserSettings(batch.settings))
   }
   for (const cacheEntry of batch.dictionaryCache ?? []) {
     const query = normalizeDictionaryQuery(cacheEntry.query)
     if (query) {
-      await transaction.objectStore('dictionaryCache').put({
+      transaction.objectStore('dictionaryCache').put({
         ...cacheEntry,
         query,
       })

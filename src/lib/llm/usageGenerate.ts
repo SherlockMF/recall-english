@@ -32,6 +32,7 @@ function asPrompt(raw: unknown, expression: string, index: number): UsagePrompt 
 
 export async function generateUsagePromptsWithLlm(item: VocabularyItem): Promise<UsagePrompt[]> {
   const payload = await chatJson({
+    retries: 1,
     messages: [
       {
         role: 'system',

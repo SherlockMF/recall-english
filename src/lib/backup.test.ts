@@ -25,6 +25,7 @@ import {
   BackupValidationError,
   exportBackup,
   importBackup,
+  markBackupExported,
   parseBackup,
   parseBackupV2,
   parseBackupV3,
@@ -144,6 +145,10 @@ describe('backup import and export', () => {
     })
     expect(exported.words).toHaveLength(1)
     expect(exported.memberships).toHaveLength(1)
+    // Building the export alone must not stamp the local settings; only an
+    // actual export does.
+    expect((await getSettings()).lastBackupAt).toBeUndefined()
+    await markBackupExported(new Date(newer))
     expect((await getSettings()).lastBackupAt).toBe(newer)
     expect(exported.timeEntries).toEqual([])
   })

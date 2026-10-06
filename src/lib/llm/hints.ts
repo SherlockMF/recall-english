@@ -11,6 +11,7 @@ export interface HintAssistInput {
 export async function hintWithLlm(input: HintAssistInput): Promise<string> {
   const usage = input.item.usagePrompts[input.promptIndex ?? 0]
   const payload = await chatJson({
+    retries: 1,
     messages: [
       {
         role: 'system',
