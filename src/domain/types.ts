@@ -1,3 +1,5 @@
+import { SEED_CONTENT_REVISION } from '../data/seedContentRevision'
+
 export type SystemListSlug = 'daily' | 'business' | 'finance' | 'accounting'
 export type ListSlug = SystemListSlug | 'my-vocabulary'
 export type VocabularySource = 'seed' | 'dictionary' | 'custom'
@@ -252,7 +254,8 @@ export const DEFAULT_SETTINGS: UserSettings = {
   newItemsPerDay: 5,
   contentMix: { daily: 0.35, business: 0.25, finance: 0.2, accounting: 0.2 },
   speechAccent: 'uk',
-  seedContentRevision: '5.3.0',
+  // Single source of truth for the seed stamp lives in seedContentRevision.
+  seedContentRevision: SEED_CONTENT_REVISION,
 }
 
 export function normalizeLemma(expression: string): string {

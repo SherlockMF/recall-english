@@ -644,10 +644,6 @@ export async function putWordListItem(item: WordListItem): Promise<void> {
   await (await getDatabase()).put('wordListItems', item)
 }
 
-export async function deleteWordListItem(id: string): Promise<void> {
-  await (await getDatabase()).delete('wordListItems', id)
-}
-
 export async function isWordInList(wordId: string, listId: string): Promise<boolean> {
   const items = await getWordListItemsForWord(wordId)
   return items.some((item) => item.listId === listId)

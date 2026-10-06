@@ -42,7 +42,9 @@ export function SettingsDialog({
   const backupFileRef = useRef<HTMLInputElement>(null)
   const vocabularyFileRef = useRef<HTMLInputElement>(null)
 
-  useEscapeToClose(onClose)
+  useEscapeToClose(() => {
+    if (!backupBusy && !saving) onClose()
+  })
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow
