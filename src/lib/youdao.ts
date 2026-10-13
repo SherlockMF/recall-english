@@ -1,6 +1,6 @@
 import type { DictionaryMeaning, SpeechAccent } from '../domain/types'
 
-export const YOUDAO_API_BASE_URL = '/api/youdao/jsonapi_s'
+export const YOUDAO_API_BASE_URL = '/api/youdao/jsonapi'
 /** Absolute URL — `<audio>` can load cross-origin without the Vite proxy. */
 export const YOUDAO_DICTVOICE_BASE_URL = 'https://dict.youdao.com/dictvoice'
 export const YOUDAO_TIMEOUT_MS = 5_000
@@ -8,6 +8,7 @@ export const YOUDAO_TIMEOUT_MS = 5_000
 export interface YoudaoSense {
   partOfSpeech: string
   zhGloss: string
+  definition?: string
   exampleEn?: string
   exampleZh?: string
 }
@@ -176,23 +177,115 @@ function parseEcBasicSenses(payload: UnknownRecord): YoudaoSense[] {
     if (!isRecord(entry) || !Array.isArray(entry.trs)) continue
     for (const tr of entry.trs) {
       if (!isRecord(tr)) continue
-      const rawPos = nonEmptyString(tr.pos) ?? 'expression'
-      const tran = nonEmptyString(tr.tran)
-      if (!tran) continue
-      if (isProperNameSense(rawPos, tran)) continue
-
-      for (const part of tran.split(/[；;]/)) {
-        const zhGloss = part.trim()
-        if (!zhGloss) continue
-        senses.push({
-          partOfSpeech: normalizePartOfSpeech(rawPos),
-          zhGloss,
-        })
+      const direct = nonEmptyString(tr.tran)
+      const translations = direct ? [direct] : Array.isArray(tr.tr)
+        ? tr.tr.flatMap((item: unknown) => {
+          if (!isRecord(item) || !isRecord(item.l)) return []
+          const text = item.l.i
+          return (Array.isArray(text) ? text : [text]).filter((value): value is string => typeof value === 'string')
+        }) : []
+      for (const translation of translations) {
+        const prefix = translation.match(/^(【名】|[a-z][a-z./ &-]{0,16}\.)\s*/i)
+        const rawPos = nonEmptyString(tr.pos) ?? prefix?.[1] ?? 'expression'
+        const tran = prefix ? translation.slice(prefix[0].length) : translation
+        let properNameTail = false
+        for (const part of tran.split(/[；;]/)) {
+          const zhGloss = part.trim()
+          if (isProperNameSense(rawPos, zhGloss)) properNameTail = true
+          if (!zhGloss || properNameTail) continue
+          senses.push({ partOfSpeech: normalizePartOfSpeech(rawPos), zhGloss })
+        }
       }
     }
   }
 
   return senses
+}
+
+/** Short Chinese alternatives are used only when they identify one source sense. */
+export function chineseGlossTerms(value: string): string[] {
+  const text = stripHtml(value).replace(/^(?:[（(][^（）()]*[）)]\s*)+/, '')
+  const terms = text.split(/[，,；;]/).map((part) => (part.match(/\p{Script=Han}/gu) ?? []).join(''))
+  return [...new Set(terms.filter((term) => term.length >= 2 && term.length <= 18))]
+}
+
+function records(value: unknown): UnknownRecord[] {
+  return (Array.isArray(value) ? value : value ? [value] : []).filter(isRecord)
+}
+
+function fillYoudaoContext(senses: YoudaoSense[], payload: UnknownRecord, query: string): YoudaoSense[] {
+  const normalize = (value: string) => value.normalize('NFKC').trim().toLocaleLowerCase('en-US')
+  const compatible = (sense: YoudaoSense, pos: string) => sense.partOfSpeech === 'expression'
+    || pos === 'expression' || normalizePartOfSpeech(sense.partOfSpeech) === pos
+  const matches = (sense: YoudaoSense, translation: string) => {
+    const chinese = (translation.match(/\p{Script=Han}/gu) ?? []).join('')
+    return chineseGlossTerms(sense.zhGloss).some((term) => chinese.includes(term))
+  }
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const mentionsWord = (sentence: string) => new RegExp(`(?:^|[^a-z])${escaped}(?:s|es|ed|d|ing)?(?:$|[^a-z])`, 'i').test(sentence)
+  const bilingual: Array<{ pos: string; zh: string; definition: string; exampleEn?: string; exampleZh?: string }> = []
+  if (isRecord(payload.collins)) for (const entry of records(payload.collins.collins_entries)) {
+    if (typeof entry.headword === 'string' && normalize(entry.headword) !== normalize(query)) continue
+    if (!isRecord(entry.entries)) continue
+    for (const group of records(entry.entries.entry)) for (const item of records(group.tran_entry)) {
+      const translation = typeof item.tran === 'string' ? stripHtml(item.tran) : ''
+      const chineseStart = translation.search(/\p{Script=Han}/u)
+      if (chineseStart <= 0) continue
+      const definition = translation.slice(0, chineseStart).trim()
+      if (!/[a-z]/i.test(definition)) continue
+      const pos = isRecord(item.pos_entry) && typeof item.pos_entry.pos === 'string'
+        ? normalizePartOfSpeech(item.pos_entry.pos) : 'expression'
+      const examples = isRecord(item.exam_sents) ? records(item.exam_sents.sent) : []
+      const example = examples.find((sent) => typeof sent.eng_sent === 'string' && mentionsWord(stripHtml(sent.eng_sent)))
+      bilingual.push({ pos, zh: translation.slice(chineseStart), definition,
+        exampleEn: example && typeof example.eng_sent === 'string' ? stripHtml(example.eng_sent) : undefined,
+        exampleZh: example && typeof example.chn_sent === 'string' ? stripHtml(example.chn_sent) : undefined })
+    }
+  }
+  const english: Array<{ pos: string; definition: string }> = []
+  if (isRecord(payload.ee) && isRecord(payload.ee.source) && payload.ee.source.name === 'WordNet') for (const word of records(payload.ee.word)) for (const group of records(word.trs)) {
+    const pos = typeof group.pos === 'string' ? normalizePartOfSpeech(group.pos) : 'expression'
+    for (const item of records(group.tr)) {
+      if (!isRecord(item.l)) continue
+      const values = Array.isArray(item.l.i) ? item.l.i : [item.l.i]
+      for (const value of values) if (typeof value === 'string') {
+        const definition = stripHtml(value)
+        if (/[a-z]/i.test(definition) && !/\p{Script=Han}/u.test(definition) && normalize(definition) !== normalize(query)) {
+          if (!english.some((candidate) => candidate.pos === pos && candidate.definition === definition)) english.push({ pos, definition })
+        }
+      }
+    }
+  }
+  const sentences = isRecord(payload.blng_sents_part) ? records(payload.blng_sents_part['sentence-pair']) : []
+  return senses.map((original) => {
+    const sense = { ...original }
+    const candidates = bilingual.filter((candidate) => compatible(sense, candidate.pos) && matches(sense, candidate.zh)
+      && senses.filter((other) => compatible(other, candidate.pos) && matches(other, candidate.zh)).length === 1)
+    if (candidates.length === 1) {
+      sense.definition ||= candidates[0].definition
+      if (!sense.exampleEn && candidates[0].exampleEn) {
+        sense.exampleEn = candidates[0].exampleEn
+        sense.exampleZh = candidates[0].exampleZh
+      }
+    }
+    const definitions = english.filter((candidate) => compatible(sense, candidate.pos))
+    if (!sense.definition && definitions.length === 1
+      && senses.filter((other) => compatible(other, definitions[0].pos)).length === 1) sense.definition = definitions[0].definition
+    if (!sense.exampleEn) {
+      const example = sentences.find((sent) => {
+        const en = typeof sent.sentence === 'string' ? sent.sentence : sent['sentence-eng']
+        const zh = sent['sentence-translation']
+        return typeof en === 'string' && typeof zh === 'string' && mentionsWord(stripHtml(en)) && matches(sense, zh)
+          && senses.filter((other) => matches(other, zh)).length === 1
+      })
+      if (example) {
+        const en = typeof example.sentence === 'string' ? example.sentence : example['sentence-eng']
+        sense.exampleEn = stripHtml(en as string)
+        sense.exampleZh = stripHtml(example['sentence-translation'] as string)
+      }
+    }
+    return sense
+  })
 }
 
 /** Parse Youdao jsonapi payload into sense + phonetic fields. */
@@ -206,7 +299,7 @@ export function parseYoudaoPayload(payload: unknown, query = ''): YoudaoLookupRe
 
   return {
     word: phonetics.word || query,
-    senses: senses.length > 0 ? senses : parseEcBasicSenses(payload),
+    senses: fillYoudaoContext(senses.length > 0 ? senses : parseEcBasicSenses(payload), payload, query || phonetics.word || ''),
     ipaUk: phonetics.ipaUk,
     ipaUs: phonetics.ipaUs,
     phonetic: phonetics.phonetic,
@@ -236,6 +329,7 @@ export function buildBilingualMeanings(
     youdaoCountByPos.set(key, (youdaoCountByPos.get(key) ?? 0) + 1)
   }
 
+  const sourceOccurrences = new Map<string, number>()
   return youdaoSenses.map((sense) => {
     const key = normalizePartOfSpeech(sense.partOfSpeech)
     const englishBucket = englishByPos.get(key) ?? []
@@ -243,9 +337,14 @@ export function buildBilingualMeanings(
     const english = englishBucket.length === 1 && youdaoCount === 1
       ? englishBucket[0]
       : undefined
-    const definition = english?.definition || sense.exampleEn || ''
+    const definition = sense.definition || english?.definition || sense.exampleEn || ''
+    const sourceGloss = sense.zhGloss.normalize('NFKC').trim().toLocaleLowerCase('en-US').replace(/\s+/g, ' ')
+    const source = JSON.stringify([key, sourceGloss])
+    const occurrence = sourceOccurrences.get(source) ?? 0
+    sourceOccurrences.set(source, occurrence + 1)
 
     return {
+      senseKey: `dictionary:youdao:${JSON.stringify([key, sourceGloss, occurrence])}`,
       partOfSpeech: sense.partOfSpeech,
       definition,
       zhGloss: sense.zhGloss,
@@ -301,6 +400,10 @@ export async function lookupYoudao(
     )
     if (!response.ok) return { word: cleaned, senses: [] }
     const payload: unknown = await response.json()
+    if (isRecord(payload) && typeof payload.input === 'string'
+      && payload.input.normalize('NFKC').trim().toLocaleLowerCase('en-US') !== cleaned.normalize('NFKC').trim().toLocaleLowerCase('en-US')) {
+      return { word: cleaned, senses: [] }
+    }
     return parseYoudaoPayload(payload, cleaned)
   } catch {
     return { word: cleaned, senses: [] }

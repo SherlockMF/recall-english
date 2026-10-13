@@ -31,6 +31,7 @@ export async function gradeWithLlm(input: GradeAssistInput): Promise<GradeAssist
           'You grade active English recall for Malaysian university / business / finance learners.',
           'Return ONLY JSON: {"correct":boolean,"rating":"again"|"hard"|"good","feedbackZh":string}',
           'correct=true only if meaning and required expression use are acceptable.',
+          'Grade only the specified lexical sense (senseKey, zhGloss, enDefinition and partOfSpeech). A correct use of another meaning of the same expression does not satisfy this task.',
           'rating: again=wrong/unusable, hard=acceptable but weak/awkward, good=natural.',
           'feedbackZh: one short Chinese sentence; if wrong, say what to fix; if right, optional polish tip.',
           'Do not reveal a full model answer unless correct=false and a short cue helps.',
@@ -41,6 +42,8 @@ export async function gradeWithLlm(input: GradeAssistInput): Promise<GradeAssist
         content: JSON.stringify({
           trackType: input.trackType,
           expression: input.item.expression,
+          senseKey: input.item.senseKey,
+          partOfSpeech: input.item.partOfSpeech,
           zhGloss: input.item.zhGloss,
           enDefinition: input.item.enDefinition,
           acceptedEnVariants: input.item.acceptedEnVariants,

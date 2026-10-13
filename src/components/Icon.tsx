@@ -21,6 +21,7 @@ export type IconName =
   | 'chevron'
   | 'brain'
   | 'refresh'
+  | 'mic'
 
 interface IconProps extends SVGProps<SVGSVGElement> {
   name: IconName
@@ -28,6 +29,7 @@ interface IconProps extends SVGProps<SVGSVGElement> {
 }
 
 const paths: Record<IconName, ReactNode> = {
+  mic: <><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></>,
   home: <><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/><path d="M9 21v-7h6v7"/></>,
   plus: <><path d="M12 5v14"/><path d="M5 12h14"/></>,
   library: <><path d="M4 5.5h5V20H4z"/><path d="M9 5.5h5V20H9z"/><path d="m15.5 6.5 4-1 3.2 13.9-4 1z"/></>,

@@ -279,7 +279,7 @@ export async function exportVocabularyPack(now = new Date()): Promise<Vocabulary
     version: 1,
     kind: 'vocabulary-pack',
     exportedAt: now.toISOString(),
-    words: snapshot.words,
+    words: snapshot.words.map(({ knownAt: _knownAt, ...word }) => word),
     lists: snapshot.lists.length ? snapshot.lists : ALL_VOCABULARY_LISTS,
     memberships: snapshot.memberships,
   }
@@ -337,7 +337,8 @@ export async function importVocabularyPack(
     if (!localWord) {
       const id = allocateWordId(packWord.id, localIds, usedNewIds)
       usedNewIds.add(id)
-      const word = { ...packWord, id }
+      const { knownAt: _knownAt, ...lexicalWord } = packWord
+      const word = { ...lexicalWord, id }
       wordsToWrite.push(word)
       newWordsForTracks.push(word)
       packWordIdToLocalId.set(packWord.id, id)

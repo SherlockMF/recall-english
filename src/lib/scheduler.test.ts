@@ -97,6 +97,19 @@ function settings(overrides: Partial<UserSettings> = {}): UserSettings {
 }
 
 describe('createInitialTracks and usage unlocking', () => {
+  it('withholds ambiguous receptive questions without English context and schedules them after context is supplied', () => {
+    const first = makeItem('interest-curiosity', 'daily', { expression: 'interest', zhGloss: '兴趣', enDefinition: '', examples: [], collocations: [] })
+    const second = makeItem('interest-benefit', 'daily', { expression: 'interest', zhGloss: '利益', enDefinition: '', examples: [], collocations: [] })
+    const items = [first, second]
+    const tracks = createInitialTracks(items, NOW)
+    const input = { settings: settings(), items, tracks, attempts: [], timeEntries: [], now: NOW }
+    const plan = buildDailyPlan(input)
+    expect(plan.tasks.some((task) => task.trackType === 'receptive')).toBe(false)
+    expect(plan.tasks.some((task) => task.trackType === 'productive')).toBe(true)
+    const clarified = buildDailyPlan({ ...input, items: [{ ...first, enDefinition: 'a desire to learn about something' }, second] })
+    expect(clarified.tasks.some((task) => task.itemId === first.id && task.trackType === 'receptive')).toBe(true)
+    expect(clarified.tasks.some((task) => task.itemId === second.id && task.trackType === 'receptive')).toBe(false)
+  })
   it('creates two core tracks and only creates a locked usage track when prompts exist', () => {
     const plain = makeItem('plain')
     const usable = makeItem('usable', 'business', {
@@ -121,6 +134,17 @@ describe('createInitialTracks and usage unlocking', () => {
       unlocked: false,
       due: NOW.toISOString(),
     })
+  })
+
+  it('withholds an ambiguous due direction even when the other sense is paused', () => {
+    const first = makeItem('interest-curiosity', 'daily', { expression: 'interest', enDefinition: '' })
+    const second = makeItem('interest-benefit', 'daily', { expression: 'interest', status: 'paused' })
+    const tracks = [makeTrack(first.id, 'receptive'), makeTrack(first.id, 'productive')]
+    const input = { settings: settings({ newItemsPerDay: 0 }), items: [first, second], tracks,
+      attempts: [], timeEntries: [], now: NOW }
+    expect(buildDailyPlan(input).tasks.map((task) => task.trackType)).toEqual(['productive'])
+    expect(buildDailyPlan({ ...input, items: [{ ...first, examples: [{ en: 'She has an interest in art.', zh: '' }] }, second] })
+      .tasks.some((task) => task.trackType === 'receptive')).toBe(true)
   })
 
   it('unlocks usage only after both recall directions have a good review', () => {
@@ -275,7 +299,7 @@ describe('buildDailyPlan task queue', () => {
   })
 })
 
-describe('adaptive target', () => {
+describe('fixed daily target', () => {
   const item = makeItem('learned')
   const fresh = Array.from({ length: 10 }, (_, index) => makeItem(`fresh-${index}`))
   const allItems = [item, ...fresh]
@@ -285,7 +309,7 @@ describe('adaptive target', () => {
     ...createInitialTracks(fresh, NOW),
   ]
 
-  it('reduces new material from delayed evidence and never raises the configured cap', () => {
+  it('keeps the configured count for both weak and strong delayed recall', () => {
     const initial = Array.from({ length: 10 }, (_, index) => makeAttempt(index, `word-${index}`, {
       reviewedAt: new Date(NOW.getTime() - 2 * 86_400_000).toISOString(),
     }))
@@ -296,11 +320,11 @@ describe('adaptive target', () => {
       ? { ...attempt, correctness: 'incorrect' as const } : attempt)
     const configured = settings({ coreMinutes: 30, newItemsPerDay: 6 })
 
-    expect(getAdaptiveNewItemTarget(configured, allItems, tracks, weak, NOW)).toBe(3)
+    expect(getAdaptiveNewItemTarget(configured, allItems, tracks, weak, NOW)).toBe(6)
     expect(getAdaptiveNewItemTarget(configured, allItems, tracks, strong, NOW)).toBe(6)
   })
 
-  it('pauses new material when due reviews consume the core budget', () => {
+  it('keeps the new-word quota when due reviews consume the time budget', () => {
     const dueTracks = [
       makeTrack('learned', 'receptive', { due: '2026-08-09T00:00:00.000Z' }),
       makeTrack('learned', 'productive', { due: '2026-08-09T00:00:00.000Z' }),
@@ -308,16 +332,18 @@ describe('adaptive target', () => {
     ]
     expect(buildDailyPlan({ settings: settings({ dailyMinutes: 1, newItemsPerDay: 6 }),
       items: allItems, tracks: dueTracks, attempts: [], timeEntries: [], now: NOW,
-    }).newItemCount).toBe(0)
+    }).newItemCount).toBe(6)
   })
 
   it.each([
     { total: 9, correct: 0, baseline: 5, target: 5 },
-    { total: 10, correct: 6, baseline: 5, target: 2 },
-    { total: 20, correct: 13, baseline: 5, target: 3 },
+    { total: 10, correct: 6, baseline: 5, target: 5 },
+    { total: 20, correct: 13, baseline: 5, target: 5 },
     { total: 10, correct: 8, baseline: 5, target: 5 },
-    { total: 10, correct: 7, baseline: 1, target: 0 },
-  ])('uses sample thresholds and integer rounding: %j', ({ total, correct, baseline, target }) => {
+    { total: 10, correct: 7, baseline: 1, target: 1 },
+    { total: 10, correct: 0, baseline: 0, target: 0 },
+    { total: 10, correct: 10, baseline: 3.9, target: 3 },
+  ])('uses the configured count independently of delayed recall: %j', ({ total, correct, baseline, target }) => {
     const attempts = Array.from({ length: total }, (_, index) => [
       makeAttempt(index, `sample-${index}`, { reviewedAt: new Date(NOW.getTime() - 2 * 86_400_000).toISOString() }),
       makeAttempt(index + total, `sample-${index}`, { reviewedAt: NOW.toISOString(),
@@ -329,7 +355,121 @@ describe('adaptive target', () => {
 })
 
 describe('buildDailyPlan', () => {
-  it('shares recorded recall and application time across sessions and only grants explicit continuation', () => {
+  it.each([{ count: 0, dailyLimit: 6 }, { count: 1, dailyLimit: 3 }, { count: 4, dailyLimit: 7 }, { count: 15, dailyLimit: 10 }])(
+    'fills the configured quota with priority words first, then ordinary words: %j', ({ count, dailyLimit }) => {
+    const priorityItems = Array.from({ length: count }, (_, index) => makeItem(`priority-${String(index).padStart(2, '0')}`, 'daily', {
+      listSlugs: ['daily', 'my-vocabulary'], priority: count - index,
+    }))
+    const ordinaryItems = Array.from({ length: 15 }, (_, index) => makeItem(`ordinary-${index}`, 'business'))
+    const items = [...ordinaryItems, ...[...priorityItems].reverse()]
+    const plan = buildDailyPlan({ items, tracks: createInitialTracks(items, NOW),
+      settings: settings({ dailyMinutes: 30, newItemsPerDay: dailyLimit,
+        contentMix: { daily: 0, business: 1, finance: 0, accounting: 0 } }),
+      attempts: [], timeEntries: [], now: NOW })
+    const selected = [...new Set(plan.tasks.map((task) => task.itemId))]
+    expect(plan.newItemCount).toBe(dailyLimit)
+    expect(selected.slice(0, Math.min(count, dailyLimit))).toEqual(priorityItems.slice(0, dailyLimit).map((item) => item.id))
+    expect(selected.filter((id) => id.startsWith('ordinary-'))).toHaveLength(Math.max(0, dailyLimit - count))
+    const ordinaryStart = plan.tasks.findIndex((task) => task.itemId.startsWith('ordinary-'))
+    if (ordinaryStart >= 0) expect(plan.tasks.slice(ordinaryStart).every((task) => task.itemId.startsWith('ordinary-'))).toBe(true)
+  })
+
+  it('advances through remaining priority words and fills spare slots with ordinary words', () => {
+    const priorityItems = Array.from({ length: 15 }, (_, index) => makeItem(`priority-${String(index).padStart(2, '0')}`, 'finance', {
+      listSlugs: ['finance', 'my-vocabulary'],
+    }))
+    const ordinaryItems = Array.from({ length: 10 }, (_, index) => makeItem(`ordinary-${index}`, 'daily'))
+    const items = [...ordinaryItems, ...priorityItems]
+    const tracks = createInitialTracks(items, NOW).map((track) => priorityItems.slice(0, 10).some((item) => item.id === track.itemId)
+      ? makeTrack(track.itemId, track.type, { due: '2026-08-20T00:00:00.000Z' }) : track)
+    const plan = buildDailyPlan({ items, tracks, settings: settings({ dailyMinutes: 30, newItemsPerDay: 10 }),
+      attempts: [], timeEntries: [], now: NOW })
+    const selected = [...new Set(plan.tasks.map((task) => task.itemId))]
+    expect(selected.slice(0, 5)).toEqual(priorityItems.slice(10).map((item) => item.id))
+    expect(selected).toHaveLength(10)
+    expect(selected.filter((id) => id.startsWith('ordinary-'))).toHaveLength(5)
+    const completedTracks = tracks.map((track) => track.itemId.startsWith('priority-')
+      ? makeTrack(track.itemId, track.type, { due: '2026-08-20T00:00:00.000Z' }) : track)
+    const nextPlan = buildDailyPlan({ items, tracks: completedTracks,
+      settings: settings({ dailyMinutes: 30, newItemsPerDay: 10 }), attempts: [], timeEntries: [], now: NOW })
+    expect(new Set(nextPlan.tasks.map((task) => task.itemId))).toEqual(new Set(ordinaryItems.map((item) => item.id)))
+  })
+
+  it('finishes an introduced priority direction without blocking the remaining daily new-word allowance', () => {
+    const items = [makeItem('priority', 'daily', { listSlugs: ['daily', 'my-vocabulary'] }),
+      makeItem('ordinary-fresh'), makeItem('ordinary-due')]
+    const tracks = [makeTrack('priority', 'receptive', { due: '2026-08-20T00:00:00.000Z' }),
+      ...createInitialTracks([items[0]], NOW).filter((track) => track.type === 'productive'),
+      ...createInitialTracks([items[1]], NOW), makeTrack('ordinary-due', 'receptive')]
+    const input = { items, tracks, settings: settings({ newItemsPerDay: 3 }),
+      attempts: [makeAttempt(0, 'priority', { trackType: 'receptive', trackId: 'priority:receptive' })],
+      timeEntries: [], now: NOW }
+    const plan = buildDailyPlan(input)
+    expect(plan.introducedToday).toBe(1)
+    expect(plan.remainingNewItems).toBe(2)
+    expect(new Set(plan.tasks.map((task) => task.itemId))).toEqual(new Set(['priority', 'ordinary-due', 'ordinary-fresh']))
+    expect(plan.tasks.findIndex((task) => task.trackId === 'priority:productive'))
+      .toBeLessThan(plan.tasks.findIndex((task) => task.itemId === 'ordinary-fresh'))
+    const completed = buildDailyPlan({ ...input,
+      tracks: tracks.map((track) => track.id === 'priority:productive'
+        ? makeTrack('priority', 'productive', { due: '2026-08-20T00:00:00.000Z' }) : track),
+      attempts: [...input.attempts, makeAttempt(1, 'priority')] })
+    expect(new Set(completed.tasks.map((task) => task.itemId))).toEqual(new Set(['ordinary-due', 'ordinary-fresh']))
+  })
+
+  it('does not block ordinary new words while a priority review is scheduled for a future day', () => {
+    const items = [makeItem('priority', 'daily', { listSlugs: ['daily', 'my-vocabulary'] }), makeItem('ordinary')]
+    const tracks = [makeTrack('priority', 'receptive', { due: '2026-08-20T00:00:00.000Z' }),
+      makeTrack('priority', 'productive', { due: '2026-08-20T00:00:00.000Z' }), ...createInitialTracks([items[1]], NOW)]
+    const failed = makeAttempt(0, 'priority', { rating: 'again', reviewedAt: '2026-08-09T00:00:00.000Z' })
+    const input = { items, tracks, settings: settings({ newItemsPerDay: 3 }),
+      attempts: [failed], timeEntries: [], now: NOW }
+    expect(new Set(buildDailyPlan(input).tasks.map((task) => task.itemId))).toEqual(new Set(['ordinary']))
+    const retry = makeAttempt(1, 'priority', { rating: 'good', retryCount: 1 })
+    expect(new Set(buildDailyPlan({ ...input, attempts: [retry, failed] }).tasks.map((task) => task.itemId)))
+      .toEqual(new Set(['ordinary']))
+  })
+
+  it('treats unlisted custom words as ordinary and excludes paused priority words', () => {
+    const items = [makeItem('custom', 'my-vocabulary', { listSlugs: [], source: 'custom', priority: 0 }),
+      makeItem('paused', 'daily', { listSlugs: ['daily', 'my-vocabulary'], status: 'paused' }),
+      makeItem('priority', 'accounting', { listSlugs: ['accounting', 'my-vocabulary'] })]
+    const plan = buildDailyPlan({ items, tracks: createInitialTracks(items, NOW),
+      settings: settings({ newItemsPerDay: 1 }), attempts: [], timeEntries: [], now: NOW })
+    expect(new Set(plan.tasks.map((task) => task.itemId))).toEqual(new Set(['priority']))
+  })
+
+  it('counts already introduced priority words toward the fixed quota across continuations', () => {
+    const priorityItems = Array.from({ length: 2 }, (_, index) => makeItem(`priority-${index}`, 'daily', {
+      listSlugs: ['daily', 'my-vocabulary'],
+    }))
+    const ordinaryItems = Array.from({ length: 12 }, (_, index) => makeItem(`ordinary-${index}`))
+    const items = [...ordinaryItems, ...priorityItems]
+    const tracks = createInitialTracks(items, NOW).map((track) => track.itemId === 'priority-0'
+      ? makeTrack(track.itemId, track.type, { due: '2026-08-20T00:00:00.000Z' }) : track)
+    const input = { items, tracks, settings: settings({ newItemsPerDay: 7 }),
+      attempts: [makeAttempt(0, 'priority-0')], timeEntries: [], now: NOW, additionalMinutes: 5 }
+    const plan = buildDailyPlan(input)
+    expect(plan).toMatchObject({ introducedToday: 1, remainingNewItems: 6, newItemCount: 6 })
+    const selected = [...new Set(plan.tasks.filter((task) => task.isNew).map((task) => task.itemId))]
+    expect(selected[0]).toBe('priority-1')
+    expect(selected.filter((id) => id.startsWith('ordinary-'))).toHaveLength(5)
+    const completed = buildDailyPlan({ ...input, attempts: [...input.attempts,
+      ...selected.map((id, index) => makeAttempt(index + 1, id, { reviewedAt: NOW.toISOString() }))] })
+    expect(completed).toMatchObject({ introducedToday: 7, remainingNewItems: 0, newItemCount: 0 })
+  })
+
+  it('only falls below the fixed quota when the active fresh vocabulary is insufficient', () => {
+    const items = [makeItem('priority', 'daily', { listSlugs: ['daily', 'my-vocabulary'] }),
+      makeItem('ordinary'), makeItem('paused', 'daily', { listSlugs: ['daily', 'my-vocabulary'], status: 'paused' })]
+    const plan = buildDailyPlan({ items, tracks: createInitialTracks(items, NOW),
+      settings: settings({ dailyMinutes: 5, newItemsPerDay: 7 }), attempts: [], timeEntries: [], now: NOW })
+    expect([...new Set(plan.tasks.map((task) => task.itemId))]).toEqual(['priority', 'ordinary'])
+    expect(plan.newItemCount).toBe(2)
+    expect(plan.reasons).toContain('可学的新表达不足，按现有内容安排，不为凑足数量重复出题。')
+  })
+
+  it('shares recorded time without shrinking the configured daily new-word allowance', () => {
     const items = Array.from({ length: 20 }, (_, index) => makeItem(`fresh-${index}`))
     const tracks = createInitialTracks(items, NOW)
     const localDate = `${NOW.getFullYear()}-${String(NOW.getMonth() + 1).padStart(2, '0')}-${String(NOW.getDate()).padStart(2, '0')}`
@@ -339,11 +479,11 @@ describe('buildDailyPlan', () => {
         { id: 'b', sessionId: 'b', localDate, activeMs: 7 * 60000, updatedAt: NOW.toISOString() },
       ] }
     const plan = buildDailyPlan(input)
-    expect(plan).toMatchObject({ usedMs: 15 * 60000, remainingMs: 5 * 60000, newItemCount: 3, totalTasks: 6, estimatedMinutes: 4.5 })
+    expect(plan).toMatchObject({ usedMs: 15 * 60000, remainingMs: 5 * 60000, newItemCount: 10, totalTasks: 20, estimatedMinutes: 15 })
     expect(buildDailyPlan({ ...input, timeEntries: [], additionalMinutes: 5 }).remainingMs).toBe(5 * 60000)
     const exhausted = { ...input, timeEntries: [...input.timeEntries,
       { id: 'c', sessionId: 'c', localDate, activeMs: 5 * 60000, updatedAt: NOW.toISOString() }] }
-    expect(buildDailyPlan(exhausted).tasks).toEqual([])
+    expect(buildDailyPlan(exhausted)).toMatchObject({ remainingMs: 0, newItemCount: 10, totalTasks: 20 })
     expect(buildDailyPlan({ ...exhausted, additionalMinutes: 5 }).remainingMs).toBe(5 * 60000)
   })
 
@@ -384,9 +524,11 @@ describe('buildDailyPlan', () => {
   })
 
   it.each([
-    { remainingMinutes: 1, selected: ['recall-a:receptive'], overflow: 2 },
-    { remainingMinutes: 1.5, selected: ['recall-a:receptive', 'recall-b:productive'], overflow: 1 },
-  ])('skips a usage task that does not fit and preserves the priority of smaller due tasks: %j', ({ remainingMinutes, selected, overflow }) => {
+    { remainingMinutes: 1 },
+    { remainingMinutes: 1.5 },
+    { remainingMinutes: 0 },
+    { remainingMinutes: -10 },
+  ])('includes all due work regardless of recorded learning time: %j', ({ remainingMinutes }) => {
     const usage = makeItem('usage', 'daily', { usagePrompts: [{ id: 'usage-prompt', type: 'cloze',
       prompt: 'Use ___.', answer: 'usage', modelAnswer: 'Use usage.', checkpoints: ['usage'] }] })
     const items = [usage, makeItem('recall-a'), makeItem('recall-b'), makeItem('fresh')]
@@ -400,10 +542,10 @@ describe('buildDailyPlan', () => {
     const plan = buildDailyPlan({ items, tracks, settings: settings({ dailyMinutes: 5, newItemsPerDay: 1 }),
       attempts: [], timeEntries: [{ id: 'session', sessionId: 'session', localDate,
         activeMs: (5 - remainingMinutes) * 60000, updatedAt: NOW.toISOString() }], now: NOW })
-    expect(plan.tasks.map((task) => task.trackId)).toEqual(selected)
-    expect(plan.overflowDueCount).toBe(overflow)
-    expect(plan.estimatedMinutes).toBe(selected.length * 0.75)
-    expect(plan.newItemCount).toBe(0)
+    expect(plan.tasks.filter((task) => !task.isNew).map((task) => task.trackId)).toEqual(['usage:usage', 'recall-a:receptive', 'recall-b:productive'])
+    expect(plan.overflowDueCount).toBe(0)
+    expect(plan.estimatedMinutes).toBe(5)
+    expect(plan.newItemCount).toBe(1)
   })
 })
 

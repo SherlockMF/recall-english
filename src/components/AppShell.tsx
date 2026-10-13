@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { Icon } from './Icon'
 
-export type AppTab = 'today' | 'add' | 'library'
+export type AppTab = 'today' | 'add' | 'library' | 'voice'
 
 interface AppShellProps {
   activeTab: AppTab
@@ -10,10 +10,11 @@ interface AppShellProps {
   onOpenSettings: () => void
 }
 
-const navItems: { id: AppTab; label: string; icon: 'home' | 'plus' | 'library' }[] = [
+const navItems: { id: AppTab; label: string; icon: 'home' | 'plus' | 'library' | 'mic' }[] = [
   { id: 'today', label: '今天', icon: 'home' },
   { id: 'add', label: '添加', icon: 'plus' },
   { id: 'library', label: '词库', icon: 'library' },
+  { id: 'voice', label: '口语', icon: 'mic' },
 ]
 
 export function AppShell({

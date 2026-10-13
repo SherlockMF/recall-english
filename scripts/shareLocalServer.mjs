@@ -1,6 +1,6 @@
 /**
  * Local share server: static app/ + API proxies matching vite.config.ts.
- * Zero dependencies (Node.js built-ins only).
+ * The share bundle includes the ws runtime used by voice messages.
  *
  * Usage: node server.mjs
  * Env: PORT=4173
@@ -10,6 +10,7 @@ import { request as httpsRequest } from 'node:https'
 import { createReadStream, existsSync, statSync } from 'node:fs'
 import { dirname, extname, join, normalize, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { loadVoiceEnv, createVoiceHandler } from './qwenVoiceServer.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PORT = Number(process.env.PORT || 4173)
@@ -23,6 +24,9 @@ if (!ROOT) {
   console.error('Cannot find app/ or dist/ next to server.mjs')
   process.exit(1)
 }
+
+const voiceDirectory = dirname(ROOT)
+const voice = createVoiceHandler({ env: loadVoiceEnv(voiceDirectory), credentialFile: join(voiceDirectory, '.env.voice.local.json') })
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -133,18 +137,25 @@ function serveStatic(req, res) {
   createReadStream(filePath).pipe(res)
 }
 
-const server = createServer((req, res) => {
-  const path = (req.url || '/').split('?')[0] || '/'
-  const rule = PROXIES.find((entry) => path === entry.prefix || path.startsWith(`${entry.prefix}/`))
-  if (rule) {
-    proxyRequest(req, res, rule)
-    return
+const server = createServer(async (req, res) => {
+  try {
+    if (await voice(req, res)) return
+    const path = (req.url || '/').split('?')[0] || '/'
+    const rule = PROXIES.find((entry) => path === entry.prefix || path.startsWith(`${entry.prefix}/`))
+    if (rule) {
+      proxyRequest(req, res, rule)
+      return
+    }
+    serveStatic(req, res)
+  } catch (error) {
+    if (res.headersSent) { res.destroy(); return }
+    send(res, error instanceof URIError ? 400 : 500, error instanceof URIError ? 'Bad request' : 'Internal server error')
   }
-  serveStatic(req, res)
 })
 
+server.once('close', voice.close)
 server.listen(PORT, '127.0.0.1', () => {
-  console.log(`Recall English: http://127.0.0.1:${PORT}`)
+  console.log(`Recall English: http://127.0.0.1:${server.address().port}`)
   console.log('Proxies: /api/dictionary /api/youdao /api/deepseek')
   console.log('Close this window to stop.')
 })

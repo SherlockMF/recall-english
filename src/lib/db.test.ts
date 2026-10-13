@@ -24,10 +24,12 @@ import {
   getSettings,
   getDatabase,
   getUserDataSnapshot,
+  hydrateWord,
   initializeDatabase,
   normalizeUserSettings,
   putStudyTimeEntry,
   recordReview,
+  removeWordFromList,
   replaceUserData,
   setDictionaryCache,
   writeBatch,
@@ -94,6 +96,9 @@ function attempt(overrides: Partial<ReviewAttempt> = {}): ReviewAttempt {
 }
 
 describe('IndexedDB persistence', () => {
+  it('does not mark words with no memberships as priority words', () => {
+    expect(hydrateWord(word({ source: 'custom' }), []).listSlugs).toEqual([])
+  })
   beforeEach(async () => {
     await closeDatabase()
     await deleteDB(DATABASE_NAME)
@@ -102,6 +107,23 @@ describe('IndexedDB persistence', () => {
   afterEach(async () => {
     await closeDatabase()
     await deleteDB(DATABASE_NAME)
+  })
+
+  it('removes the last priority membership, including legacy ids, without removing the custom word or learning history', async () => {
+    await writeBatch({ words: [word({ source: 'custom' })], lists: ALL_VOCABULARY_LISTS,
+      memberships: [{ id: 'legacy-priority-membership', wordId: word().id,
+        listId: LIST_IDS['my-vocabulary'], priority: 1, sortOrder: 0 }],
+      tracks: [track({ reps: 2 })], attempts: [attempt()] })
+    const before = await getUserDataSnapshot()
+    await removeWordFromList(word().id, 'my-vocabulary')
+    await closeDatabase()
+    const after = await getUserDataSnapshot()
+    expect(after.vocabulary[0].listSlugs).toEqual([])
+    expect(after.words).toEqual(before.words)
+    expect(after.tracks).toEqual(before.tracks)
+    expect(after.attempts).toEqual(before.attempts)
+    await removeWordFromList(word().id, 'my-vocabulary')
+    expect((await getUserDataSnapshot()).memberships).toEqual([])
   })
 
   it('migrates the core budget without adding extension time and bounds settings', () => {
@@ -331,6 +353,47 @@ describe('IndexedDB persistence', () => {
     expect(await getSettings()).toEqual(expect.objectContaining({ seedContentRevision: '5.3.0' }))
   })
 
+  it('refreshes unedited seed content while preserving all personal study choices', async () => {
+    await initializeDatabase([word()], [], [track()], { ...DEFAULT_SETTINGS, seedContentRevision: 'old' })
+    const personal = { ...word(), status: 'paused' as const, priority: 8, knownAt: timestamp,
+      vocabularyLevel: 'C1' as const, contentEdited: false, updatedAt: '2026-10-12T00:00:00.000Z' }
+    await writeBatch({ words: [personal] })
+    await initializeDatabase([word({ enDefinition: 'Corrected source definition' })], [], undefined,
+      { ...DEFAULT_SETTINGS, seedContentRevision: 'new' })
+    expect((await getUserDataSnapshot()).words[0]).toMatchObject({ enDefinition: 'Corrected source definition',
+      status: 'paused', priority: 8, knownAt: timestamp, vocabularyLevel: 'C1' })
+    expect(await getAllLearningTracks()).toEqual([track()])
+  })
+
+  it('keeps explicitly edited seed bodies through an upgrade', async () => {
+    await initializeDatabase([word()], [], [track()], { ...DEFAULT_SETTINGS, seedContentRevision: 'old' })
+    const edited = { ...word(), contentEdited: true, enDefinition: 'Personal definition', zhGloss: '个人释义' }
+    await writeBatch({ words: [edited] })
+    await initializeDatabase([word({ enDefinition: 'Replacement source' })], [], undefined,
+      { ...DEFAULT_SETTINGS, seedContentRevision: 'new' })
+    expect((await getUserDataSnapshot()).words[0]).toEqual(edited)
+    expect(await getAllLearningTracks()).toEqual([track()])
+  })
+
+  it('conservatively retains legacy edits without an edit marker', async () => {
+    await initializeDatabase([word()], [], undefined, { ...DEFAULT_SETTINGS, seedContentRevision: 'old' })
+    const edited = word({ enDefinition: 'Legacy personal definition', updatedAt: '2026-10-12T00:00:00.000Z' })
+    await writeBatch({ words: [edited] })
+    await initializeDatabase([word({ enDefinition: 'Replacement source' })], [], undefined,
+      { ...DEFAULT_SETTINGS, seedContentRevision: 'new' })
+    expect((await getUserDataSnapshot()).words[0]).toMatchObject({ ...edited, contentEdited: true })
+  })
+
+  it('continues refreshing untouched source content across successive timestamp changes', async () => {
+    await initializeDatabase([word()], [], undefined, { ...DEFAULT_SETTINGS, seedContentRevision: 'one' })
+    for (const [revision, changedAt] of [['two', '2026-09-01T00:00:00.000Z'], ['three', '2026-10-01T00:00:00.000Z']]) {
+      await initializeDatabase([word({ enDefinition: revision, createdAt: changedAt, updatedAt: changedAt })], [], undefined,
+        { ...DEFAULT_SETTINGS, seedContentRevision: revision })
+      expect((await getUserDataSnapshot()).words[0]).toMatchObject({ enDefinition: revision, createdAt: timestamp,
+        updatedAt: changedAt, contentEdited: false })
+    }
+  })
+
   it('merges newly added seed words into an existing library', async () => {
     await initializeDatabase(
       [word()],
@@ -537,6 +600,15 @@ describe('IndexedDB persistence', () => {
       expect.objectContaining({ id: 'vocabulary-1:receptive' }),
       expect.objectContaining({ id: 'vocabulary-1:productive' }),
     ]))
+  })
+
+  it('preserves personal known and level overrides when seed bodies refresh; normalizes legacy difficulty settings', async () => {
+    await writeBatch({ words: [word({ knownAt: timestamp, vocabularyLevel: 'C1' })],
+      settings: { ...DEFAULT_SETTINGS, seedContentRevision: 'old' } })
+    await initializeDatabase([word({ zhGloss: '新定义' })], [], undefined, { ...DEFAULT_SETTINGS, seedContentRevision: 'new' }, ALL_VOCABULARY_LISTS)
+    expect((await getUserDataSnapshot()).words[0]).toMatchObject({ knownAt: timestamp, vocabularyLevel: 'C1', zhGloss: '新定义' })
+    expect(normalizeUserSettings({})).toMatchObject({ vocabularyLevel: 'B1', adaptiveDifficulty: true })
+    expect(normalizeUserSettings({ vocabularyLevel: 'C9' as never, difficultyResetAt: 'invalid' })).toMatchObject({ vocabularyLevel: 'B1', difficultyResetAt: undefined })
   })
 
   it('skips heavy seed writes when revision matches and no new seed ids appear', async () => {

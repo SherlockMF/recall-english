@@ -38,6 +38,7 @@ export async function generateUsagePromptsWithLlm(item: VocabularyItem): Promise
         role: 'system',
         content: [
           'Create active-recall usage prompts for one English expression.',
+          'Both prompts must test the specified lexical sense only. Do not switch to another meaning of the expression. State the intended sense in the Chinese sentence scenario.',
           'Return ONLY JSON: {"prompts":[...]} with exactly 2 items:',
           '1) type cloze with blank _____ and answer equal to the expression',
           '2) type sentence with a Chinese scenario prompt',
@@ -49,6 +50,7 @@ export async function generateUsagePromptsWithLlm(item: VocabularyItem): Promise
         role: 'user',
         content: JSON.stringify({
           expression: item.expression,
+          senseKey: item.senseKey,
           zhGloss: item.zhGloss,
           enDefinition: item.enDefinition,
           partOfSpeech: item.partOfSpeech,

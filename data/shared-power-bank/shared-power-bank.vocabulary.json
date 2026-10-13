@@ -1,0 +1,2744 @@
+{
+  "version": 1,
+  "exportedAt": "2026-10-11T00:00:00Z",
+  "words": [
+    {
+      "lemma": "shared power bank",
+      "senseKey": "shared-power-bank:shared-power-bank",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "shared power bank",
+          "checkpoints": [
+            "shared power bank"
+          ],
+          "modelAnswer": "We want to expand our shared power bank network into shopping malls.",
+          "id": "shared-power-bank-shared-power-bank-cloze",
+          "prompt": "We want to expand our _____ network into shopping malls."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"shared power bank\" 表达“共享充电宝”，写一个完整句子。",
+          "modelAnswer": "We want to expand our shared power bank network into shopping malls.",
+          "checkpoints": [
+            "shared power bank"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-shared-power-bank-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "共享充电宝"
+      ],
+      "expression": "shared power bank",
+      "examples": [
+        {
+          "zh": "我们想把共享充电宝网络拓展到购物中心。",
+          "en": "We want to expand our shared power bank network into shopping malls."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "shared power bank"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-shared-power-bank",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "共享充电宝",
+      "enDefinition": "a portable battery offered for short-term rental through a shared network"
+    },
+    {
+      "lemma": "power bank rental service",
+      "senseKey": "shared-power-bank:power-bank-rental-service",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "power bank rental service",
+          "checkpoints": [
+            "power bank rental service"
+          ],
+          "modelAnswer": "Our power bank rental service helps visitors charge their phones while shopping.",
+          "id": "shared-power-bank-power-bank-rental-service-cloze",
+          "prompt": "Our _____ helps visitors charge their phones while shopping."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"power bank rental service\" 表达“充电宝租借服务”，写一个完整句子。",
+          "modelAnswer": "Our power bank rental service helps visitors charge their phones while shopping.",
+          "checkpoints": [
+            "power bank rental service"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-power-bank-rental-service-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "充电宝租借服务"
+      ],
+      "expression": "power bank rental service",
+      "examples": [
+        {
+          "zh": "我们的充电宝租借服务让顾客购物时也能给手机充电。",
+          "en": "Our power bank rental service helps visitors charge their phones while shopping."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "power bank rental service"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-power-bank-rental-service",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "充电宝租借服务",
+      "enDefinition": "a service that lets customers borrow portable batteries for a fee"
+    },
+    {
+      "lemma": "charging station",
+      "senseKey": "shared-power-bank:charging-station",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "charging station",
+          "checkpoints": [
+            "charging station"
+          ],
+          "modelAnswer": "Please place the charging station near the restaurant entrance.",
+          "id": "shared-power-bank-charging-station-cloze",
+          "prompt": "Please place the _____ near the restaurant entrance."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"charging station\" 表达“充电宝租借站点”，写一个完整句子。",
+          "modelAnswer": "Please place the charging station near the restaurant entrance.",
+          "checkpoints": [
+            "charging station"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-charging-station-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "充电宝租借站点"
+      ],
+      "expression": "charging station",
+      "examples": [
+        {
+          "zh": "请把充电宝租借站点设在餐厅入口附近。",
+          "en": "Please place the charging station near the restaurant entrance."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "charging station"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-charging-station",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "充电宝租借站点",
+      "enDefinition": "a location with a cabinet where rental power banks can be borrowed and returned"
+    },
+    {
+      "lemma": "rental cabinet",
+      "senseKey": "shared-power-bank:rental-cabinet",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "rental cabinet",
+          "checkpoints": [
+            "rental cabinet"
+          ],
+          "modelAnswer": "This rental cabinet holds twelve power banks.",
+          "id": "shared-power-bank-rental-cabinet-cloze",
+          "prompt": "This _____ holds twelve power banks."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"rental cabinet\" 表达“租借柜机”，写一个完整句子。",
+          "modelAnswer": "This rental cabinet holds twelve power banks.",
+          "checkpoints": [
+            "rental cabinet"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-rental-cabinet-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "租借柜机"
+      ],
+      "expression": "rental cabinet",
+      "examples": [
+        {
+          "zh": "这台租借柜机可容纳十二个充电宝。",
+          "en": "This rental cabinet holds twelve power banks."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "rental cabinet"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-rental-cabinet",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "租借柜机",
+      "enDefinition": "a cabinet that stores and releases portable batteries for rental"
+    },
+    {
+      "lemma": "docking slot",
+      "senseKey": "shared-power-bank:docking-slot",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "docking slot",
+          "checkpoints": [
+            "docking slot"
+          ],
+          "modelAnswer": "Leave a docking slot available for customers returning a power bank.",
+          "id": "shared-power-bank-docking-slot-cloze",
+          "prompt": "Leave a _____ available for customers returning a power bank."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"docking slot\" 表达“充电宝插槽”，写一个完整句子。",
+          "modelAnswer": "Leave a docking slot available for customers returning a power bank.",
+          "checkpoints": [
+            "docking slot"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-docking-slot-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "充电宝插槽"
+      ],
+      "expression": "docking slot",
+      "examples": [
+        {
+          "zh": "为归还充电宝的顾客留一个可用插槽。",
+          "en": "Leave a docking slot available for customers returning a power bank."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "docking slot"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-docking-slot",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "充电宝插槽",
+      "enDefinition": "a space in a cabinet where a power bank is inserted for charging and return"
+    },
+    {
+      "lemma": "merchant partnership",
+      "senseKey": "shared-power-bank:merchant-partnership",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "merchant partnership",
+          "checkpoints": [
+            "merchant partnership"
+          ],
+          "modelAnswer": "A clear merchant partnership helps both sides agree on responsibilities.",
+          "id": "shared-power-bank-merchant-partnership-cloze",
+          "prompt": "A clear _____ helps both sides agree on responsibilities."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"merchant partnership\" 表达“商户合作”，写一个完整句子。",
+          "modelAnswer": "A clear merchant partnership helps both sides agree on responsibilities.",
+          "checkpoints": [
+            "merchant partnership"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-merchant-partnership-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "商户合作"
+      ],
+      "expression": "merchant partnership",
+      "examples": [
+        {
+          "zh": "明确的商户合作关系有助于双方商定各自职责。",
+          "en": "A clear merchant partnership helps both sides agree on responsibilities."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "merchant partnership"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-merchant-partnership",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "商户合作",
+      "enDefinition": "a business relationship with a merchant that hosts a rental station"
+    },
+    {
+      "lemma": "venue onboarding",
+      "senseKey": "shared-power-bank:venue-onboarding",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "venue onboarding",
+          "checkpoints": [
+            "venue onboarding"
+          ],
+          "modelAnswer": "Venue onboarding includes checking the power supply and training the staff.",
+          "id": "shared-power-bank-venue-onboarding-cloze",
+          "prompt": "_____ includes checking the power supply and training the staff."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"venue onboarding\" 表达“合作场所接入”，写一个完整句子。",
+          "modelAnswer": "Venue onboarding includes checking the power supply and training the staff.",
+          "checkpoints": [
+            "venue onboarding"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-venue-onboarding-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "合作场所接入"
+      ],
+      "expression": "venue onboarding",
+      "examples": [
+        {
+          "zh": "合作场所接入包括检查供电和培训员工。",
+          "en": "Venue onboarding includes checking the power supply and training the staff."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "venue onboarding"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-venue-onboarding",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "合作场所接入",
+      "enDefinition": "the process of registering and preparing a new venue to host a station"
+    },
+    {
+      "lemma": "site acquisition",
+      "senseKey": "shared-power-bank:site-acquisition",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "site acquisition",
+          "checkpoints": [
+            "site acquisition"
+          ],
+          "modelAnswer": "Our site acquisition team is approaching restaurants and hotels.",
+          "id": "shared-power-bank-site-acquisition-cloze",
+          "prompt": "Our _____ team is approaching restaurants and hotels."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"site acquisition\" 表达“点位拓展”，写一个完整句子。",
+          "modelAnswer": "Our site acquisition team is approaching restaurants and hotels.",
+          "checkpoints": [
+            "site acquisition"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-site-acquisition-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "点位拓展"
+      ],
+      "expression": "site acquisition",
+      "examples": [
+        {
+          "zh": "我们的点位拓展团队正在洽谈餐厅和酒店。",
+          "en": "Our site acquisition team is approaching restaurants and hotels."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "site acquisition"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-site-acquisition",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "点位拓展",
+      "enDefinition": "the process of securing locations for placing rental stations"
+    },
+    {
+      "lemma": "foot traffic",
+      "senseKey": "shared-power-bank:foot-traffic",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "foot traffic",
+          "checkpoints": [
+            "foot traffic"
+          ],
+          "modelAnswer": "We compare foot traffic before choosing a new location.",
+          "id": "shared-power-bank-foot-traffic-cloze",
+          "prompt": "We compare _____ before choosing a new location."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"foot traffic\" 表达“客流量”，写一个完整句子。",
+          "modelAnswer": "We compare foot traffic before choosing a new location.",
+          "checkpoints": [
+            "foot traffic"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-foot-traffic-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "客流量"
+      ],
+      "expression": "foot traffic",
+      "examples": [
+        {
+          "zh": "选择新点位前，我们会比较客流量。",
+          "en": "We compare foot traffic before choosing a new location."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "foot traffic"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-foot-traffic",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "客流量",
+      "enDefinition": "the number or flow of people passing through a location"
+    },
+    {
+      "lemma": "dwell time",
+      "senseKey": "shared-power-bank:dwell-time",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "dwell time",
+          "checkpoints": [
+            "dwell time"
+          ],
+          "modelAnswer": "Longer dwell time may give visitors more reason to rent a power bank.",
+          "id": "shared-power-bank-dwell-time-cloze",
+          "prompt": "Longer _____ may give visitors more reason to rent a power bank."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"dwell time\" 表达“顾客停留时长”，写一个完整句子。",
+          "modelAnswer": "Longer dwell time may give visitors more reason to rent a power bank.",
+          "checkpoints": [
+            "dwell time"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-dwell-time-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "顾客停留时长"
+      ],
+      "expression": "dwell time",
+      "examples": [
+        {
+          "zh": "较长的顾客停留时长可能增加租借充电宝的需求。",
+          "en": "Longer dwell time may give visitors more reason to rent a power bank."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "dwell time"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-dwell-time",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "顾客停留时长",
+      "enDefinition": "the amount of time visitors spend at a venue"
+    },
+    {
+      "lemma": "placement agreement",
+      "senseKey": "shared-power-bank:placement-agreement",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "placement agreement",
+          "checkpoints": [
+            "placement agreement"
+          ],
+          "modelAnswer": "The placement agreement states who handles maintenance.",
+          "id": "shared-power-bank-placement-agreement-cloze",
+          "prompt": "The _____ states who handles maintenance."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"placement agreement\" 表达“设备投放协议”，写一个完整句子。",
+          "modelAnswer": "The placement agreement states who handles maintenance.",
+          "checkpoints": [
+            "placement agreement"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-placement-agreement-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "设备投放协议"
+      ],
+      "expression": "placement agreement",
+      "examples": [
+        {
+          "zh": "设备投放协议明确由谁负责维护。",
+          "en": "The placement agreement states who handles maintenance."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "placement agreement"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-placement-agreement",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "设备投放协议",
+      "enDefinition": "an agreement covering where a station is installed and how it is managed"
+    },
+    {
+      "lemma": "exclusive partnership",
+      "senseKey": "shared-power-bank:exclusive-partnership",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "exclusive partnership",
+          "checkpoints": [
+            "exclusive partnership"
+          ],
+          "modelAnswer": "The merchant asked whether the exclusive partnership covers all branches.",
+          "id": "shared-power-bank-exclusive-partnership-cloze",
+          "prompt": "The merchant asked whether the _____ covers all branches."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"exclusive partnership\" 表达“独家合作”，写一个完整句子。",
+          "modelAnswer": "The merchant asked whether the exclusive partnership covers all branches.",
+          "checkpoints": [
+            "exclusive partnership"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-exclusive-partnership-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "独家合作"
+      ],
+      "expression": "exclusive partnership",
+      "examples": [
+        {
+          "zh": "商户询问独家合作是否覆盖所有分店。",
+          "en": "The merchant asked whether the exclusive partnership covers all branches."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "exclusive partnership"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-exclusive-partnership",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "独家合作",
+      "enDefinition": "a partnership that gives one provider exclusive rights within an agreed scope"
+    },
+    {
+      "lemma": "network partner",
+      "senseKey": "shared-power-bank:network-partner",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "network partner",
+          "checkpoints": [
+            "network partner"
+          ],
+          "modelAnswer": "The network partner manages local merchant relationships.",
+          "id": "shared-power-bank-network-partner-cloze",
+          "prompt": "The _____ manages local merchant relationships."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"network partner\" 表达“网络合作运营商”，写一个完整句子。",
+          "modelAnswer": "The network partner manages local merchant relationships.",
+          "checkpoints": [
+            "network partner"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-network-partner-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "网络合作运营商"
+      ],
+      "expression": "network partner",
+      "examples": [
+        {
+          "zh": "网络合作运营商负责维护当地商户关系。",
+          "en": "The network partner manages local merchant relationships."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "network partner"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-network-partner",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "网络合作运营商",
+      "enDefinition": "a partner that develops or operates locations within a shared rental network"
+    },
+    {
+      "lemma": "rollout plan",
+      "senseKey": "shared-power-bank:rollout-plan",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "rollout plan",
+          "checkpoints": [
+            "rollout plan"
+          ],
+          "modelAnswer": "Our rollout plan starts with a small group of high-traffic venues.",
+          "id": "shared-power-bank-rollout-plan-cloze",
+          "prompt": "Our _____ starts with a small group of high-traffic venues."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"rollout plan\" 表达“分阶段投放计划”，写一个完整句子。",
+          "modelAnswer": "Our rollout plan starts with a small group of high-traffic venues.",
+          "checkpoints": [
+            "rollout plan"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-rollout-plan-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "分阶段投放计划"
+      ],
+      "expression": "rollout plan",
+      "examples": [
+        {
+          "zh": "我们的分阶段投放计划先从一小批高客流场所开始。",
+          "en": "Our rollout plan starts with a small group of high-traffic venues."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "rollout plan"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-rollout-plan",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "分阶段投放计划",
+      "enDefinition": "a plan for introducing stations across locations in stages"
+    },
+    {
+      "lemma": "pilot program",
+      "senseKey": "shared-power-bank:pilot-program",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "pilot program",
+          "checkpoints": [
+            "pilot program"
+          ],
+          "modelAnswer": "The pilot program will help us understand rental demand.",
+          "id": "shared-power-bank-pilot-program-cloze",
+          "prompt": "The _____ will help us understand rental demand."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"pilot program\" 表达“试点项目”，写一个完整句子。",
+          "modelAnswer": "The pilot program will help us understand rental demand.",
+          "checkpoints": [
+            "pilot program"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-pilot-program-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "试点项目"
+      ],
+      "expression": "pilot program",
+      "examples": [
+        {
+          "zh": "试点项目将帮助我们了解租借需求。",
+          "en": "The pilot program will help us understand rental demand."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "pilot program"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-pilot-program",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "试点项目",
+      "enDefinition": "a limited initial project used to test a service before wider expansion"
+    },
+    {
+      "lemma": "revenue sharing",
+      "senseKey": "shared-power-bank:revenue-sharing",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "revenue sharing",
+          "checkpoints": [
+            "revenue sharing"
+          ],
+          "modelAnswer": "We need to define the revenue sharing basis before signing the agreement.",
+          "id": "shared-power-bank-revenue-sharing-cloze",
+          "prompt": "We need to define the _____ basis before signing the agreement."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"revenue sharing\" 表达“收入分成”，写一个完整句子。",
+          "modelAnswer": "We need to define the revenue sharing basis before signing the agreement.",
+          "checkpoints": [
+            "revenue sharing"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-revenue-sharing-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "收入分成"
+      ],
+      "expression": "revenue sharing",
+      "examples": [
+        {
+          "zh": "签署协议前，我们需要明确收入分成的计算基础。",
+          "en": "We need to define the revenue sharing basis before signing the agreement."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "revenue sharing"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-revenue-sharing",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "收入分成",
+      "enDefinition": "an arrangement for dividing an agreed revenue base between partners"
+    },
+    {
+      "lemma": "commission rate",
+      "senseKey": "shared-power-bank:commission-rate",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "commission rate",
+          "checkpoints": [
+            "commission rate"
+          ],
+          "modelAnswer": "The commission rate applies to the revenue specified in the agreement.",
+          "id": "shared-power-bank-commission-rate-cloze",
+          "prompt": "The _____ applies to the revenue specified in the agreement."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"commission rate\" 表达“佣金比例”，写一个完整句子。",
+          "modelAnswer": "The commission rate applies to the revenue specified in the agreement.",
+          "checkpoints": [
+            "commission rate"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-commission-rate-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "佣金比例"
+      ],
+      "expression": "commission rate",
+      "examples": [
+        {
+          "zh": "佣金比例适用于协议约定的收入。",
+          "en": "The commission rate applies to the revenue specified in the agreement."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "commission rate"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-commission-rate",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "佣金比例",
+      "enDefinition": "the percentage used to calculate a partner's commission"
+    },
+    {
+      "lemma": "rental fee",
+      "senseKey": "shared-power-bank:rental-fee",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "rental fee",
+          "checkpoints": [
+            "rental fee"
+          ],
+          "modelAnswer": "The rental fee should be clearly displayed before the customer starts.",
+          "id": "shared-power-bank-rental-fee-cloze",
+          "prompt": "The _____ should be clearly displayed before the customer starts."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"rental fee\" 表达“租借费用”，写一个完整句子。",
+          "modelAnswer": "The rental fee should be clearly displayed before the customer starts.",
+          "checkpoints": [
+            "rental fee"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-rental-fee-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "租借费用"
+      ],
+      "expression": "rental fee",
+      "examples": [
+        {
+          "zh": "顾客开始租借前，应清晰显示租借费用。",
+          "en": "The rental fee should be clearly displayed before the customer starts."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "rental fee"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-rental-fee",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "租借费用",
+      "enDefinition": "the amount charged for borrowing a power bank"
+    },
+    {
+      "lemma": "billing increment",
+      "senseKey": "shared-power-bank:billing-increment",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "billing increment",
+          "checkpoints": [
+            "billing increment"
+          ],
+          "modelAnswer": "The app explains the billing increment on the payment screen.",
+          "id": "shared-power-bank-billing-increment-cloze",
+          "prompt": "The app explains the _____ on the payment screen."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"billing increment\" 表达“计费时间单位”，写一个完整句子。",
+          "modelAnswer": "The app explains the billing increment on the payment screen.",
+          "checkpoints": [
+            "billing increment"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-billing-increment-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "计费时间单位"
+      ],
+      "expression": "billing increment",
+      "examples": [
+        {
+          "zh": "应用在支付页面说明计费时间单位。",
+          "en": "The app explains the billing increment on the payment screen."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "billing increment"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-billing-increment",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "计费时间单位",
+      "enDefinition": "the time interval used to calculate a rental charge"
+    },
+    {
+      "lemma": "daily price cap",
+      "senseKey": "shared-power-bank:daily-price-cap",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "daily price cap",
+          "checkpoints": [
+            "daily price cap"
+          ],
+          "modelAnswer": "Customers should be able to see the daily price cap before renting.",
+          "id": "shared-power-bank-daily-price-cap-cloze",
+          "prompt": "Customers should be able to see the _____ before renting."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"daily price cap\" 表达“每日费用上限”，写一个完整句子。",
+          "modelAnswer": "Customers should be able to see the daily price cap before renting.",
+          "checkpoints": [
+            "daily price cap"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-daily-price-cap-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "每日费用上限"
+      ],
+      "expression": "daily price cap",
+      "examples": [
+        {
+          "zh": "顾客应能在租借前看到每日费用上限。",
+          "en": "Customers should be able to see the daily price cap before renting."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "daily price cap"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-daily-price-cap",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "每日费用上限",
+      "enDefinition": "the maximum charge allowed for a rental during a defined daily period"
+    },
+    {
+      "lemma": "deposit-free rental",
+      "senseKey": "shared-power-bank:deposit-free-rental",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "deposit-free rental",
+          "checkpoints": [
+            "deposit-free rental"
+          ],
+          "modelAnswer": "Check whether deposit-free rental is available for your account.",
+          "id": "shared-power-bank-deposit-free-rental-cloze",
+          "prompt": "Check whether _____ is available for your account."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"deposit-free rental\" 表达“免押金租借”，写一个完整句子。",
+          "modelAnswer": "Check whether deposit-free rental is available for your account.",
+          "checkpoints": [
+            "deposit-free rental"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-deposit-free-rental-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "免押金租借"
+      ],
+      "expression": "deposit-free rental",
+      "examples": [
+        {
+          "zh": "请检查你的账户是否支持免押金租借。",
+          "en": "Check whether deposit-free rental is available for your account."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "deposit-free rental"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-deposit-free-rental",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "免押金租借",
+      "enDefinition": "a rental that does not require an upfront deposit under the applicable conditions"
+    },
+    {
+      "lemma": "qr-code rental",
+      "senseKey": "shared-power-bank:qr-code-rental",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "QR-code rental",
+          "checkpoints": [
+            "QR-code rental"
+          ],
+          "modelAnswer": "QR-code rental lets customers start without asking the staff for help.",
+          "id": "shared-power-bank-qr-code-rental-cloze",
+          "prompt": "_____ lets customers start without asking the staff for help."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"QR-code rental\" 表达“扫码租借”，写一个完整句子。",
+          "modelAnswer": "QR-code rental lets customers start without asking the staff for help.",
+          "checkpoints": [
+            "QR-code rental"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-qr-code-rental-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "扫码租借"
+      ],
+      "expression": "QR-code rental",
+      "examples": [
+        {
+          "zh": "扫码租借让顾客无需向员工求助就能开始租借。",
+          "en": "QR-code rental lets customers start without asking the staff for help."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "QR-code rental"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-qr-code-rental",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "扫码租借",
+      "enDefinition": "a rental started by scanning a QR code"
+    },
+    {
+      "lemma": "cross-location return",
+      "senseKey": "shared-power-bank:cross-location-return",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "cross-location return",
+          "checkpoints": [
+            "cross-location return"
+          ],
+          "modelAnswer": "Cross-location return is useful when customers leave the original venue.",
+          "id": "shared-power-bank-cross-location-return-cloze",
+          "prompt": "_____ is useful when customers leave the original venue."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"cross-location return\" 表达“异地归还”，写一个完整句子。",
+          "modelAnswer": "Cross-location return is useful when customers leave the original venue.",
+          "checkpoints": [
+            "cross-location return"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-cross-location-return-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "异地归还"
+      ],
+      "expression": "cross-location return",
+      "examples": [
+        {
+          "zh": "顾客离开原场所后，异地归还会很方便。",
+          "en": "Cross-location return is useful when customers leave the original venue."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "cross-location return"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-cross-location-return",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "异地归还",
+      "enDefinition": "returning a rented power bank to another compatible station"
+    },
+    {
+      "lemma": "refund request",
+      "senseKey": "shared-power-bank:refund-request",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "refund request",
+          "checkpoints": [
+            "refund request"
+          ],
+          "modelAnswer": "Customer support will review the refund request and the rental record.",
+          "id": "shared-power-bank-refund-request-cloze",
+          "prompt": "Customer support will review the _____ and the rental record."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"refund request\" 表达“退款申请”，写一个完整句子。",
+          "modelAnswer": "Customer support will review the refund request and the rental record.",
+          "checkpoints": [
+            "refund request"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-refund-request-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "退款申请"
+      ],
+      "expression": "refund request",
+      "examples": [
+        {
+          "zh": "客服会审核退款申请和租借记录。",
+          "en": "Customer support will review the refund request and the rental record."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "refund request"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-refund-request",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "退款申请",
+      "enDefinition": "a customer's request to return a payment"
+    },
+    {
+      "lemma": "utilization rate",
+      "senseKey": "shared-power-bank:utilization-rate",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "utilization rate",
+          "checkpoints": [
+            "utilization rate"
+          ],
+          "modelAnswer": "We track utilization rate to compare station performance.",
+          "id": "shared-power-bank-utilization-rate-cloze",
+          "prompt": "We track _____ to compare station performance."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"utilization rate\" 表达“设备利用率”，写一个完整句子。",
+          "modelAnswer": "We track utilization rate to compare station performance.",
+          "checkpoints": [
+            "utilization rate"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-utilization-rate-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "设备利用率"
+      ],
+      "expression": "utilization rate",
+      "examples": [
+        {
+          "zh": "我们跟踪设备利用率来比较站点表现。",
+          "en": "We track utilization rate to compare station performance."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "utilization rate"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-utilization-rate",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "设备利用率",
+      "enDefinition": "a measure of how much available equipment is used during a specified period"
+    },
+    {
+      "lemma": "rental frequency",
+      "senseKey": "shared-power-bank:rental-frequency",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "rental frequency",
+          "checkpoints": [
+            "rental frequency"
+          ],
+          "modelAnswer": "Rental frequency rises during busy evening hours at this venue.",
+          "id": "shared-power-bank-rental-frequency-cloze",
+          "prompt": "_____ rises during busy evening hours at this venue."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"rental frequency\" 表达“租借频次”，写一个完整句子。",
+          "modelAnswer": "Rental frequency rises during busy evening hours at this venue.",
+          "checkpoints": [
+            "rental frequency"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-rental-frequency-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "租借频次"
+      ],
+      "expression": "rental frequency",
+      "examples": [
+        {
+          "zh": "这个场所在晚间繁忙时段的租借频次会上升。",
+          "en": "Rental frequency rises during busy evening hours at this venue."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "rental frequency"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-rental-frequency",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "租借频次",
+      "enDefinition": "how often rentals occur within a defined period"
+    },
+    {
+      "lemma": "device uptime",
+      "senseKey": "shared-power-bank:device-uptime",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "device uptime",
+          "checkpoints": [
+            "device uptime"
+          ],
+          "modelAnswer": "Better device uptime reduces missed rental opportunities.",
+          "id": "shared-power-bank-device-uptime-cloze",
+          "prompt": "Better _____ reduces missed rental opportunities."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"device uptime\" 表达“设备正常运行时间”，写一个完整句子。",
+          "modelAnswer": "Better device uptime reduces missed rental opportunities.",
+          "checkpoints": [
+            "device uptime"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-device-uptime-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "设备正常运行时间"
+      ],
+      "expression": "device uptime",
+      "examples": [
+        {
+          "zh": "更长的设备正常运行时间可以减少错失租借的机会。",
+          "en": "Better device uptime reduces missed rental opportunities."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "device uptime"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-device-uptime",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "设备正常运行时间",
+      "enDefinition": "the time during which a device is operating and available for service"
+    },
+    {
+      "lemma": "inventory rebalancing",
+      "senseKey": "shared-power-bank:inventory-rebalancing",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "inventory rebalancing",
+          "checkpoints": [
+            "inventory rebalancing"
+          ],
+          "modelAnswer": "Inventory rebalancing helps keep batteries available near busy venues.",
+          "id": "shared-power-bank-inventory-rebalancing-cloze",
+          "prompt": "_____ helps keep batteries available near busy venues."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"inventory rebalancing\" 表达“充电宝库存调配”，写一个完整句子。",
+          "modelAnswer": "Inventory rebalancing helps keep batteries available near busy venues.",
+          "checkpoints": [
+            "inventory rebalancing"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-inventory-rebalancing-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "充电宝库存调配"
+      ],
+      "expression": "inventory rebalancing",
+      "examples": [
+        {
+          "zh": "充电宝库存调配有助于让繁忙场所附近保持充足库存。",
+          "en": "Inventory rebalancing helps keep batteries available near busy venues."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "inventory rebalancing"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-inventory-rebalancing",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "充电宝库存调配",
+      "enDefinition": "moving power banks between stations to correct shortages and excess stock"
+    },
+    {
+      "lemma": "battery health",
+      "senseKey": "shared-power-bank:battery-health",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "battery health",
+          "checkpoints": [
+            "battery health"
+          ],
+          "modelAnswer": "We check battery health during routine maintenance.",
+          "id": "shared-power-bank-battery-health-cloze",
+          "prompt": "We check _____ during routine maintenance."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"battery health\" 表达“电池健康状况”，写一个完整句子。",
+          "modelAnswer": "We check battery health during routine maintenance.",
+          "checkpoints": [
+            "battery health"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-battery-health-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "电池健康状况"
+      ],
+      "expression": "battery health",
+      "examples": [
+        {
+          "zh": "我们在日常维护时检查电池健康状况。",
+          "en": "We check battery health during routine maintenance."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "battery health"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-battery-health",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "电池健康状况",
+      "enDefinition": "the condition and remaining performance of a battery"
+    },
+    {
+      "lemma": "maintenance cost",
+      "senseKey": "shared-power-bank:maintenance-cost",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "maintenance cost",
+          "checkpoints": [
+            "maintenance cost"
+          ],
+          "modelAnswer": "Include maintenance cost when reviewing the station's profitability.",
+          "id": "shared-power-bank-maintenance-cost-cloze",
+          "prompt": "Include _____ when reviewing the station's profitability."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"maintenance cost\" 表达“维护成本”，写一个完整句子。",
+          "modelAnswer": "Include maintenance cost when reviewing the station's profitability.",
+          "checkpoints": [
+            "maintenance cost"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-maintenance-cost-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "维护成本"
+      ],
+      "expression": "maintenance cost",
+      "examples": [
+        {
+          "zh": "评估站点盈利情况时，应计入维护成本。",
+          "en": "Include maintenance cost when reviewing the station's profitability."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "maintenance cost"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-maintenance-cost",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "维护成本",
+      "enDefinition": "the cost of keeping stations and batteries in working condition"
+    },
+    {
+      "lemma": "unit economics",
+      "senseKey": "shared-power-bank:unit-economics",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "unit economics",
+          "checkpoints": [
+            "unit economics"
+          ],
+          "modelAnswer": "We examine unit economics for each station before expanding.",
+          "id": "shared-power-bank-unit-economics-cloze",
+          "prompt": "We examine _____ for each station before expanding."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"unit economics\" 表达“单位经济效益”，写一个完整句子。",
+          "modelAnswer": "We examine unit economics for each station before expanding.",
+          "checkpoints": [
+            "unit economics"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-unit-economics-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "单位经济效益"
+      ],
+      "expression": "unit economics",
+      "examples": [
+        {
+          "zh": "扩大投放前，我们会研究每个站点的单位经济效益。",
+          "en": "We examine unit economics for each station before expanding."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "unit economics"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-unit-economics",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "单位经济效益",
+      "enDefinition": "the revenue and costs associated with a defined unit of business activity"
+    },
+    {
+      "lemma": "payback period",
+      "senseKey": "shared-power-bank:payback-period",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "payback period",
+          "checkpoints": [
+            "payback period"
+          ],
+          "modelAnswer": "The payback period depends on rental demand and operating costs.",
+          "id": "shared-power-bank-payback-period-cloze",
+          "prompt": "The _____ depends on rental demand and operating costs."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"payback period\" 表达“投资回收期”，写一个完整句子。",
+          "modelAnswer": "The payback period depends on rental demand and operating costs.",
+          "checkpoints": [
+            "payback period"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-payback-period-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "投资回收期"
+      ],
+      "expression": "payback period",
+      "examples": [
+        {
+          "zh": "投资回收期取决于租借需求和运营成本。",
+          "en": "The payback period depends on rental demand and operating costs."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "payback period"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-payback-period",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "投资回收期",
+      "enDefinition": "the time needed for accumulated net cash inflows to recover an initial investment"
+    },
+    {
+      "lemma": "break-even point",
+      "senseKey": "shared-power-bank:break-even-point",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "break-even point",
+          "checkpoints": [
+            "break-even point"
+          ],
+          "modelAnswer": "We estimate the break-even point using our own cost assumptions.",
+          "id": "shared-power-bank-break-even-point-cloze",
+          "prompt": "We estimate the _____ using our own cost assumptions."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"break-even point\" 表达“盈亏平衡点”，写一个完整句子。",
+          "modelAnswer": "We estimate the break-even point using our own cost assumptions.",
+          "checkpoints": [
+            "break-even point"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-break-even-point-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "盈亏平衡点"
+      ],
+      "expression": "break-even point",
+      "examples": [
+        {
+          "zh": "我们用自己的成本假设估算盈亏平衡点。",
+          "en": "We estimate the break-even point using our own cost assumptions."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "break-even point"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-break-even-point",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "盈亏平衡点",
+      "enDefinition": "the level of activity at which total revenue equals total costs"
+    },
+    {
+      "lemma": "cash flow",
+      "senseKey": "shared-power-bank:cash-flow",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "cash flow",
+          "checkpoints": [
+            "cash flow"
+          ],
+          "modelAnswer": "Merchant payouts and equipment purchases both affect cash flow.",
+          "id": "shared-power-bank-cash-flow-cloze",
+          "prompt": "Merchant payouts and equipment purchases both affect _____."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"cash flow\" 表达“现金流”，写一个完整句子。",
+          "modelAnswer": "Merchant payouts and equipment purchases both affect cash flow.",
+          "checkpoints": [
+            "cash flow"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-cash-flow-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "现金流"
+      ],
+      "expression": "cash flow",
+      "examples": [
+        {
+          "zh": "商户款项支付和设备采购都会影响现金流。",
+          "en": "Merchant payouts and equipment purchases both affect cash flow."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "cash flow"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-cash-flow",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "现金流",
+      "enDefinition": "the movement of cash into and out of a business"
+    },
+    {
+      "lemma": "gross margin",
+      "senseKey": "shared-power-bank:gross-margin",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "gross margin",
+          "checkpoints": [
+            "gross margin"
+          ],
+          "modelAnswer": "We must use a consistent cost basis when comparing gross margin.",
+          "id": "shared-power-bank-gross-margin-cloze",
+          "prompt": "We must use a consistent cost basis when comparing _____."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"gross margin\" 表达“毛利率”，写一个完整句子。",
+          "modelAnswer": "We must use a consistent cost basis when comparing gross margin.",
+          "checkpoints": [
+            "gross margin"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-gross-margin-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "毛利率"
+      ],
+      "expression": "gross margin",
+      "examples": [
+        {
+          "zh": "比较毛利率时，我们必须采用一致的成本口径。",
+          "en": "We must use a consistent cost basis when comparing gross margin."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "gross margin"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-gross-margin",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "毛利率",
+      "enDefinition": "gross profit expressed as a proportion of revenue using a defined cost basis"
+    },
+    {
+      "lemma": "net revenue",
+      "senseKey": "shared-power-bank:net-revenue",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "net revenue",
+          "checkpoints": [
+            "net revenue"
+          ],
+          "modelAnswer": "The settlement report explains the deductions used to calculate net revenue.",
+          "id": "shared-power-bank-net-revenue-cloze",
+          "prompt": "The settlement report explains the deductions used to calculate _____."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"net revenue\" 表达“净收入”，写一个完整句子。",
+          "modelAnswer": "The settlement report explains the deductions used to calculate net revenue.",
+          "checkpoints": [
+            "net revenue"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-net-revenue-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "净收入"
+      ],
+      "expression": "net revenue",
+      "examples": [
+        {
+          "zh": "结算报告说明了计算净收入时使用的扣减项目。",
+          "en": "The settlement report explains the deductions used to calculate net revenue."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "net revenue"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-net-revenue",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "净收入",
+      "enDefinition": "revenue after the specified deductions under the reporting method used"
+    },
+    {
+      "lemma": "settlement cycle",
+      "senseKey": "shared-power-bank:settlement-cycle",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "settlement cycle",
+          "checkpoints": [
+            "settlement cycle"
+          ],
+          "modelAnswer": "The merchant wants a shorter settlement cycle.",
+          "id": "shared-power-bank-settlement-cycle-cloze",
+          "prompt": "The merchant wants a shorter _____."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"settlement cycle\" 表达“结算周期”，写一个完整句子。",
+          "modelAnswer": "The merchant wants a shorter settlement cycle.",
+          "checkpoints": [
+            "settlement cycle"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-settlement-cycle-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "结算周期"
+      ],
+      "expression": "settlement cycle",
+      "examples": [
+        {
+          "zh": "商户希望缩短结算周期。",
+          "en": "The merchant wants a shorter settlement cycle."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "settlement cycle"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-settlement-cycle",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "结算周期",
+      "enDefinition": "the recurring interval at which amounts owed to partners are calculated and paid"
+    },
+    {
+      "lemma": "settlement statement",
+      "senseKey": "shared-power-bank:settlement-statement",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "settlement statement",
+          "checkpoints": [
+            "settlement statement"
+          ],
+          "modelAnswer": "Please check the settlement statement against the rental records.",
+          "id": "shared-power-bank-settlement-statement-cloze",
+          "prompt": "Please check the _____ against the rental records."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"settlement statement\" 表达“结算对账单”，写一个完整句子。",
+          "modelAnswer": "Please check the settlement statement against the rental records.",
+          "checkpoints": [
+            "settlement statement"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-settlement-statement-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "结算对账单"
+      ],
+      "expression": "settlement statement",
+      "examples": [
+        {
+          "zh": "请将结算对账单与租借记录进行核对。",
+          "en": "Please check the settlement statement against the rental records."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "settlement statement"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-settlement-statement",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "结算对账单",
+      "enDefinition": "a statement showing the transactions and amounts used for a settlement"
+    },
+    {
+      "lemma": "payment reconciliation",
+      "senseKey": "shared-power-bank:payment-reconciliation",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "payment reconciliation",
+          "checkpoints": [
+            "payment reconciliation"
+          ],
+          "modelAnswer": "Payment reconciliation helps us identify missing or duplicated payments.",
+          "id": "shared-power-bank-payment-reconciliation-cloze",
+          "prompt": "_____ helps us identify missing or duplicated payments."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"payment reconciliation\" 表达“支付对账”，写一个完整句子。",
+          "modelAnswer": "Payment reconciliation helps us identify missing or duplicated payments.",
+          "checkpoints": [
+            "payment reconciliation"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-payment-reconciliation-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "支付对账"
+      ],
+      "expression": "payment reconciliation",
+      "examples": [
+        {
+          "zh": "支付对账有助于发现遗漏或重复的付款。",
+          "en": "Payment reconciliation helps us identify missing or duplicated payments."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "payment reconciliation"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-payment-reconciliation",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "支付对账",
+      "enDefinition": "the process of matching payment records with transaction records"
+    },
+    {
+      "lemma": "accounts receivable",
+      "senseKey": "shared-power-bank:accounts-receivable",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "accounts receivable",
+          "checkpoints": [
+            "accounts receivable"
+          ],
+          "modelAnswer": "The finance team reviews overdue accounts receivable each week.",
+          "id": "shared-power-bank-accounts-receivable-cloze",
+          "prompt": "The finance team reviews overdue _____ each week."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"accounts receivable\" 表达“应收账款”，写一个完整句子。",
+          "modelAnswer": "The finance team reviews overdue accounts receivable each week.",
+          "checkpoints": [
+            "accounts receivable"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-accounts-receivable-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "应收账款"
+      ],
+      "expression": "accounts receivable",
+      "examples": [
+        {
+          "zh": "财务团队每周检查逾期应收账款。",
+          "en": "The finance team reviews overdue accounts receivable each week."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "accounts receivable"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-accounts-receivable",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "应收账款",
+      "enDefinition": "amounts customers or partners owe to a business for goods or services supplied"
+    },
+    {
+      "lemma": "merchant payout",
+      "senseKey": "shared-power-bank:merchant-payout",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "merchant payout",
+          "checkpoints": [
+            "merchant payout"
+          ],
+          "modelAnswer": "The dashboard shows when the next merchant payout is scheduled.",
+          "id": "shared-power-bank-merchant-payout-cloze",
+          "prompt": "The dashboard shows when the next _____ is scheduled."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"merchant payout\" 表达“商户款项支付”，写一个完整句子。",
+          "modelAnswer": "The dashboard shows when the next merchant payout is scheduled.",
+          "checkpoints": [
+            "merchant payout"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-merchant-payout-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "商户款项支付"
+      ],
+      "expression": "merchant payout",
+      "examples": [
+        {
+          "zh": "后台显示下一次商户款项支付的安排时间。",
+          "en": "The dashboard shows when the next merchant payout is scheduled."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "merchant payout"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-merchant-payout",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "商户款项支付",
+      "enDefinition": "a payment made to a merchant for an amount owed under a business arrangement"
+    },
+    {
+      "lemma": "asset depreciation",
+      "senseKey": "shared-power-bank:asset-depreciation",
+      "source": "custom",
+      "usagePrompts": [
+        {
+          "type": "cloze",
+          "answer": "asset depreciation",
+          "checkpoints": [
+            "asset depreciation"
+          ],
+          "modelAnswer": "The accounting team records asset depreciation for the rental cabinets.",
+          "id": "shared-power-bank-asset-depreciation-cloze",
+          "prompt": "The accounting team records _____ for the rental cabinets."
+        },
+        {
+          "prompt": "在共享充电宝商业化场景中，用 \"asset depreciation\" 表达“资产折旧”，写一个完整句子。",
+          "modelAnswer": "The accounting team records asset depreciation for the rental cabinets.",
+          "checkpoints": [
+            "asset depreciation"
+          ],
+          "type": "sentence",
+          "id": "shared-power-bank-asset-depreciation-sentence"
+        }
+      ],
+      "acceptedZhAnswers": [
+        "资产折旧"
+      ],
+      "expression": "asset depreciation",
+      "examples": [
+        {
+          "zh": "会计团队记录租借柜机的资产折旧。",
+          "en": "The accounting team records asset depreciation for the rental cabinets."
+        }
+      ],
+      "collocations": [],
+      "status": "active",
+      "priority": 0,
+      "acceptedEnVariants": [
+        "asset depreciation"
+      ],
+      "partOfSpeech": "noun",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "shared-power-bank-asset-depreciation",
+      "updatedAt": "2026-10-11T00:00:00Z",
+      "zhGloss": "资产折旧",
+      "enDefinition": "the allocation of an asset's depreciable amount over its useful life"
+    }
+  ],
+  "memberships": [
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 0,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-shared-power-bank",
+      "id": "membership-shared-power-bank-shared-power-bank-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 0,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-shared-power-bank",
+      "id": "membership-shared-power-bank-shared-power-bank-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 1,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-power-bank-rental-service",
+      "id": "membership-shared-power-bank-power-bank-rental-service-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 1,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-power-bank-rental-service",
+      "id": "membership-shared-power-bank-power-bank-rental-service-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 2,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-charging-station",
+      "id": "membership-shared-power-bank-charging-station-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 2,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-charging-station",
+      "id": "membership-shared-power-bank-charging-station-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 3,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-rental-cabinet",
+      "id": "membership-shared-power-bank-rental-cabinet-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 3,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-rental-cabinet",
+      "id": "membership-shared-power-bank-rental-cabinet-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 4,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-docking-slot",
+      "id": "membership-shared-power-bank-docking-slot-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 4,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-docking-slot",
+      "id": "membership-shared-power-bank-docking-slot-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 5,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-merchant-partnership",
+      "id": "membership-shared-power-bank-merchant-partnership-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 5,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-merchant-partnership",
+      "id": "membership-shared-power-bank-merchant-partnership-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 6,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-venue-onboarding",
+      "id": "membership-shared-power-bank-venue-onboarding-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 6,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-venue-onboarding",
+      "id": "membership-shared-power-bank-venue-onboarding-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 7,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-site-acquisition",
+      "id": "membership-shared-power-bank-site-acquisition-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 7,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-site-acquisition",
+      "id": "membership-shared-power-bank-site-acquisition-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 8,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-foot-traffic",
+      "id": "membership-shared-power-bank-foot-traffic-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 8,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-foot-traffic",
+      "id": "membership-shared-power-bank-foot-traffic-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 9,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-dwell-time",
+      "id": "membership-shared-power-bank-dwell-time-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 9,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-dwell-time",
+      "id": "membership-shared-power-bank-dwell-time-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 10,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-placement-agreement",
+      "id": "membership-shared-power-bank-placement-agreement-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 10,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-placement-agreement",
+      "id": "membership-shared-power-bank-placement-agreement-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 11,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-exclusive-partnership",
+      "id": "membership-shared-power-bank-exclusive-partnership-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 11,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-exclusive-partnership",
+      "id": "membership-shared-power-bank-exclusive-partnership-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 12,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-network-partner",
+      "id": "membership-shared-power-bank-network-partner-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 12,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-network-partner",
+      "id": "membership-shared-power-bank-network-partner-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 13,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-rollout-plan",
+      "id": "membership-shared-power-bank-rollout-plan-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 13,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-rollout-plan",
+      "id": "membership-shared-power-bank-rollout-plan-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 14,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-pilot-program",
+      "id": "membership-shared-power-bank-pilot-program-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 14,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-pilot-program",
+      "id": "membership-shared-power-bank-pilot-program-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 15,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-revenue-sharing",
+      "id": "membership-shared-power-bank-revenue-sharing-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 15,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-revenue-sharing",
+      "id": "membership-shared-power-bank-revenue-sharing-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 16,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-commission-rate",
+      "id": "membership-shared-power-bank-commission-rate-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 16,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-commission-rate",
+      "id": "membership-shared-power-bank-commission-rate-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 17,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-rental-fee",
+      "id": "membership-shared-power-bank-rental-fee-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 17,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-rental-fee",
+      "id": "membership-shared-power-bank-rental-fee-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 18,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-billing-increment",
+      "id": "membership-shared-power-bank-billing-increment-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 18,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-billing-increment",
+      "id": "membership-shared-power-bank-billing-increment-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 19,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-daily-price-cap",
+      "id": "membership-shared-power-bank-daily-price-cap-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 19,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-daily-price-cap",
+      "id": "membership-shared-power-bank-daily-price-cap-my-vocabulary"
+    },
+    {
+      "listId": "list-daily",
+      "priority": 0,
+      "sortOrder": 20,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-deposit-free-rental",
+      "id": "membership-shared-power-bank-deposit-free-rental-daily"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 20,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-deposit-free-rental",
+      "id": "membership-shared-power-bank-deposit-free-rental-my-vocabulary"
+    },
+    {
+      "listId": "list-daily",
+      "priority": 0,
+      "sortOrder": 21,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-qr-code-rental",
+      "id": "membership-shared-power-bank-qr-code-rental-daily"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 21,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-qr-code-rental",
+      "id": "membership-shared-power-bank-qr-code-rental-my-vocabulary"
+    },
+    {
+      "listId": "list-daily",
+      "priority": 0,
+      "sortOrder": 22,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-cross-location-return",
+      "id": "membership-shared-power-bank-cross-location-return-daily"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 22,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-cross-location-return",
+      "id": "membership-shared-power-bank-cross-location-return-my-vocabulary"
+    },
+    {
+      "listId": "list-daily",
+      "priority": 0,
+      "sortOrder": 23,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-refund-request",
+      "id": "membership-shared-power-bank-refund-request-daily"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 23,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-refund-request",
+      "id": "membership-shared-power-bank-refund-request-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 24,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-utilization-rate",
+      "id": "membership-shared-power-bank-utilization-rate-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 24,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-utilization-rate",
+      "id": "membership-shared-power-bank-utilization-rate-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 25,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-rental-frequency",
+      "id": "membership-shared-power-bank-rental-frequency-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 25,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-rental-frequency",
+      "id": "membership-shared-power-bank-rental-frequency-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 26,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-device-uptime",
+      "id": "membership-shared-power-bank-device-uptime-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 26,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-device-uptime",
+      "id": "membership-shared-power-bank-device-uptime-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 27,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-inventory-rebalancing",
+      "id": "membership-shared-power-bank-inventory-rebalancing-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 27,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-inventory-rebalancing",
+      "id": "membership-shared-power-bank-inventory-rebalancing-my-vocabulary"
+    },
+    {
+      "listId": "list-business",
+      "priority": 0,
+      "sortOrder": 28,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-battery-health",
+      "id": "membership-shared-power-bank-battery-health-business"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 28,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-battery-health",
+      "id": "membership-shared-power-bank-battery-health-my-vocabulary"
+    },
+    {
+      "listId": "list-accounting",
+      "priority": 0,
+      "sortOrder": 29,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-maintenance-cost",
+      "id": "membership-shared-power-bank-maintenance-cost-accounting"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 29,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-maintenance-cost",
+      "id": "membership-shared-power-bank-maintenance-cost-my-vocabulary"
+    },
+    {
+      "listId": "list-finance",
+      "priority": 0,
+      "sortOrder": 30,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-unit-economics",
+      "id": "membership-shared-power-bank-unit-economics-finance"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 30,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-unit-economics",
+      "id": "membership-shared-power-bank-unit-economics-my-vocabulary"
+    },
+    {
+      "listId": "list-finance",
+      "priority": 0,
+      "sortOrder": 31,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-payback-period",
+      "id": "membership-shared-power-bank-payback-period-finance"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 31,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-payback-period",
+      "id": "membership-shared-power-bank-payback-period-my-vocabulary"
+    },
+    {
+      "listId": "list-finance",
+      "priority": 0,
+      "sortOrder": 32,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-break-even-point",
+      "id": "membership-shared-power-bank-break-even-point-finance"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 32,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-break-even-point",
+      "id": "membership-shared-power-bank-break-even-point-my-vocabulary"
+    },
+    {
+      "listId": "list-finance",
+      "priority": 0,
+      "sortOrder": 33,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-cash-flow",
+      "id": "membership-shared-power-bank-cash-flow-finance"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 33,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-cash-flow",
+      "id": "membership-shared-power-bank-cash-flow-my-vocabulary"
+    },
+    {
+      "listId": "list-finance",
+      "priority": 0,
+      "sortOrder": 34,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-gross-margin",
+      "id": "membership-shared-power-bank-gross-margin-finance"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 34,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-gross-margin",
+      "id": "membership-shared-power-bank-gross-margin-my-vocabulary"
+    },
+    {
+      "listId": "list-accounting",
+      "priority": 0,
+      "sortOrder": 35,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-net-revenue",
+      "id": "membership-shared-power-bank-net-revenue-accounting"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 35,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-net-revenue",
+      "id": "membership-shared-power-bank-net-revenue-my-vocabulary"
+    },
+    {
+      "listId": "list-accounting",
+      "priority": 0,
+      "sortOrder": 36,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-settlement-cycle",
+      "id": "membership-shared-power-bank-settlement-cycle-accounting"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 36,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-settlement-cycle",
+      "id": "membership-shared-power-bank-settlement-cycle-my-vocabulary"
+    },
+    {
+      "listId": "list-accounting",
+      "priority": 0,
+      "sortOrder": 37,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-settlement-statement",
+      "id": "membership-shared-power-bank-settlement-statement-accounting"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 37,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-settlement-statement",
+      "id": "membership-shared-power-bank-settlement-statement-my-vocabulary"
+    },
+    {
+      "listId": "list-accounting",
+      "priority": 0,
+      "sortOrder": 38,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-payment-reconciliation",
+      "id": "membership-shared-power-bank-payment-reconciliation-accounting"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 38,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-payment-reconciliation",
+      "id": "membership-shared-power-bank-payment-reconciliation-my-vocabulary"
+    },
+    {
+      "listId": "list-accounting",
+      "priority": 0,
+      "sortOrder": 39,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-accounts-receivable",
+      "id": "membership-shared-power-bank-accounts-receivable-accounting"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 39,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-accounts-receivable",
+      "id": "membership-shared-power-bank-accounts-receivable-my-vocabulary"
+    },
+    {
+      "listId": "list-accounting",
+      "priority": 0,
+      "sortOrder": 40,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-merchant-payout",
+      "id": "membership-shared-power-bank-merchant-payout-accounting"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 40,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-merchant-payout",
+      "id": "membership-shared-power-bank-merchant-payout-my-vocabulary"
+    },
+    {
+      "listId": "list-accounting",
+      "priority": 0,
+      "sortOrder": 41,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-asset-depreciation",
+      "id": "membership-shared-power-bank-asset-depreciation-accounting"
+    },
+    {
+      "listId": "list-my-vocabulary",
+      "priority": 0,
+      "sortOrder": 41,
+      "subcategory": "共享充电宝商业化",
+      "wordId": "shared-power-bank-asset-depreciation",
+      "id": "membership-shared-power-bank-asset-depreciation-my-vocabulary"
+    }
+  ],
+  "kind": "vocabulary-pack",
+  "lists": [
+    {
+      "isSystem": true,
+      "slug": "daily",
+      "category": "daily",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "list-daily",
+      "name": "Daily Life",
+      "description": "共享充电宝商业化词汇分类"
+    },
+    {
+      "isSystem": true,
+      "slug": "business",
+      "category": "business",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "list-business",
+      "name": "Business",
+      "description": "共享充电宝商业化词汇分类"
+    },
+    {
+      "isSystem": true,
+      "slug": "finance",
+      "category": "finance",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "list-finance",
+      "name": "Finance",
+      "description": "共享充电宝商业化词汇分类"
+    },
+    {
+      "isSystem": true,
+      "slug": "accounting",
+      "category": "accounting",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "list-accounting",
+      "name": "Accounting",
+      "description": "共享充电宝商业化词汇分类"
+    },
+    {
+      "isSystem": false,
+      "slug": "my-vocabulary",
+      "category": "my-vocabulary",
+      "createdAt": "2026-10-11T00:00:00Z",
+      "id": "list-my-vocabulary",
+      "name": "Priority Study",
+      "description": "共享充电宝商业化词汇分类"
+    }
+  ]
+}

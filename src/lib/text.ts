@@ -1,3 +1,7 @@
+export function expressionKey(value: string) {
+  return value.normalize('NFKC').trim().toLocaleLowerCase('en-US').replace(/\s+/g, ' ')
+}
+
 /** Escape a string for literal use inside new RegExp(...). */
 export function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')

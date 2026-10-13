@@ -12,7 +12,7 @@ export function resolveListSlugsForEdit(
   const system = SYSTEM_LIST_ORDER.filter((slug) => currentListSlugs.includes(slug))
 
   if (nextCategory === 'other') {
-    return ['my-vocabulary']
+    return hadMyVocabulary ? ['my-vocabulary'] : []
   }
 
   let nextSystem: SystemListSlug[]
@@ -27,7 +27,7 @@ export function resolveListSlugsForEdit(
     ])]
   }
 
-  return hadMyVocabulary || previousPrimary === 'my-vocabulary'
+  return hadMyVocabulary
     ? [...nextSystem, 'my-vocabulary']
     : nextSystem
 }

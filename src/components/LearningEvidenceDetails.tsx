@@ -3,7 +3,31 @@ import type { LearningEvidence } from '../lib/learningEvidence'
 const sourceLabels = { rules: '本地规则', llm: 'AI 辅助', reveal: '揭晓答案' }
 const correctnessLabels = { correct: '正确', incorrect: '未通过', unverified: '待验证' }
 
-export function LearningEvidenceDetails({ evidence }: { evidence: LearningEvidence }) {
+export function LearningEvidenceDetails({ evidence, compact = false }: { evidence: LearningEvidence; compact?: boolean }) {
+  if (compact) {
+    const missing = [...new Set([...evidence.directions.receptive.missing, ...evidence.directions.productive.missing])]
+    const records = [
+      ...evidence.directions.receptive.details.map((detail) => ({ ...detail, direction: '理解意思' })),
+      ...evidence.directions.productive.details.map((detail) => ({ ...detail, direction: '主动表达' })),
+      ...evidence.application.details.map((detail) => ({ ...detail, direction: '场景应用' })),
+    ].sort((left, right) => Date.parse(right.reviewedAt) - Date.parse(left.reviewedAt)).slice(0, 5)
+    return (
+      <details className="learning-evidence compact-evidence">
+        <summary>学习依据与最近记录</summary>
+        <div className="evidence-content">
+          {missing.map((text) => <p key={text}>{text}</p>)}
+          {records.length > 0 ? <ul aria-label="最近五条学习记录">
+            {records.map((detail) => <li key={`${detail.direction}:${detail.reviewedAt}:${detail.promptId ?? ''}`}>
+              <span>{detail.direction} · {new Date(detail.reviewedAt).toLocaleString('zh-CN')}</span>
+              <span>{detail.evaluationSource ? sourceLabels[detail.evaluationSource] : '历史来源未知'} · {detail.correctness ? correctnessLabels[detail.correctness] : '历史证据有限'} · 提示 {detail.hintLevel}{detail.retryCount ? ' · 即时重试' : ''}{detail.wasOverride ? ' · 自评覆写' : ''}{detail.matchKind === 'minor-typo' ? ' · 拼写接近' : ''}</span>
+            </li>)}
+          </ul> : <p>尚无作答记录。</p>}
+          {evidence.legacyEvidence && <p>历史记录的证据有限，已保留原有复习进度。</p>}
+          <p>保持验证需两个方向均在至少 7 天未练该方向后成功回忆；自报已会与练习证据分别记录。</p>
+        </div>
+      </details>
+    )
+  }
   return (
     <details className="learning-evidence">
       <summary>{evidence.label} · 查看依据</summary>

@@ -1,31 +1,35 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import type { SystemListSlug, VocabularyItem } from '../domain/types'
+import { VOCABULARY_LEVELS, type SystemListSlug, type VocabularyItem, type VocabularyLevel } from '../domain/types'
+import { getVocabularyDifficulty, vocabularyLevelLabels } from '../lib/studyDifficulty'
 import { type EditCategory } from '../lib/listMembership'
 import { categoryLabels } from '../lib/presentation'
 import type { LearningEvidence } from '../lib/learningEvidence'
 import { splitListValues } from '../lib/text'
 import { useEscapeToClose } from '../lib/useEscapeToClose'
 import { useFocusTrap } from '../lib/useFocusTrap'
-import { LearningEvidenceDetails } from './LearningEvidenceDetails'
-import { speakExample, speakWord } from '../lib/speech'
+import { WordEntryDialog } from './WordEntryDialog'
 import { Icon } from './Icon'
+import { expressionKey, groupWordsByExpression } from '../lib/wordSenses'
 
 type LibraryFilter = 'all' | 'my-vocabulary' | SystemListSlug
 type VocabularyEditPatch = Pick<
   VocabularyItem,
   'zhGloss' | 'enDefinition' | 'partOfSpeech' | 'examples' | 'collocations'
-> & { category: EditCategory; scenarioNote?: string }
+> & { category: EditCategory; scenarioNote?: string; vocabularyLevel?: VocabularyLevel }
 
 interface LibraryViewProps {
   items: VocabularyItem[]
   evidenceByItemId: ReadonlyMap<string, LearningEvidence>
   onToggleStatus: (item: VocabularyItem) => Promise<void>
+  onToggleKnown: (item: VocabularyItem) => Promise<void>
   onUpdate: (
     id: string,
     patch: VocabularyEditPatch,
   ) => Promise<void>
   onAddToMyVocabulary: (item: VocabularyItem) => Promise<{ ok: boolean; message: string }>
+  onRemoveFromMyVocabulary: (item: VocabularyItem) => Promise<{ ok: boolean; message: string }>
+  onCompleteSenses?: (item: VocabularyItem) => Promise<{ message: string }>
 }
 
 const filters: { id: LibraryFilter; label: string }[] = [
@@ -43,23 +47,33 @@ export function LibraryView({
   items,
   evidenceByItemId,
   onToggleStatus,
+  onToggleKnown,
   onUpdate,
   onAddToMyVocabulary,
+  onRemoveFromMyVocabulary,
+  onCompleteSenses,
 }: LibraryViewProps) {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState<LibraryFilter>('all')
+  const [levelFilter, setLevelFilter] = useState<VocabularyLevel | 'all'>('all')
+  const [knowledgeFilter, setKnowledgeFilter] = useState('all')
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null)
+  const [selectedSenses, setSelectedSenses] = useState<Record<string, string>>({})
   const [visibleCount, setVisibleCount] = useState(24)
-  const [editing, setEditing] = useState<VocabularyItem | null>(null)
-  const [actionMessage, setActionMessage] = useState('')
+  const [editing, setEditing] = useState<{ item: VocabularyItem } | null>(null)
+  const entryTrigger = useRef<HTMLElement | null>(null)
+  const entryFallback = useRef<HTMLElement | null>(null)
+  const searchInput = useRef<HTMLInputElement | null>(null)
 
-  useEffect(() => setVisibleCount(24), [query, filter])
+  useEffect(() => setVisibleCount(24), [query, filter, levelFilter, knowledgeFilter])
 
   const filtered = useMemo(() => {
     const cleaned = query.trim().toLocaleLowerCase()
     return items
       .filter((item) => {
-        if (filter === 'my-vocabulary') return item.listSlugs.includes('my-vocabulary')
         if (filter !== 'all' && !item.listSlugs.includes(filter)) return false
+        if (levelFilter !== 'all' && getVocabularyDifficulty(item).level !== levelFilter) return false
+        if (knowledgeFilter === 'known' && !item.knownAt || knowledgeFilter === 'learning' && item.knownAt) return false
         if (!cleaned) return true
         return [item.expression, item.zhGloss, item.enDefinition, ...item.collocations]
           .some((value) => value.toLocaleLowerCase().includes(cleaned))
@@ -69,17 +83,41 @@ export function LibraryView({
         if (a.listSlugs.includes('my-vocabulary') !== b.listSlugs.includes('my-vocabulary')) {
           return a.listSlugs.includes('my-vocabulary') ? -1 : 1
         }
-        return a.expression.localeCompare(b.expression)
+        return a.expression.localeCompare(b.expression) || a.id.localeCompare(b.id)
       })
-  }, [filter, items, query])
+  }, [filter, items, query, levelFilter, knowledgeFilter])
+  const entries = useMemo(() => groupWordsByExpression(filtered), [filtered])
+  const completeEntries = useMemo(() => new Map(groupWordsByExpression(items).map((entry) => [entry.key, entry])), [items])
+  const selectedItem = items.find((item) => item.id === selectedItemId)
+  const selectedKey = selectedItem ? expressionKey(selectedItem.expression) : undefined
+  const selectedEntry = selectedKey ? completeEntries.get(selectedKey) : undefined
+
+  function selectSense(id: string) {
+    setSelectedItemId(id)
+    const item = items.find((candidate) => candidate.id === id)
+    if (item) setSelectedSenses((previous) => ({ ...previous, [expressionKey(item.expression)]: id }))
+  }
+
+  function openSense(id: string) {
+    entryTrigger.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    entryFallback.current = entryTrigger.current?.closest('article')?.querySelector<HTMLElement>('.compact-word-expression') ?? null
+    selectSense(id)
+  }
+
+  function closeEntry() {
+    setSelectedItemId(null)
+    const target = entryTrigger.current?.isConnected ? entryTrigger.current
+      : entryFallback.current?.isConnected ? entryFallback.current : searchInput.current
+    target?.focus()
+  }
 
   return (
     <div className="page-stack library-page">
       <section className="page-header library-header">
         <div>
           <p className="eyebrow">YOUR LANGUAGE BANK</p>
-          <h1>词库不是收藏夹，是你的表达工具箱。</h1>
-          <p className="page-intro">搜索、暂停或补充真实场景。每个义项保持独立，进度也分别记录。</p>
+          <h1>词库</h1>
+          <p className="page-intro">同词归并，义项分别学习。点击词义查看例句与学习情况。</p>
         </div>
         <div className="library-total"><strong>{items.length}</strong><span>个独立义项</span></div>
       </section>
@@ -87,7 +125,7 @@ export function LibraryView({
       <section className="library-tools" aria-label="词库筛选">
         <div className="input-with-icon library-search">
           <Icon name="search" size={19} />
-          <input aria-label="搜索词库" onChange={(event) => setQuery(event.target.value)} placeholder="搜索英文、中文或搭配" value={query} />
+          <input ref={searchInput} aria-label="搜索词库" onChange={(event) => setQuery(event.target.value)} placeholder="搜索英文、中文或搭配" value={query} />
         </div>
         <div className="filter-pills">
           {filters.map((item) => (
@@ -98,86 +136,53 @@ export function LibraryView({
         </div>
       </section>
 
-      <div className="library-result-line">
-        <span>找到 {filtered.length} 个义项</span>
-        <span>暂停的内容不会进入每日训练</span>
+      <div className="difficulty-filters">
+        <label>词汇难度 <select aria-label="筛选词汇难度" value={levelFilter} onChange={(event) => setLevelFilter(event.target.value as VocabularyLevel | 'all')}><option value="all">全部等级</option>{VOCABULARY_LEVELS.map((level) => <option key={level} value={level}>{vocabularyLevelLabels[level]}</option>)}</select></label>
+        <label>学习状态 <select aria-label="筛选学习状态" value={knowledgeFilter} onChange={(event) => setKnowledgeFilter(event.target.value)}><option value="all">全部状态</option><option value="learning">待学习</option><option value="known">已会</option></select></label>
       </div>
-      {actionMessage && <p className="form-note">{actionMessage}</p>}
+      <div className="library-result-line">
+        <span>找到 {entries.length} 个词条 · {filtered.length} 个义项</span>
+        <span>已会或暂停的内容不会进入每日训练</span>
+      </div>
+      {filter === 'my-vocabulary' && <p className="form-note">每日新词数量按设置固定：先按列表顺序安排优先词，剩余额度补充普通词；训练先完成优先词，再学习普通词。暂停的词不参与安排。</p>}
 
       {filtered.length ? (
         <>
           <section className="word-card-grid">
-            {filtered.slice(0, visibleCount).map((item) => {
-              const evidence = evidenceByItemId.get(item.id)
-              const inMyVocabulary = item.listSlugs.includes('my-vocabulary')
-              const ipa = item.ipaUk || item.ipaUs
+            {entries.slice(0, visibleCount).map((entry) => {
+              const selected = entry.senses.find((sense) => sense.id === selectedSenses[entry.key]) ?? entry.senses[0]
+              const preview = entry.senses.slice(0, 3)
+              if (!preview.some((sense) => sense.id === selected.id)) preview[2] = selected
+              const evidence = evidenceByItemId.get(selected.id)
+              const senseCount = completeEntries.get(entry.key)!.senses.length
               return (
-                <article className={item.status === 'paused' ? 'word-card paused' : 'word-card'} key={item.id}>
-                  <div className="word-card-top">
-                    <span className={`category-chip ${item.category}`}>{categoryLabels[item.category]}</span>
-                    {item.scenarioNote && <span className="category-chip my-vocabulary">{item.scenarioNote}</span>}
-                    <div className="word-card-actions">
-                      <button aria-label={`英式发音 ${item.expression}`} className="mini-text-button" onClick={() => void speakWord(item, 'uk')} type="button">UK</button>
-                      <button aria-label={`美式发音 ${item.expression}`} className="mini-text-button" onClick={() => void speakWord(item, 'us')} type="button">US</button>
-                      <button aria-label={`编辑 ${item.expression}`} className="mini-icon-button" onClick={() => setEditing(item)} type="button"><Icon name="edit" size={17} /></button>
-                      <button
-                        aria-label={item.status === 'active' ? `暂停 ${item.expression}` : `恢复 ${item.expression}`}
-                        className="mini-icon-button"
-                        onClick={() => void onToggleStatus(item)}
-                        type="button"
-                      >
-                        <Icon name={item.status === 'active' ? 'pause' : 'play'} size={16} />
-                      </button>
+                <article className="word-card compact-word-card" key={entry.key}>
+                  <div className="compact-word-body">
+                    <button className="compact-word-expression" type="button" aria-label={`查看 ${entry.expression} 的详情`} onClick={() => openSense(selected.id)}>
+                      <h2>{entry.expression}</h2>
+                      <span>{getVocabularyDifficulty(selected).level} · {categoryLabels[selected.category]}</span>
+                    </button>
+                    <div className="compact-word-senses" aria-label={`${entry.expression} 的义项预览`}>
+                      {preview.map((sense) => (
+                        <button key={sense.id} type="button" aria-label={`查看 ${entry.expression}：${sense.zhGloss || sense.enDefinition || '待补充词义'}`}
+                          aria-pressed={sense.id === selected.id} title={`${sense.partOfSpeech} · ${sense.zhGloss || sense.enDefinition}`}
+                          onClick={() => openSense(sense.id)}>
+                          <span className="compact-sense-dot" aria-hidden="true" /><span>{sense.zhGloss || '待补充中文'}</span>
+                        </button>
+                      ))}
                     </div>
                   </div>
-                  <div className="word-card-expression">
-                    <h2>{item.expression}</h2>
-                    {ipa && <span>/{ipa}/</span>}
+                  <div className="compact-word-footer">
+                    <span title={selected.zhGloss || selected.enDefinition}>{selected.knownAt ? '已会（自报）' : selected.status === 'paused' ? '已暂停' : evidence?.label ?? '未开始'}</span>
+                    <button type="button" onClick={() => openSense(selected.id)} aria-label={`查看 ${entry.expression} 全部 ${senseCount} 个义项`}>
+                      {senseCount > 3 ? `全部 ${senseCount} 义项` : `${senseCount} 义项`}<Icon name="arrow" size={13} />
+                    </button>
                   </div>
-                  <div className="word-card-sense">
-                    <p className="word-card-gloss">{item.zhGloss}</p>
-                    {item.enDefinition && <p className="word-card-definition">{item.enDefinition}</p>}
-                  </div>
-                  <div className="word-card-example">
-                    <span>IN CONTEXT</span>
-                    <p>{item.examples[0]?.en || '补充一个真实例句后，将解锁使用练习。'}</p>
-                    {item.examples[0]?.zh && <p className="word-card-example-zh">{item.examples[0].zh}</p>}
-                    {item.examples[0]?.en && (
-                      <button
-                        className="text-button"
-                        onClick={() => void speakExample(item.examples[0].en)}
-                        type="button"
-                      >
-                        播放例句
-                      </button>
-                    )}
-                  </div>
-                  <div className="word-card-bottom">
-                    <span className={`stage-dot ${evidence?.key ?? 'new'}`} />
-                    <span>{evidence?.label ?? '未开始'}{item.status === 'paused' ? ' · 已暂停' : ''}</span>
-                    {inMyVocabulary ? (
-                      <span className="source-mark">已优先</span>
-                    ) : (
-                      <button
-                        className="text-button"
-                        onClick={() => {
-                          void onAddToMyVocabulary(item).then((result) => {
-                            if (result.ok) setActionMessage(result.message)
-                            return result
-                          })
-                        }}
-                        type="button"
-                      >
-                        + 加入优先学习
-                      </button>
-                    )}
-                  </div>
-                  {evidence && <LearningEvidenceDetails evidence={evidence} />}
                 </article>
               )
             })}
           </section>
-          {visibleCount < filtered.length && (
+          {visibleCount < entries.length && (
             <button className="load-more-button" onClick={() => setVisibleCount((count) => count + 24)} type="button">
               显示更多 <Icon name="chevron" size={17} />
             </button>
@@ -191,13 +196,21 @@ export function LibraryView({
         </div>
       )}
 
+      {selectedEntry && selectedItem && !editing && (
+        <WordEntryDialog entry={selectedEntry} item={selectedItem} evidenceByItemId={evidenceByItemId}
+          onSelectSense={selectSense} onEdit={(item) => setEditing({ item })}
+          onClose={closeEntry}
+          onToggleStatus={onToggleStatus} onToggleKnown={onToggleKnown}
+          onAddToMyVocabulary={onAddToMyVocabulary} onRemoveFromMyVocabulary={onRemoveFromMyVocabulary}
+          onCompleteSenses={onCompleteSenses} />
+      )}
       {editing && (
         <EditWordDialog
-          item={editing}
+          item={editing.item}
           onClose={() => setEditing(null)}
           onSave={async (patch) => {
-            await onUpdate(editing.id, patch)
-            setEditing(null)
+            await onUpdate(editing.item.id, patch)
+            setEditing((current) => current === editing ? null : current)
           }}
         />
       )}
@@ -222,6 +235,7 @@ function EditWordDialog({ item, onClose, onSave }: EditWordDialogProps) {
     item.category === 'my-vocabulary' ? 'other' : item.category,
   )
   const [scenarioNote, setScenarioNote] = useState(item.scenarioNote ?? '')
+  const [vocabularyLevel, setVocabularyLevel] = useState<VocabularyLevel | ''>(item.vocabularyLevel ?? '')
   const [saveError, setSaveError] = useState('')
   const [saving, setSaving] = useState(false)
   const dialogRef = useRef<HTMLElement>(null)
@@ -247,6 +261,7 @@ function EditWordDialog({ item, onClose, onSave }: EditWordDialogProps) {
           <button aria-label="关闭" className="icon-button" onClick={onClose} type="button"><Icon name="close" size={20} /></button>
         </div>
         <div className="word-form">
+          <label><span>当前义项难度</span><select aria-label="词汇难度" value={vocabularyLevel} onChange={(event) => setVocabularyLevel(event.target.value as VocabularyLevel | '')}><option value="">使用词头参考或估算</option>{VOCABULARY_LEVELS.map((level) => <option key={level} value={level}>{vocabularyLevelLabels[level]}</option>)}</select></label>
           <div className="form-grid two-columns">
             <label><span>中文义项</span><input onChange={(event) => setZhGloss(event.target.value)} value={zhGloss} /></label>
             <label><span>词性</span><input onChange={(event) => setPartOfSpeech(event.target.value)} value={partOfSpeech} /></label>
@@ -288,9 +303,10 @@ function EditWordDialog({ item, onClose, onSave }: EditWordDialogProps) {
               try {
                 await onSave({
                   zhGloss: zhGloss.trim(),
+                  vocabularyLevel: vocabularyLevel || undefined,
                   enDefinition: enDefinition.trim(),
                   partOfSpeech: partOfSpeech.trim() || 'expression',
-                  examples: exampleEn.trim() ? [{ en: exampleEn.trim(), zh: exampleZh.trim() }] : [],
+                  examples: [...(exampleEn.trim() ? [{ en: exampleEn.trim(), zh: exampleZh.trim() }] : []), ...item.examples.slice(1)],
                   collocations: splitListValues(collocations),
                   category,
                   scenarioNote: category === 'other' ? scenarioNote.trim() : undefined,

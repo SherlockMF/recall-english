@@ -62,6 +62,101 @@ const task: SessionTask = {
 }
 
 describe('StudySession', () => {
+  it('locks background scrolling during training and restores it on unmount', () => {
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = 'auto'
+    try {
+      const { unmount } = render(<StudySession initialTasks={[task]} items={[item]} tracks={[track]} mode="core"
+        usableThisWeek={0} onRate={vi.fn()} onExit={vi.fn()} onFinish={vi.fn()} evaluate={vi.fn()} />)
+      expect(document.body.style.overflow).toBe('hidden')
+      unmount()
+      expect(document.body.style.overflow).toBe('auto')
+    } finally {
+      document.body.style.overflow = originalOverflow
+    }
+  })
+
+  it('shows a sense-specific English context without revealing the Chinese gloss or marking a hint', async () => {
+    const user = userEvent.setup()
+    const evaluate = vi.fn().mockReturnValue({ rating: 'good', matched: true })
+    render(<StudySession initialTasks={[task]} items={[item]} tracks={[track]} mode="core"
+      usableThisWeek={0} onRate={vi.fn()} onExit={vi.fn()} onFinish={vi.fn()} evaluate={evaluate} />)
+    expect(screen.getByText('We monitor cash flow every week.')).toBeInTheDocument()
+    expect(screen.queryByText('现金流')).not.toBeInTheDocument()
+    await user.type(screen.getByLabelText('你记得的中文意思'), '现金流')
+    await user.click(screen.getByRole('button', { name: /提交回忆/ }))
+    expect(evaluate.mock.calls[0][3]).toBe(0)
+  })
+
+  it('requires the current sense in a sentence task even for an older generic prompt', () => {
+    const sentence = { ...item.usagePrompts[0], type: 'sentence' as const, prompt: '用 cash flow 写一句话' }
+    render(<StudySession initialTasks={[{ ...task, trackType: 'usage' }]} items={[{ ...item, usagePrompts: [sentence] }]}
+      tracks={[{ ...track, type: 'usage' }]} mode="extension" usableThisWeek={0}
+      onRate={vi.fn()} onExit={vi.fn()} onFinish={vi.fn()} evaluate={vi.fn()} />)
+    expect(screen.getByText('本题义项：现金流')).toBeInTheDocument()
+  })
+  it('replans pending words after a saved answer without restarting or repeating the answered question', async () => {
+    const user = userEvent.setup()
+    const next = { ...item, id: 'harder', expression: 'harder' }
+    const nextTrack = { ...track, id: 'harder:receptive', itemId: next.id }
+    const nextTask = { ...task, id: 'harder-task', trackId: nextTrack.id, itemId: next.id }
+    const onRate = vi.fn().mockResolvedValue(undefined)
+    const refresh = vi.fn().mockImplementation(async () => { expect(onRate).toHaveBeenCalledOnce(); return [nextTask] })
+    render(<StudySession initialTasks={[task]} items={[item, next]} tracks={[track, nextTrack]} mode="core"
+      usableThisWeek={0} onRate={onRate} onRefreshTasks={refresh} onExit={vi.fn()} onFinish={vi.fn()}
+      evaluate={() => ({ rating: 'good', matched: true })} />)
+    await user.type(screen.getByLabelText('你记得的中文意思'), '现金流')
+    await user.click(screen.getByRole('button', { name: /提交回忆/ }))
+    await user.click(screen.getByRole('button', { name: /想起来了/ }))
+    expect(refresh).toHaveBeenCalledWith([], new Set([item.id]), false)
+    expect(screen.getByRole('heading', { name: 'harder' })).toBeInTheDocument()
+    expect(onRate).toHaveBeenCalledOnce()
+  })
+
+  it('marks known without creating a review and fills the skipped fresh slot; update failure retries only the queue', async () => {
+    const user = userEvent.setup()
+    const next = { ...item, id: 'replacement', expression: 'replacement' }
+    const nextTrack = { ...track, id: 'replacement:receptive', itemId: next.id }
+    const nextTask = { ...task, id: 'replacement-task', trackId: nextTrack.id, itemId: next.id }
+    const markKnown = vi.fn().mockResolvedValue(undefined)
+    const onRate = vi.fn()
+    const refresh = vi.fn().mockRejectedValueOnce(new Error('读取失败')).mockResolvedValue([nextTask])
+    render(<StudySession initialTasks={[task, { ...task, id: 'other-direction', trackType: 'productive' }]} items={[item, next]}
+      tracks={[track, nextTrack]} mode="core" usableThisWeek={0} onRate={onRate} onMarkKnown={markKnown}
+      onRefreshTasks={refresh} onExit={vi.fn()} onFinish={vi.fn()} evaluate={vi.fn()} />)
+    await user.click(screen.getByRole('button', { name: '这个词已会，跳过' }))
+    expect(markKnown).toHaveBeenCalledOnce()
+    expect(refresh).toHaveBeenCalledWith([], new Set(), true)
+    expect(onRate).not.toHaveBeenCalled()
+    expect(screen.getByRole('button', { name: '这个词已会，跳过' })).toBeDisabled()
+    await user.click(screen.getByRole('button', { name: '重试更新词汇' }))
+    expect(screen.getByRole('heading', { name: 'replacement' })).toBeInTheDocument()
+    expect(markKnown).toHaveBeenCalledOnce()
+    expect(onRate).not.toHaveBeenCalled()
+  })
+
+  it('retries a priority word before advancing to the ordinary new words', async () => {
+    const user = userEvent.setup()
+    const priorityItem = { ...item, listSlugs: ['finance', 'my-vocabulary'] as VocabularyItem['listSlugs'] }
+    const ordinaryItem = { ...item, id: 'ordinary', expression: 'ordinary' }
+    const onRate = vi.fn().mockResolvedValue(undefined)
+    render(<StudySession initialTasks={[task, { ...task, id: 'priority-2' },
+      { ...task, id: 'ordinary-task', itemId: ordinaryItem.id }]} items={[priorityItem, ordinaryItem]}
+      tracks={[track]} mode="core" usableThisWeek={0} onRate={onRate} onExit={vi.fn()} onFinish={vi.fn()}
+      evaluate={() => ({ rating: 'good', matched: true })} />)
+    await user.click(screen.getByRole('button', { name: '想不起来' }))
+    await user.click(screen.getByRole('button', { name: /忘记了/ }))
+    await user.type(screen.getByLabelText('你记得的中文意思'), '现金流')
+    await user.click(screen.getByRole('button', { name: /提交回忆/ }))
+    await user.click(screen.getByRole('button', { name: /想起来了/ }))
+    expect(screen.getByRole('heading', { name: 'cash flow' })).toBeInTheDocument()
+    await user.type(screen.getByLabelText('你记得的中文意思'), '现金流')
+    await user.click(screen.getByRole('button', { name: /提交回忆/ }))
+    await user.click(screen.getByRole('button', { name: /想起来了/ }))
+    expect(onRate.mock.calls[2][0]).toMatchObject({ itemId: item.id, retryCount: 1 })
+    expect(screen.getByRole('heading', { name: 'ordinary' })).toBeInTheDocument()
+  })
+
   it('requires free recall before revealing the target meaning', async () => {
     const user = userEvent.setup()
     const onRate = vi.fn().mockResolvedValue(undefined)
@@ -361,35 +456,32 @@ describe('StudySession', () => {
     expect(onRate.mock.calls[0][2]).toMatchObject({ answer: 'We monitor cash flow.', promptId: 'cash-flow-cloze', correctness: 'unverified' })
   })
 
-  it('allows the current answer to finish at the budget then offers a five minute continuation', async () => {
+  it('keeps learning past fifteen minutes and completes only after the last task', async () => {
     vi.useFakeTimers()
     vi.spyOn(document, 'hasFocus').mockReturnValue(true)
-    const onContinue = vi.fn()
     const onFinish = vi.fn()
-    render(<StudySession initialTasks={[task, { ...task, id: 'task-2' }]} items={[item]} tracks={[track]} mode="core" usableThisWeek={0} initialBudgetMs={1000} onContinue={onContinue} evaluate={() => ({ rating: 'good', matched: true })} onRate={vi.fn().mockResolvedValue(undefined)} onExit={vi.fn()} onFinish={onFinish} />)
+    render(<StudySession initialTasks={[task, { ...task, id: 'task-2' }]} items={[item]} tracks={[track]} mode="core" usableThisWeek={0} evaluate={() => ({ rating: 'good', matched: true })} onRate={vi.fn().mockResolvedValue(undefined)} onExit={vi.fn()} onFinish={onFinish} />)
     fireEvent.change(screen.getByLabelText('你记得的中文意思'), { target: { value: '现金流' } })
-    await act(async () => { await vi.advanceTimersByTimeAsync(1500) })
-    expect(screen.getByText('已达到本轮时间目标，完成当前题后选择结束或继续。')).toBeInTheDocument()
+    for (let minute = 0; minute < 16; minute += 1) {
+      fireEvent.pointerDown(window)
+      await act(async () => { await vi.advanceTimersByTimeAsync(60_000) })
+    }
+    expect(screen.getByLabelText('本轮学习计时')).toHaveTextContent('16:00')
+    expect(screen.getByLabelText('本轮学习计时')).not.toHaveTextContent('/')
     await act(async () => fireEvent.click(screen.getByRole('button', { name: /提交回忆/ })))
     await act(async () => fireEvent.click(screen.getByRole('button', { name: /想起来了/ })))
-    expect(screen.getByRole('heading', { name: '今天的时间目标已达到' })).toBeInTheDocument()
+    expect(screen.getByText('2 / 2')).toBeInTheDocument()
     expect(onFinish).not.toHaveBeenCalled()
-    await act(async () => fireEvent.click(screen.getByRole('button', { name: '继续 5 分钟' })))
-    expect(onContinue).toHaveBeenCalledTimes(1)
+    fireEvent.change(screen.getByLabelText('你记得的中文意思'), { target: { value: '现金流' } })
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: /提交回忆/ })))
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: /想起来了/ })))
+    expect(onFinish).toHaveBeenCalledOnce()
   })
 
-  it('can retry a rejected continuation without getting stuck in the exit lock', async () => {
-    const user = userEvent.setup()
-    const onContinue = vi.fn().mockRejectedValueOnce(new Error('database unavailable')).mockResolvedValue(true)
-    render(<StudySession initialTasks={[task]} items={[item]} tracks={[track]} mode="core" usableThisWeek={0} initialBudgetMs={0} onContinue={onContinue} evaluate={() => ({ rating: 'good', matched: true })} onRate={vi.fn().mockResolvedValue(undefined)} onExit={vi.fn()} onFinish={vi.fn()} />)
-    await user.type(screen.getByLabelText('你记得的中文意思'), '现金流')
-    await user.click(screen.getByRole('button', { name: /提交回忆/ }))
-    await user.click(screen.getByRole('button', { name: /想起来了/ }))
-    await user.click(screen.getByRole('button', { name: '继续 5 分钟' }))
-    expect(await screen.findByRole('alert')).toHaveTextContent('database unavailable')
-    expect(screen.getByRole('button', { name: '继续 5 分钟' })).toBeEnabled()
-    await user.click(screen.getByRole('button', { name: '继续 5 分钟' }))
-    expect(onContinue).toHaveBeenCalledTimes(2)
+  it('keeps the known-word action inside the learning card', () => {
+    render(<StudySession initialTasks={[task]} items={[item]} tracks={[track]} mode="core" usableThisWeek={0}
+      onMarkKnown={vi.fn()} evaluate={vi.fn()} onRate={vi.fn()} onExit={vi.fn()} onFinish={vi.fn()} />)
+    expect(screen.getByRole('button', { name: '这个词已会，跳过' }).closest('.recall-card')).not.toBeNull()
   })
 
   it('keeps an unsuccessful day rebuild retryable and never starts the old next card', async () => {

@@ -17,7 +17,7 @@ import {
 export const DICTIONARY_API_BASE_URL = '/api/dictionary/api/v2/entries/en'
 export const DICTIONARY_TIMEOUT_MS = 5_000
 /** Bump when cached meaning shape changes (e.g. bilingual senses). */
-export const DICTIONARY_RESULT_VERSION = 2
+export const DICTIONARY_RESULT_VERSION = 4
 
 export type DictionaryLookupErrorCode =
   | 'empty-query'

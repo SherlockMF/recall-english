@@ -2,6 +2,10 @@ import { describe, expect, it } from 'vitest'
 import { resolveListSlugsForEdit } from './listMembership'
 
 describe('resolveListSlugsForEdit', () => {
+  it('does not restore priority when editing a custom word removed from priority study', () => {
+    expect(resolveListSlugsForEdit([], 'my-vocabulary', 'business')).toEqual(['business'])
+    expect(resolveListSlugsForEdit([], 'my-vocabulary', 'other')).toEqual([])
+  })
   it('keeps dual system memberships when primary category is unchanged', () => {
     expect(resolveListSlugsForEdit(
       ['finance', 'accounting'],

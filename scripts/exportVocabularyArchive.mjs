@@ -1,14 +1,16 @@
 /**
  * Bundle the current vocabulary library into a zip the user can keep / re-import.
- * Run: npx vite-node scripts/exportVocabularyArchive.mjs
+ * Run: npm run vocabulary:export
  */
-import { mkdirSync, readFileSync, writeFileSync, copyFileSync } from 'node:fs'
-import { join } from 'node:path'
-import { execFileSync } from 'node:child_process'
-import { ALL_VOCABULARY_LISTS } from '../src/data/vocabularyLists.ts'
-import { seedMemberships, seedWords } from '../src/data/seedVocabulary.ts'
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync, copyFileSync } from 'node:fs'
+import { join, resolve } from 'node:path'
+import { parseArgs } from 'node:util'
+import { loadSeedPackFromDisk } from './lib/loadSeedPack.mjs'
+import { createArchive } from './lib/archive.mjs'
 
 const root = join(import.meta.dirname, '..')
+const { values } = parseArgs({ options: { 'output-dir': { type: 'string' } } })
+const { words: seedWords, memberships: seedMemberships, lists: ALL_VOCABULARY_LISTS } = await loadSeedPackFromDisk(root)
 const now = new Date()
 const exportedAt = now.toISOString().replace(/\.\d{3}Z$/, '.000Z')
 const stamp = new Intl.DateTimeFormat('en-CA', {
@@ -17,11 +19,14 @@ const stamp = new Intl.DateTimeFormat('en-CA', {
   month: '2-digit',
   day: '2-digit',
 }).format(now)
-const outDir = join(root, 'data', 'vocabulary-packs', '_export')
-const downloads = join(process.env.USERPROFILE ?? 'C:\\Users\\84754', 'Downloads')
-const zipName = `recall-english-vocabulary-r4-${stamp}.zip`
+const exportRoot = join(root, 'data', 'vocabulary-packs', '_export')
+mkdirSync(exportRoot, { recursive: true })
+const outDir = mkdtempSync(join(exportRoot, 'vocabulary-stage-'))
+const downloads = values['output-dir'] ? resolve(values['output-dir']) : join(process.env.USERPROFILE ?? process.env.HOME ?? root, 'Downloads')
+mkdirSync(downloads, { recursive: true })
+const zipName = `recall-english-vocabulary-v53-${stamp}.zip`
 const zipPath = join(downloads, zipName)
-const packPath = join(root, 'data', 'vocabulary-packs', 'all_batches_combined_vocabulary_pack.json')
+const packPath = join(root, 'data', 'vocabulary-packs', 'trusted_v5_2_vocabulary_pack.json')
 
 const LIST_NAME = Object.fromEntries(ALL_VOCABULARY_LISTS.map((list) => [list.id, list.slug]))
 
@@ -87,7 +92,7 @@ for (const item of seedMemberships) {
   listCounts[slug] = (listCounts[slug] ?? 0) + 1
 }
 
-const readme = `# Recall English 词库包（Round 4）
+const readme = `# Recall English 词库包（V5.3）
 
 导出时间：${exportedAt}
 
@@ -97,8 +102,8 @@ const readme = `# Recall English 词库包（Round 4）
 
 | 文件 | 说明 |
 | --- | --- |
-| \`recall-english_complete_seed.json\` | **推荐**。应用实际内置的完整种子：${seedWords.length} 条（手写核心 240 + 打包词 7350） |
-| \`recall-english_combined_pack.json\` | 词包源文件：${sourcePack.words.length} 条（与手写核心有 135 条 expression 重叠，导入时会去重） |
+| \`recall-english_complete_seed.json\` | **推荐**。应用实际内置的完整种子：${seedWords.length} 条 |
+| \`recall-english_combined_pack.json\` | 当前 trusted_v5_2 词包源文件：${sourcePack.words.length} 条 |
 | \`recall-english_complete_seed_index.csv\` | 完整种子索引，可用 Excel 打开浏览 |
 
 ## 规模
@@ -129,11 +134,7 @@ for (const name of [
   copyFileSync(join(outDir, name), join(stage, name))
 }
 
-execFileSync('powershell.exe', [
-  '-NoProfile',
-  '-Command',
-  `Compress-Archive -Path '${stage}\\*' -DestinationPath '${zipPath}' -Force; if (-not (Test-Path -LiteralPath '${zipPath}')) { throw 'zip was not created' }`,
-], { stdio: 'inherit' })
+createArchive(stage, zipPath)
 
 console.log(JSON.stringify({
   zipPath,

@@ -82,6 +82,18 @@ describe('vocabulary pack import and export', () => {
     await deleteDB(DATABASE_NAME)
   })
 
+  it('exports lexical overrides without personal known marks and does not import someone else’s known status', async () => {
+    await writeBatch({ words: [word({ knownAt: newer, vocabularyLevel: 'C1' })], settings: DEFAULT_SETTINGS })
+    const exported = await exportVocabularyPack()
+    expect(exported.words[0].vocabularyLevel).toBe('C1')
+    expect(exported.words[0].knownAt).toBeUndefined()
+    await importVocabularyPack(pack({ words: [word({ id: 'new-word', senseKey: 'another-sense', knownAt: newer, vocabularyLevel: 'B2' })], memberships: [] }))
+    const words = await getAllWords()
+    expect(words.find((entry) => entry.id === 'new-word')).toMatchObject({ vocabularyLevel: 'B2' })
+    expect(words.find((entry) => entry.id === 'new-word')?.knownAt).toBeUndefined()
+    expect(words.find((entry) => entry.id === 'vocabulary-1')?.knownAt).toBe(newer)
+  })
+
   it('exports seed and custom words without tracks or settings mutation', async () => {
     const custom = word({
       id: 'custom-1',

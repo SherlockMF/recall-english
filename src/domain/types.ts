@@ -8,6 +8,8 @@ export type TrackType = 'receptive' | 'productive' | 'usage'
 export type ReviewRating = 'again' | 'hard' | 'good'
 export type HintLevel = 0 | 1 | 2 | 3
 export type SpeechAccent = 'uk' | 'us'
+export const VOCABULARY_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const
+export type VocabularyLevel = (typeof VOCABULARY_LEVELS)[number]
 
 export interface VocabularyExample {
   en: string
@@ -39,6 +41,12 @@ export interface Word {
   source: VocabularySource
   priority: number
   status: VocabularyStatus
+  /** Self-reported knowledge; does not create recall evidence or delete history. */
+  knownAt?: string
+  /** Optional personal override for lexical difficulty, separate from FSRS difficulty. */
+  vocabularyLevel?: VocabularyLevel
+  /** Explicit personal content changes; absent on legacy records. */
+  contentEdited?: boolean
   ipaUk?: string
   ipaUs?: string
   audioUk?: string
@@ -119,6 +127,8 @@ export interface ReviewAttempt {
   correctness?: 'correct' | 'incorrect' | 'unverified'
   matchKind?: 'exact' | 'variant' | 'minor-typo' | 'checkpoint' | 'incorrect'
   suggestedRating?: ReviewRating
+  wasPriorityStudy?: boolean
+  wasNewItem?: boolean
 }
 
 export interface StudyTimeEntry {
@@ -140,15 +150,24 @@ export interface UserSettings {
   contentMix: Record<SystemListSlug, number>
   /** Preferred UK/US accent for study playback. */
   speechAccent: SpeechAccent
+  vocabularyLevel?: VocabularyLevel
+  adaptiveDifficulty?: boolean
+  difficultyResetAt?: string
   /**
    * When this differs from the app’s bundled `SEED_CONTENT_REVISION`,
    * `initializeDatabase` refreshes seed Word bodies by id (tracks kept).
    */
   seedContentRevision?: string
+  /** Supplemental dictionary senses are merged without refreshing seed bodies. */
+  dictionaryContentRevision?: string
   lastBackupAt?: string
 }
 
 export interface DictionaryMeaning {
+  /** Exact automated source definition withdrawn by a verified content correction. */
+  supersededDefinition?: string
+  /** Stable source identity retained when a learner edits this meaning before saving. */
+  senseKey?: string
   partOfSpeech: string
   definition: string
   /** Short Chinese gloss for this sense, when a bilingual source provided one. */
@@ -156,6 +175,7 @@ export interface DictionaryMeaning {
   example?: string
   exampleZh?: string
   synonyms: string[]
+  collocations?: string[]
   antonyms?: string[]
 }
 
@@ -254,6 +274,8 @@ export const DEFAULT_SETTINGS: UserSettings = {
   newItemsPerDay: 5,
   contentMix: { daily: 0.35, business: 0.25, finance: 0.2, accounting: 0.2 },
   speechAccent: 'uk',
+  vocabularyLevel: 'B1',
+  adaptiveDifficulty: true,
   // Single source of truth for the seed stamp lives in seedContentRevision.
   seedContentRevision: SEED_CONTENT_REVISION,
 }
@@ -275,11 +297,10 @@ export function hydrateWord(
   listSlugs: ListSlug[],
   scenarioNote?: string,
 ): VocabularyItem {
-  const slugs = listSlugs.length > 0 ? listSlugs : (['my-vocabulary'] as ListSlug[])
   return {
     ...word,
-    listSlugs: slugs,
-    category: primaryListSlug(slugs),
+    listSlugs,
+    category: primaryListSlug(listSlugs),
     scenarioNote: scenarioNote?.trim() || undefined,
   }
 }

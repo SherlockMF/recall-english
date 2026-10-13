@@ -11,7 +11,11 @@ import type {
   Word,
 } from '../domain/types'
 import { isExplicitFailure, isValidRecallSuccess } from './learningEvidence'
-import { activeMsForDate, introducedItemIdsToday, deriveDelayedRecall, localDateKey } from './learningStats'
+import { activeMsForDate, introducedItemIdsToday, localDateKey } from './learningStats'
+import { VOCABULARY_LEVELS, type VocabularyLevel } from '../domain/types'
+import { getStudyDifficulty, getVocabularyDifficulty } from './studyDifficulty'
+import { recallContext } from './presentation'
+import { expressionKey } from './text'
 
 export type SessionMode = 'core' | 'extension'
 export type SchedulerDate = Date | string | number
@@ -29,12 +33,6 @@ interface QueueCandidate {
   dueAt: number
   priority: number
   minutes: number
-}
-
-interface BudgetSelection {
-  selected: QueueCandidate[]
-  remaining: QueueCandidate[]
-  spent: number
 }
 
 function validDate(value: SchedulerDate | undefined, fallback: Date) {
@@ -160,7 +158,7 @@ export function unlockEligibleUsageTracks(
 }
 
 function activeItemMap(items: VocabularyItem[]) {
-  return new Map(items.filter((item) => item.status === 'active').map((item) => [item.id, item]))
+  return new Map(items.filter((item) => item.status === 'active' && !item.knownAt).map((item) => [item.id, item]))
 }
 
 function isCoreTrack(track: LearningTrack) {
@@ -212,6 +210,7 @@ function selectNewItems(
   candidates: VocabularyItem[],
   limit: number,
   settings: UserSettings,
+  level: VocabularyLevel,
   initialCounts: Record<MixedCategory, number> = {
     daily: 0,
     business: 0,
@@ -220,13 +219,13 @@ function selectNewItems(
   },
 ) {
   if (limit <= 0) return []
-  const selected: VocabularyItem[] = []
-  const sorted = [...candidates].sort(compareItems)
+  const selected = candidates.filter((item) => item.listSlugs.includes('my-vocabulary'))
+    .sort((left, right) => left.expression.localeCompare(right.expression) || left.id.localeCompare(right.id))
+    .slice(0, limit)
+  const distance = (item: VocabularyItem) => Math.abs(VOCABULARY_LEVELS.indexOf(getVocabularyDifficulty(item).level) - VOCABULARY_LEVELS.indexOf(level))
+  const sorted = candidates.filter((item) => !item.listSlugs.includes('my-vocabulary'))
+    .sort((left, right) => distance(left) - distance(right) || compareItems(left, right))
   const personal = sorted.filter((item) => item.category === 'my-vocabulary')
-
-  while (personal.length > 0 && selected.length < limit) {
-    selected.push(personal.shift()!)
-  }
   if (selected.length >= limit) return selected
 
   const pools = Object.fromEntries(
@@ -235,11 +234,16 @@ function selectNewItems(
       sorted.filter((item) => item.category === category),
     ]),
   ) as Record<MixedCategory, VocabularyItem[]>
-  const counts = { ...initialCounts }
+  const priorityCounts = categoryCounts(selected)
+  const counts = Object.fromEntries(CATEGORY_ORDER.map((category) => [category,
+    initialCounts[category] + priorityCounts[category],
+  ])) as Record<MixedCategory, number>
   const weights = normalizedMix(settings)
 
   while (selected.length < limit) {
-    const available = CATEGORY_ORDER.filter((category) => pools[category].length > 0)
+    const nearest = Math.min(...CATEGORY_ORDER.map((category) => pools[category][0] ? distance(pools[category][0]) : Infinity), personal[0] ? distance(personal[0]) : Infinity)
+    if (personal[0] && distance(personal[0]) === nearest) { selected.push(personal.shift()!); continue }
+    const available = CATEGORY_ORDER.filter((category) => pools[category].length > 0 && distance(pools[category][0]) === nearest)
     if (available.length === 0) break
     const weighted = available.filter((category) => weights[category] > 0)
     const category = (weighted.length > 0 ? weighted : available).reduce((best, current) => {
@@ -281,23 +285,6 @@ function separateItems(candidates: QueueCandidate[]) {
   return ordered
 }
 
-function takeBudget(candidates: QueueCandidate[], minutes: number): BudgetSelection {
-  const ordered = separateItems(candidates)
-  if (minutes <= 0) return { selected: [], remaining: ordered, spent: 0 }
-  const selected: QueueCandidate[] = []
-  const remaining: QueueCandidate[] = []
-  let spent = 0
-  for (const candidate of ordered) {
-    if (spent + candidate.minutes <= minutes + Number.EPSILON) {
-      selected.push(candidate)
-      spent += candidate.minutes
-    } else {
-      remaining.push(candidate)
-    }
-  }
-  return { selected, remaining, spent }
-}
-
 function trackCandidate(
   track: LearningTrack,
   item: VocabularyItem,
@@ -331,11 +318,18 @@ function newItemCandidates(
   mode: SessionMode,
   nowValue: number,
 ) {
-  return selectedItems.flatMap((item) => CORE_TRACK_TYPES.map((type) => {
+  let ordinaryIndex = 0
+  const phaseByItem = new Map(selectedItems.map((item) => [item.id, item.listSlugs.includes('my-vocabulary') ? phase : phase + 1 + Math.floor(ordinaryIndex++ / 3)]))
+  return selectedItems.flatMap((item, index) => CORE_TRACK_TYPES.map((type) => {
     const track = tracks.find(
       (candidate) => candidate.itemId === item.id && candidate.type === type && candidate.unlocked,
     )
-    return track ? trackCandidate(track, item, phase, mode, nowValue) : undefined
+    if (!track) return undefined
+    return {
+      ...trackCandidate(track, item, phaseByItem.get(item.id)!, mode, nowValue),
+      dueAt: nowValue,
+      priority: index + CORE_TRACK_TYPES.indexOf(type) * selectedItems.length,
+    }
   }).filter((candidate): candidate is QueueCandidate => Boolean(candidate)))
 }
 
@@ -346,7 +340,7 @@ export interface DailyPlanInput {
   attempts: ReviewAttempt[]
   timeEntries: StudyTimeEntry[]
   now: SchedulerDate
-  /** Grants this many more minutes from the current used total, without raising the new-item cap. */
+  /** Legacy budget metadata; no longer limits the learning queue. */
   additionalMinutes?: number
 }
 
@@ -368,20 +362,15 @@ export interface DailyPlan {
   reasons: string[]
 }
 
-/** The adaptive suggestion can reduce the configured hard cap, never increase it. */
+/** The daily count is fixed; the legacy function signature is retained for callers. */
 export function getAdaptiveNewItemTarget(
   settings: UserSettings,
   _items: VocabularyItem[],
   _tracks: LearningTrack[],
-  attempts: ReviewAttempt[],
-  now: SchedulerDate = new Date(),
+  _attempts: ReviewAttempt[],
+  _now: SchedulerDate = new Date(),
 ) {
-  const baseline = Math.min(100, Math.max(0, Math.floor(settings.newItemsPerDay)))
-  const sample = deriveDelayedRecall(attempts, validDate(now, new Date()))
-  if (sample.total < 10 || sample.rate === null) return baseline
-  if (sample.rate < 0.65) return Math.floor(baseline * 0.5)
-  if (sample.rate < 0.8) return Math.floor(baseline * 0.75)
-  return baseline
+  return Math.min(100, Math.max(0, Math.floor(settings.newItemsPerDay)))
 }
 
 /** A single projection for both Today and session start, based only on saved facts. */
@@ -414,37 +403,38 @@ export function buildDailyPlan(input: DailyPlanInput): DailyPlan {
     (item) => isFreshItem(item.id, tracksByItem.get(item.id) ?? [], attemptedItems),
   )
   const freshIds = new Set(freshItems.map((item) => item.id))
-  const due = tracks.filter((track) => {
+  const senseCounts = new Map<string, number>()
+  for (const item of items) {
+    const key = expressionKey(item.expression)
+    senseCounts.set(key, (senseCounts.get(key) ?? 0) + 1)
+  }
+  const eligibleTracks = tracks.filter((track) => {
+    const item = activeItems.get(track.itemId)
+    return track.type !== 'receptive' || !item || (senseCounts.get(expressionKey(item.expression)) ?? 0) < 2
+      || Boolean(recallContext(item))
+  })
+  const due = eligibleTracks.filter((track) => {
     if (!activeItems.has(track.itemId) || !track.unlocked || freshIds.has(track.itemId)) return false
     if (track.type === 'usage' && activeItems.get(track.itemId)!.usagePrompts.length === 0) return false
     const unfinishedDirection = isCoreTrack(track) && track.reps === 0
       && !attemptedDirections.has(`${track.itemId}:${track.type}`)
     return unfinishedDirection || dateValue(track.due, Number.NEGATIVE_INFINITY) <= nowValue
   }).map((track) => trackCandidate(track, activeItems.get(track.itemId)!, 0, 'core', nowValue))
-  const dueSelection = takeBudget(due, remainingMs / 60_000)
-  const newSlots = dueSelection.remaining.length > 0 ? 0
-    : Math.floor(Math.max(0, remainingMs / 60_000 - dueSelection.spent) / (2 * CORE_TASK_MINUTES))
   const introducedItems = items.filter((item) => introducedIds.has(item.id))
-  const newItems = selectNewItems(freshItems, Math.min(newSlots, remainingNewItems), settings, categoryCounts(introducedItems))
-  const newCandidates = newItemCandidates(newItems, tracks, 1, 'core', nowValue)
-  const selected = [...dueSelection.selected, ...separateItems(newCandidates)]
+  const difficulty = getStudyDifficulty(settings, items, validAttempts, now)
+  const newItems = selectNewItems(freshItems, remainingNewItems, settings, difficulty.level, categoryCounts(introducedItems))
+  const newCandidates = newItemCandidates(newItems, eligibleTracks, 1, 'core', nowValue)
+  const selected = [...separateItems(due), ...separateItems(newCandidates)]
   const newIds = new Set(newItems.map((item) => item.id))
   const tasks = selected.map((candidate) => ({ ...candidate.task, isNew: newIds.has(candidate.task.itemId) }))
   const estimatedMinutes = selected.reduce((sum, candidate) => sum + candidate.minutes, 0)
   const reasons: string[] = []
-  if (dailyTarget < settings.newItemsPerDay) {
-    const sample = deriveDelayedRecall(attempts, now)
-    reasons.push(`近 7 天延迟回忆正确率 ${Math.round((sample.rate ?? 0) * 100)}%（${sample.total} 次），今日新表达建议由 ${settings.newItemsPerDay} 调整为 ${dailyTarget}。`)
-  }
-  if (remainingMs <= 0) reasons.push('今日学习时间已用完，可结束或明确继续 5 分钟。')
-  if (dueSelection.remaining.length > 0) reasons.push(`剩余时间优先复习，仍有 ${dueSelection.remaining.length} 道到期或未完成题目未安排。`)
+  reasons.push(`每日新表达数量固定为 ${dailyTarget} 个；优先词按列表顺序安排，不足的额度补充普通词。`)
+  reasons.push(`普通新词优先安排 ${difficulty.level}，同级不足时补充相邻等级。${settings.adaptiveDifficulty === false ? '自动调整已关闭。' : `自动调整已开启：连续轻松 ${difficulty.easyStreak}/3，连续困难 ${difficulty.hardStreak}/2；累计调整 ${difficulty.changes} 次。`}`)
   if (remainingNewItems === 0) reasons.push(settings.newItemsPerDay === 0
     ? '今日新表达上限为 0，只安排已学内容。' : '今日新表达额度已用完；其他方向与重试不重复计新表达。')
-  if (newSlots < remainingNewItems && dueSelection.remaining.length === 0) reasons.push('按剩余时间减少新表达，每个新表达预留两个回忆方向。')
-  if (remainingMs > 0 && dueSelection.remaining.length === 0 && newItems.length < Math.min(newSlots, remainingNewItems)) {
-    reasons.push('可学的新表达不足，按现有内容安排，不为填满时间重复出题。')
-  }
-  if (tasks.length === 0 && remainingMs > 0 && remainingNewItems === 0) reasons.push('当前没有到期或未完成的练习。')
+  if (newItems.length < remainingNewItems) reasons.push('可学的新表达不足，按现有内容安排，不为凑足数量重复出题。')
+  if (tasks.length === 0 && remainingNewItems === 0) reasons.push('当前没有到期或未完成的练习。')
   return {
     tasks, localDate, dailyMinutes, usedMs, remainingMs, estimatedMinutes,
     newItemCount: newItems.length,
@@ -452,7 +442,7 @@ export function buildDailyPlan(input: DailyPlanInput): DailyPlan {
     reviewTaskCount: tasks.filter((task) => !task.isNew && task.trackType !== 'usage').length,
     usageTaskCount: tasks.filter((task) => task.trackType === 'usage').length,
     totalTasks: tasks.length, introducedToday: introduced, remainingNewItems,
-    overflowDueCount: dueSelection.remaining.length, reasons,
+    overflowDueCount: 0, reasons,
   }
 }
 

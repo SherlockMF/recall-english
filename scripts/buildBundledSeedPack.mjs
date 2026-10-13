@@ -4,8 +4,7 @@
  * Source: data/vocabulary-packs/trusted_v1_vocabulary_pack.json
  * Output: public/data/bundledSeedWords.json + bundledSeedMemberships.json
  *
- * Skips pack entries whose expression already exists in the handcrafted seed
- * (seedVocabulary.ts), so the curated 240 stay authoritative.
+ * Skips identical handcrafted senses; other meanings of the same expression remain eligible.
  *
  * Hard-fails on placeholder definitions, template examples, or fake collocations.
  *
@@ -14,17 +13,10 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { loadHandcraftedSenses, overlapsHandcraftedSense } from './lib/handcraftedSenses.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const SEED_TIMESTAMP = '2026-08-14T00:00:00.000Z'
-
-function normalizeExpression(value) {
-  return value
-    .normalize('NFKC')
-    .trim()
-    .toLocaleLowerCase('en-US')
-    .replace(/\s+/g, ' ')
-}
 
 function normalizeLoose(value) {
   return String(value ?? '')
@@ -162,18 +154,6 @@ function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
-function loadHandcraftedExpressions() {
-  const source = readFileSync(join(root, 'src/data/seedVocabulary.ts'), 'utf8')
-  const expressions = new Set()
-  for (const match of source.matchAll(/expression:\s*'((?:\\'|[^'])*)'/g)) {
-    expressions.add(normalizeExpression(match[1].replace(/\\'/g, "'")))
-  }
-  for (const match of source.matchAll(/expression:\s*"((?:\\"|[^"])*)"/g)) {
-    expressions.add(normalizeExpression(match[1].replace(/\\"/g, '"')))
-  }
-  return expressions
-}
-
 function buildUsagePrompts(wordId, expression, exampleEn) {
   const sample = exampleEn || `I used ${expression} in a real situation.`
   return [
@@ -250,7 +230,7 @@ const packPathCandidates = [
 const packPath = packPathCandidates.find((path) => existsSync(path))
 if (!packPath) throw new Error('No trusted vocabulary pack found')
 const pack = JSON.parse(readFileSync(packPath, 'utf8'))
-const existing = loadHandcraftedExpressions()
+const existing = loadHandcraftedSenses(readFileSync(join(root, 'src/data/seedVocabulary.ts'), 'utf8'))
 
 if (pack.kind !== 'vocabulary-pack') {
   throw new Error('trusted pack kind must be vocabulary-pack')
@@ -266,8 +246,7 @@ for (const word of pack.words) {
     errors.push(`${word.id}: production pack must use v1-*/core-*/econ-* ids`)
     continue
   }
-  const key = normalizeExpression(word.expression)
-  if (existing.has(key)) {
+  if (overlapsHandcraftedSense(word, existing)) {
     skipped.push(word.expression)
     continue
   }

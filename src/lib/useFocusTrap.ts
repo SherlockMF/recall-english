@@ -6,6 +6,7 @@ const FOCUSABLE_SELECTOR = [
   'input:not([disabled]):not([type="hidden"])',
   'select:not([disabled])',
   'textarea:not([disabled])',
+  'summary',
   '[tabindex]:not([tabindex="-1"])',
 ].join(', ')
 
@@ -35,12 +36,13 @@ export function useFocusTrap(dialogRef: RefObject<HTMLElement | null>): void {
       const last = items[items.length - 1]
       const active = document.activeElement
       const inside = active !== null && dialog!.contains(active)
+      const activeIsFocusable = items.some((item) => item === active)
       if (event.shiftKey) {
-        if (active === first || !inside) {
+        if (active === first || !inside || !activeIsFocusable) {
           event.preventDefault()
           last.focus()
         }
-      } else if (active === last || !inside) {
+      } else if (active === last || !inside || !activeIsFocusable) {
         event.preventDefault()
         first.focus()
       }

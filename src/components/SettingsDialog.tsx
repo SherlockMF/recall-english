@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import type { SpeechAccent, UserSettings } from '../domain/types'
+import { VOCABULARY_LEVELS, type SpeechAccent, type UserSettings, type VocabularyLevel } from '../domain/types'
+import { vocabularyLevelLabels } from '../lib/studyDifficulty'
 import {
   clearDeepseekApiKey,
   getDeepseekApiKey,
@@ -8,6 +9,8 @@ import {
 import { useEscapeToClose } from '../lib/useEscapeToClose'
 import { useFocusTrap } from '../lib/useFocusTrap'
 import { Icon } from './Icon'
+import { VoiceServiceStatus } from './VoiceServiceStatus'
+import { KeyStatusBadge } from './KeyStatusBadge'
 
 interface SettingsDialogProps {
   settings: UserSettings
@@ -33,9 +36,13 @@ export function SettingsDialog({
   onImportVocabulary,
 }: SettingsDialogProps) {
   const [newItems, setNewItems] = useState(String(settings.newItemsPerDay))
-  const [dailyMinutes, setDailyMinutes] = useState(String(settings.dailyMinutes ?? settings.coreMinutes))
   const [speechAccent, setSpeechAccent] = useState<SpeechAccent>(settings.speechAccent)
-  const [apiKey, setApiKey] = useState(() => getDeepseekApiKey())
+  const [vocabularyLevel, setVocabularyLevel] = useState<VocabularyLevel>(settings.vocabularyLevel ?? 'B1')
+  const [adaptiveDifficulty, setAdaptiveDifficulty] = useState(settings.adaptiveDifficulty !== false)
+  const [savedApiKey, setSavedApiKey] = useState(() => getDeepseekApiKey())
+  const [apiKey, setApiKey] = useState(savedApiKey)
+  const [apiKeyNotice, setApiKeyNotice] = useState('')
+  const [apiKeyFailed, setApiKeyFailed] = useState(false)
   const [message, setMessage] = useState('')
   const [saving, setSaving] = useState(false)
   const [backupBusy, setBackupBusy] = useState(false)
@@ -58,10 +65,11 @@ export function SettingsDialog({
   }, [])
 
   useEffect(() => {
-    setDailyMinutes(String(settings.dailyMinutes ?? settings.coreMinutes))
     setNewItems(String(settings.newItemsPerDay))
     setSpeechAccent(settings.speechAccent)
-  }, [settings.dailyMinutes, settings.coreMinutes, settings.newItemsPerDay, settings.speechAccent])
+    setVocabularyLevel(settings.vocabularyLevel ?? 'B1')
+    setAdaptiveDifficulty(settings.adaptiveDifficulty !== false)
+  }, [settings.newItemsPerDay, settings.speechAccent, settings.vocabularyLevel, settings.adaptiveDifficulty])
 
   async function runBackupAction(action: () => Promise<void>) {
     setBackupBusy(true)
@@ -97,6 +105,23 @@ export function SettingsDialog({
     setPersistentState(granted ? 'granted' : 'unavailable')
   }
 
+  function saveDeepseekKey(value: string): boolean {
+    const cleaned = value.trim()
+    try {
+      if (cleaned) setDeepseekApiKey(cleaned)
+      else clearDeepseekApiKey()
+      if (getDeepseekApiKey() !== cleaned) throw new Error('Key storage verification failed')
+      setSavedApiKey(cleaned)
+      setApiKeyFailed(false)
+      setApiKeyNotice(cleaned ? '已保存 DeepSeek API Key。' : '已清除 DeepSeek API Key。')
+      return true
+    } catch {
+      setApiKeyFailed(true)
+      setApiKeyNotice('无法更新 DeepSeek Key，请检查浏览器存储权限后重试。')
+      return false
+    }
+  }
+
   return (
     <div className="dialog-backdrop" role="presentation" onMouseDown={(event) => {
       if (event.currentTarget === event.target) onClose()
@@ -110,20 +135,29 @@ export function SettingsDialog({
         <div className="settings-section">
           <div className="settings-copy">
             <h3>每日节奏</h3>
-            <p>回忆与应用共用当天时间，可分多次完成。先复习，再根据剩余时间与延迟回忆表现安排新表达。</p>
+            <p>每日新表达数量按设置固定，优先词不足时补充普通词。只记录学习时间，不限时，可按自己的节奏分多次完成。</p>
           </div>
           <label className="text-setting">
-            <span>每日学习分钟 <small>5—120 分钟</small></span>
-            <input aria-label="每日学习分钟" type="number" min="5" max="120" step="1" value={dailyMinutes} onChange={(event) => setDailyMinutes(event.target.value)} />
-          </label>
-          <label className="text-setting">
-            <span>每日新表达上限 <small>0—100 个；0 表示只复习</small></span>
-            <input aria-label="每日新表达上限" type="number" min="0" max="100" step="1" value={newItems} onChange={(event) => setNewItems(event.target.value)} />
+            <span>每日新表达数量 <small>0—100 个；0 表示只复习</small></span>
+            <input aria-label="每日新表达数量" type="number" min="0" max="100" step="1" value={newItems} onChange={(event) => setNewItems(event.target.value)} />
           </label>
           <div className="retention-setting">
             <span><Icon name="brain" size={20} /></span>
             <div><strong>目标保持率 {Math.round(settings.desiredRetention * 100)}%</strong><p>这是 FSRS 安排复习的目标，不代表已经达到的掌握程度。</p></div>
           </div>
+        </div>
+
+        <div className="settings-section">
+          <div className="settings-copy">
+            <h3>词汇难度</h3>
+            <p>普通新词优先选取目标等级，同级不足时补充相邻等级。优先学习按原顺序安排，每日数量固定。修改等级或开关后重新累计表现。</p>
+          </div>
+          <label className="text-setting"><span>起始词汇难度</span><select aria-label="起始词汇难度" value={vocabularyLevel} onChange={(event) => setVocabularyLevel(event.target.value as VocabularyLevel)}>
+            {VOCABULARY_LEVELS.map((level) => <option key={level} value={level}>{vocabularyLevelLabels[level]}</option>)}
+          </select></label>
+          <label className="text-setting"><span>根据学习表现自动调整</span><input aria-label="根据学习表现自动调整" type="checkbox" checked={adaptiveDifficulty} onChange={(event) => setAdaptiveDifficulty(event.target.checked)} /></label>
+          <p className="form-note">连续 3 个普通新词双向快速、无提示答对，升一级；连续 2 个词首轮答错、想不起来或依赖二级以上提示，降一级。已会可在词库或训练中标记并跳过。词级来自 CEFR-J / Octanove，未收录为估算，不能代替水平测评。</p>
+          <p className="form-note"><a href="https://github.com/openlanguageprofiles/olp-en-cefrj" target="_blank" rel="noreferrer">词级来源与使用条件</a> · CEFR-J © Tono Laboratory, TUFS；Octanove C1/C2：CC BY-SA 4.0</p>
         </div>
 
         <div className="settings-section">
@@ -153,31 +187,29 @@ export function SettingsDialog({
 
         <div className="settings-section">
           <div className="settings-copy">
-            <h3>DeepSeek 辅助</h3>
+            <div className="settings-service-heading"><h3>DeepSeek 辅助</h3><KeyStatusBadge service="DeepSeek" status={apiKeyFailed ? 'error' : apiKey.trim() !== savedApiKey ? 'pending' : savedApiKey ? 'saved' : 'missing'} /></div>
             <p>可选。用于语义判分、提示、造题与词条补全；开放造句需主动点击 AI 验证。Key 只存在本机，不会进入备份；未验证的造句不会计为已通过。</p>
           </div>
           <label className="text-setting">
             <span>API Key</span>
             <input
+              aria-label="DeepSeek API Key"
               autoComplete="off"
-              onChange={(event) => setApiKey(event.target.value)}
+              onChange={(event) => { setApiKey(event.target.value); setApiKeyFailed(false); setApiKeyNotice('') }}
               placeholder="sk-..."
               type="password"
               value={apiKey}
             />
           </label>
-          <button
-            className="secondary-button"
-            onClick={() => {
-              clearDeepseekApiKey()
-              setApiKey('')
-              setMessage('已清除 DeepSeek API Key。')
-            }}
-            type="button"
-          >
-            清除 API Key
-          </button>
+          <div className="backup-actions">
+            <button className="primary-button" disabled={saving || !apiKey.trim()} onClick={() => saveDeepseekKey(apiKey)} type="button">保存 DeepSeek Key</button>
+            <button className="secondary-button" disabled={saving} onClick={() => { if (saveDeepseekKey('')) setApiKey('') }} type="button">清除 API Key</button>
+          </div>
+          {apiKeyNotice && <p className="key-status-help" role={apiKeyFailed ? 'alert' : 'status'}>{apiKeyNotice}</p>}
+          <p className="key-status-help">点击「保存 DeepSeek Key」后立即生效，不需要保存其他设置。已保存仅表示保留在本机；接口是否可用以实际调用结果为准。</p>
         </div>
+
+        <VoiceServiceStatus />
 
         <div className="settings-section">
           <div className="settings-copy">
@@ -243,18 +275,17 @@ export function SettingsDialog({
             className="primary-button"
             disabled={saving}
             onClick={async () => {
-              const minutes = Number(dailyMinutes)
               const limit = Number(newItems)
-              if (!dailyMinutes.trim() || !newItems.trim() || !Number.isInteger(minutes) || minutes < 5 || minutes > 120 || !Number.isInteger(limit) || limit < 0 || limit > 100) {
-                setMessage('学习时长须为 5—120 的整数，新表达上限须为 0—100 的整数。')
+              if (!newItems.trim() || !Number.isInteger(limit) || limit < 0 || limit > 100) {
+                setMessage('新表达数量须为 0—100 的整数。')
                 return
               }
               setSaving(true)
               setMessage('')
               try {
-                if (apiKey.trim()) setDeepseekApiKey(apiKey)
-                else clearDeepseekApiKey()
-                await onSave({ ...settings, dailyMinutes: minutes, newItemsPerDay: limit, speechAccent })
+                if (!saveDeepseekKey(apiKey)) { setMessage('无法更新 DeepSeek Key，请检查浏览器存储权限后重试。'); return }
+                await onSave({ ...settings, newItemsPerDay: limit, speechAccent, vocabularyLevel, adaptiveDifficulty,
+                  difficultyResetAt: vocabularyLevel !== (settings.vocabularyLevel ?? 'B1') || adaptiveDifficulty !== (settings.adaptiveDifficulty !== false) ? new Date().toISOString() : settings.difficultyResetAt })
                 onClose()
               } catch (error) {
                 setMessage(error instanceof Error ? error.message : '保存设置失败，请重试。')

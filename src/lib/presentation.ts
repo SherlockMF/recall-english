@@ -1,5 +1,10 @@
-import type { LearningTrack, ListSlug, ReviewAttempt, TrackType, VocabularyItem } from '../domain/types'
+import type { LearningTrack, ListSlug, ReviewAttempt, TrackType, VocabularyItem, Word } from '../domain/types'
 import { deriveLearningEvidence } from './learningEvidence'
+
+export function recallContext(item: Pick<Word, 'examples' | 'enDefinition' | 'collocations'>): string {
+  return item.examples.find((example) => example.en.trim())?.en.trim()
+    || item.enDefinition.trim() || item.collocations.find((value) => value.trim())?.trim() || ''
+}
 
 export const categoryLabels: Record<ListSlug | 'other', string> = {
   daily: '日常生活',

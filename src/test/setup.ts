@@ -10,6 +10,7 @@ window.scrollTo = () => undefined
 const seedFiles: Record<string, string> = {
   '/data/bundledSeedWords.json': '../../public/data/bundledSeedWords.json',
   '/data/bundledSeedMemberships.json': '../../public/data/bundledSeedMemberships.json',
+  '/data/bundledDictionarySenses.json': '../../public/data/bundledDictionarySenses.json',
 }
 
 const originalFetch = globalThis.fetch.bind(globalThis)

@@ -4,6 +4,7 @@ import {
   parseYoudaoPayload,
   youdaoDictVoiceUrl,
   wordPronunciationUrls,
+  lookupYoudao,
 } from './youdao'
 import type { DictionaryMeaning } from '../domain/types'
 
@@ -71,6 +72,55 @@ describe('Youdao POS normalization', () => {
 })
 
 describe('Youdao sense parsing', () => {
+  it('fills a single sense from a single matching WordNet definition', () => {
+    const parsed = parseYoudaoPayload({ ec: { word: { trs: [{ pos: 'adj.', tran: '保险精算的' }] } },
+      ee: { source: { name: 'WordNet' }, word: { trs: [{ pos: 'adj.', tr: [{ l: { i: 'of or relating to the work of an actuary' } }] }] } } }, 'actuarial')
+    expect(parsed.senses[0]).toMatchObject({ definition: 'of or relating to the work of an actuary' })
+  })
+
+  it('does not use a Wikipedia namesake as the definition of a common expression', () => {
+    const parsed = parseYoudaoPayload({ ec: { word: { trs: [{ pos: 'expression', tran: '家规' }] } },
+      ee: { source: { name: 'Wikipedia' }, word: { trs: [{ pos: 'abstract:', tr: [{ l: { i: 'House Rules is an Australian television drama series.' } }] }] } } }, 'house rules')
+    expect(parsed.senses[0].definition).toBeUndefined()
+  })
+
+  it('aligns bilingual definitions and examples to the Chinese sense instead of sharing them by POS', () => {
+    const parsed = parseYoudaoPayload({ ec: { word: { trs: [{ pos: 'n.', tran: '银行；河岸' }] } },
+      collins: { collins_entries: [{ headword: 'bank', entries: { entry: [{ tran_entry: [
+        { pos_entry: { pos: 'N-COUNT' }, tran: 'A bank is a financial institution. 银行',
+          exam_sents: { sent: [{ eng_sent: 'The bank approved the loan.', chn_sent: '银行批准了贷款。' }] } },
+        { pos_entry: { pos: 'N-COUNT' }, tran: 'A bank is the land beside a river. 河岸' },
+      ] }] } }] }, blng_sents_part: { 'sentence-pair': [{ sentence: 'We walked along the bank.', 'sentence-translation': '我们沿着河岸散步。' }] },
+    }, 'bank')
+    expect(parsed.senses[0]).toMatchObject({ definition: 'A bank is a financial institution.', exampleEn: 'The bank approved the loan.' })
+    expect(parsed.senses[1]).toMatchObject({ definition: 'A bank is the land beside a river.', exampleEn: 'We walked along the bank.' })
+  })
+
+  it('does not assign ambiguous English definitions or sentences to multiple Chinese senses', () => {
+    const parsed = parseYoudaoPayload({ ec: { word: { trs: [{ pos: 'n.', tran: '利息；贷款利息' }] } },
+      ee: { word: { trs: [{ pos: 'n.', tr: [{ l: { i: 'interest paid' } }, { l: { i: 'money borrowed' } }] }] } },
+      blng_sents_part: { 'sentence-pair': [{ sentence: 'The interest increased.', 'sentence-translation': '贷款利息提高了。' }] },
+    }, 'interest')
+    expect(parsed.senses.every((sense) => !sense.definition && !sense.exampleEn)).toBe(true)
+  })
+  it('does not use a response that belongs to a different query', async () => {
+    const request = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(JSON.stringify({ ...youdaoProudPayload, input: 'proud' })))
+    try {
+      expect((await lookupYoudao('nurse')).senses).toEqual([])
+    } finally { request.mockRestore() }
+  })
+  it('reads nested basic translations and retains ordinary senses before a proper name', () => {
+    const parsed = parseYoudaoPayload({ ec: { word: [{ 'return-phrase': { l: { i: 'camera' } }, trs: [
+      { tr: [{ l: { i: ['n. 照相机；摄影机；（Camera）人名；（英、意、西）卡梅拉'] } }] },
+    ] }] } }, 'camera')
+    expect(parsed.word).toBe('camera')
+    expect(parsed.senses).toEqual([
+      { partOfSpeech: 'noun', zhGloss: '照相机' },
+      { partOfSpeech: 'noun', zhGloss: '摄影机' },
+    ])
+    expect(parseYoudaoPayload({ ec: { word: { trs: [{ pos: 'n.', tran: '照相机；摄影机；（Camera）人名' }] } } })
+      .senses.map((sense) => sense.zhGloss)).toEqual(['照相机', '摄影机'])
+  })
   it('extracts Chinese-first senses and strips HTML from examples', () => {
     const parsed = parseYoudaoPayload(youdaoProudPayload, 'proud')
 
@@ -189,6 +239,7 @@ describe('bilingual meaning composition', () => {
 
     expect(buildBilingualMeanings(youdao, english)).toEqual([
       {
+        senseKey: 'dictionary:youdao:["noun","权益",0]',
         partOfSpeech: 'noun',
         definition: 'Ownership interest in a company.',
         zhGloss: '权益',
@@ -198,6 +249,7 @@ describe('bilingual meaning composition', () => {
         antonyms: undefined,
       },
       {
+        senseKey: 'dictionary:youdao:["adjective","公平的",0]',
         partOfSpeech: 'adjective',
         definition: 'Fair and impartial.',
         zhGloss: '公平的',
@@ -207,6 +259,14 @@ describe('bilingual meaning composition', () => {
         antonyms: undefined,
       },
     ])
+  })
+
+  it('retains source identities through enrichment and distinguishes repeated glosses', () => {
+    const source = [{ partOfSpeech: 'noun', zhGloss: '银行' }, { partOfSpeech: 'noun', zhGloss: '银行' }]
+    const original = buildBilingualMeanings(source, [])
+    const enriched = buildBilingualMeanings(source.map((sense, index) => ({ ...sense, exampleEn: `Example ${index}` })), [])
+    expect(original.map((meaning) => meaning.senseKey)).toEqual(enriched.map((meaning) => meaning.senseKey))
+    expect(new Set(original.map((meaning) => meaning.senseKey)).size).toBe(2)
   })
 
   it('falls back to English-only meanings when Youdao has no usable senses', () => {

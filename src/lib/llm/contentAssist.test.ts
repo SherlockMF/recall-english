@@ -4,6 +4,7 @@ import { clearDeepseekApiKey, setDeepseekApiKey } from './config'
 import { enrichWithLlm } from './enrich'
 import { hintWithLlm } from './hints'
 import { generateUsagePromptsWithLlm } from './usageGenerate'
+import { gradeWithLlm } from './gradeAssist'
 
 function baseItem(): VocabularyItem {
   return {
@@ -30,6 +31,18 @@ function baseItem(): VocabularyItem {
 }
 
 describe('llm content helpers', () => {
+  it('passes the target sense and forbids another meaning when verifying an answer', async () => {
+    setDeepseekApiKey('sk-test')
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => ({
+      choices: [{ message: { content: JSON.stringify({ correct: false, rating: 'again', feedbackZh: '请使用本题义项。' }) } }],
+    }) })
+    vi.stubGlobal('fetch', fetchMock)
+    await gradeWithLlm({ item: baseItem(), trackType: 'usage', answer: 'another sense', hintLevel: 0 })
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body)
+    expect(body.messages[0].content).toContain('specified lexical sense')
+    expect(JSON.parse(body.messages[1].content)).toMatchObject({ senseKey: 'invoice', partOfSpeech: 'noun' })
+  })
+
   afterEach(() => {
     clearDeepseekApiKey()
     vi.unstubAllGlobals()
@@ -142,5 +155,7 @@ describe('llm content helpers', () => {
     expect(prompts[0]?.type).toBe('cloze')
     expect(prompts[1]?.type).toBe('sentence')
     expect(prompts[0]?.id).toBeTruthy()
+    const body = JSON.parse(vi.mocked(fetch).mock.calls[0][1]!.body as string)
+    expect(body.messages[0].content).toContain('specified lexical sense')
   })
 })

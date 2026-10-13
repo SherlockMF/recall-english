@@ -8,15 +8,17 @@ import type {
   SpeechAccent,
   StudyTimeEntry,
   VocabularyItem,
+  VocabularyLevel,
 } from '../domain/types'
 import type { GradeMatchKind } from '../lib/grading'
 import type { LearningStats } from '../lib/learningStats'
-import { expressionHint, trackLabels } from '../lib/presentation'
+import { categoryLabels, expressionHint, recallContext, trackLabels } from '../lib/presentation'
 import { speakWord } from '../lib/speech'
 import { escapeRegExp } from '../lib/text'
 import { localStudyDate } from '../lib/studyTime'
 import { useStudyTimer, type StudyTimerApi } from '../lib/useStudyTimer'
 import { Icon } from './Icon'
+import { getVocabularyDifficulty } from '../lib/studyDifficulty'
 
 export interface EvaluationResult {
   rating: ReviewRating
@@ -63,12 +65,8 @@ interface StudySessionProps {
   usableThisWeek: number
   learningStats?: LearningStats
   sessionId?: string
-  dailyMinutes?: number
-  usedTodayMs?: number
-  initialBudgetMs?: number
   timeEntries?: StudyTimeEntry[]
   onSaveTime?: (entry: StudyTimeEntry) => Promise<void>
-  onContinue?: () => boolean | void | Promise<boolean | void>
   onDayChange?: () => boolean | void | Promise<boolean | void>
   canVerifySentence?: boolean
   speechAccent?: SpeechAccent
@@ -88,6 +86,9 @@ interface StudySessionProps {
   resolveHint?: (task: SessionTask, item: VocabularyItem, hintLevel: HintLevel) => Promise<string>
   ensureUsageItem?: (item: VocabularyItem) => Promise<VocabularyItem>
   onRate: (task: SessionTask, rating: ReviewRating, detail: RateDetail) => Promise<void>
+  onMarkKnown?: (item: VocabularyItem) => Promise<void>
+  onRefreshTasks?: (pending: SessionTask[], started: ReadonlySet<string>, force: boolean) => Promise<SessionTask[]>
+  difficultyLevel?: VocabularyLevel
   onExit: () => void
   onFinish: (summary: SessionSummary) => void
 }
@@ -96,20 +97,21 @@ type Submission = Pick<RateDetail, 'answer' | 'hintLevel' | 'responseMs' | 'revi
 
 export function StudySession({
   mode, initialTasks, items, tracks, usableThisWeek, learningStats,
-  sessionId: suppliedSessionId, dailyMinutes = 15, usedTodayMs = 0, initialBudgetMs,
-  timeEntries, onSaveTime, onContinue, onDayChange, canVerifySentence = false,
+  sessionId: suppliedSessionId,
+  timeEntries, onSaveTime, onDayChange, canVerifySentence = false,
   speechAccent = 'uk', onSpeechAccentChange, evaluate, resolveHint, ensureUsageItem,
-  onRate, onExit, onFinish,
+  onRate, onExit, onFinish, onMarkKnown, onRefreshTasks, difficultyLevel,
 }: StudySessionProps) {
   const sessionId = useRef(suppliedSessionId ?? crypto.randomUUID()).current
   const sessionDay = useRef(localStudyDate()).current
-  const budgetMs = useRef(initialBudgetMs ?? Math.max(0, dailyMinutes * 60_000 - usedTodayMs)).current
   const [tasks, setTasks] = useState(initialTasks)
   const [index, setIndex] = useState(0)
   const [answer, setAnswer] = useState('')
   const [hintLevel, setHintLevel] = useState<HintLevel>(0)
   const [hintText, setHintText] = useState('')
-  const [phase, setPhase] = useState<'question' | 'feedback' | 'budget' | 'complete'>(initialTasks.length ? 'question' : 'complete')
+  const [phase, setPhase] = useState<'question' | 'feedback' | 'complete'>(
+    initialTasks.length ? 'question' : 'complete',
+  )
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null)
   const [revealed, setRevealed] = useState(false)
   const [correction, setCorrection] = useState('')
@@ -126,8 +128,9 @@ export function StudySession({
   const [pendingWrites, setPendingWrites] = useState(0)
   const [paused, setPaused] = useState(false)
   const [verificationRequested, setVerificationRequested] = useState(false)
-  const [rebuildMode, setRebuildMode] = useState<'day' | 'continue' | null>(null)
+  const [rebuildMode, setRebuildMode] = useState<'day' | null>(null)
   const [rebuildError, setRebuildError] = useState<string | null>(null)
+  const [queueRetry, setQueueRetry] = useState<{ tasks: SessionTask[]; force: boolean; message: string } | null>(null)
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null)
   const finishCalled = useRef(false)
   const submittedTaskIds = useRef(new Set<string>())
@@ -143,12 +146,18 @@ export function StudySession({
   const timer = useStudyTimer({
     sessionId, entries: timeEntries, save: onSaveTime,
     enabled: (phase === 'question' || phase === 'feedback') && !grading && !hinting && !ensuringUsage
-      && !paused && !flushingExit && rebuildMode !== 'day' && pendingWrites === 0 && failedSaves.length === 0,
+      && !paused && !flushingExit && !queueRetry && rebuildMode !== 'day' && pendingWrites === 0 && failedSaves.length === 0,
   })
 
   useEffect(() => {
     mountedRef.current = true
-    return () => { mountedRef.current = false; requestId.current += 1 }
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      mountedRef.current = false
+      requestId.current += 1
+      document.body.style.overflow = previousOverflow
+    }
   }, [])
   useEffect(() => { setAccent(speechAccent) }, [speechAccent])
 
@@ -178,14 +187,34 @@ export function StudySession({
     }))
     if (entry.rating === 'again') setFailedWords((words) => words.includes(entry.label) ? words : [...words, entry.label])
     if (localStudyDate() !== sessionDay && onDayChange) { await rebuildSession('day'); return }
-    if (timer.sample() >= budgetMs) { setPhase('budget'); return }
     let nextTasks = tasks
     if (entry.rating === 'again' && (entry.task.retryCount ?? 0) < 2) {
       const retry = { ...entry.task, id: `${entry.task.id}-retry-${(entry.task.retryCount ?? 0) + 1}`, isNew: false, retryCount: (entry.task.retryCount ?? 0) + 1 }
       nextTasks = [...tasks]
-      nextTasks.splice(Math.min(nextTasks.length, index + 4), 0, retry)
+      let retryIndex = Math.min(nextTasks.length, index + 4)
+      if (items.find((vocabularyItem) => vocabularyItem.id === entry.task.itemId)?.listSlugs.includes('my-vocabulary')) {
+        const ordinaryStart = nextTasks.findIndex((candidate, candidateIndex) => candidateIndex > index
+          && candidate.isNew && !items.find((vocabularyItem) => vocabularyItem.id === candidate.itemId)?.listSlugs.includes('my-vocabulary'))
+        if (ordinaryStart >= 0) retryIndex = Math.min(retryIndex, ordinaryStart)
+      }
+      nextTasks.splice(retryIndex, 0, retry)
       setTasks(nextTasks)
     }
+    await advanceQueue(nextTasks, false)
+  }
+
+  async function advanceQueue(nextTasks: SessionTask[], force: boolean) {
+    if (onRefreshTasks) {
+      try {
+        const pending = await onRefreshTasks(nextTasks.slice(index + 1), savedItemIds.current, force)
+        nextTasks = [...nextTasks.slice(0, index + 1), ...pending]
+      } catch (error) {
+        setQueueRetry({ tasks: nextTasks, force, message: error instanceof Error ? error.message : '调整下一组词汇失败，请重试。' })
+        return
+      }
+    }
+    setQueueRetry(null)
+    setTasks(nextTasks)
     if (index + 1 >= nextTasks.length) { await completeSession(); return }
     setIndex((value) => value + 1)
     setAnswer(''); setCorrection(''); setHintLevel(0); setHintText('')
@@ -194,6 +223,33 @@ export function StudySession({
     submission.current = null
     questionStartedMs.current = timer.sample()
     setPhase('question')
+  }
+
+  async function markKnown(currentTask: SessionTask) {
+    const current = items.find((word) => word.id === currentTask.itemId)
+    if (!current || !onMarkKnown || savingRef.current) return
+    savingRef.current = true
+    setPendingWrites(1)
+    timer.setRunning(false)
+    setRebuildError(null)
+    try {
+      if (!(await timer.flush())) return
+      await onMarkKnown(current)
+      const remaining = tasks.filter((candidate, candidateIndex) => candidateIndex <= index || candidate.itemId !== current.id)
+      await advanceQueue(remaining, true)
+    } catch (error) {
+      setRebuildError(error instanceof Error ? error.message : '保存已会标记失败，请重试。')
+    } finally {
+      savingRef.current = false
+      if (mountedRef.current) setPendingWrites(0)
+    }
+  }
+
+  async function retryQueue() {
+    if (!queueRetry || savingRef.current) return
+    savingRef.current = true; setPendingWrites(1)
+    try { await advanceQueue(queueRetry.tasks, queueRetry.force) }
+    finally { savingRef.current = false; setPendingWrites(0) }
   }
 
   async function persistRating(entry: FailedSave) {
@@ -227,10 +283,7 @@ export function StudySession({
     try { if (await timer.flush()) onExit() }
     finally { if (mountedRef.current) setFlushingExit(false) }
   }
-  async function continueSession() {
-    await rebuildSession('continue')
-  }
-  async function rebuildSession(kind: 'day' | 'continue') {
+  async function rebuildSession(kind: 'day') {
     if (flushingExit) return
     setFlushingExit(true)
     setRebuildMode(kind)
@@ -238,7 +291,7 @@ export function StudySession({
     timer.setRunning(false)
     try {
       if (!(await timer.flush())) return
-      const result = await (kind === 'day' ? onDayChange?.() : onContinue?.())
+      const result = await onDayChange?.()
       if (result === false) throw new Error('重新安排学习失败，请重试。')
     } catch (error) {
       if (mountedRef.current) setRebuildError(error instanceof Error ? error.message : '重新安排学习失败，请重试。')
@@ -371,27 +424,12 @@ export function StudySession({
     return (
       <div className="study-overlay complete-overlay"><div className="completion-card">
         <h1>已进入新的一天</h1>
-        <p>当前题已保存，将按今天的时间与新词额度重新安排学习。</p>
+        <p>当前题已保存，将按今天的复习任务与新词额度重新安排学习。</p>
         {rebuildError && <p role="alert">{rebuildError}</p>}
         {timer.error && <p role="alert">学习时间未保存：{timer.error}</p>}
         <button className="primary-button" disabled={flushingExit} onClick={() => void rebuildSession('day')} type="button">{flushingExit ? '正在安排…' : '重新安排今日学习'}</button>
         <button aria-label="退出训练" className="secondary-button" disabled={flushingExit} onClick={() => void requestExit()} type="button">回到今天</button>
       </div></div>
-    )
-  }
-  if (phase === 'budget') {
-    return (
-      <div className="study-overlay complete-overlay">
-        <div className="completion-card">
-          <h1>今天的时间目标已达到</h1>
-          <p>已保存当前题。你可以结束，或自愿再学 5 分钟；每日新词上限保持不变。</p>
-          <p><SessionElapsedText timer={timer} /></p>
-          {timer.error && <p role="alert">学习时间未保存：{timer.error}<button onClick={() => void timer.flush()} type="button">重试保存时间</button></p>}
-          {rebuildError && <p role="alert">{rebuildError}</p>}
-          <button className="primary-button" disabled={flushingExit} onClick={() => void completeSession()} type="button">结束学习</button>
-          {onContinue && <button className="secondary-button" disabled={flushingExit} onClick={() => void continueSession()} type="button">继续 5 分钟</button>}
-        </div>
-      </div>
     )
   }
   if (phase === 'complete') {
@@ -450,13 +488,15 @@ export function StudySession({
           <div className="study-progress-copy"><span>{mode === 'core' ? '今日学习' : '继续学习'}</span><span>{index + 1} / {tasks.length}</span></div>
           <div className="study-progress"><span style={{ width: `${progress}%` }} /></div>
         </div>
-        <SessionClock timer={timer} budgetMs={budgetMs} />
+        <SessionClock timer={timer} />
         <button className="mini-text-button" onClick={() => { if (!paused) timer.setRunning(false); setPaused(!paused) }} type="button">{paused ? '恢复学习' : '暂停'}</button>
       </header>
 
       <main className="study-main">
+        {difficultyLevel && <p className="study-timer-notice" role="status">普通新词目标 {difficultyLevel} · 当前义项 {getVocabularyDifficulty(item).level}{getVocabularyDifficulty(item).source === 'estimated' ? '（估算）' : getVocabularyDifficulty(item).source === 'profile' ? '（词头参考）' : ''}</p>}
+        {rebuildError && !rebuildMode && <p className="form-note" role="alert">{rebuildError}</p>}
+        {queueRetry && <div className="save-error-panel" role="alert"><p>当前操作已保存，下一组词汇尚未更新：{queueRetry.message}</p><button className="secondary-button" disabled={pendingWrites > 0} onClick={() => void retryQueue()} type="button">重试更新词汇</button></div>}
         {(paused || timer.idle) && <p className="study-timer-notice" role="status">{paused ? '学习已暂停，恢复后继续计时。' : '120 秒无操作，已自动暂停计时；操作后恢复。'}</p>}
-        <ElapsedBudgetNotices timer={timer} budgetMs={budgetMs} usedTodayMs={usedTodayMs} dailyMinutes={dailyMinutes} />
         {timer.error && <div className="save-error-panel" role="alert"><p>学习时间未保存，已暂停：{timer.error}</p><button className="secondary-button" onClick={() => void timer.flush()} type="button">重试保存时间</button></div>}
         {failedSaves.length > 0 && (
           <div className="save-error-panel study-save-error" role="alert">
@@ -464,13 +504,16 @@ export function StudySession({
             <button className="secondary-button" disabled={flushingExit || pendingWrites > 0} onClick={() => void retryFailedSaves()} type="button">重试保存</button>
           </div>
         )}
-        <fieldset className="study-controls" disabled={paused || Boolean(timer.error) || pendingWrites > 0 || failedSaves.length > 0}>
+        <fieldset className="study-controls" disabled={paused || Boolean(timer.error) || pendingWrites > 0 || failedSaves.length > 0 || Boolean(queueRetry)}>
         <section className={phase === 'feedback' ? 'recall-card feedback' : 'recall-card'} aria-live="polite">
           {phase === 'question' ? (
             <>
               <div className="recall-card-meta">
                 <span className={`direction-chip ${task.trackType}`}>{trackLabels[task.trackType]}</span>
-                <span>{prompt.direction}</span>
+                <div className="recall-card-tools">
+                  <span>{prompt.direction}</span>
+                  {onMarkKnown && <button className="text-button" disabled={grading || hinting || ensuringUsage || flushingExit} onClick={() => void markKnown(task)} type="button">这个词已会，跳过</button>}
+                </div>
               </div>
               <div className="prompt-block">
                 <p className="prompt-instruction">{prompt.instruction}</p>
@@ -658,9 +701,9 @@ function buildPrompt(task: SessionTask, item: VocabularyItem, usagePrompt?: Voca
   if (task.trackType === 'receptive') {
     return {
       direction: 'English → 中文',
-      instruction: '不要翻译整句，先从记忆里找出这个具体意思。',
+      instruction: '根据语境回忆这个词在本题中的意思，不用翻译整句。',
       title: item.expression,
-      context: '',
+      context: recallContext(item) || `${item.partOfSpeech} · ${categoryLabels[item.category]}`,
       answerLabel: '你记得的中文意思',
       placeholder: '用自己的中文表达即可',
     }
@@ -681,7 +724,7 @@ function buildPrompt(task: SessionTask, item: VocabularyItem, usagePrompt?: Voca
       ? '写一个能在真实生活中直接说出口的句子。'
       : '根据完整语境，从记忆里填入最自然的表达。',
     title: usagePrompt?.prompt ?? `用 ${item.expression} 写一句话`,
-    context: '',
+    context: usagePrompt?.type === 'sentence' ? `本题义项：${item.zhGloss}` : '',
     answerLabel: usagePrompt?.type === 'sentence' ? '你的句子' : '缺少的英文表达',
     placeholder: usagePrompt?.type === 'sentence' ? `Use “${item.expression}” in your sentence` : 'Type the missing expression',
   }
@@ -721,11 +764,11 @@ function answerMatches(value: string, target: string, alternatives: string[]) {
 
 
 /** Live mm:ss clock; isolated so timer ticks never re-render the session tree. */
-function SessionClock({ timer, budgetMs }: { timer: StudyTimerApi; budgetMs: number }) {
+function SessionClock({ timer }: { timer: StudyTimerApi }) {
   const elapsedMs = useSyncExternalStore(timer.subscribeElapsed, timer.getElapsed)
   return (
-    <span className="study-time">
-      <Icon name="clock" size={17} /> {Math.floor(elapsedMs / 60_000)}:{String(Math.floor(elapsedMs / 1000) % 60).padStart(2, '0')} / {Math.ceil(budgetMs / 60_000)} min
+    <span className="study-time" aria-label="本轮学习计时">
+      <Icon name="clock" size={17} /> {Math.floor(elapsedMs / 60_000)}:{String(Math.floor(elapsedMs / 1000) % 60).padStart(2, '0')}
     </span>
   )
 }
@@ -733,19 +776,4 @@ function SessionClock({ timer, budgetMs }: { timer: StudyTimerApi; budgetMs: num
 function SessionElapsedText({ timer }: { timer: StudyTimerApi }) {
   const elapsedMs = useSyncExternalStore(timer.subscribeElapsed, timer.getElapsed)
   return <>本轮有效学习 {Math.floor(elapsedMs / 60_000)} 分 {Math.floor(elapsedMs / 1000) % 60} 秒</>
-}
-
-function ElapsedBudgetNotices({ timer, budgetMs, usedTodayMs, dailyMinutes }: {
-  timer: StudyTimerApi
-  budgetMs: number
-  usedTodayMs: number
-  dailyMinutes: number
-}) {
-  const elapsedMs = useSyncExternalStore(timer.subscribeElapsed, timer.getElapsed)
-  return (
-    <>
-      {elapsedMs >= budgetMs && <p className="study-timer-notice" role="status">已达到本轮时间目标，完成当前题后选择结束或继续。</p>}
-      {usedTodayMs + elapsedMs > dailyMinutes * 60_000 && <p className="field-help">今日已超出目标 {Math.floor((usedTodayMs + elapsedMs - dailyMinutes * 60_000) / 60_000)} 分钟</p>}
-    </>
-  )
 }

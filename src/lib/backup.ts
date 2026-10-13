@@ -18,6 +18,7 @@ import {
   type Word,
   type WordListItem,
   normalizeLemma,
+  VOCABULARY_LEVELS,
 } from '../domain/types'
 import { ALL_VOCABULARY_LISTS, listIdForSlug } from '../data/vocabularyLists'
 import { listSlugsForSeedCategory } from '../data/listAssignment'
@@ -182,6 +183,9 @@ export function validateWord(value: unknown, path: string): Word {
     'source',
     'priority',
     'status',
+    'knownAt',
+    'vocabularyLevel',
+    'contentEdited',
     'ipaUk',
     'ipaUs',
     'audioUk',
@@ -214,6 +218,9 @@ export function validateWord(value: unknown, path: string): Word {
     'paused',
   ] as const satisfies readonly VocabularyStatus[])
   optionalStringAt(record.ipaUk, `${path}.ipaUk`)
+  optionalDateAt(record.knownAt, `${path}.knownAt`)
+  if (record.vocabularyLevel !== undefined) literalAt(record.vocabularyLevel, `${path}.vocabularyLevel`, VOCABULARY_LEVELS)
+  if (record.contentEdited !== undefined) booleanAt(record.contentEdited, `${path}.contentEdited`)
   optionalStringAt(record.ipaUs, `${path}.ipaUs`)
   optionalStringAt(record.audioUk, `${path}.audioUk`)
   optionalStringAt(record.audioUs, `${path}.audioUs`)
@@ -408,6 +415,8 @@ function validateReviewAttempt(value: unknown, path: string): ReviewAttempt {
     'correctness',
     'matchKind',
     'suggestedRating',
+    'wasPriorityStudy',
+    'wasNewItem',
   ])
   stringAt(record.id, `${path}.id`, true)
   stringAt(record.trackId, `${path}.trackId`, true)
@@ -432,6 +441,8 @@ function validateReviewAttempt(value: unknown, path: string): ReviewAttempt {
   ] as const satisfies readonly HintLevel[])
   finiteNumberAt(record.responseMs, `${path}.responseMs`, { min: 0 })
   dateAt(record.reviewedAt, `${path}.reviewedAt`)
+  if (record.wasPriorityStudy !== undefined) booleanAt(record.wasPriorityStudy, `${path}.wasPriorityStudy`)
+  if (record.wasNewItem !== undefined) booleanAt(record.wasNewItem, `${path}.wasNewItem`)
   if (record.wasOverride !== undefined) {
     booleanAt(record.wasOverride, `${path}.wasOverride`)
   }
@@ -468,9 +479,16 @@ function validateSettings(value: unknown, path: string, requireDailyMinutes = fa
     'contentMix',
     'speechAccent',
     'seedContentRevision',
+    'dictionaryContentRevision',
     'lastBackupAt',
+    'vocabularyLevel',
+    'adaptiveDifficulty',
+    'difficultyResetAt',
   ])
   literalAt(record.id, `${path}.id`, ['primary'] as const)
+  if (record.vocabularyLevel !== undefined) literalAt(record.vocabularyLevel, `${path}.vocabularyLevel`, VOCABULARY_LEVELS)
+  if (record.adaptiveDifficulty !== undefined) booleanAt(record.adaptiveDifficulty, `${path}.adaptiveDifficulty`)
+  optionalDateAt(record.difficultyResetAt, `${path}.difficultyResetAt`)
   if (requireDailyMinutes || record.dailyMinutes !== undefined) {
     finiteNumberAt(record.dailyMinutes, `${path}.dailyMinutes`, { integer: true, min: 5, max: 120 })
   }
@@ -493,6 +511,9 @@ function validateSettings(value: unknown, path: string, requireDailyMinutes = fa
     if (typeof record.seedContentRevision === 'string' && record.seedContentRevision.trim().length === 0) {
       fail(`${path}.seedContentRevision`, '必须是非空字符串')
     }
+  }
+  if (record.dictionaryContentRevision !== undefined) {
+    stringAt(record.dictionaryContentRevision, `${path}.dictionaryContentRevision`, true)
   }
   const contentMix = objectAt(record.contentMix, `${path}.contentMix`, [
     'daily',

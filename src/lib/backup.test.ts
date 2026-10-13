@@ -19,6 +19,7 @@ import {
   getAllVocabulary,
   getSettings,
   getUserDataSnapshot,
+  initializeDatabase,
   writeBatch,
 } from './db'
 import {
@@ -151,6 +152,42 @@ describe('backup import and export', () => {
     await markBackupExported(new Date(newer))
     expect((await getSettings()).lastBackupAt).toBe(newer)
     expect(exported.timeEntries).toEqual([])
+  })
+
+  it('round-trips known marks, lexical overrides and adaptive history and rejects invalid difficulty fields', async () => {
+    await writeBatch({ words: [word({ knownAt: newer, vocabularyLevel: 'C1' })], tracks: [track()],
+      attempts: [attempt({ wasNewItem: true, wasPriorityStudy: false })],
+      settings: { ...DEFAULT_SETTINGS, vocabularyLevel: 'B2', adaptiveDifficulty: false, difficultyResetAt: newer } })
+    const exported = await exportBackup()
+    const parsed = parseBackupV3(JSON.stringify(exported))
+    expect(parsed.words[0]).toMatchObject({ knownAt: newer, vocabularyLevel: 'C1' })
+    expect(parsed.settings).toMatchObject({ vocabularyLevel: 'B2', adaptiveDifficulty: false, difficultyResetAt: newer })
+    expect(parsed.attempts[0]).toMatchObject({ wasNewItem: true, wasPriorityStudy: false })
+    await importBackup(parsed)
+    expect((await getAllVocabulary())[0]).toMatchObject({ knownAt: newer, vocabularyLevel: 'C1' })
+    for (const patch of [{ vocabularyLevel: 'C3' }, { knownAt: 'invalid' }]) {
+      expect(() => parseBackupV3({ ...exported, words: [{ ...exported.words[0], ...patch }] })).toThrow(BackupValidationError)
+    }
+    expect(() => parseBackupV3({ ...exported, settings: { ...exported.settings, adaptiveDifficulty: 'yes' } })).toThrow(BackupValidationError)
+  })
+
+  it('round-trips the personal content marker and rejects non-boolean markers', async () => {
+    const edited = word({ contentEdited: true, zhGloss: '个人释义', status: 'paused', priority: 7 })
+    await writeBatch({ words: [edited], tracks: [track({ reps: 12, stability: 40 })], attempts: [attempt()],
+      settings: { ...DEFAULT_SETTINGS, seedContentRevision: 'old' } })
+    const exported = await exportBackup(new Date(newer))
+    const parsed = parseBackupV3(JSON.stringify(exported))
+    expect(parsed.words[0]).toMatchObject({ contentEdited: true })
+    await importBackup(parsed)
+    const restored = await getUserDataSnapshot()
+    await initializeDatabase([word({ zhGloss: '新版种子释义' })], [], undefined,
+      { ...DEFAULT_SETTINGS, seedContentRevision: 'new' })
+    const upgraded = await getUserDataSnapshot()
+    expect(upgraded.words[0]).toEqual(edited)
+    expect(upgraded.tracks).toEqual(restored.tracks)
+    expect(upgraded.attempts).toEqual(restored.attempts)
+    expect(() => parseBackupV3({ ...exported, words: [{ ...exported.words[0], contentEdited: 'yes' }] }))
+      .toThrow(BackupValidationError)
   })
 
   it('round-trips V3 budgets, study time and evidence without altering FSRS or IDs', async () => {

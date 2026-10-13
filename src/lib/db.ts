@@ -7,6 +7,7 @@ import {
 
 import { ALL_VOCABULARY_LISTS, listIdForSlug } from '../data/vocabularyLists'
 import { SEED_CONTENT_REVISION } from '../data/seedContentRevision'
+import { isVocabularyLevel } from './studyDifficulty'
 import {
   createInitialTracks,
   scheduleReview,
@@ -146,9 +147,16 @@ export function normalizeUserSettings(raw: Partial<UserSettings> | UserSettings)
     newItemsPerDay: boundedInteger(raw.newItemsPerDay, 0, 100, DEFAULT_SETTINGS.newItemsPerDay),
     contentMix: normalizeContentMix(raw.contentMix),
     speechAccent: normalizeSpeechAccent(raw.speechAccent),
+    vocabularyLevel: isVocabularyLevel(raw.vocabularyLevel) ? raw.vocabularyLevel : 'B1',
+    adaptiveDifficulty: typeof raw.adaptiveDifficulty === 'boolean' ? raw.adaptiveDifficulty : true,
+    difficultyResetAt: typeof raw.difficultyResetAt === 'string' && Number.isFinite(Date.parse(raw.difficultyResetAt)) ? raw.difficultyResetAt : undefined,
     seedContentRevision:
       typeof raw.seedContentRevision === 'string' && raw.seedContentRevision.trim()
         ? raw.seedContentRevision.trim()
+        : undefined,
+    dictionaryContentRevision:
+      typeof raw.dictionaryContentRevision === 'string' && raw.dictionaryContentRevision.trim()
+        ? raw.dictionaryContentRevision.trim()
         : undefined,
   }
 }
@@ -482,9 +490,21 @@ export async function initializeDatabase(
     for (const local of existingWords) {
       const seed = seedById.get(local.id)
       if (!seed) continue
+      if (local.source !== 'seed') continue
+      // Legacy records do not distinguish content edits from other personal actions.
+      const contentEdited = local.contentEdited ?? local.updatedAt !== local.createdAt
+      if (contentEdited) {
+        if (local.contentEdited === undefined) wordStore.put({ ...local, contentEdited: true })
+        continue
+      }
       wordStore.put({
         ...seed,
         createdAt: local.createdAt || seed.createdAt,
+        contentEdited: false,
+        status: local.status,
+        priority: local.priority,
+        knownAt: local.knownAt,
+        vocabularyLevel: local.vocabularyLevel,
       })
     }
   }
@@ -672,6 +692,18 @@ export async function addWordToList(
   }
   await putWordListItem(membership)
   return membership
+}
+
+/** Removes only the membership, retaining the word and its learning history. */
+export async function removeWordFromList(wordId: string, listSlug: ListSlug): Promise<void> {
+  const database = await getDatabase()
+  const transaction = database.transaction('wordListItems', 'readwrite')
+  const store = transaction.objectStore('wordListItems')
+  const memberships = await store.index('by-word').getAll(wordId)
+  const listId = listIdForSlug(listSlug)
+  await Promise.all(memberships.filter((membership) => membership.listId === listId)
+    .map((membership) => store.delete(membership.id)))
+  await transaction.done
 }
 
 /** Snapshot of every hydrated vocabulary item (words + memberships + lists). */

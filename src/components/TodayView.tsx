@@ -12,7 +12,6 @@ interface TodayViewProps {
   mapProgress: MapLearningProgress
   recentWords: { expression: string; zhGloss: string; stage: string }[]
   onStart: () => void
-  onContinue: () => void
 }
 
 export function TodayView({
@@ -23,11 +22,9 @@ export function TodayView({
   mapProgress,
   recentWords,
   onStart,
-  onContinue,
 }: TodayViewProps) {
   const noHintRate = stats.delayedRecall.rate === null ? null : Math.round(stats.delayedRecall.rate * 100)
   const usedMinutes = Math.round(plan.usedMs / 6000) / 10
-  const remainingMinutes = Math.round(plan.remainingMs / 6000) / 10
   const startedProgress = mapProgress.total
     ? Math.min(100, Math.round((mapProgress.started / mapProgress.total) * 100))
     : 0
@@ -52,9 +49,9 @@ export function TodayView({
       <section className="today-hero" aria-labelledby="today-session-title">
         <div className="hero-copy">
           <div className="session-kicker"><span /> TODAY'S RECALL</div>
-          <h2 id="today-session-title">{plan.dailyMinutes} 分钟每日计划</h2>
-          <p>已学习 {usedMinutes} 分钟 · 今日剩余 {remainingMinutes} 分钟</p>
-          <p>本次 {plan.totalTasks} 道练习，包含 {plan.newItemCount} 个新表达。回忆与应用共用当天预算。</p>
+          <h2 id="today-session-title">今日学习计划</h2>
+          <p>今日已学习 {usedMinutes} 分钟 · 按自己的节奏完成</p>
+          <p>本次 {plan.totalTasks} 道练习，包含 {plan.newItemCount} 个新表达。只记录学习时间，不限时。</p>
 
           <div className="session-metrics">
             <div><span>复习题</span><strong>{plan.reviewTaskCount}</strong></div>
@@ -70,9 +67,6 @@ export function TodayView({
           <div className="hero-actions">
             <button className="primary-button large" disabled={plan.totalTasks === 0} onClick={onStart} type="button">
               {plan.totalTasks === 0 ? '当前计划已完成' : '开始今天的训练'} <Icon name="arrow" size={19} />
-            </button>
-            <button className="text-button" onClick={onContinue} type="button">
-              继续学习 5 分钟
             </button>
           </div>
         </div>
@@ -162,10 +156,10 @@ export function TodayView({
           </div>
           <p className="memory-note">
             {stats.delayedRecall.total < 10
-              ? '可判定样本不足 10 条，暂不根据表现调整新词。首次学习、即时重试、提示与自评不计入此指标。'
+              ? '可判定样本不足 10 条。首次学习、即时重试、提示与自评不计入此指标；每日新词数量保持设置值。'
               : noHintRate !== null && noHintRate < 80
-                ? '根据同一组延迟回忆样本减少新词，先安排复习。'
-                : '继续优先完成复习，新词安排始终受每日上限约束。'}
+                ? '延迟回忆较弱，可加强复习；每日新词数量保持设置值，不自动减少。'
+                : '先完成到期复习，新词按固定每日数量安排，优先词不足时补充普通词。'}
           </p>
           <p className="quiet-copy">{stats.delayedRecall.correct} / {stats.delayedRecall.total} 次可判定延迟回忆正确</p>
           <p className="quiet-copy">今日练习 {stats.practicedItems} 个表达 · {stats.taskCount} 道不同题 · {stats.attemptCount} 次作答</p>

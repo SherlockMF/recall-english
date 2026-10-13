@@ -2,18 +2,21 @@
  * Build a shareable zip: runnable web app (vocab bundled) + importable V5.3 seed pack.
  * Mac-first: includes double-clickable 「启动 Recall English.command」.
  *
- * Run: npx vite-node scripts/exportShareBundle.mjs
+ * Run: npm run share:export
  * Output: ~/Downloads/recall-english-v53-share-YYYY-MM-DD.zip
  */
-import { mkdirSync, writeFileSync, rmSync, cpSync, existsSync } from 'node:fs'
-import { join, dirname } from 'node:path'
+import { mkdirSync, mkdtempSync, writeFileSync, cpSync, existsSync } from 'node:fs'
+import { join, dirname, resolve } from 'node:path'
 import { execFileSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
-import { ALL_VOCABULARY_LISTS } from '../src/data/vocabularyLists.ts'
-import { seedMemberships, seedWords } from '../src/data/seedVocabulary.ts'
-import { SEED_CONTENT_REVISION } from '../src/data/seedContentRevision.ts'
+import { parseArgs } from 'node:util'
+import { loadSeedPackFromDisk } from './lib/loadSeedPack.mjs'
+import { createArchive } from './lib/archive.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
+const { values } = parseArgs({ options: { 'output-dir': { type: 'string' }, 'skip-build': { type: 'boolean', default: false } } })
+const { words: seedWords, memberships: seedMemberships, lists: ALL_VOCABULARY_LISTS,
+  revision: SEED_CONTENT_REVISION } = await loadSeedPackFromDisk(root)
 const now = new Date()
 const exportedAt = now.toISOString().replace(/\.\d{3}Z$/, '.000Z')
 const stamp = new Intl.DateTimeFormat('en-CA', {
@@ -23,23 +26,28 @@ const stamp = new Intl.DateTimeFormat('en-CA', {
   day: '2-digit',
 }).format(now)
 
-const downloads = join(process.env.USERPROFILE ?? process.env.HOME ?? root, 'Downloads')
+const downloads = values['output-dir'] ? resolve(values['output-dir']) : join(process.env.USERPROFILE ?? process.env.HOME ?? root, 'Downloads')
 const zipName = `recall-english-v53-share-${stamp}.zip`
 const zipPath = join(downloads, zipName)
-const stageRoot = join(root, 'data', 'vocabulary-packs', '_export', 'share-stage')
+mkdirSync(downloads, { recursive: true })
+if (existsSync(zipPath)) throw new Error(`Archive already exists: ${zipPath}; choose another --output-dir`)
+const exportRoot = join(root, 'data', 'vocabulary-packs', '_export')
+mkdirSync(exportRoot, { recursive: true })
+const stageRoot = mkdtempSync(join(exportRoot, 'share-stage-'))
 const appDir = join(stageRoot, 'app')
 const vocabDir = join(stageRoot, 'vocabulary')
 
-if (existsSync(stageRoot)) rmSync(stageRoot, { recursive: true, force: true })
 mkdirSync(appDir, { recursive: true })
 mkdirSync(vocabDir, { recursive: true })
 
-console.log('Building app with relative base…')
-execFileSync('npm', ['run', 'build', '--', '--base', './'], {
-  cwd: root,
-  stdio: 'inherit',
-  shell: true,
-})
+if (!values['skip-build']) {
+  console.log('Building app with relative base…')
+  execFileSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['run', 'build', '--', '--base', './'], {
+    cwd: root,
+    stdio: 'inherit',
+    shell: process.platform === 'win32',
+  })
+}
 
 const dist = join(root, 'dist')
 if (!existsSync(dist)) throw new Error('dist/ missing after build')
@@ -48,6 +56,10 @@ cpSync(dist, appDir, { recursive: true })
 const shareServerSrc = join(root, 'scripts', 'shareLocalServer.mjs')
 if (!existsSync(shareServerSrc)) throw new Error('scripts/shareLocalServer.mjs missing')
 cpSync(shareServerSrc, join(stageRoot, 'server.mjs'))
+cpSync(join(root, 'scripts', 'qwenVoiceServer.mjs'), join(stageRoot, 'qwenVoiceServer.mjs'))
+cpSync(join(root, 'scripts', 'qwenVoiceMessages.mjs'), join(stageRoot, 'qwenVoiceMessages.mjs'))
+cpSync(join(root, 'node_modules', 'ws'), join(stageRoot, 'node_modules', 'ws'), { recursive: true })
+cpSync(join(root, '.env.example'), join(stageRoot, '.env.example'))
 
 const systemLists = ALL_VOCABULARY_LISTS.filter((list) => list.isSystem)
 const completeSeed = {
@@ -71,6 +83,8 @@ for (const item of seedMemberships) {
 }
 
 const readme = `# Recall English V5.3 分享包（Mac）
+
+口语陪练：进入「口语」选择「实时畅聊」或「语音消息」，均使用千问北京地域。消息可按住录制、松开发送、上滑取消，也可点击录制，语音条可回听。录音只在页面内存保留，离页或刷新清理。需要 Node.js 22+；启动后在学习设置中输入自己的百炼 API Key 与业务空间 ID，点击保存即可。也可使用 .env.local 配置。分享包自带 ws，真实凭证不包含在分享包中。
 
 导出时间：${exportedAt}
 词库版本：V5.3（seedContentRevision ${SEED_CONTENT_REVISION}）
@@ -251,22 +265,13 @@ pause
 `
 writeFileSync(join(stageRoot, 'start-windows.bat'), bat)
 
-if (existsSync(zipPath)) rmSync(zipPath, { force: true })
-
-execFileSync(
-  'powershell.exe',
-  [
-    '-NoProfile',
-    '-Command',
-    `Compress-Archive -Path '${stageRoot}\\*' -DestinationPath '${zipPath}' -Force; if (-not (Test-Path -LiteralPath '${zipPath}')) { throw 'zip was not created' }`,
-  ],
-  { stdio: 'inherit' },
-)
+createArchive(stageRoot, zipPath)
 
 console.log(
   JSON.stringify(
     {
       zipPath,
+      stageRoot,
       words: seedWords.length,
       revision: SEED_CONTENT_REVISION,
       exportedAt,

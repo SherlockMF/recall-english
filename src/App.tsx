@@ -5,13 +5,17 @@ import { LibraryView } from './components/LibraryView'
 import { SettingsDialog } from './components/SettingsDialog'
 import { StudySession, type EvaluationResult, type RateDetail } from './components/StudySession'
 import { TodayView } from './components/TodayView'
+import { VoicePractice } from './components/VoicePractice'
 import { handcraftedSeedMemberships, handcraftedSeedWords, loadSeedPack } from './data/seedVocabulary'
+import { DICTIONARY_CONTENT_REVISION } from './data/dictionaryContentRevision'
+import { loadBundledDictionarySenses } from './data/dictionarySenses'
 import { ALL_VOCABULARY_LISTS, listIdForSlug } from './data/vocabularyLists'
 import {
   DEFAULT_SETTINGS,
   normalizeLemma,
   primaryListSlug,
   type HintLevel,
+  type DictionaryResult,
   type LearningTrack,
   type ListSlug,
   type ReviewAttempt,
@@ -36,6 +40,8 @@ import {
 import {
   addWordToList,
   getLibrarySeedStatus,
+  getAllReviewAttempts,
+  getSettings,
   getUserDataSnapshot,
   getWordListItemsForWord,
   initializeDatabase,
@@ -43,15 +49,19 @@ import {
   putStudyTimeEntry,
   putWord,
   recordReview,
+  removeWordFromList,
   writeBatch,
 } from './lib/db'
 import { lookupDictionary } from './lib/dictionary'
+import { applyBundledDictionarySenses, saveDictionarySenses, type DictionarySenseEdit } from './lib/wordSenses'
+import { prepareVocabularyImportRow, type ImportCategory, type VocabularyImportRow, type VocabularyImportSummary } from './lib/vocabularyImport'
 import { evaluateAssist } from './lib/llm/evaluateAssist'
 import { hasDeepseekApiKey } from './lib/llm/config'
 import { hintWithLlm } from './lib/llm/hints'
 import { createSerialQueue } from './lib/serialQueue'
 import { showToast } from './lib/toast'
-import { escapeRegExp, uniqueStrings } from './lib/text'
+import { escapeRegExp, expressionKey, uniqueStrings } from './lib/text'
+import { normalizeChinese } from './lib/grading'
 import { enrichWithLlm } from './lib/llm/enrich'
 import {
   buildFallbackUsagePrompts,
@@ -62,6 +72,7 @@ import {
   snapshotMapLearningProgress,
 } from './lib/learningTracks'
 import { deriveLearningStats, localDateKey } from './lib/learningStats'
+import { getStudyDifficulty, isNewLearningTask, refreshPendingNewTasks } from './lib/studyDifficulty'
 import {
   buildDailyPlan,
   createInitialTracks,
@@ -84,9 +95,12 @@ function App() {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
+  const [dictionaryWarning, setDictionaryWarning] = useState('')
+  const [dictionaryBusy, setDictionaryBusy] = useState(false)
   const [sessionError, setSessionError] = useState('')
   const [now, setNow] = useState(() => new Date())
   const enqueueReviewWrite = useRef(createSerialQueue()).current
+  const sessionDifficulty = useRef<string>('B1')
 
   const refreshData = useCallback(async () => {
     const snapshot = await getUserDataSnapshot()
@@ -96,6 +110,19 @@ function App() {
     setTimeEntries(snapshot.timeEntries)
     setSettings(snapshot.settings)
   }, [])
+
+  const syncDictionaryContent = useCallback(async () => {
+    setDictionaryBusy(true)
+    try {
+      try {
+        await applyBundledDictionarySenses(await loadBundledDictionarySenses())
+        setDictionaryWarning('')
+      } catch (error) {
+        setDictionaryWarning(error instanceof Error ? error.message : '词义资料暂时无法加载。')
+      }
+      await refreshData()
+    } finally { setDictionaryBusy(false) }
+  }, [refreshData])
 
   useEffect(() => {
     let active = true
@@ -115,7 +142,10 @@ function App() {
           ALL_VOCABULARY_LISTS,
         )
         if (!active) return
-        await refreshData()
+        if ((await getSettings()).dictionaryContentRevision !== DICTIONARY_CONTENT_REVISION) {
+          await syncDictionaryContent()
+        } else await refreshData()
+        if (!active) return
       } catch (error) {
         if (!active) return
         setLoadError(error instanceof Error ? error.message : '无法打开本地学习数据。')
@@ -125,7 +155,7 @@ function App() {
     }
     void boot()
     return () => { active = false }
-  }, [refreshData])
+  }, [refreshData, syncDictionaryContent])
 
   useEffect(() => {
     const interval = window.setInterval(() => setNow(new Date()), 60_000)
@@ -139,6 +169,7 @@ function App() {
   const statsDayKey = localDateKey(now)
   const stats = useMemo(() => deriveLearningStats({ items, tracks, attempts, timeEntries, now }), [items, tracks, attempts, timeEntries, statsDayKey])
   const dailyPlan = useMemo(() => buildDailyPlan({ settings, items, tracks, attempts, timeEntries, now }), [settings, items, tracks, attempts, timeEntries, now])
+  const difficulty = useMemo(() => getStudyDifficulty(settings, items, attempts, now), [settings, items, attempts, now])
 
   const learningTrackSnapshots = useMemo(() => {
     const learnedItemIds = new Set(
@@ -181,14 +212,15 @@ function App() {
       void rebuildSession()
       return
     }
+    sessionDifficulty.current = difficulty.level
     setSession({ id: makeId('session'), plan: dailyPlan })
   }
 
-  async function rebuildSession(additionalMinutes = 0) {
+  async function rebuildSession() {
     try {
       const snapshot = await getUserDataSnapshot()
       const current = new Date()
-      const plan = buildDailyPlan({ settings: snapshot.settings, items: snapshot.vocabulary, tracks: snapshot.tracks, attempts: snapshot.attempts, timeEntries: snapshot.timeEntries, now: current, additionalMinutes })
+      const plan = buildDailyPlan({ settings: snapshot.settings, items: snapshot.vocabulary, tracks: snapshot.tracks, attempts: snapshot.attempts, timeEntries: snapshot.timeEntries, now: current })
       setItems(snapshot.vocabulary)
       setTracks(snapshot.tracks)
       setAttempts(snapshot.attempts)
@@ -196,6 +228,7 @@ function App() {
       setSettings(snapshot.settings)
       setNow(current)
       setSessionError('')
+      sessionDifficulty.current = getStudyDifficulty(snapshot.settings, snapshot.vocabulary, snapshot.attempts, current).level
       setSession({ id: makeId('session'), plan })
       return true
     } catch (error) {
@@ -306,12 +339,39 @@ function App() {
         correctness: detail.correctness,
         matchKind: detail.matchKind,
         suggestedRating: detail.suggestedRating,
+        wasPriorityStudy: itemMap.get(task.itemId)?.listSlugs.includes('my-vocabulary') ?? false,
+        wasNewItem: isNewLearningTask(task, tracks, attempts),
       },
     }))
     const changedById = new Map(result.tracks.map((track) => [track.id, track]))
     setTracks((current) => current.map((track) => changedById.get(track.id) ?? track))
     setAttempts((current) => [...current.filter((attempt) => attempt.id !== result.attempt.id), result.attempt])
     setNow(new Date())
+  }
+
+  async function toggleKnown(item: VocabularyItem) {
+    const snapshot = await getUserDataSnapshot()
+    const current = snapshot.words.find((word) => word.id === item.id)
+    if (!current) throw new Error('词条不存在，请刷新词库。')
+    const updated = { ...current, knownAt: current.knownAt ? undefined : new Date().toISOString(),
+      contentEdited: current.contentEdited ?? current.updatedAt !== current.createdAt, updatedAt: new Date().toISOString() }
+    await putWord(updated)
+    setItems((previous) => previous.map((word) => word.id === updated.id ? { ...word, ...updated } : word))
+    setNow(new Date())
+  }
+
+  async function refreshSessionTasks(pending: SessionTask[], started: ReadonlySet<string>, force: boolean) {
+    if (!force) {
+      const [savedAttempts, savedSettings] = await Promise.all([getAllReviewAttempts(), getSettings()])
+      if (getStudyDifficulty(savedSettings, items, savedAttempts).level === sessionDifficulty.current) return pending
+    }
+    const snapshot = await getUserDataSnapshot()
+    const current = new Date()
+    const nextDifficulty = getStudyDifficulty(snapshot.settings, snapshot.vocabulary, snapshot.attempts, current)
+    const plan = buildDailyPlan({ settings: snapshot.settings, items: snapshot.vocabulary, tracks: snapshot.tracks, attempts: snapshot.attempts, timeEntries: snapshot.timeEntries, now: current })
+    const next = refreshPendingNewTasks(pending, plan.tasks, snapshot.vocabulary, started)
+    sessionDifficulty.current = nextDifficulty.level
+    return next
   }
 
   async function addCustomItem(draft: CustomItemDraft) {
@@ -329,8 +389,23 @@ function App() {
     return { ok: true, message: `已把 “${item.expression}” 加入优先学习。` }
   }
 
+  async function saveDictionaryEntry(result: DictionaryResult, selectedIndices: number[], category: SystemListSlug | 'other' | 'auto', scenarioNote?: string, preserveExistingTraining = false, edits?: DictionarySenseEdit[]) {
+    const summary = await saveDictionarySenses(result, selectedIndices, category, scenarioNote, { preserveExistingTraining, edits })
+    await refreshData()
+    return { ok: true, message: `已保存 “${result.word}” 的词义：新增 ${summary.added} 个，选定训练 ${summary.activated} 个；其他新增义项默认暂停。` }
+  }
+
+  async function completeSenses(item: VocabularyItem) {
+    const result = await lookupDictionary(item.expression)
+    const category = item.category === 'my-vocabulary'
+      ? item.scenarioNote?.trim() ? 'other' : 'daily'
+      : item.category
+    return saveDictionaryEntry(result, [], category, item.scenarioNote)
+  }
+
   async function addToMyVocabulary(item: VocabularyItem) {
     try {
+      if (!item.zhGloss.trim()) return { ok: false as const, message: '请先编辑补充中文义项，再加入训练。' }
       await addWordToList(item.id, 'my-vocabulary', item.priority)
       await refreshData()
       return { ok: true as const, message: `已加入优先学习：${item.expression}` }
@@ -341,48 +416,68 @@ function App() {
     }
   }
 
+  async function removeFromMyVocabulary(item: VocabularyItem) {
+    try {
+      await removeWordFromList(item.id, 'my-vocabulary')
+      await refreshData()
+      return { ok: true as const, message: `已移除优先学习：${item.expression}` }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '移除优先学习失败。'
+      showToast(message, 'error')
+      return { ok: false as const, message }
+    }
+  }
+
   async function bulkAdd(
-    rows: { expression: string; zhGloss: string }[],
-    category: SystemListSlug,
+    rows: VocabularyImportRow[],
+    category: ImportCategory,
+    onProgress?: (completed: number, total: number) => void,
   ) {
-    const existing = new Set(items.map((item) => `${normalizeText(item.expression)}::${normalizeText(item.zhGloss)}`))
-    const addedWords: Word[] = []
-    const addedMemberships: WordListItem[] = []
-    const addedItems: VocabularyItem[] = []
-    let skipped = 0
-    for (const row of rows) {
-      const key = `${normalizeText(row.expression)}::${normalizeText(row.zhGloss)}`
-      if (!row.expression.trim() || !row.zhGloss.trim() || existing.has(key)) {
-        skipped += 1
-        continue
+    const original = await getUserDataSnapshot()
+    const preserveExistingTrainingIds = new Set(original.words.map((word) => word.id))
+    const seen = new Set<string>()
+    const lookups = new Map<string, Promise<DictionaryResult>>()
+    const summary: VocabularyImportSummary = { added: 0, skipped: 0, sensesAdded: 0, failed: [], warnings: [] }
+    const lookup = (expression: string) => {
+      const key = expressionKey(expression)
+      let pending = lookups.get(key)
+      if (!pending) { pending = lookupDictionary(expression); lookups.set(key, pending) }
+      return pending
+    }
+    for (let start = 0; start < rows.length; start += 3) {
+      const batch = rows.slice(start, start + 3)
+      const prepared = await Promise.allSettled(batch.map((row) => prepareVocabularyImportRow(row, lookup, category)))
+      for (const [index, row] of batch.entries()) {
+        const key = JSON.stringify([expressionKey(row.expression), expressionKey(row.zhGloss), row.partOfSpeech ?? '', row.category ?? category, expressionKey(row.enDefinition ?? '')])
+        const candidate = prepared[index]
+        try {
+          if (seen.has(key)) { summary.skipped += 1; continue }
+          seen.add(key)
+          if (candidate.status === 'rejected') throw candidate.reason
+          const entry = candidate.value
+          const saved = await saveDictionarySenses(entry.result, entry.selectedIndices, entry.category, undefined,
+            { preserveExistingTraining: true, preserveExistingTrainingIds })
+          if (saved.added || saved.activated) summary.added += 1
+          else summary.skipped += 1
+          summary.sensesAdded += saved.added
+          if (entry.warning) summary.warnings.push(entry.warning)
+        } catch (error) {
+          summary.failed.push({ row, message: error instanceof Error ? error.message : '补全或保存失败，请重试。' })
+        } finally { onProgress?.(start + index + 1, rows.length) }
       }
-      existing.add(key)
-      const built = customItemFromDraft({
-        expression: row.expression,
-        zhGloss: row.zhGloss,
-        enDefinition: '',
-        partOfSpeech: 'expression',
-        category,
-        exampleEn: '',
-        exampleZh: '',
-        collocations: [],
-      })
-      addedWords.push(built.word)
-      addedMemberships.push(...built.memberships)
-      addedItems.push(built.item)
     }
-    if (addedWords.length) {
-      const newTracks = createInitialTracks(addedWords, new Date())
-      await writeBatch({ words: addedWords, memberships: addedMemberships, tracks: newTracks })
-      setItems((current) => [...addedItems, ...current])
-      setTracks((current) => [...current, ...newTracks])
-    }
-    return { added: addedWords.length, skipped }
+    await refreshData()
+    return summary
   }
 
   async function toggleStatus(item: VocabularyItem) {
+    if (item.status === 'paused' && !item.zhGloss.trim()) {
+      showToast('请先编辑补充中文义项，再恢复训练。', 'error')
+      return
+    }
     const updatedWord: Word = stripHydration({
       ...item,
+      contentEdited: item.contentEdited ?? item.updatedAt !== item.createdAt,
       status: item.status === 'active' ? 'paused' : 'active',
       updatedAt: new Date().toISOString(),
     })
@@ -409,6 +504,7 @@ function App() {
       collocations: string[]
       category: EditCategory
       scenarioNote?: string
+      vocabularyLevel?: VocabularyItem['vocabularyLevel']
     },
   ) {
     const current = items.find((item) => item.id === id)
@@ -421,13 +517,21 @@ function App() {
     const scenarioNote = patch.category === 'other'
       ? (patchScenarioNote?.trim() || current.scenarioNote)
       : undefined
+    const glossChanged = normalizeChinese(patch.zhGloss) !== normalizeChinese(current.zhGloss)
+    const acceptedZhAnswers = glossChanged
+      ? current.acceptedZhAnswers.filter((answer) => normalizeChinese(answer) !== normalizeChinese(current.zhGloss))
+      : current.acceptedZhAnswers
+    const contentChanged = patch.zhGloss !== current.zhGloss || patch.enDefinition !== current.enDefinition
+      || patch.partOfSpeech !== current.partOfSpeech || JSON.stringify(patch.examples) !== JSON.stringify(current.examples)
+      || JSON.stringify(patch.collocations) !== JSON.stringify(current.collocations)
     const updated: VocabularyItem = {
       ...current,
       ...contentPatch,
       listSlugs,
       category: primaryListSlug(listSlugs),
       scenarioNote,
-      acceptedZhAnswers: uniqueStrings([patch.zhGloss, ...current.acceptedZhAnswers]),
+      acceptedZhAnswers: uniqueStrings([patch.zhGloss, ...acceptedZhAnswers]),
+      contentEdited: contentChanged || (current.contentEdited ?? current.updatedAt !== current.createdAt),
       usagePrompts,
       updatedAt: new Date().toISOString(),
     }
@@ -528,6 +632,13 @@ function App() {
     }
   }
 
+  async function addSharedPowerBankVocabulary() {
+    const { default: pack } = await import('../data/shared-power-bank/shared-power-bank.vocabulary.json')
+    const summary = await importVocabularyPack(pack)
+    await refreshData()
+    return { ok: true, message: `已加入共享充电宝工作词库：新增 ${summary.added} 个义项，补全 ${summary.updated} 个，已有 ${summary.unchanged} 个；每日学习数量保持设置值。` }
+  }
+
   if (loading) return <LoadingScreen />
   if (loadError) return <ErrorScreen message={loadError} onRetry={() => window.location.reload()} />
 
@@ -541,6 +652,12 @@ function App() {
         }}
         onOpenSettings={() => setSettingsOpen(true)}
       >
+        {dictionaryWarning && <div className="session-open-error" role="alert">
+          <span>词义补全暂未完成，已有词库仍可使用。{dictionaryWarning}</span>
+          <button type="button" disabled={dictionaryBusy} onClick={() => void syncDictionaryContent().catch((error) => setDictionaryWarning(error instanceof Error ? error.message : '重试失败。'))}>
+            {dictionaryBusy ? '正在补全…' : '重试词义补全'}
+          </button>
+        </div>}
         {sessionError && <div className="session-open-error" role="alert">
           <span>{sessionError}</span>
           <button type="button" onClick={() => setSessionError('')}>关闭提示后重试</button>
@@ -552,7 +669,6 @@ function App() {
             mapProgress={mapProgress}
             now={now}
             onStart={startSession}
-            onContinue={() => void rebuildSession(5)}
             recentWords={recentWords}
             tracks={learningTrackSnapshots}
           />
@@ -561,19 +677,25 @@ function App() {
           <AddView
             onAdd={addCustomItem}
             onBulkAdd={bulkAdd}
+            onAddWorkVocabulary={addSharedPowerBankVocabulary}
             onEnrich={enrichDraft}
             onLookup={lookupDictionary}
+            onSaveDictionary={saveDictionaryEntry}
           />
         )}
         {tab === 'library' && (
           <LibraryView
             items={items}
             onAddToMyVocabulary={addToMyVocabulary}
+            onRemoveFromMyVocabulary={removeFromMyVocabulary}
             onToggleStatus={toggleStatus}
+            onToggleKnown={toggleKnown}
             onUpdate={updateItem}
             evidenceByItemId={stats.evidenceByItemId}
+            onCompleteSenses={completeSenses}
           />
         )}
+        {tab === 'voice' && <VoicePractice items={items} accent={settings.speechAccent} />}
       </AppShell>
 
       {session && (
@@ -585,12 +707,8 @@ function App() {
           key={session.id}
           mode="core"
           sessionId={session.id}
-          dailyMinutes={settings.dailyMinutes}
-          usedTodayMs={session.plan.usedMs}
-          initialBudgetMs={session.plan.remainingMs}
           timeEntries={timeEntries}
           onSaveTime={saveStudyTime}
-          onContinue={() => rebuildSession(5)}
           onDayChange={() => rebuildSession()}
           canVerifySentence={hasDeepseekApiKey()}
           learningStats={stats}
@@ -601,6 +719,9 @@ function App() {
           }}
           onFinish={() => { void refreshData().catch((error) => setSessionError(error instanceof Error ? error.message : '读取学习结果失败。')) }}
           onRate={handleRate}
+          onMarkKnown={toggleKnown}
+          onRefreshTasks={refreshSessionTasks}
+          difficultyLevel={difficulty.level}
           onSpeechAccentChange={(accent) => {
             void saveSettings({ ...settings, speechAccent: accent })
           }}
