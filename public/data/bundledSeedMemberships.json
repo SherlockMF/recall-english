@@ -784,6 +784,14 @@
     "subcategory": "ratios-reporting"
   },
   {
+    "id": "membership-v1-accrual-b8434b06-accounting-revenue-expense-accrual",
+    "wordId": "v1-accrual-b8434b06",
+    "listId": "list-accounting",
+    "priority": 10,
+    "sortOrder": 188,
+    "subcategory": "revenue-expense-accrual"
+  },
+  {
     "id": "membership-v1-accrued-expense-02a89fb9-accounting-revenue-expense-accrual",
     "wordId": "v1-accrued-expense-02a89fb9",
     "listId": "list-accounting",
@@ -2296,6 +2304,14 @@
     "subcategory": "payment"
   },
   {
+    "id": "membership-v1-deposit-a4182cd6-business-payment",
+    "wordId": "v1-deposit-a4182cd6",
+    "listId": "list-business",
+    "priority": 10,
+    "sortOrder": 221,
+    "subcategory": "payment"
+  },
+  {
     "id": "membership-v1-full-payment-741c53a5-business-payment",
     "wordId": "v1-full-payment-741c53a5",
     "listId": "list-business",
@@ -2493,6 +2509,14 @@
     "listId": "list-business",
     "priority": 8,
     "sortOrder": 177,
+    "subcategory": "pricing-quotation"
+  },
+  {
+    "id": "membership-v1-discount-rate-654e3f44-business-pricing-quotation",
+    "wordId": "v1-discount-rate-654e3f44",
+    "listId": "list-business",
+    "priority": 8,
+    "sortOrder": 172,
     "subcategory": "pricing-quotation"
   },
   {
@@ -4504,6 +4528,14 @@
     "subcategory": "school"
   },
   {
+    "id": "membership-v1-attendance-c38aed08-daily-life-school",
+    "wordId": "v1-attendance-c38aed08",
+    "listId": "list-daily",
+    "priority": 10,
+    "sortOrder": 79,
+    "subcategory": "school"
+  },
+  {
     "id": "membership-v1-class-schedule-f0ccd008-daily-life-school",
     "wordId": "v1-class-schedule-f0ccd008",
     "listId": "list-daily",
@@ -5048,6 +5080,14 @@
     "subcategory": "transport"
   },
   {
+    "id": "membership-v1-transfer-a3c86f8f-daily-life-transport",
+    "wordId": "v1-transfer-a3c86f8f",
+    "listId": "list-daily",
+    "priority": 9,
+    "sortOrder": 40,
+    "subcategory": "transport"
+  },
+  {
     "id": "membership-v1-could-you-drop-me-off-here-e2b347b8-daily-life-transport-sentences",
     "wordId": "v1-could-you-drop-me-off-here-e2b347b8",
     "listId": "list-daily",
@@ -5197,6 +5237,14 @@
     "listId": "list-finance",
     "priority": 10,
     "sortOrder": 1,
+    "subcategory": "banking-interest"
+  },
+  {
+    "id": "membership-v1-liquidity-c57dc693-finance-banking-interest",
+    "wordId": "v1-liquidity-c57dc693",
+    "listId": "list-finance",
+    "priority": 10,
+    "sortOrder": 18,
     "subcategory": "banking-interest"
   },
   {
@@ -5917,6 +5965,14 @@
     "listId": "list-finance",
     "priority": 7,
     "sortOrder": 24,
+    "subcategory": "time-value-capital-budgeting"
+  },
+  {
+    "id": "membership-v1-discount-rate-654e3f44-finance-time-value-capital-budgeting",
+    "wordId": "v1-discount-rate-654e3f44",
+    "listId": "list-finance",
+    "priority": 9,
+    "sortOrder": 23,
     "subcategory": "time-value-capital-budgeting"
   },
   {

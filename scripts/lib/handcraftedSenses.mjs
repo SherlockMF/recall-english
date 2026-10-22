@@ -15,7 +15,21 @@ export function loadHandcraftedSenses(source) {
     enDefinition: field(row, 'definition'), partOfSpeech: field(row, 'partOfSpeech') }))
 }
 
-export function overlapsHandcraftedSense(word, handcrafted) {
+function sameSnapshot(left, right) {
+  return ['expression', 'partOfSpeech', 'zhGloss', 'enDefinition']
+    .every((key) => normalize(left[key]) === normalize(right?.[key]))
+}
+
+export function overlapsHandcraftedSense(word, handcrafted, reviews = []) {
+  const review = reviews.find((entry) => entry.wordId === word.id)
+  if (review) {
+    if (!['duplicate', 'retain'].includes(review.decision)
+      || !sameSnapshot(word, review.source)
+      || handcrafted.filter((sense) => sameSnapshot(sense, review.canonical)).length !== 1) {
+      throw new Error(`Sense overlap review is stale or invalid: ${word.id}; review both senses before rebuilding`)
+    }
+    return review.decision === 'duplicate'
+  }
   return handcrafted.some((sense) => {
     if (normalize(sense.expression) !== normalize(word.expression)
       || normalize(sense.partOfSpeech) !== normalize(word.partOfSpeech)) return false

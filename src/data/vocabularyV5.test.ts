@@ -10,11 +10,11 @@ const seedWords = bundled.words
 const seedMemberships = bundled.memberships
 
 describe('vocabulary V5 trusted library', () => {
-  it('keeps V5.3 production size at 7497 after identical-sense dedupe', () => {
-    expect(bundledSeedWords).toHaveLength(7257)
-    expect(seedWords).toHaveLength(7497)
+  it('keeps 7503 production senses after reviewed dedupe and six distinct additions', () => {
+    expect(bundledSeedWords).toHaveLength(7263)
+    expect(seedWords).toHaveLength(7503)
     expect(bundledSeedWords.every((item) => /^(v1|core|econ)-/.test(item.id))).toBe(true)
-    expect(bundledSeedWords.filter((item) => item.id.startsWith('v1-')).length).toBe(756)
+    expect(bundledSeedWords.filter((item) => item.id.startsWith('v1-')).length).toBe(762)
   })
 
   it('rejects wrap/meta definitions and old template example banks on non-v1 senses', () => {
@@ -418,6 +418,6 @@ describe('vocabulary V5 trusted library', () => {
         2,
       ),
     )
-    expect(progress.total).toBe(7497)
+    expect(progress.total).toBe(7503)
   })
 })

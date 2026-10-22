@@ -448,6 +448,62 @@
     "updatedAt": "2026-08-14T00:00:00.000Z"
   },
   {
+    "id": "v1-accrual-b8434b06",
+    "expression": "accrual",
+    "lemma": "accrual",
+    "senseKey": "core-b8434b06f443",
+    "zhGloss": "应计确认",
+    "enDefinition": "the recognition of income or expenses in the period earned or incurred rather than when cash is settled",
+    "partOfSpeech": "noun",
+    "acceptedZhAnswers": [
+      "应计确认"
+    ],
+    "acceptedEnVariants": [
+      "accrual"
+    ],
+    "examples": [
+      {
+        "en": "Accrual accounting records income when it is earned, even if payment comes later.",
+        "zh": "应计制会计在收入赚取时确认收入，即使款项稍后才收到。"
+      },
+      {
+        "en": "The accrual of this expense belongs in the period when the service was received.",
+        "zh": "这项费用应在接受服务的期间作应计确认。"
+      }
+    ],
+    "collocations": [
+      "accrual accounting",
+      "accrual of expenses",
+      "accrual of income"
+    ],
+    "source": "seed",
+    "priority": 10,
+    "status": "active",
+    "usagePrompts": [
+      {
+        "id": "v1-accrual-b8434b06-cloze",
+        "type": "cloze",
+        "prompt": "Complete: _____ accounting records income when it is earned, even if payment comes later.",
+        "answer": "accrual",
+        "modelAnswer": "Accrual accounting records income when it is earned, even if payment comes later.",
+        "checkpoints": [
+          "accrual"
+        ]
+      },
+      {
+        "id": "v1-accrual-b8434b06-sentence",
+        "type": "sentence",
+        "prompt": "用 “accrual” 写一句你真实会说的话。",
+        "modelAnswer": "Accrual accounting records income when it is earned, even if payment comes later.",
+        "checkpoints": [
+          "accrual"
+        ]
+      }
+    ],
+    "createdAt": "2026-08-14T00:00:00.000Z",
+    "updatedAt": "2026-08-14T00:00:00.000Z"
+  },
+  {
     "id": "v1-accrued-expense-02a89fb9",
     "expression": "accrued expense",
     "lemma": "accrued expense",
@@ -1841,6 +1897,62 @@
         "modelAnswer": "Before we sign, let’s confirm the attachment in writing.",
         "checkpoints": [
           "attachment"
+        ]
+      }
+    ],
+    "createdAt": "2026-08-14T00:00:00.000Z",
+    "updatedAt": "2026-08-14T00:00:00.000Z"
+  },
+  {
+    "id": "v1-attendance-c38aed08",
+    "expression": "attendance",
+    "lemma": "attendance",
+    "senseKey": "core-c38aed086f66",
+    "zhGloss": "出勤记录",
+    "enDefinition": "a record of which people are present at a class or event",
+    "partOfSpeech": "noun",
+    "acceptedZhAnswers": [
+      "出勤记录"
+    ],
+    "acceptedEnVariants": [
+      "attendance"
+    ],
+    "examples": [
+      {
+        "en": "The tutor takes attendance at the start of each class.",
+        "zh": "导师在每节课开始时点名并记录出勤情况。"
+      },
+      {
+        "en": "Please check the attendance before marking anyone absent.",
+        "zh": "标记某人缺席前，请核对出勤记录。"
+      }
+    ],
+    "collocations": [
+      "take attendance",
+      "check attendance",
+      "attendance record"
+    ],
+    "source": "seed",
+    "priority": 10,
+    "status": "active",
+    "usagePrompts": [
+      {
+        "id": "v1-attendance-c38aed08-cloze",
+        "type": "cloze",
+        "prompt": "Complete: The tutor takes _____ at the start of each class.",
+        "answer": "attendance",
+        "modelAnswer": "The tutor takes attendance at the start of each class.",
+        "checkpoints": [
+          "attendance"
+        ]
+      },
+      {
+        "id": "v1-attendance-c38aed08-sentence",
+        "type": "sentence",
+        "prompt": "用 “attendance” 写一句你真实会说的话。",
+        "modelAnswer": "The tutor takes attendance at the start of each class.",
+        "checkpoints": [
+          "attendance"
         ]
       }
     ],
@@ -11704,6 +11816,63 @@
     "updatedAt": "2026-08-14T00:00:00.000Z"
   },
   {
+    "id": "v1-deposit-a4182cd6",
+    "expression": "deposit",
+    "lemma": "deposit",
+    "senseKey": "core-a4182cd6cd68",
+    "zhGloss": "定金",
+    "enDefinition": "an initial payment made towards the full price of goods or services",
+    "partOfSpeech": "noun",
+    "acceptedZhAnswers": [
+      "定金",
+      "预付定金"
+    ],
+    "acceptedEnVariants": [
+      "deposit"
+    ],
+    "examples": [
+      {
+        "en": "We paid a deposit to reserve the furniture and will pay the balance on delivery.",
+        "zh": "我们支付了一笔定金来预订家具，余款将在交货时支付。"
+      },
+      {
+        "en": "The deposit is part of the purchase price, not an extra charge.",
+        "zh": "这笔定金是购买价款的一部分，而不是额外收费。"
+      }
+    ],
+    "collocations": [
+      "pay a deposit",
+      "a deposit on a purchase",
+      "deposit payment"
+    ],
+    "source": "seed",
+    "priority": 10,
+    "status": "active",
+    "usagePrompts": [
+      {
+        "id": "v1-deposit-a4182cd6-cloze",
+        "type": "cloze",
+        "prompt": "Complete: We paid a _____ to reserve the furniture and will pay the balance on delivery.",
+        "answer": "deposit",
+        "modelAnswer": "We paid a deposit to reserve the furniture and will pay the balance on delivery.",
+        "checkpoints": [
+          "deposit"
+        ]
+      },
+      {
+        "id": "v1-deposit-a4182cd6-sentence",
+        "type": "sentence",
+        "prompt": "用 “deposit” 写一句你真实会说的话。",
+        "modelAnswer": "We paid a deposit to reserve the furniture and will pay the balance on delivery.",
+        "checkpoints": [
+          "deposit"
+        ]
+      }
+    ],
+    "createdAt": "2026-08-14T00:00:00.000Z",
+    "updatedAt": "2026-08-14T00:00:00.000Z"
+  },
+  {
     "id": "v1-deposit-cash-f992867e",
     "expression": "deposit cash",
     "lemma": "deposit cash",
@@ -12313,6 +12482,63 @@
         "modelAnswer": "I compared last year’s discount factor with the current forecast.",
         "checkpoints": [
           "discount factor"
+        ]
+      }
+    ],
+    "createdAt": "2026-08-14T00:00:00.000Z",
+    "updatedAt": "2026-08-14T00:00:00.000Z"
+  },
+  {
+    "id": "v1-discount-rate-654e3f44",
+    "expression": "discount rate",
+    "lemma": "discount rate",
+    "senseKey": "core-654e3f44ffc0",
+    "zhGloss": "央行贴现率",
+    "enDefinition": "the interest rate charged on loans by a central bank through a discount window",
+    "partOfSpeech": "noun phrase",
+    "acceptedZhAnswers": [
+      "央行贴现率",
+      "贴现率"
+    ],
+    "acceptedEnVariants": [
+      "discount rate"
+    ],
+    "examples": [
+      {
+        "en": "The central bank raised the discount rate on its lending to banks.",
+        "zh": "中央银行提高了向银行贷款所用的贴现率。"
+      },
+      {
+        "en": "This discount rate applies to eligible borrowing from the central bank.",
+        "zh": "这项贴现率适用于符合条件的央行借款。"
+      }
+    ],
+    "collocations": [
+      "official discount rate",
+      "central bank discount rate",
+      "raise the discount rate"
+    ],
+    "source": "seed",
+    "priority": 8,
+    "status": "active",
+    "usagePrompts": [
+      {
+        "id": "v1-discount-rate-654e3f44-cloze",
+        "type": "cloze",
+        "prompt": "Complete: The central bank raised the _____ on its lending to banks.",
+        "answer": "discount rate",
+        "modelAnswer": "The central bank raised the discount rate on its lending to banks.",
+        "checkpoints": [
+          "discount rate"
+        ]
+      },
+      {
+        "id": "v1-discount-rate-654e3f44-sentence",
+        "type": "sentence",
+        "prompt": "用 “discount rate” 写一句你真实会说的话。",
+        "modelAnswer": "The central bank raised the discount rate on its lending to banks.",
+        "checkpoints": [
+          "discount rate"
         ]
       }
     ],
@@ -22454,6 +22680,62 @@
         "modelAnswer": "When I need it, I say “Let's review the sales results after one month.” naturally.",
         "checkpoints": [
           "Let's review the sales results after one month."
+        ]
+      }
+    ],
+    "createdAt": "2026-08-14T00:00:00.000Z",
+    "updatedAt": "2026-08-14T00:00:00.000Z"
+  },
+  {
+    "id": "v1-liquidity-c57dc693",
+    "expression": "liquidity",
+    "lemma": "liquidity",
+    "senseKey": "core-c57dc693d3bc",
+    "zhGloss": "资产流动性",
+    "enDefinition": "the ease with which an asset can be converted into cash without a significant loss in value",
+    "partOfSpeech": "noun",
+    "acceptedZhAnswers": [
+      "资产流动性"
+    ],
+    "acceptedEnVariants": [
+      "liquidity"
+    ],
+    "examples": [
+      {
+        "en": "We assessed the liquidity of the shares before deciding how quickly we could sell them.",
+        "zh": "在判断能多快卖出这些股票之前，我们评估了它们的资产流动性。"
+      },
+      {
+        "en": "An asset with low liquidity may take longer to sell for cash.",
+        "zh": "流动性较低的资产可能需要更长时间才能出售变现。"
+      }
+    ],
+    "collocations": [
+      "asset liquidity",
+      "market liquidity",
+      "liquidity of an investment"
+    ],
+    "source": "seed",
+    "priority": 10,
+    "status": "active",
+    "usagePrompts": [
+      {
+        "id": "v1-liquidity-c57dc693-cloze",
+        "type": "cloze",
+        "prompt": "Complete: We assessed the _____ of the shares before deciding how quickly we could sell them.",
+        "answer": "liquidity",
+        "modelAnswer": "We assessed the liquidity of the shares before deciding how quickly we could sell them.",
+        "checkpoints": [
+          "liquidity"
+        ]
+      },
+      {
+        "id": "v1-liquidity-c57dc693-sentence",
+        "type": "sentence",
+        "prompt": "用 “liquidity” 写一句你真实会说的话。",
+        "modelAnswer": "We assessed the liquidity of the shares before deciding how quickly we could sell them.",
+        "checkpoints": [
+          "liquidity"
         ]
       }
     ],
@@ -37745,6 +38027,62 @@
         "modelAnswer": "Once I understood the transaction history, the process felt easier.",
         "checkpoints": [
           "transaction history"
+        ]
+      }
+    ],
+    "createdAt": "2026-08-14T00:00:00.000Z",
+    "updatedAt": "2026-08-14T00:00:00.000Z"
+  },
+  {
+    "id": "v1-transfer-a3c86f8f",
+    "expression": "transfer",
+    "lemma": "transfer",
+    "senseKey": "core-a3c86f8fcd4e",
+    "zhGloss": "换乘",
+    "enDefinition": "to change from one transport service to another during a journey",
+    "partOfSpeech": "verb",
+    "acceptedZhAnswers": [
+      "换乘"
+    ],
+    "acceptedEnVariants": [
+      "transfer"
+    ],
+    "examples": [
+      {
+        "en": "We transfer from the bus to the train at the central station.",
+        "zh": "我们在中央车站从公交车换乘火车。"
+      },
+      {
+        "en": "Passengers need to transfer to another line to reach the airport.",
+        "zh": "乘客需要换乘另一条线路才能到达机场。"
+      }
+    ],
+    "collocations": [
+      "transfer to another train",
+      "transfer between lines",
+      "transfer from a bus to a train"
+    ],
+    "source": "seed",
+    "priority": 9,
+    "status": "active",
+    "usagePrompts": [
+      {
+        "id": "v1-transfer-a3c86f8f-cloze",
+        "type": "cloze",
+        "prompt": "Complete: We _____ from the bus to the train at the central station.",
+        "answer": "transfer",
+        "modelAnswer": "We transfer from the bus to the train at the central station.",
+        "checkpoints": [
+          "transfer"
+        ]
+      },
+      {
+        "id": "v1-transfer-a3c86f8f-sentence",
+        "type": "sentence",
+        "prompt": "用 “transfer” 写一句你真实会说的话。",
+        "modelAnswer": "We transfer from the bus to the train at the central station.",
+        "checkpoints": [
+          "transfer"
         ]
       }
     ],

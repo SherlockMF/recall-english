@@ -27,6 +27,33 @@ it('retains differing definitions even when their Chinese translations coincide'
   expect(overlapsHandcraftedSense({ expression: 'bank', zhGloss: '银行', enDefinition: 'a building housing a financial institution', partOfSpeech: 'noun' }, handcrafted)).toBe(false)
 })
 
+it('excludes a reviewed paraphrase even when its noun label differs', () => {
+  const handcrafted = [{ expression: 'accounts payable', zhGloss: '应付账款',
+    enDefinition: 'amounts an entity owes suppliers on credit', partOfSpeech: 'plural noun' }]
+  const word = { id: 'reviewed-payable', expression: 'accounts payable', zhGloss: '应付账款',
+    enDefinition: 'amounts a business owes to suppliers', partOfSpeech: 'noun phrase' }
+  const reviews = [{ wordId: word.id, decision: 'duplicate', source: { ...word }, canonical: handcrafted[0] }]
+  expect(overlapsHandcraftedSense(word, handcrafted, reviews)).toBe(true)
+})
+
+it('requires a new review when either approved sense changes', () => {
+  const handcrafted = [{ expression: 'bank', zhGloss: '银行', enDefinition: 'a financial institution', partOfSpeech: 'noun' }]
+  const word = { id: 'reviewed-bank', expression: 'bank', zhGloss: '银行', enDefinition: 'a business holding money', partOfSpeech: 'noun' }
+  const reviews = [{ wordId: word.id, decision: 'duplicate', source: { ...word }, canonical: handcrafted[0] }]
+  expect(() => overlapsHandcraftedSense({ ...word, enDefinition: 'a building housing a financial institution' }, handcrafted, reviews))
+    .toThrow(/review/i)
+  expect(() => overlapsHandcraftedSense(word, [{ ...handcrafted[0], zhGloss: '河岸' }], reviews)).toThrow(/review/i)
+  expect(() => overlapsHandcraftedSense(word, [handcrafted[0], { ...handcrafted[0] }], reviews)).toThrow(/review/i)
+})
+
+it('does not let a review apply to another ID with the same expression and Chinese', () => {
+  const handcrafted = [{ expression: 'bank', zhGloss: '银行', enDefinition: 'a financial institution', partOfSpeech: 'noun' }]
+  const original = { id: 'reviewed-bank', expression: 'bank', zhGloss: '银行', enDefinition: 'a business holding money', partOfSpeech: 'noun' }
+  const reviews = [{ wordId: original.id, decision: 'duplicate', source: { ...original }, canonical: handcrafted[0] }]
+  expect(overlapsHandcraftedSense({ ...original, id: 'different-bank', enDefinition: 'a building housing a financial institution' }, handcrafted, reviews))
+    .toBe(false)
+})
+
 it('reads every literal row in the current production handwritten vocabulary', () => {
   const actual = loadHandcraftedSenses(readFileSync('src/data/seedVocabulary.ts', 'utf8'))
   expect(actual).toHaveLength(240)

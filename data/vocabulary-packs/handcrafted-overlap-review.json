@@ -1,0 +1,1813 @@
+{
+  "reviewedAt": "2026-10-22",
+  "baselineRevision": "5.3.1",
+  "targetRevision": "5.3.2",
+  "candidateCount": 100,
+  "duplicateCount": 94,
+  "retainedCount": 6,
+  "note": "人工逐项复核；精确绑定源ID与两边语义快照。未知义项仍保留，快照变化或目标歧义要求重新复核。例句为项目编写，非词典引用。",
+  "entries": [
+    {
+      "wordId": "v1-accounts-payable-dde3ab58",
+      "decision": "duplicate",
+      "source": {
+        "expression": "accounts payable",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "应付账款",
+        "enDefinition": "amounts a business owes to suppliers for goods or services received"
+      },
+      "canonical": {
+        "expression": "accounts payable",
+        "zhGloss": "应付账款",
+        "enDefinition": "amounts an entity owes suppliers for goods or services received on credit",
+        "partOfSpeech": "plural noun"
+      },
+      "reason": "noun phrase 与 plural noun 是标签差异，均指同一项应收或应付余额。"
+    },
+    {
+      "wordId": "v1-accounts-receivable-c715b151",
+      "decision": "duplicate",
+      "source": {
+        "expression": "accounts receivable",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "应收账款",
+        "enDefinition": "amounts owed to a business by customers for goods or services delivered"
+      },
+      "canonical": {
+        "expression": "accounts receivable",
+        "zhGloss": "应收账款",
+        "enDefinition": "amounts owed to an entity by customers for goods or services supplied on credit",
+        "partOfSpeech": "plural noun"
+      },
+      "reason": "noun phrase 与 plural noun 是标签差异，均指同一项应收或应付余额。"
+    },
+    {
+      "wordId": "v1-accrual-b8434b06",
+      "decision": "retain",
+      "source": {
+        "expression": "accrual",
+        "partOfSpeech": "noun",
+        "zhGloss": "应计确认",
+        "enDefinition": "the recognition of income or expenses in the period earned or incurred rather than when cash is settled"
+      },
+      "canonical": {
+        "expression": "accrual",
+        "zhGloss": "应计项目",
+        "enDefinition": "income earned or an expense incurred before the related cash is received or paid",
+        "partOfSpeech": "noun"
+      },
+      "reason": "保留应计确认过程，区别于手写种子的应计项目金额。",
+      "originalSource": {
+        "expression": "accrual",
+        "partOfSpeech": "noun",
+        "zhGloss": "应计",
+        "enDefinition": "recognition of income or expense in the period it is earned or incurred rather than when cash moves"
+      },
+      "originalExamples": [
+        {
+          "en": "The worksheet shows how the accrual affects the accounts.",
+          "zh": "工作底稿显示「应计」如何影响账目。"
+        },
+        {
+          "en": "I can now explain the accrual without reading the notes.",
+          "zh": "我现在可以不看笔记解释「应计」。"
+        }
+      ],
+      "reference": "https://www.cambridgeshire-pcc.gov.uk/SysSiteAssets/media/downloads/cambs-pcc/money-downloads/stat-acc-23-24/cc-final-accounts-2324.pdf"
+    },
+    {
+      "wordId": "v1-amortisation-cd65c7e6",
+      "decision": "duplicate",
+      "source": {
+        "expression": "amortisation",
+        "partOfSpeech": "noun",
+        "zhGloss": "摊销",
+        "enDefinition": "systematic allocation of the cost of an intangible asset over its useful life"
+      },
+      "canonical": {
+        "expression": "amortisation",
+        "zhGloss": "摊销",
+        "enDefinition": "the systematic allocation of an intangible asset's depreciable amount over its useful life",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-appointment-6166cd59",
+      "decision": "duplicate",
+      "source": {
+        "expression": "appointment",
+        "partOfSpeech": "noun",
+        "zhGloss": "预约",
+        "enDefinition": "an arrangement to meet a doctor or other professional at a specific time"
+      },
+      "canonical": {
+        "expression": "appointment",
+        "zhGloss": "预约",
+        "enDefinition": "an arrangement to meet someone at a particular time",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-asset-22d3a72a",
+      "decision": "duplicate",
+      "source": {
+        "expression": "asset",
+        "partOfSpeech": "noun",
+        "zhGloss": "资产",
+        "enDefinition": "resource controlled by an entity that is expected to provide future economic benefits"
+      },
+      "canonical": {
+        "expression": "asset",
+        "zhGloss": "资产",
+        "enDefinition": "a present economic resource controlled by an entity as a result of past events",
+        "partOfSpeech": "noun"
+      },
+      "reason": "旧的未来经济利益表述与经济资源表述指向同一资产概念，保留较精确的手写定义。"
+    },
+    {
+      "wordId": "v1-assignment-58243973",
+      "decision": "duplicate",
+      "source": {
+        "expression": "assignment",
+        "partOfSpeech": "noun",
+        "zhGloss": "作业",
+        "enDefinition": "piece of work given to a student to complete"
+      },
+      "canonical": {
+        "expression": "assignment",
+        "zhGloss": "课程作业",
+        "enDefinition": "a piece of work given to a student as part of a course",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-attendance-c38aed08",
+      "decision": "retain",
+      "source": {
+        "expression": "attendance",
+        "partOfSpeech": "noun",
+        "zhGloss": "出勤记录",
+        "enDefinition": "a record of which people are present at a class or event"
+      },
+      "canonical": {
+        "expression": "attendance",
+        "zhGloss": "出勤",
+        "enDefinition": "the act of being present at a class or event",
+        "partOfSpeech": "noun"
+      },
+      "reason": "保留出勤记录，区别于出席行为；不再把出勤率作为唯一答案。",
+      "originalSource": {
+        "expression": "attendance",
+        "partOfSpeech": "noun",
+        "zhGloss": "出勤率，出勤",
+        "enDefinition": "record of whether someone is present at classes or events"
+      },
+      "originalExamples": [
+        {
+          "en": "Once I understood the attendance, the process felt easier.",
+          "zh": "弄懂「出勤率，出勤」后，流程就顺多了。"
+        },
+        {
+          "en": "I downloaded the attendance from the student portal.",
+          "zh": "我从学生门户下载了「出勤率，出勤」。"
+        }
+      ],
+      "reference": "https://www.merriam-webster.com/dictionary/attendance"
+    },
+    {
+      "wordId": "v1-audit-62fd76d6",
+      "decision": "duplicate",
+      "source": {
+        "expression": "audit",
+        "partOfSpeech": "noun",
+        "zhGloss": "审计",
+        "enDefinition": "an independent examination of financial information and related evidence"
+      },
+      "canonical": {
+        "expression": "audit",
+        "zhGloss": "审计",
+        "enDefinition": "an independent examination of financial information to support an audit opinion",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-audit-evidence-ea0c697f",
+      "decision": "duplicate",
+      "source": {
+        "expression": "audit evidence",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "审计证据",
+        "enDefinition": "information used by an auditor to support conclusions and opinions"
+      },
+      "canonical": {
+        "expression": "audit evidence",
+        "zhGloss": "审计证据",
+        "enDefinition": "information used by an auditor to reach conclusions and support an audit opinion",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-auditor-a1534d2a",
+      "decision": "duplicate",
+      "source": {
+        "expression": "auditor",
+        "partOfSpeech": "noun",
+        "zhGloss": "审计师",
+        "enDefinition": "professional who examines financial statements, records, and controls"
+      },
+      "canonical": {
+        "expression": "auditor",
+        "zhGloss": "审计师",
+        "enDefinition": "a qualified person who examines financial information and expresses an audit opinion",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-bond-56d27d00",
+      "decision": "duplicate",
+      "source": {
+        "expression": "bond",
+        "partOfSpeech": "noun",
+        "zhGloss": "债券",
+        "enDefinition": "debt security through which an investor lends money to an issuer"
+      },
+      "canonical": {
+        "expression": "bond",
+        "zhGloss": "债券",
+        "enDefinition": "a debt security under which an issuer promises repayment of principal and may provide coupons or another form of return",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-break-even-point-ba25dca5",
+      "decision": "duplicate",
+      "source": {
+        "expression": "break-even point",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "盈亏平衡点",
+        "enDefinition": "the level of activity at which total revenue equals total cost"
+      },
+      "canonical": {
+        "expression": "break-even point",
+        "zhGloss": "盈亏平衡点",
+        "enDefinition": "the sales level at which total revenue equals total costs and profit is zero",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-budget-4930c7b6",
+      "decision": "duplicate",
+      "source": {
+        "expression": "budget",
+        "partOfSpeech": "noun",
+        "zhGloss": "预算",
+        "enDefinition": "quantified plan for revenue, costs, cash, or other activities over a future period"
+      },
+      "canonical": {
+        "expression": "budget",
+        "zhGloss": "企业预算",
+        "enDefinition": "a financial plan estimating income, costs, and cash needs for a future period",
+        "partOfSpeech": "noun"
+      },
+      "reason": "业务收入、成本和现金的计划对应企业预算，不对应个人预算。"
+    },
+    {
+      "wordId": "v1-carrying-amount-8423f79a",
+      "decision": "duplicate",
+      "source": {
+        "expression": "carrying amount",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "账面金额",
+        "enDefinition": "the amount at which an asset or liability is recognized after adjustments"
+      },
+      "canonical": {
+        "expression": "carrying amount",
+        "zhGloss": "账面金额",
+        "enDefinition": "the amount at which an asset or liability is recognised after relevant deductions or adjustments",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-citation-52dcacc4",
+      "decision": "duplicate",
+      "source": {
+        "expression": "citation",
+        "partOfSpeech": "noun",
+        "zhGloss": "引用",
+        "enDefinition": "reference identifying the source of information used in academic work"
+      },
+      "canonical": {
+        "expression": "citation",
+        "zhGloss": "文献引用",
+        "enDefinition": "a reference to the source of information used in academic work",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-clarify-2d8e9940",
+      "decision": "duplicate",
+      "source": {
+        "expression": "clarify",
+        "partOfSpeech": "verb",
+        "zhGloss": "澄清",
+        "enDefinition": "to make information clearer or remove uncertainty"
+      },
+      "canonical": {
+        "expression": "clarify",
+        "zhGloss": "澄清说明",
+        "enDefinition": "to make something easier to understand by explaining it more clearly",
+        "partOfSpeech": "verb"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-clinic-98e03370",
+      "decision": "duplicate",
+      "source": {
+        "expression": "clinic",
+        "partOfSpeech": "noun",
+        "zhGloss": "诊所",
+        "enDefinition": "place where people receive medical advice or treatment without staying overnight"
+      },
+      "canonical": {
+        "expression": "clinic",
+        "zhGloss": "诊所",
+        "enDefinition": "a place where people receive medical advice or treatment",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-compound-interest-417e1838",
+      "decision": "duplicate",
+      "source": {
+        "expression": "compound interest",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "复利",
+        "enDefinition": "interest calculated on principal plus previously accumulated interest"
+      },
+      "canonical": {
+        "expression": "compound interest",
+        "zhGloss": "复利",
+        "enDefinition": "interest calculated on both the original principal and accumulated interest",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-contribution-margin-dafba36e",
+      "decision": "duplicate",
+      "source": {
+        "expression": "contribution margin",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "边际贡献",
+        "enDefinition": "sales revenue minus variable costs; the amount available to cover fixed costs and profit"
+      },
+      "canonical": {
+        "expression": "contribution margin",
+        "zhGloss": "边际贡献",
+        "enDefinition": "sales revenue minus variable costs, available to cover fixed costs and profit",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-conversion-rate-363f0b7d",
+      "decision": "duplicate",
+      "source": {
+        "expression": "conversion rate",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "转化率",
+        "enDefinition": "the percentage of potential customers who complete a desired action or purchase"
+      },
+      "canonical": {
+        "expression": "conversion rate",
+        "zhGloss": "转化率",
+        "enDefinition": "the percentage of people who complete a desired action out of those who had the opportunity",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-cost-of-sales-23b079fb",
+      "decision": "duplicate",
+      "source": {
+        "expression": "cost of sales",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "销售成本",
+        "enDefinition": "the cost of goods or services sold during a period"
+      },
+      "canonical": {
+        "expression": "cost of sales",
+        "zhGloss": "销售成本",
+        "enDefinition": "the direct cost of the goods or services that generated sales during a period",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-credit-4f2261e4",
+      "decision": "duplicate",
+      "source": {
+        "expression": "credit",
+        "partOfSpeech": "noun",
+        "zhGloss": "贷方",
+        "enDefinition": "an accounting entry recorded on the right side of an account"
+      },
+      "canonical": {
+        "expression": "credit",
+        "zhGloss": "贷方记录",
+        "enDefinition": "an entry on the right side of an account",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-customer-segment-c0530075",
+      "decision": "duplicate",
+      "source": {
+        "expression": "customer segment",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "客户细分",
+        "enDefinition": "group of customers sharing similar characteristics or needs"
+      },
+      "canonical": {
+        "expression": "customer segment",
+        "zhGloss": "客户细分群体",
+        "enDefinition": "a group of customers who share similar needs, behaviours, or characteristics",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-deadline-6537c5db",
+      "decision": "duplicate",
+      "source": {
+        "expression": "deadline",
+        "partOfSpeech": "noun",
+        "zhGloss": "截止日期",
+        "enDefinition": "the latest time by which work must be completed"
+      },
+      "canonical": {
+        "expression": "deadline",
+        "zhGloss": "截止日期",
+        "enDefinition": "the latest time or date by which something must be completed",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-debit-fb999526",
+      "decision": "duplicate",
+      "source": {
+        "expression": "debit",
+        "partOfSpeech": "noun",
+        "zhGloss": "借方",
+        "enDefinition": "an accounting entry recorded on the left side of an account"
+      },
+      "canonical": {
+        "expression": "debit",
+        "zhGloss": "借方记录",
+        "enDefinition": "an entry on the left side of an account",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-deferred-tax-2cac8c1d",
+      "decision": "duplicate",
+      "source": {
+        "expression": "deferred tax",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "递延所得税",
+        "enDefinition": "tax effects arising from differences between accounting and tax bases"
+      },
+      "canonical": {
+        "expression": "deferred tax",
+        "zhGloss": "递延所得税",
+        "enDefinition": "tax recognised for future consequences of temporary differences and certain carryforwards",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "均为递延所得税，保留对暂时性差异和结转项目的较精确说明。"
+    },
+    {
+      "wordId": "v1-deposit-a4182cd6",
+      "decision": "retain",
+      "source": {
+        "expression": "deposit",
+        "partOfSpeech": "noun",
+        "zhGloss": "定金",
+        "enDefinition": "an initial payment made towards the full price of goods or services"
+      },
+      "canonical": {
+        "expression": "deposit",
+        "zhGloss": "押金",
+        "enDefinition": "money paid in advance as security and usually returned if conditions are met",
+        "partOfSpeech": "noun"
+      },
+      "reason": "仅保留计入总价的部分预付款；手写种子继续承载可退押金。",
+      "originalSource": {
+        "expression": "deposit",
+        "partOfSpeech": "noun",
+        "zhGloss": "定金，押金",
+        "enDefinition": "money paid in advance as security or part payment"
+      },
+      "originalExamples": [
+        {
+          "en": "We put the deposit on the agenda for Thursday.",
+          "zh": "我们把「定金，押金」放进周四议程。"
+        },
+        {
+          "en": "Accounts payable released the deposit after three-way match.",
+          "zh": "三单匹配通过后，应付账款放出了「定金，押金」。"
+        }
+      ],
+      "reference": "https://dictionary.cambridge.org/us/dictionary/english/deposit"
+    },
+    {
+      "wordId": "v1-discount-rate-654e3f44",
+      "decision": "retain",
+      "source": {
+        "expression": "discount rate",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "央行贴现率",
+        "enDefinition": "the interest rate charged on loans by a central bank through a discount window"
+      },
+      "canonical": {
+        "expression": "discount rate",
+        "zhGloss": "折现率",
+        "enDefinition": "the rate used to convert future cash flows into present value",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "仅保留央行贴现率；手写种子继续承载现值计算的折现率。",
+      "originalSource": {
+        "expression": "discount rate",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "折现率，贴现率",
+        "enDefinition": "the interest rate used to discount future cash flows to present value; also a central-bank lending rate"
+      },
+      "originalExamples": [
+        {
+          "en": "I compared last year’s discount rate with the current forecast.",
+          "zh": "我把去年的「折现率，贴现率」与当前预测做了对比。"
+        },
+        {
+          "en": "Our model is sensitive to assumptions about the discount rate.",
+          "zh": "我们的模型对「折现率，贴现率」相关假设很敏感。"
+        }
+      ],
+      "reference": "https://www.federalreserve.gov/monetarypolicy/discountrate.htm"
+    },
+    {
+      "wordId": "v1-diversification-732ed86c",
+      "decision": "duplicate",
+      "source": {
+        "expression": "diversification",
+        "partOfSpeech": "noun",
+        "zhGloss": "分散投资",
+        "enDefinition": "spreading investments across assets to reduce concentration risk"
+      },
+      "canonical": {
+        "expression": "diversification",
+        "zhGloss": "分散投资",
+        "enDefinition": "spreading investments across different assets to reduce exposure to a single source of risk",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-dividend-b1d954fe",
+      "decision": "duplicate",
+      "source": {
+        "expression": "dividend",
+        "partOfSpeech": "noun",
+        "zhGloss": "股息，股利",
+        "enDefinition": "distribution of company profit to shareholders"
+      },
+      "canonical": {
+        "expression": "dividend",
+        "zhGloss": "股利",
+        "enDefinition": "a distribution of a company's profits or reserves to its shareholders",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-double-entry-bookkeeping-382a7e18",
+      "decision": "duplicate",
+      "source": {
+        "expression": "double-entry bookkeeping",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "复式记账",
+        "enDefinition": "system in which each transaction affects at least two accounts with equal debits and credits"
+      },
+      "canonical": {
+        "expression": "double-entry bookkeeping",
+        "zhGloss": "复式记账",
+        "enDefinition": "a system in which every transaction is recorded with equal debit and credit entries",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-earnings-per-share-3cc2fb6e",
+      "decision": "duplicate",
+      "source": {
+        "expression": "earnings per share",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "每股收益",
+        "enDefinition": "profit attributable to ordinary shareholders divided by weighted average shares"
+      },
+      "canonical": {
+        "expression": "earnings per share",
+        "zhGloss": "每股收益",
+        "enDefinition": "profit attributable to ordinary shareholders divided by the weighted average ordinary shares outstanding",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-equity-39625273",
+      "decision": "duplicate",
+      "source": {
+        "expression": "equity",
+        "partOfSpeech": "noun",
+        "zhGloss": "所有者权益",
+        "enDefinition": "the residual interest in assets after liabilities are deducted"
+      },
+      "canonical": {
+        "expression": "equity",
+        "zhGloss": "所有者权益",
+        "enDefinition": "the residual interest in an entity's assets after deducting all liabilities",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-expense-b3d0ba9e",
+      "decision": "duplicate",
+      "source": {
+        "expression": "expense",
+        "partOfSpeech": "noun",
+        "zhGloss": "费用",
+        "enDefinition": "cost consumed or incurred in generating revenue during a period"
+      },
+      "canonical": {
+        "expression": "expense",
+        "zhGloss": "费用",
+        "enDefinition": "a decrease in assets or increase in liabilities that reduces equity, excluding owner distributions",
+        "partOfSpeech": "noun"
+      },
+      "reason": "经营费用的通俗解释与费用的正式定义指向同一会计概念，保留手写定义。"
+    },
+    {
+      "wordId": "v1-extension-20309cdc",
+      "decision": "duplicate",
+      "source": {
+        "expression": "extension",
+        "partOfSpeech": "noun",
+        "zhGloss": "延期",
+        "enDefinition": "extra time formally granted to complete an assignment"
+      },
+      "canonical": {
+        "expression": "extension",
+        "zhGloss": "延期",
+        "enDefinition": "extra time allowed to complete a task or meet a deadline",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-fair-value-128b8c02",
+      "decision": "duplicate",
+      "source": {
+        "expression": "fair value",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "公允价值",
+        "enDefinition": "an estimated market-based value used for measurement or reporting"
+      },
+      "canonical": {
+        "expression": "fair value",
+        "zhGloss": "公允价值",
+        "enDefinition": "the price to sell an asset or transfer a liability in an orderly transaction between market participants",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "均为公允价值，保留明确交易条件的手写定义。"
+    },
+    {
+      "wordId": "v1-fare-053c18da",
+      "decision": "duplicate",
+      "source": {
+        "expression": "fare",
+        "partOfSpeech": "noun",
+        "zhGloss": "车费",
+        "enDefinition": "the amount charged for a journey by public transport or taxi"
+      },
+      "canonical": {
+        "expression": "fare",
+        "zhGloss": "交通票价",
+        "enDefinition": "the money paid for a journey on public transport or in a taxi",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-fever-f6cc8e72",
+      "decision": "duplicate",
+      "source": {
+        "expression": "fever",
+        "partOfSpeech": "noun",
+        "zhGloss": "发烧",
+        "enDefinition": "an abnormally high body temperature"
+      },
+      "canonical": {
+        "expression": "fever",
+        "zhGloss": "发烧",
+        "enDefinition": "a medical condition in which the body temperature is higher than normal",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-fixed-cost-b0ffab21",
+      "decision": "duplicate",
+      "source": {
+        "expression": "fixed cost",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "固定成本",
+        "enDefinition": "a cost that does not change with activity level in the short run"
+      },
+      "canonical": {
+        "expression": "fixed cost",
+        "zhGloss": "固定成本",
+        "enDefinition": "a cost that does not change in total with activity within a relevant range",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "均为固定总成本，保留手写定义对相关范围的限定。"
+    },
+    {
+      "wordId": "v1-future-value-6d7e1928",
+      "decision": "duplicate",
+      "source": {
+        "expression": "future value",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "终值，将来值",
+        "enDefinition": "the value that a current amount of money will grow to in the future"
+      },
+      "canonical": {
+        "expression": "future value",
+        "zhGloss": "终值",
+        "enDefinition": "the amount that a present sum will grow to at a specified future date",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-general-ledger-14ce8e42",
+      "decision": "duplicate",
+      "source": {
+        "expression": "general ledger",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "总账",
+        "enDefinition": "the complete collection of an entity's accounting accounts"
+      },
+      "canonical": {
+        "expression": "general ledger",
+        "zhGloss": "总分类账",
+        "enDefinition": "the complete collection of accounts used to record an entity's transactions",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-gross-profit-18253952",
+      "decision": "duplicate",
+      "source": {
+        "expression": "gross profit",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "毛利",
+        "enDefinition": "sales revenue minus cost of sales"
+      },
+      "canonical": {
+        "expression": "gross profit",
+        "zhGloss": "毛利",
+        "enDefinition": "revenue minus cost of sales before operating and other expenses",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-group-project-76364da5",
+      "decision": "duplicate",
+      "source": {
+        "expression": "group project",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "小组项目",
+        "enDefinition": "an assignment completed collaboratively by several students"
+      },
+      "canonical": {
+        "expression": "group project",
+        "zhGloss": "小组项目",
+        "enDefinition": "a course task completed jointly by several students",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-health-insurance-695448ee",
+      "decision": "duplicate",
+      "source": {
+        "expression": "health insurance",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "医疗保险",
+        "enDefinition": "insurance that covers some or all medical expenses"
+      },
+      "canonical": {
+        "expression": "health insurance",
+        "zhGloss": "医疗保险",
+        "enDefinition": "insurance that pays for some or all medical costs",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-humid-a2c1b594",
+      "decision": "duplicate",
+      "source": {
+        "expression": "humid",
+        "partOfSpeech": "adjective",
+        "zhGloss": "潮湿闷热的",
+        "enDefinition": "having a high level of moisture in the air"
+      },
+      "canonical": {
+        "expression": "humid",
+        "zhGloss": "潮湿闷热的",
+        "enDefinition": "having a lot of moisture in the air, often making it feel hot",
+        "partOfSpeech": "adjective"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-impairment-8425cfc0",
+      "decision": "duplicate",
+      "source": {
+        "expression": "impairment",
+        "partOfSpeech": "noun",
+        "zhGloss": "减值",
+        "enDefinition": "reduction in carrying amount when an asset's recoverable amount falls below book value"
+      },
+      "canonical": {
+        "expression": "impairment",
+        "zhGloss": "减值",
+        "enDefinition": "a recognised reduction in an asset's carrying amount; for many non-financial assets under IAS 36, it arises when carrying amount exceeds recoverable amount",
+        "partOfSpeech": "noun"
+      },
+      "reason": "指向同一减值概念，保留手写定义对适用资产范围的限定。"
+    },
+    {
+      "wordId": "v1-income-statement-e02d1005",
+      "decision": "duplicate",
+      "source": {
+        "expression": "income statement",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "利润表",
+        "enDefinition": "statement showing revenue, expenses, and profit for a period"
+      },
+      "canonical": {
+        "expression": "income statement",
+        "zhGloss": "利润表",
+        "enDefinition": "a financial statement presenting income, expenses, and profit or loss for a period",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-inflation-d15e55f4",
+      "decision": "duplicate",
+      "source": {
+        "expression": "inflation",
+        "partOfSpeech": "noun",
+        "zhGloss": "通货膨胀",
+        "enDefinition": "sustained increase in the general level of prices"
+      },
+      "canonical": {
+        "expression": "inflation",
+        "zhGloss": "通货膨胀",
+        "enDefinition": "a sustained increase in the general level of prices that reduces purchasing power",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-interest-rate-4091a117",
+      "decision": "duplicate",
+      "source": {
+        "expression": "interest rate",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "利率",
+        "enDefinition": "the percentage charged or earned on an amount of money over time"
+      },
+      "canonical": {
+        "expression": "interest rate",
+        "zhGloss": "利率",
+        "enDefinition": "the percentage charged on borrowed money or earned on invested money over a period",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-internal-control-fe691e44",
+      "decision": "duplicate",
+      "source": {
+        "expression": "internal control",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "内部控制",
+        "enDefinition": "policies and procedures designed to protect assets and support reliable reporting"
+      },
+      "canonical": {
+        "expression": "internal control",
+        "zhGloss": "内部控制",
+        "enDefinition": "a process designed to support reliable reporting, effective operations, and compliance",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "政策程序与控制过程是同一内部控制概念的不同展开。"
+    },
+    {
+      "wordId": "v1-internal-rate-of-return-ca034bc9",
+      "decision": "duplicate",
+      "source": {
+        "expression": "internal rate of return",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "内部收益率",
+        "enDefinition": "the discount rate that makes a project's net present value equal to zero"
+      },
+      "canonical": {
+        "expression": "internal rate of return",
+        "zhGloss": "内部收益率",
+        "enDefinition": "the discount rate at which an investment's net present value equals zero",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-inventory-6836395b",
+      "decision": "duplicate",
+      "source": {
+        "expression": "inventory",
+        "partOfSpeech": "noun",
+        "zhGloss": "库存",
+        "enDefinition": "goods and materials held by a business for sale or use"
+      },
+      "canonical": {
+        "expression": "inventory",
+        "zhGloss": "存货",
+        "enDefinition": "assets held for sale, being produced for sale, or used in producing goods or services",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-invoice-0117cc44",
+      "decision": "duplicate",
+      "source": {
+        "expression": "invoice",
+        "partOfSpeech": "noun",
+        "zhGloss": "发票，账单",
+        "enDefinition": "document requesting payment and listing goods or services supplied"
+      },
+      "canonical": {
+        "expression": "invoice",
+        "zhGloss": "发票",
+        "enDefinition": "a document from a seller listing goods or services supplied and the amount due",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-journal-entry-04deec19",
+      "decision": "duplicate",
+      "source": {
+        "expression": "journal entry",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "会计分录",
+        "enDefinition": "record of a transaction showing the accounts debited and credited"
+      },
+      "canonical": {
+        "expression": "journal entry",
+        "zhGloss": "会计分录",
+        "enDefinition": "a record of a transaction showing the accounts and debit and credit amounts affected",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-landlord-7cc24883",
+      "decision": "duplicate",
+      "source": {
+        "expression": "landlord",
+        "partOfSpeech": "noun",
+        "zhGloss": "房东",
+        "enDefinition": "person who owns property and rents it to someone else"
+      },
+      "canonical": {
+        "expression": "landlord",
+        "zhGloss": "房东",
+        "enDefinition": "a person who owns a property and rents it to someone else",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-lecture-56be5a3e",
+      "decision": "duplicate",
+      "source": {
+        "expression": "lecture",
+        "partOfSpeech": "noun",
+        "zhGloss": "讲座，大课",
+        "enDefinition": "formal class in which a teacher presents information to students"
+      },
+      "canonical": {
+        "expression": "lecture",
+        "zhGloss": "大学讲座课",
+        "enDefinition": "a formal talk given to a group of students as part of a course",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-leverage-878dd9dd",
+      "decision": "duplicate",
+      "source": {
+        "expression": "leverage",
+        "partOfSpeech": "noun",
+        "zhGloss": "杠杆",
+        "enDefinition": "the use of borrowed funds to increase potential returns and risks"
+      },
+      "canonical": {
+        "expression": "leverage",
+        "zhGloss": "财务杠杆",
+        "enDefinition": "the use of debt financing to increase the potential return to owners",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-liability-7b0d317e",
+      "decision": "duplicate",
+      "source": {
+        "expression": "liability",
+        "partOfSpeech": "noun",
+        "zhGloss": "负债",
+        "enDefinition": "present obligation that is expected to require an outflow of resources"
+      },
+      "canonical": {
+        "expression": "liability",
+        "zhGloss": "负债",
+        "enDefinition": "a present obligation of an entity to transfer an economic resource because of past events",
+        "partOfSpeech": "noun"
+      },
+      "reason": "旧的资源流出与经济资源转移表述指向同一负债概念。"
+    },
+    {
+      "wordId": "v1-liquidity-c57dc693",
+      "decision": "retain",
+      "source": {
+        "expression": "liquidity",
+        "partOfSpeech": "noun",
+        "zhGloss": "资产流动性",
+        "enDefinition": "the ease with which an asset can be converted into cash without a significant loss in value"
+      },
+      "canonical": {
+        "expression": "liquidity",
+        "zhGloss": "流动性",
+        "enDefinition": "the ability to obtain cash and meet short-term obligations when they fall due",
+        "partOfSpeech": "noun"
+      },
+      "reason": "保留资产变现的难易程度，区别于企业短期偿债能力。",
+      "originalSource": {
+        "expression": "liquidity",
+        "partOfSpeech": "noun",
+        "zhGloss": "流动性",
+        "enDefinition": "the ease with which an asset can be converted into cash without major loss"
+      },
+      "originalExamples": [
+        {
+          "en": "I compared last year’s liquidity with the current forecast.",
+          "zh": "我把去年的「流动性」与当前预测做了对比。"
+        },
+        {
+          "en": "Our model is sensitive to assumptions about the liquidity.",
+          "zh": "我们的模型对「流动性」相关假设很敏感。"
+        }
+      ],
+      "reference": "https://www.fidelity.com/learning-center/trading-investing/liquidity"
+    },
+    {
+      "wordId": "v1-loan-9bb40814",
+      "decision": "duplicate",
+      "source": {
+        "expression": "loan",
+        "partOfSpeech": "noun",
+        "zhGloss": "贷款",
+        "enDefinition": "money borrowed that must be repaid, usually with interest"
+      },
+      "canonical": {
+        "expression": "loan",
+        "zhGloss": "贷款",
+        "enDefinition": "money provided by a lender that must be repaid, usually with interest",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-materiality-5db67664",
+      "decision": "duplicate",
+      "source": {
+        "expression": "materiality",
+        "partOfSpeech": "noun",
+        "zhGloss": "重要性",
+        "enDefinition": "the significance of information or misstatement to users' decisions"
+      },
+      "canonical": {
+        "expression": "materiality",
+        "zhGloss": "重要性",
+        "enDefinition": "the quality of information whose omission or misstatement could reasonably influence users' decisions",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-mobile-data-b5f415ea",
+      "decision": "duplicate",
+      "source": {
+        "expression": "mobile data",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "手机流量",
+        "enDefinition": "internet data used through a mobile network"
+      },
+      "canonical": {
+        "expression": "mobile data",
+        "zhGloss": "移动数据流量",
+        "enDefinition": "internet access provided to a mobile phone through a cellular network",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-net-present-value-dd361f1b",
+      "decision": "duplicate",
+      "source": {
+        "expression": "net present value",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "净现值",
+        "enDefinition": "the present value of expected cash inflows minus the present value of outflows"
+      },
+      "canonical": {
+        "expression": "net present value",
+        "zhGloss": "净现值",
+        "enDefinition": "the present value of expected cash inflows minus the present value of cash outflows",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-net-profit-6ad8489d",
+      "decision": "duplicate",
+      "source": {
+        "expression": "net profit",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "净利润",
+        "enDefinition": "profit remaining after all expenses, interest, and tax"
+      },
+      "canonical": {
+        "expression": "net profit",
+        "zhGloss": "净利润",
+        "enDefinition": "profit remaining after all expenses, finance costs, and taxes are deducted",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-operating-profit-24b40a63",
+      "decision": "duplicate",
+      "source": {
+        "expression": "operating profit",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "营业利润",
+        "enDefinition": "profit from normal operations before financing and tax items"
+      },
+      "canonical": {
+        "expression": "operating profit",
+        "zhGloss": "营业利润",
+        "enDefinition": "profit from an entity's operations, generally measured before finance costs and income tax; its exact composition may vary by entity",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "均为经营形成的利润，保留手写定义对构成可能因企业而异的限定。"
+    },
+    {
+      "wordId": "v1-overhead-db79164a",
+      "decision": "duplicate",
+      "source": {
+        "expression": "overhead",
+        "partOfSpeech": "noun",
+        "zhGloss": "间接费用",
+        "enDefinition": "indirect costs of production or operations"
+      },
+      "canonical": {
+        "expression": "overhead",
+        "zhGloss": "间接费用",
+        "enDefinition": "an indirect cost of operating a business that cannot be traced easily to one product or service",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-pharmacy-e25e545d",
+      "decision": "duplicate",
+      "source": {
+        "expression": "pharmacy",
+        "partOfSpeech": "noun",
+        "zhGloss": "药房",
+        "enDefinition": "shop or department where medicines are prepared and sold"
+      },
+      "canonical": {
+        "expression": "pharmacy",
+        "zhGloss": "药房",
+        "enDefinition": "a shop or department where medicines are prepared and sold",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-plagiarism-17e6e16b",
+      "decision": "duplicate",
+      "source": {
+        "expression": "plagiarism",
+        "partOfSpeech": "noun",
+        "zhGloss": "抄袭",
+        "enDefinition": "using another person's work or ideas without proper acknowledgment"
+      },
+      "canonical": {
+        "expression": "plagiarism",
+        "zhGloss": "抄袭",
+        "enDefinition": "using another person's words or ideas without acknowledging the source",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-portfolio-386414c2",
+      "decision": "duplicate",
+      "source": {
+        "expression": "portfolio",
+        "partOfSpeech": "noun",
+        "zhGloss": "投资组合",
+        "enDefinition": "collection of investments held by an investor"
+      },
+      "canonical": {
+        "expression": "portfolio",
+        "zhGloss": "投资组合",
+        "enDefinition": "a collection of investments owned by an individual or organisation",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-prepayment-f9f1544b",
+      "decision": "duplicate",
+      "source": {
+        "expression": "prepayment",
+        "partOfSpeech": "noun",
+        "zhGloss": "预付款项",
+        "enDefinition": "payment made in advance for goods or services to be received in a future period"
+      },
+      "canonical": {
+        "expression": "prepayment",
+        "zhGloss": "预付款项",
+        "enDefinition": "a payment made before the related goods or services are received or consumed",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-prescription-a997ed6b",
+      "decision": "duplicate",
+      "source": {
+        "expression": "prescription",
+        "partOfSpeech": "noun",
+        "zhGloss": "处方",
+        "enDefinition": "doctor's written instruction for medicine or treatment"
+      },
+      "canonical": {
+        "expression": "prescription",
+        "zhGloss": "处方",
+        "enDefinition": "a written instruction from a doctor that allows medicine to be supplied",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-present-value-601a0661",
+      "decision": "duplicate",
+      "source": {
+        "expression": "present value",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "现值",
+        "enDefinition": "the current value of money to be received or paid in the future"
+      },
+      "canonical": {
+        "expression": "present value",
+        "zhGloss": "现值",
+        "enDefinition": "the current value of a future cash flow after discounting it at an appropriate rate",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-presentation-0d8e8c90",
+      "decision": "duplicate",
+      "source": {
+        "expression": "presentation",
+        "partOfSpeech": "noun",
+        "zhGloss": "展示，演讲",
+        "enDefinition": "talk in which information is presented to an audience"
+      },
+      "canonical": {
+        "expression": "presentation",
+        "zhGloss": "演示汇报",
+        "enDefinition": "a talk in which information is explained to an audience",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-price-to-earnings-ratio-f12cb571",
+      "decision": "duplicate",
+      "source": {
+        "expression": "price-to-earnings ratio",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "市盈率",
+        "enDefinition": "valuation ratio comparing share price with earnings per share"
+      },
+      "canonical": {
+        "expression": "price-to-earnings ratio",
+        "zhGloss": "市盈率",
+        "enDefinition": "a valuation ratio comparing a company's share price with its earnings per share",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-principal-6cd1fc2f",
+      "decision": "duplicate",
+      "source": {
+        "expression": "principal",
+        "partOfSpeech": "noun",
+        "zhGloss": "本金",
+        "enDefinition": "the original amount of money invested or borrowed, excluding interest"
+      },
+      "canonical": {
+        "expression": "principal",
+        "zhGloss": "本金",
+        "enDefinition": "the original amount of money borrowed or invested, excluding interest",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-purchase-order-af22722c",
+      "decision": "duplicate",
+      "source": {
+        "expression": "purchase order",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "采购订单",
+        "enDefinition": "formal document sent by a buyer to order specified goods or services"
+      },
+      "canonical": {
+        "expression": "purchase order",
+        "zhGloss": "采购订单",
+        "enDefinition": "a formal document from a buyer authorising the purchase of specified goods or services",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-receipt-8c4acb13",
+      "decision": "duplicate",
+      "source": {
+        "expression": "receipt",
+        "partOfSpeech": "noun",
+        "zhGloss": "收据",
+        "enDefinition": "written or electronic record showing that payment was made"
+      },
+      "canonical": {
+        "expression": "receipt",
+        "zhGloss": "收据",
+        "enDefinition": "a written or electronic record showing that goods or services were paid for",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-reconciliation-6d3271d2",
+      "decision": "duplicate",
+      "source": {
+        "expression": "reconciliation",
+        "partOfSpeech": "noun",
+        "zhGloss": "对账，调节",
+        "enDefinition": "the process of comparing records and explaining differences between them"
+      },
+      "canonical": {
+        "expression": "reconciliation",
+        "zhGloss": "对账",
+        "enDefinition": "the process of comparing two sets of records and explaining or correcting differences",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-refund-047c7127",
+      "decision": "duplicate",
+      "source": {
+        "expression": "refund",
+        "partOfSpeech": "noun",
+        "zhGloss": "退款",
+        "enDefinition": "money returned after a purchase is cancelled or returned"
+      },
+      "canonical": {
+        "expression": "refund",
+        "zhGloss": "退款",
+        "enDefinition": "money returned to a customer because a purchase is cancelled or unsatisfactory",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-return-on-investment-7eaacef8",
+      "decision": "duplicate",
+      "source": {
+        "expression": "return on investment",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "投资回报率",
+        "enDefinition": "measure comparing investment gain with the amount invested"
+      },
+      "canonical": {
+        "expression": "return on investment",
+        "zhGloss": "投资回报率",
+        "enDefinition": "a measure comparing the gain or benefit from an investment with its cost",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-revenue-574d60f8",
+      "decision": "duplicate",
+      "source": {
+        "expression": "revenue",
+        "partOfSpeech": "noun",
+        "zhGloss": "收入",
+        "enDefinition": "income earned from an entity's ordinary activities"
+      },
+      "canonical": {
+        "expression": "revenue",
+        "zhGloss": "营业收入",
+        "enDefinition": "income arising from an entity's ordinary activities",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-share-cf03ff6f",
+      "decision": "duplicate",
+      "source": {
+        "expression": "share",
+        "partOfSpeech": "noun",
+        "zhGloss": "股份，股票",
+        "enDefinition": "unit of ownership in a company"
+      },
+      "canonical": {
+        "expression": "share",
+        "zhGloss": "股份",
+        "enDefinition": "a unit representing ownership in a company",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-sore-throat-40754095",
+      "decision": "duplicate",
+      "source": {
+        "expression": "sore throat",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "喉咙痛",
+        "enDefinition": "pain or irritation in the throat"
+      },
+      "canonical": {
+        "expression": "sore throat",
+        "zhGloss": "喉咙痛",
+        "enDefinition": "pain or irritation in the throat, especially when swallowing",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-spicy-b5c407f8",
+      "decision": "duplicate",
+      "source": {
+        "expression": "spicy",
+        "partOfSpeech": "adjective",
+        "zhGloss": "辣的",
+        "enDefinition": "having a strong hot taste from chilli or spices"
+      },
+      "canonical": {
+        "expression": "spicy",
+        "zhGloss": "辛辣的",
+        "enDefinition": "having a strong hot flavour from spices such as chilli",
+        "partOfSpeech": "adjective"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-statement-of-cash-flows-b6b9a69b",
+      "decision": "duplicate",
+      "source": {
+        "expression": "statement of cash flows",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "现金流量表",
+        "enDefinition": "statement showing cash inflows and outflows by activity during a period"
+      },
+      "canonical": {
+        "expression": "statement of cash flows",
+        "zhGloss": "现金流量表",
+        "enDefinition": "a financial statement classifying cash flows as operating, investing, and financing activities",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-statement-of-financial-position-c7861bbb",
+      "decision": "duplicate",
+      "source": {
+        "expression": "statement of financial position",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "财务状况表，资产负债表",
+        "enDefinition": "statement showing assets, liabilities, and equity at a specific date"
+      },
+      "canonical": {
+        "expression": "statement of financial position",
+        "zhGloss": "财务状况表",
+        "enDefinition": "a financial statement showing an entity's assets, liabilities, and equity at a specific date",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-student-visa-c95fdd8f",
+      "decision": "duplicate",
+      "source": {
+        "expression": "student visa",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "学生签证",
+        "enDefinition": "official permission allowing a foreign student to study in a country"
+      },
+      "canonical": {
+        "expression": "student visa",
+        "zhGloss": "学生签证",
+        "enDefinition": "official permission to enter or remain in a country for study",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-supplier-93d485e5",
+      "decision": "duplicate",
+      "source": {
+        "expression": "supplier",
+        "partOfSpeech": "noun",
+        "zhGloss": "供应商",
+        "enDefinition": "business or person that provides goods or materials to another business"
+      },
+      "canonical": {
+        "expression": "supplier",
+        "zhGloss": "供应商",
+        "enDefinition": "a business or person that provides goods or services to another organisation",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-takeaway-9a4f76e7",
+      "decision": "duplicate",
+      "source": {
+        "expression": "takeaway",
+        "partOfSpeech": "noun",
+        "zhGloss": "外带，打包",
+        "enDefinition": "food bought from a restaurant to eat somewhere else"
+      },
+      "canonical": {
+        "expression": "takeaway",
+        "zhGloss": "外带餐食",
+        "enDefinition": "food bought from a restaurant to be eaten somewhere else",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-target-market-677ca6c7",
+      "decision": "duplicate",
+      "source": {
+        "expression": "target market",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "目标市场",
+        "enDefinition": "the group of customers a business intends to serve"
+      },
+      "canonical": {
+        "expression": "target market",
+        "zhGloss": "目标市场",
+        "enDefinition": "the particular group of customers a business intends to serve",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-tenancy-agreement-f4c3bd6b",
+      "decision": "duplicate",
+      "source": {
+        "expression": "tenancy agreement",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "租赁合同",
+        "enDefinition": "contract setting out the terms of renting a property"
+      },
+      "canonical": {
+        "expression": "tenancy agreement",
+        "zhGloss": "租赁协议",
+        "enDefinition": "a legal agreement between a landlord and a tenant",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-top-up-cbb7d374",
+      "decision": "duplicate",
+      "source": {
+        "expression": "top up",
+        "partOfSpeech": "phrasal verb",
+        "zhGloss": "充值",
+        "enDefinition": "to add money or credit to an account or prepaid service"
+      },
+      "canonical": {
+        "expression": "top up",
+        "zhGloss": "充值",
+        "enDefinition": "to add money or credit to a card, account, or phone",
+        "partOfSpeech": "phrasal verb"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-traffic-jam-98eaa337",
+      "decision": "duplicate",
+      "source": {
+        "expression": "traffic jam",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "堵车",
+        "enDefinition": "situation in which vehicles move very slowly because roads are crowded"
+      },
+      "canonical": {
+        "expression": "traffic jam",
+        "zhGloss": "交通堵塞",
+        "enDefinition": "a line of vehicles moving very slowly or not moving at all",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-transfer-a3c86f8f",
+      "decision": "retain",
+      "source": {
+        "expression": "transfer",
+        "partOfSpeech": "verb",
+        "zhGloss": "换乘",
+        "enDefinition": "to change from one transport service to another during a journey"
+      },
+      "canonical": {
+        "expression": "transfer",
+        "zhGloss": "转账",
+        "enDefinition": "to move money from one bank account to another",
+        "partOfSpeech": "verb"
+      },
+      "reason": "保留交通换乘，区别于银行转账；删除交货日期和库存模板。",
+      "originalSource": {
+        "expression": "transfer",
+        "partOfSpeech": "verb",
+        "zhGloss": "换乘",
+        "enDefinition": "to change from one transport service to another during a journey"
+      },
+      "originalExamples": [
+        {
+          "en": "Please transfer the delivery date in writing.",
+          "zh": "请书面换乘交货日期。"
+        },
+        {
+          "en": "We need to transfer before the stock runs out.",
+          "zh": "库存耗尽前我们需要换乘。"
+        }
+      ],
+      "reference": "https://dictionary.cambridge.org/us/dictionary/english/transfer?topic=travelling"
+    },
+    {
+      "wordId": "v1-trial-balance-47e6967f",
+      "decision": "duplicate",
+      "source": {
+        "expression": "trial balance",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "试算平衡表",
+        "enDefinition": "list of ledger account balances used to check debit and credit equality"
+      },
+      "canonical": {
+        "expression": "trial balance",
+        "zhGloss": "试算平衡表",
+        "enDefinition": "a list of ledger account balances used to check whether total debits equal total credits",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-tutorial-a766417a",
+      "decision": "duplicate",
+      "source": {
+        "expression": "tutorial",
+        "partOfSpeech": "noun",
+        "zhGloss": "辅导课",
+        "enDefinition": "smaller class focused on discussion, practice, or guidance"
+      },
+      "canonical": {
+        "expression": "tutorial",
+        "zhGloss": "辅导课",
+        "enDefinition": "a small class in which students discuss a subject with a tutor",
+        "partOfSpeech": "noun"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-utility-bill-25077dbd",
+      "decision": "duplicate",
+      "source": {
+        "expression": "utility bill",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "水电等公共事业账单",
+        "enDefinition": "bill for services such as electricity, water, gas, or internet"
+      },
+      "canonical": {
+        "expression": "utility bill",
+        "zhGloss": "水电网账单",
+        "enDefinition": "a bill for household services such as electricity, water, or gas",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-variable-cost-b5947daa",
+      "decision": "duplicate",
+      "source": {
+        "expression": "variable cost",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "变动成本",
+        "enDefinition": "a cost that varies in proportion to activity or output"
+      },
+      "canonical": {
+        "expression": "variable cost",
+        "zhGloss": "变动成本",
+        "enDefinition": "a cost that changes in total in proportion to activity or output",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    },
+    {
+      "wordId": "v1-working-capital-f7c692fb",
+      "decision": "duplicate",
+      "source": {
+        "expression": "working capital",
+        "partOfSpeech": "noun phrase",
+        "zhGloss": "营运资金",
+        "enDefinition": "current assets minus current liabilities; short-term operating liquidity"
+      },
+      "canonical": {
+        "expression": "working capital",
+        "zhGloss": "营运资本",
+        "enDefinition": "the difference between current assets and current liabilities",
+        "partOfSpeech": "noun phrase"
+      },
+      "reason": "中英文指向同一学习义项，差异为同义改写、翻译措辞或解释细节，保留已有手写条目。"
+    }
+  ]
+}

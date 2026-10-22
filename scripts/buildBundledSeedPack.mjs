@@ -1,10 +1,11 @@
 /**
- * Build bundled seed JSON from the trusted V1 vocabulary pack (Vocabulary V5.0).
+ * Build bundled seed JSON from the current trusted vocabulary pack.
  *
- * Source: data/vocabulary-packs/trusted_v1_vocabulary_pack.json
+ * Source: data/vocabulary-packs/trusted_v5_2_vocabulary_pack.json (with older fallbacks)
  * Output: public/data/bundledSeedWords.json + bundledSeedMemberships.json
  *
- * Skips identical handcrafted senses; other meanings of the same expression remain eligible.
+ * Skips identical and explicitly reviewed equivalent handcrafted senses.
+ * Other meanings of the same expression remain eligible.
  *
  * Hard-fails on placeholder definitions, template examples, or fake collocations.
  *
@@ -231,6 +232,14 @@ const packPath = packPathCandidates.find((path) => existsSync(path))
 if (!packPath) throw new Error('No trusted vocabulary pack found')
 const pack = JSON.parse(readFileSync(packPath, 'utf8'))
 const existing = loadHandcraftedSenses(readFileSync(join(root, 'src/data/seedVocabulary.ts'), 'utf8'))
+const reviews = JSON.parse(readFileSync(join(root, 'data/vocabulary-packs/handcrafted-overlap-review.json'), 'utf8')).entries
+if (!Array.isArray(reviews) || new Set(reviews.map((entry) => entry.wordId)).size !== reviews.length) {
+  throw new Error('Sense overlap review must contain entries with unique word IDs')
+}
+const sourceIds = new Set(pack.words.map((word) => word.id))
+if (reviews.some((entry) => !sourceIds.has(entry.wordId))) {
+  throw new Error('Sense overlap review source is missing; review removed or renamed source IDs before rebuilding')
+}
 
 if (pack.kind !== 'vocabulary-pack') {
   throw new Error('trusted pack kind must be vocabulary-pack')
@@ -246,7 +255,7 @@ for (const word of pack.words) {
     errors.push(`${word.id}: production pack must use v1-*/core-*/econ-* ids`)
     continue
   }
-  if (overlapsHandcraftedSense(word, existing)) {
+  if (overlapsHandcraftedSense(word, existing, reviews)) {
     skipped.push(word.expression)
     continue
   }

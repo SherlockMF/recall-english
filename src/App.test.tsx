@@ -254,10 +254,10 @@ describe('App integration', () => {
     expect(screen.getByText('日常生活')).toBeInTheDocument()
     expect(screen.getByText('商业英语')).toBeInTheDocument()
     expect(screen.getByText('金融会计')).toBeInTheDocument()
-    expect(screen.getByText('0 / 3041')).toBeInTheDocument()
-    expect(screen.getByText('0 / 2351')).toBeInTheDocument()
-    expect(screen.getByText('0 / 2113')).toBeInTheDocument()
-    expect(screen.getByLabelText('学习进度：已开始 0，双向可回忆 0，词库 7497')).toBeInTheDocument()
+    expect(screen.getByText('0 / 3043')).toBeInTheDocument()
+    expect(screen.getByText('0 / 2353')).toBeInTheDocument()
+    expect(screen.getByText('0 / 2116')).toBeInTheDocument()
+    expect(screen.getByLabelText('学习进度：已开始 0，双向可回忆 0，词库 7503')).toBeInTheDocument()
     expect(screen.getByText('学习进度')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /开始今天的训练/ }))
@@ -277,7 +277,7 @@ describe('App integration', () => {
     const libraryButtons = screen.getAllByRole('button', { name: '词库' })
     await user.click(libraryButtons[0])
     expect(await screen.findByRole('heading', { name: '词库' })).toBeInTheDocument()
-    await waitFor(() => expect(screen.getByText('7497')).toBeInTheDocument(), { timeout: 20_000 })
+    await waitFor(() => expect(screen.getByText('7503')).toBeInTheDocument(), { timeout: 20_000 })
 
     await user.click(screen.getAllByRole('button', { name: '口语' })[0])
     expect(await screen.findByText('把学过的英语，说出来。')).toBeInTheDocument()
