@@ -19,7 +19,6 @@ export function useStudyTimer({ sessionId, entries, enabled, save }: TimerInput)
   const enabledRef = useRef(enabled)
   const committedEnabledRef = useRef<boolean | undefined>(undefined)
   const saveRef = useRef(save)
-  saveRef.current = save
   const errorRef = useRef(false)
   const mounted = useRef(true)
   const focused = useRef(document.hasFocus())
@@ -94,6 +93,7 @@ export function useStudyTimer({ sessionId, entries, enabled, save }: TimerInput)
   }
 
   useEffect(() => {
+    saveRef.current = save
     // React may batch a blocking state on/off into one commit. Reconcile the
     // immediate stop with each committed UI state even if `enabled` is unchanged.
     if (enabledRef.current !== enabled) setRunning(enabled)

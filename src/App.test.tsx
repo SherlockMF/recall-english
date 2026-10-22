@@ -1,10 +1,10 @@
-import { cleanup, render, screen, waitFor, within } from '@testing-library/react'
+import { act, cleanup, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { StrictMode } from 'react'
 import { afterEach, beforeEach, vi } from 'vitest'
 import App from './App'
 import { clearDatabase, closeDatabase, getUserDataSnapshot, initializeDatabase, putSettings, putStudyTimeEntry, writeBatch } from './lib/db'
-import { DEFAULT_SETTINGS } from './domain/types'
+import { DEFAULT_SETTINGS, type ReviewAttempt } from './domain/types'
 import { handcraftedSeedWords } from './data/seedVocabulary'
 import { LIST_IDS } from './data/vocabularyLists'
 import * as dictionary from './lib/dictionary'
@@ -24,6 +24,27 @@ describe('App integration', () => {
     vi.restoreAllMocks()
   })
 
+  it('expires a delayed recall sample during the same day on the next clock tick', async () => {
+    vi.useFakeTimers({ toFake: ['Date', 'setInterval', 'clearInterval'] })
+    const now = new Date(2026, 9, 22, 12)
+    vi.setSystemTime(now)
+    try {
+      const word = handcraftedSeedWords[0]
+      await initializeDatabase([word])
+      const track = (await getUserDataSnapshot()).tracks.find(value => value.itemId === word.id && value.type === 'productive')!
+      const attempt = (id: string, at: number): ReviewAttempt => ({ id, itemId: word.id, trackId: track.id,
+        trackType: 'productive', promptType: 'productive', answer: word.expression, rating: 'good', hintLevel: 0,
+        responseMs: 3000, reviewedAt: new Date(at).toISOString(), evidenceVersion: 1, sessionId: 'clock-boundary',
+        retryCount: 0, evaluationSource: 'rules', correctness: 'correct', matchKind: 'exact', suggestedRating: 'good' })
+      await writeBatch({ attempts: [attempt('previous', now.getTime() - 9 * 86_400_000),
+        attempt('boundary', now.getTime() - 7 * 86_400_000 + 30_000)] })
+      render(<App />)
+      expect(await screen.findByText('1 / 1 次可判定延迟回忆正确')).toBeInTheDocument()
+      await act(async () => { vi.advanceTimersByTime(60_000) })
+      expect(screen.getByText('0 / 0 次可判定延迟回忆正确')).toBeInTheDocument()
+    } finally { vi.useRealTimers() }
+  })
+
   it('removes a corrected gloss from grading while preserving independent answers and learning history', async () => {
     const original = { ...handcraftedSeedWords[0], id: 'edit-regression-word', expression: 'edit-regression',
       lemma: 'edit-regression', zhGloss: '旧误译', acceptedZhAnswers: ['旧误译', ' 旧误译。 ', '独立同义答案'] }
@@ -34,7 +55,7 @@ describe('App integration', () => {
     render(<App />)
     await screen.findByText('今日学习计划', {}, { timeout: 20_000 })
     await user.click(screen.getAllByRole('button', { name: '词库' })[0])
-    await user.type(screen.getByRole('textbox', { name: '搜索词库' }), original.expression)
+    await user.type(await screen.findByRole('textbox', { name: '搜索词库' }), original.expression)
     await user.click(screen.getByRole('button', { name: `查看 ${original.expression} 的详情` }))
     await user.click(screen.getByRole('button', { name: `编辑 ${original.expression}` }))
     await user.clear(screen.getByLabelText('中文义项'))
@@ -76,7 +97,7 @@ describe('App integration', () => {
     render(<App />)
     await screen.findByText('今日学习计划', {}, { timeout: 20_000 })
     await user.click(screen.getAllByRole('button', { name: '添加' })[0])
-    await user.click(screen.getByRole('button', { name: '批量粘贴' }))
+    await user.click(await screen.findByRole('button', { name: '批量粘贴' }))
     await user.type(screen.getByLabelText('批量词汇'), expressions.join('\n') + '\n WORK OUT ')
     await user.click(screen.getByRole('button', { name: '补全并加入队列' }))
     await screen.findByText(/失败 0 条/, {}, { timeout: 10_000 })
@@ -131,7 +152,7 @@ describe('App integration', () => {
     await screen.findByText('今日学习计划', {}, { timeout: 20_000 })
     const before = await getUserDataSnapshot()
     await user.click(screen.getAllByRole('button', { name: '添加' })[0])
-    await user.click(screen.getByRole('button', { name: '批量粘贴' }))
+    await user.click(await screen.findByRole('button', { name: '批量粘贴' }))
     await user.type(screen.getByLabelText('批量词汇'), 'import-interest-probe | 兴趣\nimport-interest-probe | 利息\nmissing-import-probe\nimport-bank-probe,银行,noun,finance,a financial institution\nimport-bank-probe,银行,noun,finance,a building housing a financial institution')
     await user.click(screen.getByRole('button', { name: '补全并加入队列' }))
     await screen.findByText(/失败 1 条/, {}, { timeout: 10_000 })
@@ -191,7 +212,7 @@ describe('App integration', () => {
     await screen.findByText('今日学习计划', {}, { timeout: 20_000 })
     const before = await getUserDataSnapshot()
     await user.click(screen.getAllByRole('button', { name: '词库' })[0])
-    await user.type(screen.getByLabelText('搜索词库'), word.expression)
+    await user.type(await screen.findByLabelText('搜索词库'), word.expression)
     await user.click(screen.getByRole('button', { name: `查看 ${word.expression} 的详情` }))
     await user.click(screen.getByRole('button', { name: `补全词义 ${word.expression}` }))
     await screen.findByText(/已保存 “scenario-probe” 的词义/, {}, { timeout: 10_000 })
@@ -231,7 +252,7 @@ describe('App integration', () => {
     render(<App />)
     await screen.findByText('今日学习计划', {}, { timeout: 20_000 })
     await user.click(screen.getAllByRole('button', { name: '词库' })[0])
-    await user.type(screen.getByLabelText('搜索词库'), 'interest')
+    await user.type(await screen.findByLabelText('搜索词库'), 'interest')
     expect(screen.getAllByRole('heading', { name: 'interest' })).toHaveLength(1)
     const card = screen.getByRole('heading', { name: 'interest' }).closest('article')!
     await user.click(within(card).getByRole('button', { name: '查看 interest 的详情' }))
@@ -261,7 +282,7 @@ describe('App integration', () => {
     expect(screen.getByText('学习进度')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /开始今天的训练/ }))
-    expect(screen.getByRole('button', { name: '想不起来' })).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: '想不起来' })).toBeInTheDocument()
     expect(screen.queryByRole('radio')).not.toBeInTheDocument()
   }, 30_000)
 
@@ -291,7 +312,7 @@ describe('App integration', () => {
     render(<App />)
     await screen.findByText('今日学习计划', {}, { timeout: 20_000 })
     await user.click(screen.getAllByRole('button', { name: '词库' })[0])
-    await user.type(screen.getByRole('textbox', { name: '搜索词库' }), 'abandon')
+    await user.type(await screen.findByRole('textbox', { name: '搜索词库' }), 'abandon')
     const card = screen.getByRole('heading', { name: 'abandon' }).closest('article')!
     await user.click(within(card).getByRole('button', { name: '查看 abandon 的详情' }))
     await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: '加入优先学习 abandon' }))
@@ -314,7 +335,7 @@ describe('App integration', () => {
     render(<App />)
     await screen.findByText('今日学习计划', {}, { timeout: 20_000 })
     await user.click(screen.getAllByRole('button', { name: '词库' })[0])
-    await user.type(screen.getByRole('textbox', { name: '搜索词库' }), 'abandon')
+    await user.type(await screen.findByRole('textbox', { name: '搜索词库' }), 'abandon')
     await user.click(screen.getByRole('button', { name: '查看 abandon 的详情' }))
     expect(within(screen.getByRole('dialog')).getByRole('button', { name: '加入优先学习 abandon' })).toBeInTheDocument()
   }, 30_000)
@@ -324,7 +345,7 @@ describe('App integration', () => {
     render(<App />)
     await screen.findByText('今日学习计划', {}, { timeout: 20_000 })
     await user.click(screen.getAllByRole('button', { name: '词库' })[0])
-    await user.type(screen.getByRole('textbox', { name: '搜索词库' }), 'abandon')
+    await user.type(await screen.findByRole('textbox', { name: '搜索词库' }), 'abandon')
     const before = await getUserDataSnapshot()
     const id = before.vocabulary.find((word) => word.expression === 'abandon')!.id
     await user.click(screen.getByRole('button', { name: '查看 abandon 的详情' }))
@@ -337,7 +358,7 @@ describe('App integration', () => {
     cleanup(); render(<App />)
     await screen.findByText('今日学习计划', {}, { timeout: 20_000 })
     await user.click(screen.getAllByRole('button', { name: '词库' })[0])
-    await user.type(screen.getByRole('textbox', { name: '搜索词库' }), 'abandon')
+    await user.type(await screen.findByRole('textbox', { name: '搜索词库' }), 'abandon')
     await user.selectOptions(screen.getByLabelText('筛选学习状态'), 'known')
     expect(screen.getByRole('heading', { name: 'abandon' })).toBeInTheDocument()
     await user.selectOptions(screen.getByLabelText('筛选词汇难度'), 'C2')
@@ -373,6 +394,6 @@ describe('App integration', () => {
     expect(screen.getByText('今日已学习 15 分钟 · 按自己的节奏完成')).toBeInTheDocument()
     expect(screen.getByLabelText('预计 3 分钟，共 4 道练习')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /开始今天的训练/ }))
-    expect(screen.getByRole('button', { name: '想不起来' })).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: '想不起来' })).toBeInTheDocument()
   }, 30_000)
 })

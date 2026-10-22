@@ -361,6 +361,7 @@ describe('buildDailyPlan', () => {
       listSlugs: ['daily', 'my-vocabulary'], priority: count - index,
     }))
     const ordinaryItems = Array.from({ length: 15 }, (_, index) => makeItem(`ordinary-${index}`, 'business'))
+    // oxlint-disable-next-line no-array-reverse -- ES2022 target; reverse only the copied fixture array.
     const items = [...ordinaryItems, ...[...priorityItems].reverse()]
     const plan = buildDailyPlan({ items, tracks: createInitialTracks(items, NOW),
       settings: settings({ dailyMinutes: 30, newItemsPerDay: dailyLimit,

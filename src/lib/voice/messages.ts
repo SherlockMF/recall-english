@@ -33,8 +33,8 @@ export class VoiceMessageSession {
       if (!response.ok) throw new VoiceMessageError(typeof asRecord(value.error).message === 'string' ? String(asRecord(value.error).message) : '发送失败，请重试。', [410, 502].includes(response.status))
       return value
     } catch (error) {
-      if (controller.signal.aborted) throw new Error(this.closed ? '本次语音消息练习已结束。' : '发送超时，录音已保留，可以重试发送。')
-      if (error instanceof TypeError) throw new Error('网络连接失败，录音已保留，可以重试发送。')
+      if (controller.signal.aborted) throw new Error(this.closed ? '本次语音消息练习已结束。' : '发送超时，录音已保留，可以重试发送。', { cause: error })
+      if (error instanceof TypeError) throw new Error('网络连接失败，录音已保留，可以重试发送。', { cause: error })
       throw error
     } finally { clearTimeout(timeout); this.controller.signal.removeEventListener('abort', cancel) }
   }

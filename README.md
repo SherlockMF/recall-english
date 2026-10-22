@@ -39,6 +39,7 @@ npm run dev
 
 ```bash
 npm test                    # 单元 / 组件测试
+npm run test:e2e            # 生产构建后的 Chromium 关键流程（首次需安装浏览器，见下文）
 npm run lint                # oxlint 静态检查
 npm run build               # 生产构建
 npm run share:check         # 构建、生成 ZIP、解压并启动分享包进行冒烟检查
@@ -49,7 +50,19 @@ npm run seed:quality        # 词库硬闸
 npm run seed:validate-sense # 义项一致性（strict）
 ```
 
-CI 在构建后运行 `npm run share:check -- --skip-build`。检查包含完整种子一致性、静态资源、语音运行时、凭证排除和无效 URL 后服务仍可访问。两个导出命令支持 `-- --output-dir <directory>`，不会覆盖同名 ZIP；Windows 使用 PowerShell，macOS/Linux 需要 `zip` 和 `unzip`。构建与导出需要项目开发依赖，分享包运行只需要 Node.js 22+。
+CI 使用 Ubuntu、Windows、macOS 矩阵，构建后运行分享包检查与 Chromium 端到端测试，失败保留浏览器报告和 trace。分享包检查包含完整种子一致性、静态资源、语音运行时、凭证排除和无效 URL 后服务仍可访问。两个导出命令支持 `-- --output-dir <directory>`，不会覆盖同名 ZIP；Windows 使用 PowerShell，macOS/Linux 需要 `zip` 和 `unzip`。构建与导出需要项目开发依赖，分享包运行只需要 Node.js 22+。
+
+本机首次运行浏览器测试：
+
+```bash
+npx playwright install chromium
+npm run build
+npm run test:e2e
+```
+
+Linux 如缺浏览器系统库，使用 `npx playwright install --with-deps chromium`。测试占用本机 `5188` 端口，使用隔离的临时服务目录与全新浏览器上下文，不复制 `.env`，不接入真实麦克风或收费 AI。覆盖首次与再次打开、完整回忆与 FSRS 保存、独立义项编辑、实际备份下载和恢复。测试结束会停止服务并清理本轮目录；失败截图、trace 和测试备份位于被 Git 忽略的 `test-results/`，HTML 报告位于 `playwright-report/`。修改代码后先重新构建，避免测试旧的 `dist`。
+
+添加、词库、训练、语音和设置模块按需加载。2026-10-22 的软件收尾与测量见[验收记录](docs/software-closeout-2026-10-22.md)，保留的 lint 诊断见[逐项复核](docs/lint-review-2026-10-22.md)。这些自动化不替代麦克风、扬声器和 macOS 桌面权限的实机验收。
 
 2026-10-22 已复核 130 条义项提示，修正 93 个既有条目；见[逐项记录](docs/vocabulary-review-2026-10-22.md)。随后完成重建差异中的 100 对义项复核：94 条同义改写去重，6 条真实不同义项保留，内容修订升至 5.3.2。`seed:pack` 现在可直接完整重建当前资产；见[重建一致性验收](docs/seed-rebuild-review-2026-10-22.md)。
 

@@ -15,14 +15,14 @@ export function stringifyOffMainThread(value: unknown, space?: number): Promise<
       resolve(JSON.stringify(value, null, space))
       return
     }
-    worker.onmessage = (event: MessageEvent<string>) => {
+    worker.addEventListener('message', (event: MessageEvent<string>) => {
       worker.terminate()
       resolve(event.data)
-    }
-    worker.onerror = (event) => {
+    }, { once: true })
+    worker.addEventListener('error', (event) => {
       worker.terminate()
       reject(new Error(event.message || '导出序列化失败。'))
-    }
+    }, { once: true })
     // oxlint-disable-next-line require-post-message-target-origin -- worker-scope postMessage has no targetOrigin parameter
     worker.postMessage({ value, space })
   })

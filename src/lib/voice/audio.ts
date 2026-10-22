@@ -92,6 +92,7 @@ export class VoiceRecorder {
       if (this.closed) return
       const node = new AudioWorkletNode(context, 'recall-recorder')
       this.node = node
+      // oxlint-disable-next-line prefer-add-event-listener -- One owned handler; onmessage also starts the MessagePort.
       node.port.onmessage = ({ data }: MessageEvent<Float32Array | string>) => {
         if (data === 'stopped') { this.stopped?.(); return }
         if (this.closed || !(data instanceof Float32Array)) return
@@ -111,6 +112,7 @@ export class VoiceRecorder {
     await new Promise<void>((resolve) => {
       const timeout = setTimeout(resolve, 1000)
       this.stopped = () => { clearTimeout(timeout); resolve() }
+      // oxlint-disable-next-line require-post-message-target-origin -- MessagePort.postMessage has no targetOrigin argument.
       this.node!.port.postMessage('stop')
     })
     const samples = new Float32Array(this.size)
@@ -126,6 +128,7 @@ export class VoiceRecorder {
     this.stopped?.()
     this.stream?.getTracks().forEach((track) => track.stop())
     this.source?.disconnect(); this.node?.disconnect(); this.sink?.disconnect()
+    // oxlint-disable-next-line prefer-add-event-listener -- Remove the recorder's single owned port handler on cancellation.
     if (this.node) this.node.port.onmessage = null
     void this.context?.close().catch(() => undefined)
     this.chunks = []; this.size = 0

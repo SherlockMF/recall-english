@@ -12,12 +12,12 @@ import { dirname, extname, join, normalize, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { loadVoiceEnv, createVoiceHandler } from './qwenVoiceServer.mjs'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
+const serverDirectory = dirname(fileURLToPath(import.meta.url))
 const PORT = Number(process.env.PORT || 4173)
 const ROOT = [
-  join(__dirname, 'app'),
-  join(__dirname, 'dist'),
-  join(__dirname, '..', 'dist'),
+  join(serverDirectory, 'app'),
+  join(serverDirectory, 'dist'),
+  join(serverDirectory, '..', 'dist'),
 ].find((candidate) => existsSync(candidate))
 
 if (!ROOT) {

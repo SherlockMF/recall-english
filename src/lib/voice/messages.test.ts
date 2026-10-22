@@ -4,14 +4,15 @@ import { VoiceMessageSession } from './messages'
 afterEach(() => vi.unstubAllGlobals())
 describe('voice message transport', () => {
   it('reuses a session and the message ID for an explicit retry, then closes it', async () => {
+    const networkError = new TypeError('network')
     const request = vi.fn().mockResolvedValueOnce(new Response(JSON.stringify({ id: 'session-1', maxSeconds: null })))
-      .mockRejectedValueOnce(new TypeError('network'))
+      .mockRejectedValueOnce(networkError)
       .mockResolvedValueOnce(new Response(JSON.stringify({ id: 'm-1', userText: 'Coffee.', text: 'Sure.', audio: 'AAAAAA==', sampleRate: 24000, usage: {} })))
       .mockResolvedValue(new Response(null, { status: 204 }))
     vi.stubGlobal('fetch', request)
     const call = new VoiceMessageSession()
     await call.start('Practice ordering coffee.')
-    await expect(call.send('m-1', new Uint8Array(32000))).rejects.toThrow()
+    await expect(call.send('m-1', new Uint8Array(32000))).rejects.toMatchObject({ cause: networkError, message: '网络连接失败，录音已保留，可以重试发送。' })
     expect((await call.send('m-1', new Uint8Array(32000))).text).toBe('Sure.')
     expect(request.mock.calls[1][0]).toBe('/api/voice/messages/session-1/turns')
     expect(JSON.parse(request.mock.calls[1][1].body).id).toBe('m-1')

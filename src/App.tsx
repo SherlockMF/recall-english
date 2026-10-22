@@ -1,11 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { AddView, type CustomItemDraft } from './components/AddView'
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import type { CustomItemDraft } from './components/AddView'
 import { AppShell, type AppTab } from './components/AppShell'
-import { LibraryView } from './components/LibraryView'
-import { SettingsDialog } from './components/SettingsDialog'
-import { StudySession, type EvaluationResult, type RateDetail } from './components/StudySession'
+import type { EvaluationResult, RateDetail } from './components/StudySession'
 import { TodayView } from './components/TodayView'
-import { VoicePractice } from './components/VoicePractice'
 import { handcraftedSeedMemberships, handcraftedSeedWords, loadSeedPack } from './data/seedVocabulary'
 import { DICTIONARY_CONTENT_REVISION } from './data/dictionaryContentRevision'
 import { loadBundledDictionarySenses } from './data/dictionarySenses'
@@ -71,7 +68,7 @@ import {
   snapshotLearningTracks,
   snapshotMapLearningProgress,
 } from './lib/learningTracks'
-import { deriveLearningStats, localDateKey } from './lib/learningStats'
+import { deriveLearningStats } from './lib/learningStats'
 import { getStudyDifficulty, isNewLearningTask, refreshPendingNewTasks } from './lib/studyDifficulty'
 import {
   buildDailyPlan,
@@ -83,6 +80,15 @@ interface ActiveSession {
   id: string
   plan: DailyPlan
 }
+
+const AddView = lazy(() => import('./components/AddView').then(module => ({ default: module.AddView })))
+const LibraryView = lazy(() => import('./components/LibraryView').then(module => ({ default: module.LibraryView })))
+const SettingsDialog = lazy(() => import('./components/SettingsDialog').then(module => ({ default: module.SettingsDialog })))
+const StudySession = lazy(() => import('./components/StudySession').then(module => ({ default: module.StudySession })))
+const VoicePractice = lazy(() => import('./components/VoicePractice').then(module => ({ default: module.VoicePractice })))
+const pageFallback = <p role="status">正在打开页面…</p>
+const studyFallback = <div className="study-overlay" role="status">正在准备训练…</div>
+const settingsFallback = <div className="dialog-backdrop" role="status">正在打开设置…</div>
 
 function App() {
   const [tab, setTab] = useState<AppTab>('today')
@@ -163,11 +169,8 @@ function App() {
   }, [])
 
   const itemMap = useMemo(() => new Map(items.map((item) => [item.id, item])), [items])
-  // Stats only change at local-day granularity, so keying the memo on the
-  // day keeps the per-minute clock tick from re-deriving 7.5k-item stats.
-  // buildDailyPlan below keeps the full `now` for due-time scheduling.
-  const statsDayKey = localDateKey(now)
-  const stats = useMemo(() => deriveLearningStats({ items, tracks, attempts, timeEntries, now }), [items, tracks, attempts, timeEntries, statsDayKey])
+  // Delayed recall uses a sliding seven-day window, including within-day boundaries.
+  const stats = useMemo(() => deriveLearningStats({ items, tracks, attempts, timeEntries, now }), [items, tracks, attempts, timeEntries, now])
   const dailyPlan = useMemo(() => buildDailyPlan({ settings, items, tracks, attempts, timeEntries, now }), [settings, items, tracks, attempts, timeEntries, now])
   const difficulty = useMemo(() => getStudyDifficulty(settings, items, attempts, now), [settings, items, attempts, now])
 
@@ -308,9 +311,6 @@ function App() {
     return updated
   }, [])
 
-  async function enrichDraft(expression: string, category: SystemListSlug | 'other', existingDefinition?: string) {
-    return enrichWithLlm({ expression, category, existingDefinition })
-  }
 
   async function handleRate(
     task: SessionTask,
@@ -601,20 +601,6 @@ function App() {
     }
   }
 
-  async function downloadVocabularyPack() {
-    try {
-      const json = await exportVocabularyPackJson()
-      const blob = new Blob([json], { type: 'application/json' })
-      const url = URL.createObjectURL(blob)
-      const anchor = document.createElement('a')
-      anchor.href = url
-      anchor.download = `recall-english-vocabulary-${new Date().toISOString().slice(0, 10)}.json`
-      anchor.click()
-      URL.revokeObjectURL(url)
-    } catch (error) {
-      showToast(error instanceof Error ? `导出词库失败：${error.message}` : '导出词库失败。', 'error')
-    }
-  }
 
   async function restoreVocabularyPack(content: string) {
     try {
@@ -662,6 +648,7 @@ function App() {
           <span>{sessionError}</span>
           <button type="button" onClick={() => setSessionError('')}>关闭提示后重试</button>
         </div>}
+        <Suspense fallback={pageFallback}>
         {tab === 'today' && (
           <TodayView
             plan={dailyPlan}
@@ -696,9 +683,11 @@ function App() {
           />
         )}
         {tab === 'voice' && <VoicePractice items={items} accent={settings.speechAccent} />}
+        </Suspense>
       </AppShell>
 
       {session && (
+        <Suspense fallback={studyFallback}>
         <StudySession
           ensureUsageItem={ensureUsageItem}
           evaluate={evaluateTask}
@@ -730,9 +719,11 @@ function App() {
           tracks={tracks}
           usableThisWeek={stats.applicationCount}
         />
+        </Suspense>
       )}
 
       {settingsOpen && (
+        <Suspense fallback={settingsFallback}>
         <SettingsDialog
           attemptCount={attempts.length}
           onClose={() => setSettingsOpen(false)}
@@ -744,6 +735,7 @@ function App() {
           settings={settings}
           vocabularyCount={items.length}
         />
+        </Suspense>
       )}
     </>
   )
@@ -768,6 +760,25 @@ function ErrorScreen({ message, onRetry }: { message: string; onRetry: () => voi
       <button className="primary-button" onClick={onRetry} type="button">重新载入</button>
     </div>
   )
+}
+
+async function enrichDraft(expression: string, category: SystemListSlug | 'other', existingDefinition?: string) {
+  return enrichWithLlm({ expression, category, existingDefinition })
+}
+
+async function downloadVocabularyPack() {
+  try {
+    const json = await exportVocabularyPackJson()
+    const blob = new Blob([json], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = `recall-english-vocabulary-${new Date().toISOString().slice(0, 10)}.json`
+    anchor.click()
+    URL.revokeObjectURL(url)
+  } catch (error) {
+    showToast(error instanceof Error ? `导出词库失败：${error.message}` : '导出词库失败。', 'error')
+  }
 }
 
 function stripHydration(item: VocabularyItem | Word): Word {

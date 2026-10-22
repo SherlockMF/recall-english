@@ -41,7 +41,7 @@ async function serve(mode: 'normal' | 'disconnect' | 'slow' = 'normal') {
   if (typeof address === 'string') throw new Error('missing address')
   const voice = createVoiceHandler({ env: { DASHSCOPE_API_KEY: 'fake-test-key', DASHSCOPE_WORKSPACE_ID: 'fake-workspace' }, messageConnect: () => new WebSocket(`ws://127.0.0.1:${address.port}`) })
   closeVoice = voice.close
-  const server = createServer((req, res) => { void voice(req, res).then((handled) => { if (!handled) { res.writeHead(404); res.end() } }) })
+  const server = createServer((req, res) => { void voice(req, res).then((handled) => { if (!handled) { res.writeHead(404); res.end() } return handled }) })
   servers.push(server)
   await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve))
   const local = server.address()

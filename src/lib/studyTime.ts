@@ -15,7 +15,7 @@ export class StudyClock {
   idle = false
 
   constructor(private sessionId: string, entries: StudyTimeEntry[] = []) {
-    for (const entry of entries.filter((entry) => entry.sessionId === sessionId)) {
+    for (const entry of entries.filter((candidate) => candidate.sessionId === sessionId)) {
       const current = this.records.get(entry.localDate)
       if (!current || current.activeMs < entry.activeMs) this.records.set(entry.localDate, { ...entry })
     }

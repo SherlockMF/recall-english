@@ -12,11 +12,11 @@ export default defineConfig(({ mode }) => {
       name: 'qwen-voice',
       configureServer(server) {
         server.httpServer?.once('close', voice.close)
-        server.middlewares.use((req, res, next) => { void voice(req, res).then((handled) => { if (!handled) next() }).catch(next) })
+        server.middlewares.use(async (req, res, next) => { try { if (!(await voice(req, res))) next() } catch (error) { next(error) } })
       },
       configurePreviewServer(server) {
         server.httpServer?.once('close', voice.close)
-        server.middlewares.use((req, res, next) => { void voice(req, res).then((handled) => { if (!handled) next() }).catch(next) })
+        server.middlewares.use(async (req, res, next) => { try { if (!(await voice(req, res))) next() } catch (error) { next(error) } })
       },
     }],
     server: {
@@ -58,6 +58,9 @@ export default defineConfig(({ mode }) => {
       },
     },
     test: {
+      include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.ts'],
+      // Full-library IndexedDB fixtures need predictable CPU and memory on CI.
+      maxWorkers: 2,
       environment: 'jsdom',
       globals: true,
       setupFiles: './src/test/setup.ts',

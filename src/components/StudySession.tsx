@@ -458,7 +458,7 @@ export function StudySession({
           {timer.error && <p role="alert">学习时间未保存：{timer.error}<button onClick={() => void timer.flush()} type="button">重试保存时间</button></p>}
           {failedSaves.length > 0 && (
             <div className="save-error-panel" role="alert">
-              <p>{failedSaves.length} 条复习结果未保存（{failedSaves.map((item) => item.label).join('、')}）。{failedSaves[0]?.message}</p>
+              <p>{failedSaves.length} 条复习结果未保存（{failedSaves.map((failed) => failed.label).join('、')}）。{failedSaves[0]?.message}</p>
               <button className="secondary-button" disabled={pendingWrites > 0} onClick={() => void retryFailedSaves()} type="button">重试保存</button>
             </div>
           )}
@@ -500,7 +500,7 @@ export function StudySession({
         {timer.error && <div className="save-error-panel" role="alert"><p>学习时间未保存，已暂停：{timer.error}</p><button className="secondary-button" onClick={() => void timer.flush()} type="button">重试保存时间</button></div>}
         {failedSaves.length > 0 && (
           <div className="save-error-panel study-save-error" role="alert">
-            <p>{failedSaves.length} 条复习结果未保存（{failedSaves.map((item) => item.label).join('、')}）。{failedSaves[0]?.message}</p>
+            <p>{failedSaves.length} 条复习结果未保存（{failedSaves.map((failed) => failed.label).join('、')}）。{failedSaves[0]?.message}</p>
             <button className="secondary-button" disabled={flushingExit || pendingWrites > 0} onClick={() => void retryFailedSaves()} type="button">重试保存</button>
           </div>
         )}

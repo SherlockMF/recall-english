@@ -213,8 +213,9 @@ function records(value: unknown): UnknownRecord[] {
   return (Array.isArray(value) ? value : value ? [value] : []).filter(isRecord)
 }
 
+const normalizeContext = (value: string) => value.normalize('NFKC').trim().toLocaleLowerCase('en-US')
+
 function fillYoudaoContext(senses: YoudaoSense[], payload: UnknownRecord, query: string): YoudaoSense[] {
-  const normalize = (value: string) => value.normalize('NFKC').trim().toLocaleLowerCase('en-US')
   const compatible = (sense: YoudaoSense, pos: string) => sense.partOfSpeech === 'expression'
     || pos === 'expression' || normalizePartOfSpeech(sense.partOfSpeech) === pos
   const matches = (sense: YoudaoSense, translation: string) => {
@@ -225,7 +226,7 @@ function fillYoudaoContext(senses: YoudaoSense[], payload: UnknownRecord, query:
   const mentionsWord = (sentence: string) => new RegExp(`(?:^|[^a-z])${escaped}(?:s|es|ed|d|ing)?(?:$|[^a-z])`, 'i').test(sentence)
   const bilingual: Array<{ pos: string; zh: string; definition: string; exampleEn?: string; exampleZh?: string }> = []
   if (isRecord(payload.collins)) for (const entry of records(payload.collins.collins_entries)) {
-    if (typeof entry.headword === 'string' && normalize(entry.headword) !== normalize(query)) continue
+    if (typeof entry.headword === 'string' && normalizeContext(entry.headword) !== normalizeContext(query)) continue
     if (!isRecord(entry.entries)) continue
     for (const group of records(entry.entries.entry)) for (const item of records(group.tran_entry)) {
       const translation = typeof item.tran === 'string' ? stripHtml(item.tran) : ''
@@ -250,7 +251,7 @@ function fillYoudaoContext(senses: YoudaoSense[], payload: UnknownRecord, query:
       const values = Array.isArray(item.l.i) ? item.l.i : [item.l.i]
       for (const value of values) if (typeof value === 'string') {
         const definition = stripHtml(value)
-        if (/[a-z]/i.test(definition) && !/\p{Script=Han}/u.test(definition) && normalize(definition) !== normalize(query)) {
+        if (/[a-z]/i.test(definition) && !/\p{Script=Han}/u.test(definition) && normalizeContext(definition) !== normalizeContext(query)) {
           if (!english.some((candidate) => candidate.pos === pos && candidate.definition === definition)) english.push({ pos, definition })
         }
       }

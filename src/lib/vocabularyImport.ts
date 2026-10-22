@@ -118,6 +118,11 @@ export function parseVocabularyImport(value: string) {
   return { rows, errors }
 }
 
+const partKey = (value: string) => {
+  const key = expressionKey(value).replace(/\.$/, '')
+  return ({ n: 'noun', v: 'verb', adj: 'adjective', adv: 'adverb', prep: 'preposition' } as Record<string, string>)[key] ?? key
+}
+
 export async function prepareVocabularyImportRow(
   row: VocabularyImportRow,
   lookup: (expression: string) => Promise<DictionaryResult>,
@@ -132,10 +137,6 @@ export async function prepareVocabularyImportRow(
     if (!row.zhGloss) throw error
     warning = `${row.expression}：${error instanceof Error ? error.message : '补全失败'}；已保留提供的中文义项。`
     result = { query: row.expression, word: row.expression, fetchedAt: new Date().toISOString(), meanings: [] }
-  }
-  const partKey = (value: string) => {
-    const key = expressionKey(value).replace(/\.$/, '')
-    return ({ n: 'noun', v: 'verb', adj: 'adjective', adv: 'adverb', prep: 'preposition' } as Record<string, string>)[key] ?? key
   }
   let selected = result.meanings.findIndex((meaning) => Boolean(meaning.zhGloss?.trim())
     && (!row.zhGloss || expressionKey(meaning.zhGloss ?? '') === expressionKey(row.zhGloss))

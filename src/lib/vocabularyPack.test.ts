@@ -329,7 +329,7 @@ describe('vocabulary pack import and export', () => {
   })
 
   it('strips top-level note metadata so Design-A packs remain importable', () => {
-    const pack = parseVocabularyPack({
+    const imported = parseVocabularyPack({
       version: 1,
       kind: 'vocabulary-pack',
       exportedAt: newer,
@@ -338,7 +338,7 @@ describe('vocabulary pack import and export', () => {
       lists: ALL_VOCABULARY_LISTS,
       memberships: [],
     })
-    expect(pack.words).toHaveLength(1)
-    expect(pack).not.toHaveProperty('note')
+    expect(imported.words).toHaveLength(1)
+    expect(imported).not.toHaveProperty('note')
   })
 })
