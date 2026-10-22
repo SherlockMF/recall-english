@@ -239,18 +239,18 @@
     ],
     "examples": [
       {
-        "en": "We put the account management on the agenda for Thursday.",
-        "zh": "我们把「客户管理」放进周四议程。"
+        "en": "Our account management team meets each client every month.",
+        "zh": "我们的客户管理团队每月与各位客户会面。"
       },
       {
-        "en": "Before we sign, let’s confirm the account management in writing.",
-        "zh": "签字前，我们书面确认一下「客户管理」。"
+        "en": "Good account management helps us understand each customer’s needs.",
+        "zh": "良好的客户管理有助于我们了解各位客户的需求。"
       }
     ],
     "collocations": [
-      "confirm the account management",
-      "prepare the account management",
-      "follow up on the account management"
+      "account management team",
+      "account management strategy",
+      "key account management"
     ],
     "source": "seed",
     "priority": 7,
@@ -259,9 +259,9 @@
       {
         "id": "v1-account-management-5bc2ba54-cloze",
         "type": "cloze",
-        "prompt": "Complete: We put the _____ on the agenda for Thursday.",
+        "prompt": "Complete: Our _____ team meets each client every month.",
         "answer": "account management",
-        "modelAnswer": "We put the account management on the agenda for Thursday.",
+        "modelAnswer": "Our account management team meets each client every month.",
         "checkpoints": [
           "account management"
         ]
@@ -270,7 +270,7 @@
         "id": "v1-account-management-5bc2ba54-sentence",
         "type": "sentence",
         "prompt": "用 “account management” 写一句你真实会说的话。",
-        "modelAnswer": "We put the account management on the agenda for Thursday.",
+        "modelAnswer": "Our account management team meets each client every month.",
         "checkpoints": [
           "account management"
         ]
@@ -7127,18 +7127,18 @@
     ],
     "examples": [
       {
-        "en": "I can now explain the cost allocation without reading the notes.",
-        "zh": "我现在可以不看笔记解释「成本分配」。"
+        "en": "We use machine hours as the basis for cost allocation.",
+        "zh": "我们以机器工时作为成本分配的依据。"
       },
       {
-        "en": "In class we applied a cost allocation to a short case study.",
-        "zh": "课上我们把「成本分配」用到一个短案例中。"
+        "en": "The cost allocation assigns factory rent to each product line.",
+        "zh": "这项成本分配把厂房租金分配到各条产品线。"
       }
     ],
     "collocations": [
-      "allocate the cost allocation",
-      "analyse the cost allocation",
-      "control the cost allocation"
+      "cost allocation method",
+      "basis for cost allocation",
+      "cost allocation process"
     ],
     "source": "seed",
     "priority": 8,
@@ -7147,9 +7147,9 @@
       {
         "id": "v1-cost-allocation-af1d3c2f-cloze",
         "type": "cloze",
-        "prompt": "Complete: I can now explain the _____ without reading the notes.",
+        "prompt": "Complete: We use machine hours as the basis for _____.",
         "answer": "cost allocation",
-        "modelAnswer": "I can now explain the cost allocation without reading the notes.",
+        "modelAnswer": "We use machine hours as the basis for cost allocation.",
         "checkpoints": [
           "cost allocation"
         ]
@@ -7158,7 +7158,7 @@
         "id": "v1-cost-allocation-af1d3c2f-sentence",
         "type": "sentence",
         "prompt": "用 “cost allocation” 写一句你真实会说的话。",
-        "modelAnswer": "I can now explain the cost allocation without reading the notes.",
+        "modelAnswer": "We use machine hours as the basis for cost allocation.",
         "checkpoints": [
           "cost allocation"
         ]
@@ -10823,18 +10823,18 @@
     ],
     "examples": [
       {
-        "en": "We put the customs clearance on the agenda for Thursday.",
-        "zh": "我们把「清关」放进周四议程。"
+        "en": "The shipment is waiting for customs clearance at the port.",
+        "zh": "这批货物正在港口等待清关。"
       },
       {
-        "en": "Before we sign, let’s confirm the customs clearance in writing.",
-        "zh": "签字前，我们书面确认一下「清关」。"
+        "en": "Missing documents delayed customs clearance.",
+        "zh": "文件缺失延误了清关。"
       }
     ],
     "collocations": [
-      "ship against the customs clearance",
-      "update the customs clearance",
-      "check the customs clearance"
+      "customs clearance documents",
+      "complete customs clearance",
+      "delay in customs clearance"
     ],
     "source": "seed",
     "priority": 9,
@@ -10843,9 +10843,9 @@
       {
         "id": "v1-customs-clearance-659f6972-cloze",
         "type": "cloze",
-        "prompt": "Complete: We put the _____ on the agenda for Thursday.",
+        "prompt": "Complete: The shipment is waiting for _____ at the port.",
         "answer": "customs clearance",
-        "modelAnswer": "We put the customs clearance on the agenda for Thursday.",
+        "modelAnswer": "The shipment is waiting for customs clearance at the port.",
         "checkpoints": [
           "customs clearance"
         ]
@@ -10854,7 +10854,7 @@
         "id": "v1-customs-clearance-659f6972-sentence",
         "type": "sentence",
         "prompt": "用 “customs clearance” 写一句你真实会说的话。",
-        "modelAnswer": "We put the customs clearance on the agenda for Thursday.",
+        "modelAnswer": "The shipment is waiting for customs clearance at the port.",
         "checkpoints": [
           "customs clearance"
         ]
@@ -11495,18 +11495,18 @@
     ],
     "examples": [
       {
-        "en": "We put the delivery on the agenda for Thursday.",
-        "zh": "我们把「配送，交付」放进周四议程。"
+        "en": "The shop offers free delivery for orders over fifty ringgit.",
+        "zh": "该店为超过五十令吉的订单提供免费配送。"
       },
       {
-        "en": "Before we sign, let’s confirm the delivery in writing.",
-        "zh": "签字前，我们书面确认一下「配送，交付」。"
+        "en": "Please confirm the delivery address before we send the parcel.",
+        "zh": "我们寄出包裹前，请确认配送地址。"
       }
     ],
     "collocations": [
-      "ship against the delivery",
-      "update the delivery",
-      "check the delivery"
+      "delivery address",
+      "free delivery",
+      "delivery service"
     ],
     "source": "seed",
     "priority": 10,
@@ -11515,9 +11515,9 @@
       {
         "id": "v1-delivery-4c55ec36-cloze",
         "type": "cloze",
-        "prompt": "Complete: We put the _____ on the agenda for Thursday.",
+        "prompt": "Complete: The shop offers free _____ for orders over fifty ringgit.",
         "answer": "delivery",
-        "modelAnswer": "We put the delivery on the agenda for Thursday.",
+        "modelAnswer": "The shop offers free delivery for orders over fifty ringgit.",
         "checkpoints": [
           "delivery"
         ]
@@ -11526,7 +11526,7 @@
         "id": "v1-delivery-4c55ec36-sentence",
         "type": "sentence",
         "prompt": "用 “delivery” 写一句你真实会说的话。",
-        "modelAnswer": "We put the delivery on the agenda for Thursday.",
+        "modelAnswer": "The shop offers free delivery for orders over fifty ringgit.",
         "checkpoints": [
           "delivery"
         ]
@@ -14072,18 +14072,18 @@
     ],
     "examples": [
       {
-        "en": "I sorted out the enrolment on campus this afternoon.",
-        "zh": "今天下午我在校园把「注册入学，选课注册」办妥了。"
+        "en": "Online enrolment opens a week before classes begin.",
+        "zh": "网上注册入学在开课前一周开放。"
       },
       {
-        "en": "Could you show me where to find the enrolment?",
-        "zh": "你能告诉我在哪里找「注册入学，选课注册」吗？"
+        "en": "Complete your enrolment before the deadline.",
+        "zh": "请在截止日期前完成注册入学。"
       }
     ],
     "collocations": [
-      "submit the enrolment",
-      "check the enrolment",
-      "download the enrolment"
+      "online enrolment",
+      "enrolment deadline",
+      "complete enrolment"
     ],
     "source": "seed",
     "priority": 8,
@@ -14092,9 +14092,9 @@
       {
         "id": "v1-enrolment-1ff742b0-cloze",
         "type": "cloze",
-        "prompt": "Complete: I sorted out the _____ on campus this afternoon.",
+        "prompt": "Complete: Online _____ opens a week before classes begin.",
         "answer": "enrolment",
-        "modelAnswer": "I sorted out the enrolment on campus this afternoon.",
+        "modelAnswer": "Online enrolment opens a week before classes begin.",
         "checkpoints": [
           "enrolment"
         ]
@@ -14103,7 +14103,7 @@
         "id": "v1-enrolment-1ff742b0-sentence",
         "type": "sentence",
         "prompt": "用 “enrolment” 写一句你真实会说的话。",
-        "modelAnswer": "I sorted out the enrolment on campus this afternoon.",
+        "modelAnswer": "Online enrolment opens a week before classes begin.",
         "checkpoints": [
           "enrolment"
         ]
@@ -23092,18 +23092,18 @@
     ],
     "examples": [
       {
-        "en": "Before we sign, let’s confirm the market entry in writing.",
-        "zh": "签字前，我们书面确认一下「市场进入」。"
+        "en": "The company’s market entry strategy starts with online sales.",
+        "zh": "该公司的市场进入策略从线上销售开始。"
       },
       {
-        "en": "The ops lead owns follow-up on the market entry.",
-        "zh": "运营负责人跟进「市场进入」。"
+        "en": "High licence fees can create a barrier to market entry.",
+        "zh": "高额许可费可能构成市场进入壁垒。"
       }
     ],
     "collocations": [
-      "confirm the market entry",
-      "prepare the market entry",
-      "follow up on the market entry"
+      "market entry strategy",
+      "barrier to market entry",
+      "market entry costs"
     ],
     "source": "seed",
     "priority": 8,
@@ -23112,9 +23112,9 @@
       {
         "id": "v1-market-entry-409aea6e-cloze",
         "type": "cloze",
-        "prompt": "Complete: Before we sign, let’s confirm the _____ in writing.",
+        "prompt": "Complete: The company’s _____ strategy starts with online sales.",
         "answer": "market entry",
-        "modelAnswer": "Before we sign, let’s confirm the market entry in writing.",
+        "modelAnswer": "The company’s market entry strategy starts with online sales.",
         "checkpoints": [
           "market entry"
         ]
@@ -23123,7 +23123,7 @@
         "id": "v1-market-entry-409aea6e-sentence",
         "type": "sentence",
         "prompt": "用 “market entry” 写一句你真实会说的话。",
-        "modelAnswer": "Before we sign, let’s confirm the market entry in writing.",
+        "modelAnswer": "The company’s market entry strategy starts with online sales.",
         "checkpoints": [
           "market entry"
         ]
@@ -30037,18 +30037,18 @@
     ],
     "examples": [
       {
-        "en": "The ops lead owns follow-up on the quality control.",
-        "zh": "运营负责人跟进「质量控制」。"
+        "en": "The factory checks every batch as part of quality control.",
+        "zh": "工厂在质量控制中检查每批产品。"
       },
       {
-        "en": "We put the quality control on the agenda for Thursday.",
-        "zh": "我们把「质量控制」放进周四议程。"
+        "en": "A quality control inspector rejected the damaged items.",
+        "zh": "质量控制检验员拒收了受损产品。"
       }
     ],
     "collocations": [
-      "confirm the quality control",
-      "prepare the quality control",
-      "follow up on the quality control"
+      "quality control inspector",
+      "quality control checks",
+      "quality control procedures"
     ],
     "source": "seed",
     "priority": 9,
@@ -30057,9 +30057,9 @@
       {
         "id": "v1-quality-control-db1be02d-cloze",
         "type": "cloze",
-        "prompt": "Complete: The ops lead owns follow-up on the _____.",
+        "prompt": "Complete: The factory checks every batch as part of _____.",
         "answer": "quality control",
-        "modelAnswer": "The ops lead owns follow-up on the quality control.",
+        "modelAnswer": "The factory checks every batch as part of quality control.",
         "checkpoints": [
           "quality control"
         ]
@@ -30068,7 +30068,7 @@
         "id": "v1-quality-control-db1be02d-sentence",
         "type": "sentence",
         "prompt": "用 “quality control” 写一句你真实会说的话。",
-        "modelAnswer": "The ops lead owns follow-up on the quality control.",
+        "modelAnswer": "The factory checks every batch as part of quality control.",
         "checkpoints": [
           "quality control"
         ]
@@ -35246,18 +35246,18 @@
     ],
     "examples": [
       {
-        "en": "I can now explain the stocktake without reading the notes.",
-        "zh": "我现在可以不看笔记解释「盘点」。"
+        "en": "The warehouse will close on Friday for a stocktake.",
+        "zh": "仓库周五将为盘点而关闭。"
       },
       {
-        "en": "Warehouse staff counted items linked to the stocktake.",
-        "zh": "仓管清点了与「盘点」相关的存货。"
+        "en": "We found three missing items during the stocktake.",
+        "zh": "我们在盘点时发现少了三件物品。"
       }
     ],
     "collocations": [
-      "count the stocktake",
-      "value the stocktake",
-      "move the stocktake"
+      "annual stocktake",
+      "carry out a stocktake",
+      "stocktake results"
     ],
     "source": "seed",
     "priority": 8,
@@ -35266,9 +35266,9 @@
       {
         "id": "v1-stocktake-2a464717-cloze",
         "type": "cloze",
-        "prompt": "Complete: I can now explain the _____ without reading the notes.",
+        "prompt": "Complete: The warehouse will close on Friday for a _____.",
         "answer": "stocktake",
-        "modelAnswer": "I can now explain the stocktake without reading the notes.",
+        "modelAnswer": "The warehouse will close on Friday for a stocktake.",
         "checkpoints": [
           "stocktake"
         ]
@@ -35277,7 +35277,7 @@
         "id": "v1-stocktake-2a464717-sentence",
         "type": "sentence",
         "prompt": "用 “stocktake” 写一句你真实会说的话。",
-        "modelAnswer": "I can now explain the stocktake without reading the notes.",
+        "modelAnswer": "The warehouse will close on Friday for a stocktake.",
         "checkpoints": [
           "stocktake"
         ]
@@ -35639,18 +35639,18 @@
     ],
     "examples": [
       {
-        "en": "Could you show me where to find the submission?",
-        "zh": "你能告诉我在哪里找「提交，提交物」吗？"
+        "en": "Online submission of the assignment closes at noon.",
+        "zh": "这份作业的网上提交于中午截止。"
       },
       {
-        "en": "Once I understood the submission, the process felt easier.",
-        "zh": "弄懂「提交，提交物」后，流程就顺多了。"
+        "en": "Keep a copy of the report before submission.",
+        "zh": "提交报告前请保留副本。"
       }
     ],
     "collocations": [
-      "submit the submission",
-      "check the submission",
-      "download the submission"
+      "online submission",
+      "submission deadline",
+      "submission of a report"
     ],
     "source": "seed",
     "priority": 9,
@@ -35659,9 +35659,9 @@
       {
         "id": "v1-submission-14b2fcf8-cloze",
         "type": "cloze",
-        "prompt": "Complete: Could you show me where to find the _____?",
+        "prompt": "Complete: Online _____ of the assignment closes at noon.",
         "answer": "submission",
-        "modelAnswer": "Could you show me where to find the submission?",
+        "modelAnswer": "Online submission of the assignment closes at noon.",
         "checkpoints": [
           "submission"
         ]
@@ -35670,7 +35670,7 @@
         "id": "v1-submission-14b2fcf8-sentence",
         "type": "sentence",
         "prompt": "用 “submission” 写一句你真实会说的话。",
-        "modelAnswer": "Could you show me where to find the submission?",
+        "modelAnswer": "Online submission of the assignment closes at noon.",
         "checkpoints": [
           "submission"
         ]
@@ -36255,18 +36255,18 @@
     ],
     "examples": [
       {
-        "en": "The tax team estimated the tax compliance for the return.",
-        "zh": "税务团队为报税估算了「税务合规」。"
+        "en": "Accurate records help a business maintain tax compliance.",
+        "zh": "准确的记录有助于企业保持税务合规。"
       },
       {
-        "en": "Supporting workings for the tax compliance were filed with the pack.",
-        "zh": "「税务合规」的支持性计算已归入资料包。"
+        "en": "The company reviews its tax compliance procedures each year.",
+        "zh": "该公司每年复核税务合规程序。"
       }
     ],
     "collocations": [
-      "compute the tax compliance",
-      "file the tax compliance",
-      "estimate the tax compliance"
+      "tax compliance procedures",
+      "tax compliance costs",
+      "maintain tax compliance"
     ],
     "source": "seed",
     "priority": 8,
@@ -36275,9 +36275,9 @@
       {
         "id": "v1-tax-compliance-17d2e063-cloze",
         "type": "cloze",
-        "prompt": "Complete: The tax team estimated the _____ for the return.",
+        "prompt": "Complete: Accurate records help a business maintain _____.",
         "answer": "tax compliance",
-        "modelAnswer": "The tax team estimated the tax compliance for the return.",
+        "modelAnswer": "Accurate records help a business maintain tax compliance.",
         "checkpoints": [
           "tax compliance"
         ]
@@ -36286,7 +36286,7 @@
         "id": "v1-tax-compliance-17d2e063-sentence",
         "type": "sentence",
         "prompt": "用 “tax compliance” 写一句你真实会说的话。",
-        "modelAnswer": "The tax team estimated the tax compliance for the return.",
+        "modelAnswer": "Accurate records help a business maintain tax compliance.",
         "checkpoints": [
           "tax compliance"
         ]
@@ -38383,18 +38383,18 @@
     ],
     "examples": [
       {
-        "en": "Our model is sensitive to assumptions about the valuation.",
-        "zh": "我们的模型对「估值」相关假设很敏感。"
+        "en": "The bank requested an independent valuation of the property.",
+        "zh": "银行要求对该房产进行独立估值。"
       },
       {
-        "en": "The memo highlights why the valuation matters for this deal.",
-        "zh": "备忘录强调了「估值」对本交易的重要性。"
+        "en": "Our valuation depends on the expected future cash flows.",
+        "zh": "我们的估值取决于预计未来现金流。"
       }
     ],
     "collocations": [
-      "prepare a valuation",
-      "update the valuation",
-      "review the valuation"
+      "independent valuation",
+      "property valuation",
+      "valuation method"
     ],
     "source": "seed",
     "priority": 10,
@@ -38403,9 +38403,9 @@
       {
         "id": "v1-valuation-ea71fbc8-cloze",
         "type": "cloze",
-        "prompt": "Complete: Our model is sensitive to assumptions about the _____.",
+        "prompt": "Complete: The bank requested an independent _____ of the property.",
         "answer": "valuation",
-        "modelAnswer": "Our model is sensitive to assumptions about the valuation.",
+        "modelAnswer": "The bank requested an independent valuation of the property.",
         "checkpoints": [
           "valuation"
         ]
@@ -38414,7 +38414,7 @@
         "id": "v1-valuation-ea71fbc8-sentence",
         "type": "sentence",
         "prompt": "用 “valuation” 写一句你真实会说的话。",
-        "modelAnswer": "Our model is sensitive to assumptions about the valuation.",
+        "modelAnswer": "The bank requested an independent valuation of the property.",
         "checkpoints": [
           "valuation"
         ]
@@ -38551,18 +38551,18 @@
     ],
     "examples": [
       {
-        "en": "Once I understood the visa renewal, the process felt easier.",
-        "zh": "弄懂「签证续签」后，流程就顺多了。"
+        "en": "She submitted the documents required for visa renewal.",
+        "zh": "她提交了签证续签所需的文件。"
       },
       {
-        "en": "I sorted out the visa renewal on campus this afternoon.",
-        "zh": "今天下午我在校园把「签证续签」办妥了。"
+        "en": "Start the visa renewal process before your current visa expires.",
+        "zh": "请在现有签证到期前启动续签流程。"
       }
     ],
     "collocations": [
-      "use the visa renewal",
-      "ask about the visa renewal",
-      "remember the visa renewal"
+      "visa renewal application",
+      "visa renewal process",
+      "visa renewal fee"
     ],
     "source": "seed",
     "priority": 8,
@@ -38571,9 +38571,9 @@
       {
         "id": "v1-visa-renewal-6197f8c8-cloze",
         "type": "cloze",
-        "prompt": "Complete: Once I understood the _____, the process felt easier.",
+        "prompt": "Complete: She submitted the documents required for _____.",
         "answer": "visa renewal",
-        "modelAnswer": "Once I understood the visa renewal, the process felt easier.",
+        "modelAnswer": "She submitted the documents required for visa renewal.",
         "checkpoints": [
           "visa renewal"
         ]
@@ -38582,7 +38582,7 @@
         "id": "v1-visa-renewal-6197f8c8-sentence",
         "type": "sentence",
         "prompt": "用 “visa renewal” 写一句你真实会说的话。",
-        "modelAnswer": "Once I understood the visa renewal, the process felt easier.",
+        "modelAnswer": "She submitted the documents required for visa renewal.",
         "checkpoints": [
           "visa renewal"
         ]
@@ -38607,18 +38607,18 @@
     ],
     "examples": [
       {
-        "en": "I sorted out the visitor registration on campus this afternoon.",
-        "zh": "今天下午我在校园把「访客登记」办妥了。"
+        "en": "Visitor registration takes place at the reception desk.",
+        "zh": "访客登记在接待处办理。"
       },
       {
-        "en": "Could you show me where to find the visitor registration?",
-        "zh": "你能告诉我在哪里找「访客登记」吗？"
+        "en": "Please complete visitor registration before entering the laboratory.",
+        "zh": "进入实验室前请完成访客登记。"
       }
     ],
     "collocations": [
-      "calculate the visitor registration",
-      "interpret the visitor registration",
-      "compare the visitor registration"
+      "visitor registration form",
+      "visitor registration desk",
+      "visitor registration system"
     ],
     "source": "seed",
     "priority": 7,
@@ -38627,9 +38627,9 @@
       {
         "id": "v1-visitor-registration-026dd902-cloze",
         "type": "cloze",
-        "prompt": "Complete: I sorted out the _____ on campus this afternoon.",
+        "prompt": "Complete: _____ takes place at the reception desk.",
         "answer": "visitor registration",
-        "modelAnswer": "I sorted out the visitor registration on campus this afternoon.",
+        "modelAnswer": "Visitor registration takes place at the reception desk.",
         "checkpoints": [
           "visitor registration"
         ]
@@ -38638,7 +38638,7 @@
         "id": "v1-visitor-registration-026dd902-sentence",
         "type": "sentence",
         "prompt": "用 “visitor registration” 写一句你真实会说的话。",
-        "modelAnswer": "I sorted out the visitor registration on campus this afternoon.",
+        "modelAnswer": "Visitor registration takes place at the reception desk.",
         "checkpoints": [
           "visitor registration"
         ]
@@ -44768,18 +44768,18 @@
     ],
     "examples": [
       {
-        "en": "Please ensure the delivery date in writing.",
-        "zh": "请书面确保交货日期。"
+        "en": "Please ensure that every file has a backup.",
+        "zh": "请确保每份文件都有备份。"
       },
       {
-        "en": "Can you ensure the latest figures?",
-        "zh": "你能确保最新数字吗？"
+        "en": "Clear instructions help ensure a smooth handover.",
+        "zh": "清楚的说明有助于确保顺利交接。"
       }
     ],
     "collocations": [
-      "need to ensure",
-      "please ensure",
-      "refuse to ensure"
+      "ensure safety",
+      "ensure that",
+      "ensure a smooth handover"
     ],
     "source": "seed",
     "priority": 8,
@@ -44788,9 +44788,9 @@
       {
         "id": "econ-03503cd82262dd-cloze",
         "type": "cloze",
-        "prompt": "Complete: Please _____ the delivery date in writing.",
+        "prompt": "Complete: Please _____ that every file has a backup.",
         "answer": "ensure",
-        "modelAnswer": "Please ensure the delivery date in writing.",
+        "modelAnswer": "Please ensure that every file has a backup.",
         "checkpoints": [
           "ensure"
         ]
@@ -44799,7 +44799,7 @@
         "id": "econ-03503cd82262dd-sentence",
         "type": "sentence",
         "prompt": "用 “ensure” 写一句你真实会说的话。",
-        "modelAnswer": "Please ensure the delivery date in writing.",
+        "modelAnswer": "Please ensure that every file has a backup.",
         "checkpoints": [
           "ensure"
         ]
@@ -46718,7 +46718,7 @@
     "lemma": "acknowledge",
     "senseKey": "econ-1bab32c6adb7",
     "zhGloss": "承认",
-    "enDefinition": "report the receipt of",
+    "enDefinition": "to accept or admit that something is true or exists",
     "partOfSpeech": "verb",
     "acceptedZhAnswers": [
       "承认"
@@ -46728,18 +46728,18 @@
     ],
     "examples": [
       {
-        "en": "I will acknowledge with the supplier tomorrow.",
-        "zh": "我明天会与供应商承认。"
+        "en": "The manager had to acknowledge the mistake.",
+        "zh": "经理不得不承认这个错误。"
       },
       {
-        "en": "We need to acknowledge before the deadline.",
-        "zh": "截止日期前我们需要承认。"
+        "en": "We acknowledge that the first estimate was too low.",
+        "zh": "我们承认第一次估算过低。"
       }
     ],
     "collocations": [
-      "need to acknowledge",
-      "please acknowledge",
-      "refuse to acknowledge"
+      "acknowledge a mistake",
+      "acknowledge that",
+      "acknowledge a problem"
     ],
     "source": "seed",
     "priority": 8,
@@ -46748,9 +46748,9 @@
       {
         "id": "econ-4f6c0a36ad32b8-cloze",
         "type": "cloze",
-        "prompt": "Complete: I will _____ with the supplier tomorrow.",
+        "prompt": "Complete: The manager had to _____ the mistake.",
         "answer": "acknowledge",
-        "modelAnswer": "I will acknowledge with the supplier tomorrow.",
+        "modelAnswer": "The manager had to acknowledge the mistake.",
         "checkpoints": [
           "acknowledge"
         ]
@@ -46759,7 +46759,7 @@
         "id": "econ-4f6c0a36ad32b8-sentence",
         "type": "sentence",
         "prompt": "用 “acknowledge” 写一句你真实会说的话。",
-        "modelAnswer": "I will acknowledge with the supplier tomorrow.",
+        "modelAnswer": "The manager had to acknowledge the mistake.",
         "checkpoints": [
           "acknowledge"
         ]
@@ -49629,29 +49629,29 @@
     "expression": "transportation",
     "lemma": "transportation",
     "senseKey": "econ-813056d371e5",
-    "zhGloss": "运转",
+    "zhGloss": "运输",
     "enDefinition": "the act of moving something from one location to another",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
-      "运转"
+      "运输"
     ],
     "acceptedEnVariants": [
       "transportation"
     ],
     "examples": [
       {
-        "en": "Can you explain “transportation” in one sentence?",
-        "zh": "你能用一句话解释「运转」吗？"
+        "en": "Rail transportation carries goods between the two cities.",
+        "zh": "铁路运输在这两座城市之间运送货物。"
       },
       {
-        "en": "I looked up “transportation” before the quiz.",
-        "zh": "小测前我查阅了「运转」。"
+        "en": "The company is trying to reduce transportation costs.",
+        "zh": "该公司正设法降低运输成本。"
       }
     ],
     "collocations": [
-      "prioritise the transportation",
-      "standardise the transportation",
-      "monitor the transportation"
+      "transportation costs",
+      "rail transportation",
+      "transportation of goods"
     ],
     "source": "seed",
     "priority": 8,
@@ -49660,9 +49660,9 @@
       {
         "id": "econ-a14a944d6c5879-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you explain “_____” in one sentence?",
+        "prompt": "Complete: Rail _____ carries goods between the two cities.",
         "answer": "transportation",
-        "modelAnswer": "Can you explain “transportation” in one sentence?",
+        "modelAnswer": "Rail transportation carries goods between the two cities.",
         "checkpoints": [
           "transportation"
         ]
@@ -49671,7 +49671,7 @@
         "id": "econ-a14a944d6c5879-sentence",
         "type": "sentence",
         "prompt": "用 “transportation” 写一句你真实会说的话。",
-        "modelAnswer": "Can you explain “transportation” in one sentence?",
+        "modelAnswer": "Rail transportation carries goods between the two cities.",
         "checkpoints": [
           "transportation"
         ]
@@ -52317,29 +52317,29 @@
     "expression": "accredit",
     "lemma": "accredit",
     "senseKey": "econ-64e4f91801d5",
-    "zhGloss": "授权",
-    "enDefinition": "grant credentials to",
+    "zhGloss": "认可",
+    "enDefinition": "to officially recognise that a person or organisation meets required standards",
     "partOfSpeech": "verb",
     "acceptedZhAnswers": [
-      "授权"
+      "认可"
     ],
     "acceptedEnVariants": [
       "accredit"
     ],
     "examples": [
       {
-        "en": "They decided to accredit the risky option.",
-        "zh": "他们决定授权那个高风险选项。"
+        "en": "The national body will accredit the training programme.",
+        "zh": "全国性机构将对这个培训项目进行认证。"
       },
       {
-        "en": "Please accredit the delivery date in writing.",
-        "zh": "请书面授权交货日期。"
+        "en": "Only an approved agency can accredit the laboratory.",
+        "zh": "只有获准机构才能认可这间实验室的资质。"
       }
     ],
     "collocations": [
-      "need to accredit",
-      "please accredit",
-      "refuse to accredit"
+      "accredit a programme",
+      "accredit a laboratory",
+      "officially accredit"
     ],
     "source": "seed",
     "priority": 8,
@@ -52348,9 +52348,9 @@
       {
         "id": "econ-c2d0f75d679b71-cloze",
         "type": "cloze",
-        "prompt": "Complete: They decided to _____ the risky option.",
+        "prompt": "Complete: The national body will _____ the training programme.",
         "answer": "accredit",
-        "modelAnswer": "They decided to accredit the risky option.",
+        "modelAnswer": "The national body will accredit the training programme.",
         "checkpoints": [
           "accredit"
         ]
@@ -52359,7 +52359,7 @@
         "id": "econ-c2d0f75d679b71-sentence",
         "type": "sentence",
         "prompt": "用 “accredit” 写一句你真实会说的话。",
-        "modelAnswer": "They decided to accredit the risky option.",
+        "modelAnswer": "The national body will accredit the training programme.",
         "checkpoints": [
           "accredit"
         ]
@@ -53560,18 +53560,18 @@
     ],
     "examples": [
       {
-        "en": "Please abolish the delivery date in writing.",
-        "zh": "请书面废除交货日期。"
+        "en": "The council voted to abolish the outdated fee.",
+        "zh": "议会投票废除了这项过时的收费。"
       },
       {
-        "en": "Can you abolish the latest figures?",
-        "zh": "你能废除最新数字吗？"
+        "en": "The proposal would abolish the current reporting requirement.",
+        "zh": "该提案将废除现行的报告要求。"
       }
     ],
     "collocations": [
-      "need to abolish",
-      "please abolish",
-      "refuse to abolish"
+      "abolish a law",
+      "abolish a fee",
+      "abolish a requirement"
     ],
     "source": "seed",
     "priority": 8,
@@ -53580,9 +53580,9 @@
       {
         "id": "econ-5194d926dde85c-cloze",
         "type": "cloze",
-        "prompt": "Complete: Please _____ the delivery date in writing.",
+        "prompt": "Complete: The council voted to _____ the outdated fee.",
         "answer": "abolish",
-        "modelAnswer": "Please abolish the delivery date in writing.",
+        "modelAnswer": "The council voted to abolish the outdated fee.",
         "checkpoints": [
           "abolish"
         ]
@@ -53591,7 +53591,7 @@
         "id": "econ-5194d926dde85c-sentence",
         "type": "sentence",
         "prompt": "用 “abolish” 写一句你真实会说的话。",
-        "modelAnswer": "Please abolish the delivery date in writing.",
+        "modelAnswer": "The council voted to abolish the outdated fee.",
         "checkpoints": [
           "abolish"
         ]
@@ -56528,18 +56528,18 @@
     ],
     "examples": [
       {
-        "en": "We need to defray before the deadline.",
-        "zh": "截止日期前我们需要支付或准备支付。"
+        "en": "The grant will help defray the cost of travel.",
+        "zh": "这笔补助将帮助支付差旅费用。"
       },
       {
-        "en": "They decided to defray the risky option.",
-        "zh": "他们决定支付或准备支付那个高风险选项。"
+        "en": "Registration fees defray part of the conference expenses.",
+        "zh": "报名费支付了部分会议开支。"
       }
     ],
     "collocations": [
-      "need to defray",
-      "please defray",
-      "refuse to defray"
+      "defray the cost",
+      "defray expenses",
+      "help defray"
     ],
     "source": "seed",
     "priority": 8,
@@ -56548,9 +56548,9 @@
       {
         "id": "econ-31fd83086d505d-cloze",
         "type": "cloze",
-        "prompt": "Complete: We need to _____ before the deadline.",
+        "prompt": "Complete: The grant will help _____ the cost of travel.",
         "answer": "defray",
-        "modelAnswer": "We need to defray before the deadline.",
+        "modelAnswer": "The grant will help defray the cost of travel.",
         "checkpoints": [
           "defray"
         ]
@@ -56559,7 +56559,7 @@
         "id": "econ-31fd83086d505d-sentence",
         "type": "sentence",
         "prompt": "用 “defray” 写一句你真实会说的话。",
-        "modelAnswer": "We need to defray before the deadline.",
+        "modelAnswer": "The grant will help defray the cost of travel.",
         "checkpoints": [
           "defray"
         ]
@@ -59150,7 +59150,7 @@
     "lemma": "redeem",
     "senseKey": "econ-c41b8ab0849d",
     "zhGloss": "履行(契约)",
-    "enDefinition": "restore the honor or worth of",
+    "enDefinition": "to fulfil a promise or an obligation",
     "partOfSpeech": "verb",
     "acceptedZhAnswers": [
       "履行(契约)"
@@ -59160,18 +59160,18 @@
     ],
     "examples": [
       {
-        "en": "They decided to redeem the risky option.",
-        "zh": "他们决定履行(契约)那个高风险选项。"
+        "en": "The company must redeem its promise to improve safety.",
+        "zh": "公司必须兑现改善安全的承诺。"
       },
       {
-        "en": "Please redeem the delivery date in writing.",
-        "zh": "请书面履行(契约)交货日期。"
+        "en": "She worked hard to redeem the pledge she had made.",
+        "zh": "她努力兑现自己许下的诺言。"
       }
     ],
     "collocations": [
-      "need to redeem",
-      "please redeem",
-      "refuse to redeem"
+      "redeem a promise",
+      "redeem a pledge",
+      "redeem an obligation"
     ],
     "source": "seed",
     "priority": 8,
@@ -59180,9 +59180,9 @@
       {
         "id": "econ-988b8889339e70-cloze",
         "type": "cloze",
-        "prompt": "Complete: They decided to _____ the risky option.",
+        "prompt": "Complete: The company must _____ its promise to improve safety.",
         "answer": "redeem",
-        "modelAnswer": "They decided to redeem the risky option.",
+        "modelAnswer": "The company must redeem its promise to improve safety.",
         "checkpoints": [
           "redeem"
         ]
@@ -59191,7 +59191,7 @@
         "id": "econ-988b8889339e70-sentence",
         "type": "sentence",
         "prompt": "用 “redeem” 写一句你真实会说的话。",
-        "modelAnswer": "They decided to redeem the risky option.",
+        "modelAnswer": "The company must redeem its promise to improve safety.",
         "checkpoints": [
           "redeem"
         ]
@@ -64470,7 +64470,7 @@
     "lemma": "certification",
     "senseKey": "econ-259d8224ce1b",
     "zhGloss": "证明",
-    "enDefinition": "the act of certifying or bestowing a franchise on",
+    "enDefinition": "formal confirmation that a person, product, or organisation meets specified requirements",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "证明"
@@ -64480,18 +64480,18 @@
     ],
     "examples": [
       {
-        "en": "We discussed “certification” in today’s tutorial.",
-        "zh": "今天的辅导课我们讨论了「证明」。"
+        "en": "The product received certification after independent testing.",
+        "zh": "该产品经独立检测后获得了认证。"
       },
       {
-        "en": "The article mentions “certification” several times.",
-        "zh": "这篇文章多次提到「证明」。"
+        "en": "The course prepares technicians for professional certification.",
+        "zh": "该课程帮助技术人员准备专业认证。"
       }
     ],
     "collocations": [
-      "define “certification”",
-      "teach “certification”",
-      "revise “certification”"
+      "professional certification",
+      "certification requirements",
+      "product certification"
     ],
     "source": "seed",
     "priority": 4,
@@ -64500,9 +64500,9 @@
       {
         "id": "econ-064122cb792ff9-cloze",
         "type": "cloze",
-        "prompt": "Complete: We discussed “_____” in today’s tutorial.",
+        "prompt": "Complete: The product received _____ after independent testing.",
         "answer": "certification",
-        "modelAnswer": "We discussed “certification” in today’s tutorial.",
+        "modelAnswer": "The product received certification after independent testing.",
         "checkpoints": [
           "certification"
         ]
@@ -64511,7 +64511,7 @@
         "id": "econ-064122cb792ff9-sentence",
         "type": "sentence",
         "prompt": "用 “certification” 写一句你真实会说的话。",
-        "modelAnswer": "We discussed “certification” in today’s tutorial.",
+        "modelAnswer": "The product received certification after independent testing.",
         "checkpoints": [
           "certification"
         ]
@@ -65142,7 +65142,7 @@
     "lemma": "abandonment",
     "senseKey": "econ-7a1cd03350de",
     "zhGloss": "委付",
-    "enDefinition": "the act of giving something up",
+    "enDefinition": "the surrender of an insured interest to the insurer when claiming a total loss under marine insurance",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "委付"
@@ -65152,18 +65152,18 @@
     ],
     "examples": [
       {
-        "en": "We discussed “abandonment” in today’s tutorial.",
-        "zh": "今天的辅导课我们讨论了「委付」。"
+        "en": "The shipowner gave notice of abandonment to the insurer.",
+        "zh": "船东向保险人发出了委付通知。"
       },
       {
-        "en": "The article mentions “abandonment” several times.",
-        "zh": "这篇文章多次提到「委付」。"
+        "en": "A valid abandonment allows the insurer to take over the remaining insured interest.",
+        "zh": "有效的委付使保险人有权接收剩余的被保险利益。"
       }
     ],
     "collocations": [
-      "clarify “abandonment”",
-      "apply “abandonment”",
-      "update “abandonment”"
+      "notice of abandonment",
+      "valid abandonment",
+      "acceptance of abandonment"
     ],
     "source": "seed",
     "priority": 4,
@@ -65172,9 +65172,9 @@
       {
         "id": "econ-9942b261a9138d-cloze",
         "type": "cloze",
-        "prompt": "Complete: We discussed “_____” in today’s tutorial.",
+        "prompt": "Complete: The shipowner gave notice of _____ to the insurer.",
         "answer": "abandonment",
-        "modelAnswer": "We discussed “abandonment” in today’s tutorial.",
+        "modelAnswer": "The shipowner gave notice of abandonment to the insurer.",
         "checkpoints": [
           "abandonment"
         ]
@@ -65183,7 +65183,7 @@
         "id": "econ-9942b261a9138d-sentence",
         "type": "sentence",
         "prompt": "用 “abandonment” 写一句你真实会说的话。",
-        "modelAnswer": "We discussed “abandonment” in today’s tutorial.",
+        "modelAnswer": "The shipowner gave notice of abandonment to the insurer.",
         "checkpoints": [
           "abandonment"
         ]
@@ -73219,18 +73219,18 @@
     ],
     "examples": [
       {
-        "en": "Compare cost amid quality before you decide.",
-        "zh": "决定前请比较成本在…之中质量。"
+        "en": "The team continued working amid the noise.",
+        "zh": "团队在嘈杂声中继续工作。"
       },
       {
-        "en": "Put the keys amid the laptop.",
-        "zh": "把钥匙放在笔记本电脑在…之中。"
+        "en": "The announcement came amid growing uncertainty.",
+        "zh": "这项公告是在不确定性增加之际发布的。"
       }
     ],
     "collocations": [
-      "amid work",
-      "amid that",
-      "go amid"
+      "amid the noise",
+      "amid uncertainty",
+      "amid the crowd"
     ],
     "source": "seed",
     "priority": 8,
@@ -73239,9 +73239,9 @@
       {
         "id": "econ-ca7db6d03ec492-cloze",
         "type": "cloze",
-        "prompt": "Complete: Compare cost _____ quality before you decide.",
+        "prompt": "Complete: The team continued working _____ the noise.",
         "answer": "amid",
-        "modelAnswer": "Compare cost amid quality before you decide.",
+        "modelAnswer": "The team continued working amid the noise.",
         "checkpoints": [
           "amid"
         ]
@@ -73250,7 +73250,7 @@
         "id": "econ-ca7db6d03ec492-sentence",
         "type": "sentence",
         "prompt": "用 “amid” 写一句你真实会说的话。",
-        "modelAnswer": "Compare cost amid quality before you decide.",
+        "modelAnswer": "The team continued working amid the noise.",
         "checkpoints": [
           "amid"
         ]
@@ -75224,29 +75224,29 @@
     "expression": "inwards",
     "lemma": "inwards",
     "senseKey": "econ-b76b15de50ca",
-    "zhGloss": "进口税",
-    "enDefinition": "to or toward the inside of",
+    "zhGloss": "向内",
+    "enDefinition": "towards the inside or centre of something",
     "partOfSpeech": "adverb",
     "acceptedZhAnswers": [
-      "进口税"
+      "向内"
     ],
     "acceptedEnVariants": [
       "inwards"
     ],
     "examples": [
       {
-        "en": "I can explain “inwards” without looking at the notes.",
-        "zh": "我不看笔记也能解释「进口税」。"
+        "en": "The door opens inwards.",
+        "zh": "这扇门向内开。"
       },
       {
-        "en": "The tutor asked how “inwards” affects the accounts.",
-        "zh": "导师问「进口税」如何影响账目。"
+        "en": "Fold the edges inwards before sealing the envelope.",
+        "zh": "封好信封前把边缘向内折。"
       }
     ],
     "collocations": [
-      "define “inwards”",
-      "teach “inwards”",
-      "revise “inwards”"
+      "open inwards",
+      "fold inwards",
+      "turn inwards"
     ],
     "source": "seed",
     "priority": 4,
@@ -75255,9 +75255,9 @@
       {
         "id": "econ-db47156d1a1a22-cloze",
         "type": "cloze",
-        "prompt": "Complete: I can explain “_____” without looking at the notes.",
+        "prompt": "Complete: The door opens _____.",
         "answer": "inwards",
-        "modelAnswer": "I can explain “inwards” without looking at the notes.",
+        "modelAnswer": "The door opens inwards.",
         "checkpoints": [
           "inwards"
         ]
@@ -75266,7 +75266,7 @@
         "id": "econ-db47156d1a1a22-sentence",
         "type": "sentence",
         "prompt": "用 “inwards” 写一句你真实会说的话。",
-        "modelAnswer": "I can explain “inwards” without looking at the notes.",
+        "modelAnswer": "The door opens inwards.",
         "checkpoints": [
           "inwards"
         ]
@@ -77189,29 +77189,29 @@
     "expression": "underwriting",
     "lemma": "underwriting",
     "senseKey": "econ-c70d392e0a1b",
-    "zhGloss": "(海上)保险业",
-    "enDefinition": "guarantee financial support of",
+    "zhGloss": "承保",
+    "enDefinition": "the business or process of accepting insurance risks in exchange for premiums",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
-      "(海上)保险业"
+      "承保"
     ],
     "acceptedEnVariants": [
       "underwriting"
     ],
     "examples": [
       {
-        "en": "The model is sensitive to assumptions about “underwriting”.",
-        "zh": "模型对「(海上)保险业」相关假设很敏感。"
+        "en": "The insurer tightened its underwriting standards.",
+        "zh": "该保险公司收紧了承保标准。"
       },
       {
-        "en": "Our memo flags why “underwriting” matters for this deal.",
-        "zh": "备忘录标出「(海上)保险业」对本交易为何重要。"
+        "en": "Marine underwriting involves assessing risks to ships and cargo.",
+        "zh": "海上保险承保涉及评估船舶和货物风险。"
       }
     ],
     "collocations": [
-      "an underwriting decision",
-      "remain underwriting",
-      "sound underwriting"
+      "underwriting standards",
+      "marine underwriting",
+      "underwriting risk"
     ],
     "source": "seed",
     "priority": 4,
@@ -77220,9 +77220,9 @@
       {
         "id": "econ-e6be4939542747-cloze",
         "type": "cloze",
-        "prompt": "Complete: The model is sensitive to assumptions about “_____”.",
+        "prompt": "Complete: The insurer tightened its _____ standards.",
         "answer": "underwriting",
-        "modelAnswer": "The model is sensitive to assumptions about “underwriting”.",
+        "modelAnswer": "The insurer tightened its underwriting standards.",
         "checkpoints": [
           "underwriting"
         ]
@@ -77231,7 +77231,7 @@
         "id": "econ-e6be4939542747-sentence",
         "type": "sentence",
         "prompt": "用 “underwriting” 写一句你真实会说的话。",
-        "modelAnswer": "The model is sensitive to assumptions about “underwriting”.",
+        "modelAnswer": "The insurer tightened its underwriting standards.",
         "checkpoints": [
           "underwriting"
         ]
@@ -77808,7 +77808,7 @@
     "lemma": "cover",
     "senseKey": "core-dcff2c2ea353",
     "zhGloss": "盖子",
-    "enDefinition": "the act of concealing the existence of something by obstructing the view of it",
+    "enDefinition": "a lid or other object placed over something to close or protect it",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "盖子"
@@ -77818,18 +77818,18 @@
     ],
     "examples": [
       {
-        "en": "We discussed “cover” in today’s tutorial.",
-        "zh": "今天的辅导课我们讨论了「盖子」。"
+        "en": "Put the cover back on the container.",
+        "zh": "把盖子重新盖在容器上。"
       },
       {
-        "en": "The article mentions “cover” several times.",
-        "zh": "这篇文章多次提到「盖子」。"
+        "en": "The plastic cover keeps dust out of the machine.",
+        "zh": "这个塑料盖防止灰尘进入机器。"
       }
     ],
     "collocations": [
-      "explain “cover”",
-      "use “cover”",
-      "learn “cover”"
+      "plastic cover",
+      "protective cover",
+      "remove the cover"
     ],
     "source": "seed",
     "priority": 8,
@@ -77838,9 +77838,9 @@
       {
         "id": "core-a28100fa6a50a3-cloze",
         "type": "cloze",
-        "prompt": "Complete: We discussed “_____” in today’s tutorial.",
+        "prompt": "Complete: Put the _____ back on the container.",
         "answer": "cover",
-        "modelAnswer": "We discussed “cover” in today’s tutorial.",
+        "modelAnswer": "Put the cover back on the container.",
         "checkpoints": [
           "cover"
         ]
@@ -77849,7 +77849,7 @@
         "id": "core-a28100fa6a50a3-sentence",
         "type": "sentence",
         "prompt": "用 “cover” 写一句你真实会说的话。",
-        "modelAnswer": "We discussed “cover” in today’s tutorial.",
+        "modelAnswer": "Put the cover back on the container.",
         "checkpoints": [
           "cover"
         ]
@@ -78827,18 +78827,18 @@
     ],
     "examples": [
       {
-        "en": "Please use “fight” correctly in your essay.",
-        "zh": "请在作文里正确使用「打架」。"
+        "en": "A fight broke out outside the stadium.",
+        "zh": "体育场外发生了一场打架事件。"
       },
       {
-        "en": "Can you explain “fight” in one sentence?",
-        "zh": "你能用一句话解释「打架」吗？"
+        "en": "Two teachers stepped in to stop the fight.",
+        "zh": "两位老师上前制止了打架。"
       }
     ],
     "collocations": [
-      "prepare the fight",
-      "bring the fight",
-      "file the fight"
+      "break up a fight",
+      "get into a fight",
+      "a fight between classmates"
     ],
     "source": "seed",
     "priority": 8,
@@ -78847,9 +78847,9 @@
       {
         "id": "core-517bd000b74cbc-cloze",
         "type": "cloze",
-        "prompt": "Complete: Please use “_____” correctly in your essay.",
+        "prompt": "Complete: A _____ broke out outside the stadium.",
         "answer": "fight",
-        "modelAnswer": "Please use “fight” correctly in your essay.",
+        "modelAnswer": "A fight broke out outside the stadium.",
         "checkpoints": [
           "fight"
         ]
@@ -78858,7 +78858,7 @@
         "id": "core-517bd000b74cbc-sentence",
         "type": "sentence",
         "prompt": "用 “fight” 写一句你真实会说的话。",
-        "modelAnswer": "Please use “fight” correctly in your essay.",
+        "modelAnswer": "A fight broke out outside the stadium.",
         "checkpoints": [
           "fight"
         ]
@@ -79779,18 +79779,18 @@
     ],
     "examples": [
       {
-        "en": "Can you explain “visit” in one sentence?",
-        "zh": "你能用一句话解释「拜访」吗？"
+        "en": "We paid a visit to our former teacher.",
+        "zh": "我们拜访了以前的老师。"
       },
       {
-        "en": "I looked up “visit” before the quiz.",
-        "zh": "小测前我查阅了「拜访」。"
+        "en": "Her visit lasted only an hour.",
+        "zh": "她的拜访只持续了一个小时。"
       }
     ],
     "collocations": [
-      "prepare the visit",
-      "bring the visit",
-      "file the visit"
+      "pay a visit",
+      "a brief visit",
+      "a visit to someone"
     ],
     "source": "seed",
     "priority": 8,
@@ -79799,9 +79799,9 @@
       {
         "id": "core-a41f18cb110cde-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you explain “_____” in one sentence?",
+        "prompt": "Complete: We paid a _____ to our former teacher.",
         "answer": "visit",
-        "modelAnswer": "Can you explain “visit” in one sentence?",
+        "modelAnswer": "We paid a visit to our former teacher.",
         "checkpoints": [
           "visit"
         ]
@@ -79810,7 +79810,7 @@
         "id": "core-a41f18cb110cde-sentence",
         "type": "sentence",
         "prompt": "用 “visit” 写一句你真实会说的话。",
-        "modelAnswer": "Can you explain “visit” in one sentence?",
+        "modelAnswer": "We paid a visit to our former teacher.",
         "checkpoints": [
           "visit"
         ]
@@ -81785,7 +81785,7 @@
     "lemma": "contain",
     "senseKey": "core-c8fa8044a2fe",
     "zhGloss": "包含",
-    "enDefinition": "be divisible by",
+    "enDefinition": "to have something inside or as a part of something larger",
     "partOfSpeech": "verb",
     "acceptedZhAnswers": [
       "包含"
@@ -81795,18 +81795,18 @@
     ],
     "examples": [
       {
-        "en": "They decided to contain the risky option.",
-        "zh": "他们决定包含那个高风险选项。"
+        "en": "This box can contain up to twenty files.",
+        "zh": "这个箱子最多可装二十份文件。"
       },
       {
-        "en": "Please contain the delivery date in writing.",
-        "zh": "请书面包含交货日期。"
+        "en": "The report may contain confidential information.",
+        "zh": "这份报告可能包含机密信息。"
       }
     ],
     "collocations": [
-      "need to contain",
-      "please contain",
-      "refuse to contain"
+      "contain information",
+      "contain details",
+      "contain ingredients"
     ],
     "source": "seed",
     "priority": 8,
@@ -81815,9 +81815,9 @@
       {
         "id": "core-c1380af4865911-cloze",
         "type": "cloze",
-        "prompt": "Complete: They decided to _____ the risky option.",
+        "prompt": "Complete: This box can _____ up to twenty files.",
         "answer": "contain",
-        "modelAnswer": "They decided to contain the risky option.",
+        "modelAnswer": "This box can contain up to twenty files.",
         "checkpoints": [
           "contain"
         ]
@@ -81826,7 +81826,7 @@
         "id": "core-c1380af4865911-sentence",
         "type": "sentence",
         "prompt": "用 “contain” 写一句你真实会说的话。",
-        "modelAnswer": "They decided to contain the risky option.",
+        "modelAnswer": "This box can contain up to twenty files.",
         "checkpoints": [
           "contain"
         ]
@@ -86882,7 +86882,7 @@
     "lemma": "please",
     "senseKey": "core-a98ba238c2c5",
     "zhGloss": "请",
-    "enDefinition": "give pleasure to or be pleasing to",
+    "enDefinition": "used in a request to make it more polite",
     "partOfSpeech": "adverb",
     "acceptedZhAnswers": [
       "请"
@@ -86892,18 +86892,18 @@
     ],
     "examples": [
       {
-        "en": "She finished the report please before the deadline.",
-        "zh": "她在截止日期前请完成了报告。"
+        "en": "Please send the report by Friday.",
+        "zh": "请在周五前发送报告。"
       },
       {
-        "en": "We please agree with the revised forecast.",
-        "zh": "我们请同意修订后的预测。"
+        "en": "Could you close the window, please?",
+        "zh": "请你关上窗，好吗？"
       }
     ],
     "collocations": [
-      "speak please",
-      "work please",
-      "answer please"
+      "please send",
+      "yes please",
+      "could you please"
     ],
     "source": "seed",
     "priority": 8,
@@ -86912,9 +86912,9 @@
       {
         "id": "core-cae355b615b613-cloze",
         "type": "cloze",
-        "prompt": "Complete: She finished the report _____ before the deadline.",
+        "prompt": "Complete: _____ send the report by Friday.",
         "answer": "please",
-        "modelAnswer": "She finished the report please before the deadline.",
+        "modelAnswer": "Please send the report by Friday.",
         "checkpoints": [
           "please"
         ]
@@ -86923,7 +86923,7 @@
         "id": "core-cae355b615b613-sentence",
         "type": "sentence",
         "prompt": "用 “please” 写一句你真实会说的话。",
-        "modelAnswer": "She finished the report please before the deadline.",
+        "modelAnswer": "Please send the report by Friday.",
         "checkpoints": [
           "please"
         ]
@@ -87386,7 +87386,7 @@
     "lemma": "recognize",
     "senseKey": "core-100cdb5ac313",
     "zhGloss": "认出",
-    "enDefinition": "be fully aware or cognizant of",
+    "enDefinition": "to identify someone or something because you have encountered them before",
     "partOfSpeech": "verb",
     "acceptedZhAnswers": [
       "认出"
@@ -87396,18 +87396,18 @@
     ],
     "examples": [
       {
-        "en": "We need to recognize before the deadline.",
-        "zh": "截止日期前我们需要认出。"
+        "en": "I did not recognize him at first.",
+        "zh": "我起初没有认出他。"
       },
       {
-        "en": "They decided to recognize the risky option.",
-        "zh": "他们决定认出那个高风险选项。"
+        "en": "Can you recognize the building in this photograph?",
+        "zh": "你能认出这张照片里的建筑吗？"
       }
     ],
     "collocations": [
-      "need to recognize",
-      "please recognize",
-      "refuse to recognize"
+      "recognize a face",
+      "recognize a voice",
+      "recognize someone immediately"
     ],
     "source": "seed",
     "priority": 8,
@@ -87416,9 +87416,9 @@
       {
         "id": "core-3dbcdc08e11750-cloze",
         "type": "cloze",
-        "prompt": "Complete: We need to _____ before the deadline.",
+        "prompt": "Complete: I did not _____ him at first.",
         "answer": "recognize",
-        "modelAnswer": "We need to recognize before the deadline.",
+        "modelAnswer": "I did not recognize him at first.",
         "checkpoints": [
           "recognize"
         ]
@@ -87427,7 +87427,7 @@
         "id": "core-3dbcdc08e11750-sentence",
         "type": "sentence",
         "prompt": "用 “recognize” 写一句你真实会说的话。",
-        "modelAnswer": "We need to recognize before the deadline.",
+        "modelAnswer": "I did not recognize him at first.",
         "checkpoints": [
           "recognize"
         ]
@@ -88236,18 +88236,18 @@
     ],
     "examples": [
       {
-        "en": "Please suffer the delivery date in writing.",
-        "zh": "请书面遭受交货日期。"
+        "en": "Small firms may suffer heavy losses after a flood.",
+        "zh": "小企业可能在洪水后遭受重大损失。"
       },
       {
-        "en": "Can you suffer the latest figures?",
-        "zh": "你能遭受最新数字吗？"
+        "en": "Passengers suffer delays when the line is closed.",
+        "zh": "线路关闭时，乘客会遭遇延误。"
       }
     ],
     "collocations": [
-      "need to suffer",
-      "please suffer",
-      "refuse to suffer"
+      "suffer losses",
+      "suffer damage",
+      "suffer delays"
     ],
     "source": "seed",
     "priority": 8,
@@ -88256,9 +88256,9 @@
       {
         "id": "core-6df580aee7e3c8-cloze",
         "type": "cloze",
-        "prompt": "Complete: Please _____ the delivery date in writing.",
+        "prompt": "Complete: Small firms may _____ heavy losses after a flood.",
         "answer": "suffer",
-        "modelAnswer": "Please suffer the delivery date in writing.",
+        "modelAnswer": "Small firms may suffer heavy losses after a flood.",
         "checkpoints": [
           "suffer"
         ]
@@ -88267,7 +88267,7 @@
         "id": "core-6df580aee7e3c8-sentence",
         "type": "sentence",
         "prompt": "用 “suffer” 写一句你真实会说的话。",
-        "modelAnswer": "Please suffer the delivery date in writing.",
+        "modelAnswer": "Small firms may suffer heavy losses after a flood.",
         "checkpoints": [
           "suffer"
         ]
@@ -95627,18 +95627,18 @@
     ],
     "examples": [
       {
-        "en": "Please use “travel” correctly in your essay.",
-        "zh": "请在作文里正确使用「旅行」。"
+        "en": "Air travel can be tiring on a long journey.",
+        "zh": "长途航空旅行可能令人疲惫。"
       },
       {
-        "en": "Can you explain “travel” in one sentence?",
-        "zh": "你能用一句话解释「旅行」吗？"
+        "en": "Her job involves frequent travel.",
+        "zh": "她的工作需要频繁旅行。"
       }
     ],
     "collocations": [
-      "prepare the travel",
-      "bring the travel",
-      "file the travel"
+      "air travel",
+      "business travel",
+      "travel arrangements"
     ],
     "source": "seed",
     "priority": 8,
@@ -95647,9 +95647,9 @@
       {
         "id": "core-f7956b2763e6ff-cloze",
         "type": "cloze",
-        "prompt": "Complete: Please use “_____” correctly in your essay.",
+        "prompt": "Complete: Air _____ can be tiring on a long journey.",
         "answer": "travel",
-        "modelAnswer": "Please use “travel” correctly in your essay.",
+        "modelAnswer": "Air travel can be tiring on a long journey.",
         "checkpoints": [
           "travel"
         ]
@@ -95658,7 +95658,7 @@
         "id": "core-f7956b2763e6ff-sentence",
         "type": "sentence",
         "prompt": "用 “travel” 写一句你真实会说的话。",
-        "modelAnswer": "Please use “travel” correctly in your essay.",
+        "modelAnswer": "Air travel can be tiring on a long journey.",
         "checkpoints": [
           "travel"
         ]
@@ -105025,7 +105025,7 @@
     "lemma": "equal",
     "senseKey": "core-46b72e66677e",
     "zhGloss": "对手",
-    "enDefinition": "be identical or equivalent to",
+    "enDefinition": "a person or thing with the same ability, status, or value as another",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "对手"
@@ -105035,18 +105035,18 @@
     ],
     "examples": [
       {
-        "en": "Can you explain “equal” in one sentence?",
-        "zh": "你能用一句话解释「对手」吗？"
+        "en": "She has no equal in this field.",
+        "zh": "在这个领域她没有对手。"
       },
       {
-        "en": "Please use “equal” correctly in your essay.",
-        "zh": "请在作文里正确使用「对手」。"
+        "en": "The younger player finally met his equal in the final.",
+        "zh": "这位年轻选手终于在决赛中遇到了旗鼓相当的对手。"
       }
     ],
     "collocations": [
-      "explain “equal”",
-      "use “equal”",
-      "learn “equal”"
+      "have no equal",
+      "meet one’s equal",
+      "treat someone as an equal"
     ],
     "source": "seed",
     "priority": 6,
@@ -105055,9 +105055,9 @@
       {
         "id": "core-f57b2d312d9efe-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you explain “_____” in one sentence?",
+        "prompt": "Complete: She has no _____ in this field.",
         "answer": "equal",
-        "modelAnswer": "Can you explain “equal” in one sentence?",
+        "modelAnswer": "She has no equal in this field.",
         "checkpoints": [
           "equal"
         ]
@@ -105066,7 +105066,7 @@
         "id": "core-f57b2d312d9efe-sentence",
         "type": "sentence",
         "prompt": "用 “equal” 写一句你真实会说的话。",
-        "modelAnswer": "Can you explain “equal” in one sentence?",
+        "modelAnswer": "She has no equal in this field.",
         "checkpoints": [
           "equal"
         ]
@@ -106144,29 +106144,29 @@
     "expression": "secure",
     "lemma": "secure",
     "senseKey": "core-cb19520ce737",
-    "zhGloss": "无虑的",
-    "enDefinition": "assure payment of",
+    "zhGloss": "安心的",
+    "enDefinition": "feeling safe and confident, without fear or worry",
     "partOfSpeech": "adjective",
     "acceptedZhAnswers": [
-      "无虑的"
+      "安心的"
     ],
     "acceptedEnVariants": [
       "secure"
     ],
     "examples": [
       {
-        "en": "Is the apartment secure?",
-        "zh": "这套公寓是无虑的的吗？"
+        "en": "A reliable income helps her feel secure.",
+        "zh": "稳定的收入让她感到安心。"
       },
       {
-        "en": "The terms are secure, so we can still discuss price.",
-        "zh": "条款是无虑的的，所以价格仍可谈。"
+        "en": "The children feel secure in a familiar environment.",
+        "zh": "孩子们在熟悉的环境里感到安心。"
       }
     ],
     "collocations": [
-      "a secure option",
-      "remain secure",
-      "secure terms"
+      "feel secure",
+      "emotionally secure",
+      "secure in the knowledge that"
     ],
     "source": "seed",
     "priority": 6,
@@ -106175,9 +106175,9 @@
       {
         "id": "core-d015cc465bdb4e-cloze",
         "type": "cloze",
-        "prompt": "Complete: Is the apartment _____?",
+        "prompt": "Complete: A reliable income helps her feel _____.",
         "answer": "secure",
-        "modelAnswer": "Is the apartment secure?",
+        "modelAnswer": "A reliable income helps her feel secure.",
         "checkpoints": [
           "secure"
         ]
@@ -106186,7 +106186,7 @@
         "id": "core-d015cc465bdb4e-sentence",
         "type": "sentence",
         "prompt": "用 “secure” 写一句你真实会说的话。",
-        "modelAnswer": "Is the apartment secure?",
+        "modelAnswer": "A reliable income helps her feel secure.",
         "checkpoints": [
           "secure"
         ]
@@ -106435,18 +106435,18 @@
     ],
     "examples": [
       {
-        "en": "We discussed “escape” in today’s tutorial.",
-        "zh": "今天的辅导课我们讨论了「逃亡」。"
+        "en": "The police blocked every possible route of escape.",
+        "zh": "警方封锁了所有可能的逃亡路线。"
       },
       {
-        "en": "The article mentions “escape” several times.",
-        "zh": "这篇文章多次提到「逃亡」。"
+        "en": "The prisoner’s escape was discovered at dawn.",
+        "zh": "囚犯的逃亡在黎明时被发现。"
       }
     ],
     "collocations": [
-      "prepare the escape",
-      "bring the escape",
-      "file the escape"
+      "make an escape",
+      "route of escape",
+      "prevent an escape"
     ],
     "source": "seed",
     "priority": 6,
@@ -106455,9 +106455,9 @@
       {
         "id": "core-cdecabe1520a39-cloze",
         "type": "cloze",
-        "prompt": "Complete: We discussed “_____” in today’s tutorial.",
+        "prompt": "Complete: The police blocked every possible route of _____.",
         "answer": "escape",
-        "modelAnswer": "We discussed “escape” in today’s tutorial.",
+        "modelAnswer": "The police blocked every possible route of escape.",
         "checkpoints": [
           "escape"
         ]
@@ -106466,7 +106466,7 @@
         "id": "core-cdecabe1520a39-sentence",
         "type": "sentence",
         "prompt": "用 “escape” 写一句你真实会说的话。",
-        "modelAnswer": "We discussed “escape” in today’s tutorial.",
+        "modelAnswer": "The police blocked every possible route of escape.",
         "checkpoints": [
           "escape"
         ]
@@ -106760,29 +106760,29 @@
     "expression": "defend",
     "lemma": "defend",
     "senseKey": "core-1735e2a10858",
-    "zhGloss": "防护",
-    "enDefinition": "argue or speak in defense of",
+    "zhGloss": "保护",
+    "enDefinition": "to protect someone or something from attack, criticism, or harm",
     "partOfSpeech": "verb",
     "acceptedZhAnswers": [
-      "防护"
+      "保护"
     ],
     "acceptedEnVariants": [
       "defend"
     ],
     "examples": [
       {
-        "en": "We need to defend before the deadline.",
-        "zh": "截止日期前我们需要防护。"
+        "en": "A strong wall can defend the village against attack.",
+        "zh": "坚固的城墙可以保护村庄免遭攻击。"
       },
       {
-        "en": "They decided to defend the risky option.",
-        "zh": "他们决定防护那个高风险选项。"
+        "en": "The team must defend its lead in the final minutes.",
+        "zh": "球队必须在最后几分钟保住领先优势。"
       }
     ],
     "collocations": [
-      "need to defend",
-      "please defend",
-      "refuse to defend"
+      "defend a client",
+      "defend a position",
+      "defend against criticism"
     ],
     "source": "seed",
     "priority": 6,
@@ -106791,9 +106791,9 @@
       {
         "id": "core-a4555a4be0d70c-cloze",
         "type": "cloze",
-        "prompt": "Complete: We need to _____ before the deadline.",
+        "prompt": "Complete: A strong wall can _____ the village against attack.",
         "answer": "defend",
-        "modelAnswer": "We need to defend before the deadline.",
+        "modelAnswer": "A strong wall can defend the village against attack.",
         "checkpoints": [
           "defend"
         ]
@@ -106802,7 +106802,7 @@
         "id": "core-a4555a4be0d70c-sentence",
         "type": "sentence",
         "prompt": "用 “defend” 写一句你真实会说的话。",
-        "modelAnswer": "We need to defend before the deadline.",
+        "modelAnswer": "A strong wall can defend the village against attack.",
         "checkpoints": [
           "defend"
         ]
@@ -106883,18 +106883,18 @@
     ],
     "examples": [
       {
-        "en": "We need to approve before the deadline.",
-        "zh": "截止日期前我们需要赞同。"
+        "en": "The board must approve the annual budget.",
+        "zh": "董事会必须批准年度预算。"
       },
       {
-        "en": "They decided to approve the risky option.",
-        "zh": "他们决定赞同那个高风险选项。"
+        "en": "Do you approve of the proposed changes?",
+        "zh": "你赞同这些拟议的改动吗？"
       }
     ],
     "collocations": [
-      "need to approve",
-      "please approve",
-      "refuse to approve"
+      "approve a budget",
+      "approve a proposal",
+      "approve of something"
     ],
     "source": "seed",
     "priority": 6,
@@ -106903,9 +106903,9 @@
       {
         "id": "core-e4788b8afee677-cloze",
         "type": "cloze",
-        "prompt": "Complete: We need to _____ before the deadline.",
+        "prompt": "Complete: The board must _____ the annual budget.",
         "answer": "approve",
-        "modelAnswer": "We need to approve before the deadline.",
+        "modelAnswer": "The board must approve the annual budget.",
         "checkpoints": [
           "approve"
         ]
@@ -106914,7 +106914,7 @@
         "id": "core-e4788b8afee677-sentence",
         "type": "sentence",
         "prompt": "用 “approve” 写一句你真实会说的话。",
-        "modelAnswer": "We need to approve before the deadline.",
+        "modelAnswer": "The board must approve the annual budget.",
         "checkpoints": [
           "approve"
         ]
@@ -107432,29 +107432,29 @@
     "expression": "except",
     "lemma": "except",
     "senseKey": "core-017931b1dc1a",
-    "zhGloss": "除",
-    "enDefinition": "take exception to",
+    "zhGloss": "排除",
+    "enDefinition": "to leave someone or something out of a group or statement",
     "partOfSpeech": "verb",
     "acceptedZhAnswers": [
-      "除"
+      "排除"
     ],
     "acceptedEnVariants": [
       "except"
     ],
     "examples": [
       {
-        "en": "We need to except before the deadline.",
-        "zh": "截止日期前我们需要除。"
+        "en": "The policy will except students from the additional charge.",
+        "zh": "这项规定将把学生排除在额外收费范围之外。"
       },
       {
-        "en": "They decided to except the risky option.",
-        "zh": "他们决定除那个高风险选项。"
+        "en": "We cannot except one applicant without a clear reason.",
+        "zh": "没有明确理由，我们不能把某位申请者排除在外。"
       }
     ],
     "collocations": [
-      "need to except",
-      "please except",
-      "refuse to except"
+      "except someone from",
+      "except a case",
+      "except an applicant"
     ],
     "source": "seed",
     "priority": 6,
@@ -107463,9 +107463,9 @@
       {
         "id": "core-672fccd70b672e-cloze",
         "type": "cloze",
-        "prompt": "Complete: We need to _____ before the deadline.",
+        "prompt": "Complete: The policy will _____ students from the additional charge.",
         "answer": "except",
-        "modelAnswer": "We need to except before the deadline.",
+        "modelAnswer": "The policy will except students from the additional charge.",
         "checkpoints": [
           "except"
         ]
@@ -107474,7 +107474,7 @@
         "id": "core-672fccd70b672e-sentence",
         "type": "sentence",
         "prompt": "用 “except” 写一句你真实会说的话。",
-        "modelAnswer": "We need to except before the deadline.",
+        "modelAnswer": "The policy will except students from the additional charge.",
         "checkpoints": [
           "except"
         ]
@@ -110859,18 +110859,18 @@
     ],
     "examples": [
       {
-        "en": "Please relate the delivery date in writing.",
-        "zh": "请书面讲交货日期。"
+        "en": "The witness will relate what happened that evening.",
+        "zh": "证人将讲述当晚发生的事情。"
       },
       {
-        "en": "Can you relate the latest figures?",
-        "zh": "你能讲最新数字吗？"
+        "en": "Please relate the events in the order they occurred.",
+        "zh": "请按发生顺序讲述这些事件。"
       }
     ],
     "collocations": [
-      "need to relate",
-      "please relate",
-      "refuse to relate"
+      "relate a story",
+      "relate the events",
+      "relate an experience"
     ],
     "source": "seed",
     "priority": 6,
@@ -110879,9 +110879,9 @@
       {
         "id": "core-84774ba193af24-cloze",
         "type": "cloze",
-        "prompt": "Complete: Please _____ the delivery date in writing.",
+        "prompt": "Complete: The witness will _____ what happened that evening.",
         "answer": "relate",
-        "modelAnswer": "Please relate the delivery date in writing.",
+        "modelAnswer": "The witness will relate what happened that evening.",
         "checkpoints": [
           "relate"
         ]
@@ -110890,7 +110890,7 @@
         "id": "core-84774ba193af24-sentence",
         "type": "sentence",
         "prompt": "用 “relate” 写一句你真实会说的话。",
-        "modelAnswer": "Please relate the delivery date in writing.",
+        "modelAnswer": "The witness will relate what happened that evening.",
         "checkpoints": [
           "relate"
         ]
@@ -111027,18 +111027,18 @@
     ],
     "examples": [
       {
-        "en": "They decided to obtain the risky option.",
-        "zh": "他们决定获得那个高风险选项。"
+        "en": "You must obtain permission before entering the archive.",
+        "zh": "进入档案室前必须获得许可。"
       },
       {
-        "en": "Please obtain the delivery date in writing.",
-        "zh": "请书面获得交货日期。"
+        "en": "We can obtain a copy of the report from the library.",
+        "zh": "我们可以从图书馆获得这份报告的副本。"
       }
     ],
     "collocations": [
-      "need to obtain",
-      "please obtain",
-      "refuse to obtain"
+      "obtain permission",
+      "obtain information",
+      "obtain a copy"
     ],
     "source": "seed",
     "priority": 6,
@@ -111047,9 +111047,9 @@
       {
         "id": "core-b5c5697f83be28-cloze",
         "type": "cloze",
-        "prompt": "Complete: They decided to _____ the risky option.",
+        "prompt": "Complete: You must _____ permission before entering the archive.",
         "answer": "obtain",
-        "modelAnswer": "They decided to obtain the risky option.",
+        "modelAnswer": "You must obtain permission before entering the archive.",
         "checkpoints": [
           "obtain"
         ]
@@ -111058,7 +111058,7 @@
         "id": "core-b5c5697f83be28-sentence",
         "type": "sentence",
         "prompt": "用 “obtain” 写一句你真实会说的话。",
-        "modelAnswer": "They decided to obtain the risky option.",
+        "modelAnswer": "You must obtain permission before entering the archive.",
         "checkpoints": [
           "obtain"
         ]
@@ -119472,29 +119472,29 @@
     "expression": "capture",
     "lemma": "capture",
     "senseKey": "core-96648f5480db",
-    "zhGloss": "抓取",
-    "enDefinition": "the act of forcibly dispossessing an owner of property",
+    "zhGloss": "捕获",
+    "enDefinition": "the act of catching someone or something and bringing them under control",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
-      "抓取"
+      "捕获"
     ],
     "acceptedEnVariants": [
       "capture"
     ],
     "examples": [
       {
-        "en": "Please use “capture” correctly in your essay.",
-        "zh": "请在作文里正确使用「抓取」。"
+        "en": "The rescue team planned the safe capture of the escaped animal.",
+        "zh": "救援队计划安全捕获逃出的动物。"
       },
       {
-        "en": "Can you explain “capture” in one sentence?",
-        "zh": "你能用一句话解释「抓取」吗？"
+        "en": "The capture of the suspect ended the search.",
+        "zh": "嫌疑人的落网结束了搜捕。"
       }
     ],
     "collocations": [
-      "prepare the capture",
-      "bring the capture",
-      "file the capture"
+      "capture of a suspect",
+      "safe capture",
+      "avoid capture"
     ],
     "source": "seed",
     "priority": 6,
@@ -119503,9 +119503,9 @@
       {
         "id": "core-fbc259d1f78c5c-cloze",
         "type": "cloze",
-        "prompt": "Complete: Please use “_____” correctly in your essay.",
+        "prompt": "Complete: The rescue team planned the safe _____ of the escaped animal.",
         "answer": "capture",
-        "modelAnswer": "Please use “capture” correctly in your essay.",
+        "modelAnswer": "The rescue team planned the safe capture of the escaped animal.",
         "checkpoints": [
           "capture"
         ]
@@ -119514,7 +119514,7 @@
         "id": "core-fbc259d1f78c5c-sentence",
         "type": "sentence",
         "prompt": "用 “capture” 写一句你真实会说的话。",
-        "modelAnswer": "Please use “capture” correctly in your essay.",
+        "modelAnswer": "The rescue team planned the safe capture of the escaped animal.",
         "checkpoints": [
           "capture"
         ]
@@ -120817,7 +120817,7 @@
     "lemma": "passage",
     "senseKey": "core-25e51e36139c",
     "zhGloss": "通道",
-    "enDefinition": "the act of passing from one state or place to the next",
+    "enDefinition": "a corridor or narrow way through which people can move",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "通道"
@@ -120827,18 +120827,18 @@
     ],
     "examples": [
       {
-        "en": "Please use “passage” correctly in your essay.",
-        "zh": "请在作文里正确使用「通道」。"
+        "en": "A narrow passage connects the kitchen to the courtyard.",
+        "zh": "一条狭窄通道连接厨房和庭院。"
       },
       {
-        "en": "Can you explain “passage” in one sentence?",
-        "zh": "你能用一句话解释「通道」吗？"
+        "en": "Keep the passage clear in case of an emergency.",
+        "zh": "请保持通道畅通，以备紧急情况。"
       }
     ],
     "collocations": [
-      "prepare the passage",
-      "bring the passage",
-      "file the passage"
+      "narrow passage",
+      "underground passage",
+      "passage entrance"
     ],
     "source": "seed",
     "priority": 6,
@@ -120847,9 +120847,9 @@
       {
         "id": "core-a62731f64fcef4-cloze",
         "type": "cloze",
-        "prompt": "Complete: Please use “_____” correctly in your essay.",
+        "prompt": "Complete: A narrow _____ connects the kitchen to the courtyard.",
         "answer": "passage",
-        "modelAnswer": "Please use “passage” correctly in your essay.",
+        "modelAnswer": "A narrow passage connects the kitchen to the courtyard.",
         "checkpoints": [
           "passage"
         ]
@@ -120858,7 +120858,7 @@
         "id": "core-a62731f64fcef4-sentence",
         "type": "sentence",
         "prompt": "用 “passage” 写一句你真实会说的话。",
-        "modelAnswer": "Please use “passage” correctly in your essay.",
+        "modelAnswer": "A narrow passage connects the kitchen to the courtyard.",
         "checkpoints": [
           "passage"
         ]
@@ -122216,29 +122216,29 @@
     "expression": "somewhat",
     "lemma": "somewhat",
     "senseKey": "core-4e7f56a82a38",
-    "zhGloss": "某物",
-    "enDefinition": "to a small degree or extent",
-    "partOfSpeech": "noun",
+    "zhGloss": "有点",
+    "enDefinition": "to a limited degree; a little rather than completely",
+    "partOfSpeech": "adverb",
     "acceptedZhAnswers": [
-      "某物"
+      "有点"
     ],
     "acceptedEnVariants": [
       "somewhat"
     ],
     "examples": [
       {
-        "en": "Please use “somewhat” correctly in your essay.",
-        "zh": "请在作文里正确使用「某物」。"
+        "en": "The revised plan is somewhat simpler than the original.",
+        "zh": "修改后的计划比原计划简单一些。"
       },
       {
-        "en": "Can you explain “somewhat” in one sentence?",
-        "zh": "你能用一句话解释「某物」吗？"
+        "en": "I was somewhat surprised by the result.",
+        "zh": "这个结果让我有点惊讶。"
       }
     ],
     "collocations": [
-      "prepare the somewhat",
-      "bring the somewhat",
-      "file the somewhat"
+      "somewhat different",
+      "somewhat surprised",
+      "somewhat easier"
     ],
     "source": "seed",
     "priority": 6,
@@ -122247,9 +122247,9 @@
       {
         "id": "core-1899fd45244bce-cloze",
         "type": "cloze",
-        "prompt": "Complete: Please use “_____” correctly in your essay.",
+        "prompt": "Complete: The revised plan is _____ simpler than the original.",
         "answer": "somewhat",
-        "modelAnswer": "Please use “somewhat” correctly in your essay.",
+        "modelAnswer": "The revised plan is somewhat simpler than the original.",
         "checkpoints": [
           "somewhat"
         ]
@@ -122258,7 +122258,7 @@
         "id": "core-1899fd45244bce-sentence",
         "type": "sentence",
         "prompt": "用 “somewhat” 写一句你真实会说的话。",
-        "modelAnswer": "Please use “somewhat” correctly in your essay.",
+        "modelAnswer": "The revised plan is somewhat simpler than the original.",
         "checkpoints": [
           "somewhat"
         ]
@@ -122395,18 +122395,18 @@
     ],
     "examples": [
       {
-        "en": "We need to accompany before the deadline.",
-        "zh": "截止日期前我们需要陪伴。"
+        "en": "A colleague will accompany me to the meeting.",
+        "zh": "一位同事将陪我去开会。"
       },
       {
-        "en": "They decided to accompany the risky option.",
-        "zh": "他们决定陪伴那个高风险选项。"
+        "en": "Parents may accompany their children on the visit.",
+        "zh": "家长可以陪孩子参加这次参观。"
       }
     ],
     "collocations": [
-      "need to accompany",
-      "please accompany",
-      "refuse to accompany"
+      "accompany someone to",
+      "accompany a visitor",
+      "accompany a child"
     ],
     "source": "seed",
     "priority": 6,
@@ -122415,9 +122415,9 @@
       {
         "id": "core-84900cb68e875d-cloze",
         "type": "cloze",
-        "prompt": "Complete: We need to _____ before the deadline.",
+        "prompt": "Complete: A colleague will _____ me to the meeting.",
         "answer": "accompany",
-        "modelAnswer": "We need to accompany before the deadline.",
+        "modelAnswer": "A colleague will accompany me to the meeting.",
         "checkpoints": [
           "accompany"
         ]
@@ -122426,7 +122426,7 @@
         "id": "core-84900cb68e875d-sentence",
         "type": "sentence",
         "prompt": "用 “accompany” 写一句你真实会说的话。",
-        "modelAnswer": "We need to accompany before the deadline.",
+        "modelAnswer": "A colleague will accompany me to the meeting.",
         "checkpoints": [
           "accompany"
         ]
@@ -122787,18 +122787,18 @@
     ],
     "examples": [
       {
-        "en": "I will oppose with the supplier tomorrow.",
-        "zh": "我明天会与供应商反对。"
+        "en": "Several residents oppose the road-building proposal.",
+        "zh": "几位居民反对这项修路提案。"
       },
       {
-        "en": "We need to oppose before the deadline.",
-        "zh": "截止日期前我们需要反对。"
+        "en": "The committee may oppose any further increase in fees.",
+        "zh": "委员会可能反对进一步提高费用。"
       }
     ],
     "collocations": [
-      "need to oppose",
-      "please oppose",
-      "refuse to oppose"
+      "oppose a proposal",
+      "oppose a decision",
+      "strongly oppose"
     ],
     "source": "seed",
     "priority": 6,
@@ -122807,9 +122807,9 @@
       {
         "id": "core-35a522e9ebedfe-cloze",
         "type": "cloze",
-        "prompt": "Complete: I will _____ with the supplier tomorrow.",
+        "prompt": "Complete: Several residents _____ the road-building proposal.",
         "answer": "oppose",
-        "modelAnswer": "I will oppose with the supplier tomorrow.",
+        "modelAnswer": "Several residents oppose the road-building proposal.",
         "checkpoints": [
           "oppose"
         ]
@@ -122818,7 +122818,7 @@
         "id": "core-35a522e9ebedfe-sentence",
         "type": "sentence",
         "prompt": "用 “oppose” 写一句你真实会说的话。",
-        "modelAnswer": "I will oppose with the supplier tomorrow.",
+        "modelAnswer": "Several residents oppose the road-building proposal.",
         "checkpoints": [
           "oppose"
         ]
@@ -125755,18 +125755,18 @@
     ],
     "examples": [
       {
-        "en": "They decided to alter the risky option.",
-        "zh": "他们决定改变那个高风险选项。"
+        "en": "Please alter the delivery date on the order form.",
+        "zh": "请更改订单上的交货日期。"
       },
       {
-        "en": "Please alter the delivery date in writing.",
-        "zh": "请书面改变交货日期。"
+        "en": "A small change could alter the final result.",
+        "zh": "小小的变化就可能改变最终结果。"
       }
     ],
     "collocations": [
-      "need to alter",
-      "please alter",
-      "refuse to alter"
+      "alter a plan",
+      "alter the result",
+      "alter a date"
     ],
     "source": "seed",
     "priority": 6,
@@ -125775,9 +125775,9 @@
       {
         "id": "core-736d58ea8a0e11-cloze",
         "type": "cloze",
-        "prompt": "Complete: They decided to _____ the risky option.",
+        "prompt": "Complete: Please _____ the delivery date on the order form.",
         "answer": "alter",
-        "modelAnswer": "They decided to alter the risky option.",
+        "modelAnswer": "Please alter the delivery date on the order form.",
         "checkpoints": [
           "alter"
         ]
@@ -125786,7 +125786,7 @@
         "id": "core-736d58ea8a0e11-sentence",
         "type": "sentence",
         "prompt": "用 “alter” 写一句你真实会说的话。",
-        "modelAnswer": "They decided to alter the risky option.",
+        "modelAnswer": "Please alter the delivery date on the order form.",
         "checkpoints": [
           "alter"
         ]
@@ -126921,7 +126921,7 @@
     "lemma": "reckon",
     "senseKey": "core-ee1a17e7100a",
     "zhGloss": "计算",
-    "enDefinition": "take account of",
+    "enDefinition": "to calculate or estimate an amount or number",
     "partOfSpeech": "verb",
     "acceptedZhAnswers": [
       "计算"
@@ -126931,18 +126931,18 @@
     ],
     "examples": [
       {
-        "en": "Can you reckon the latest figures?",
-        "zh": "你能计算最新数字吗？"
+        "en": "We reckon the total cost at about two thousand ringgit.",
+        "zh": "我们估算总费用约为两千令吉。"
       },
       {
-        "en": "I will reckon with the supplier tomorrow.",
-        "zh": "我明天会与供应商计算。"
+        "en": "I reckon we will need six more chairs.",
+        "zh": "我估计我们还需要六把椅子。"
       }
     ],
     "collocations": [
-      "need to reckon",
-      "please reckon",
-      "refuse to reckon"
+      "reckon the cost",
+      "reckon that",
+      "reckon an amount at"
     ],
     "source": "seed",
     "priority": 6,
@@ -126951,9 +126951,9 @@
       {
         "id": "core-b66ea8d754da74-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you _____ the latest figures?",
+        "prompt": "Complete: We _____ the total cost at about two thousand ringgit.",
         "answer": "reckon",
-        "modelAnswer": "Can you reckon the latest figures?",
+        "modelAnswer": "We reckon the total cost at about two thousand ringgit.",
         "checkpoints": [
           "reckon"
         ]
@@ -126962,7 +126962,7 @@
         "id": "core-b66ea8d754da74-sentence",
         "type": "sentence",
         "prompt": "用 “reckon” 写一句你真实会说的话。",
-        "modelAnswer": "Can you reckon the latest figures?",
+        "modelAnswer": "We reckon the total cost at about two thousand ringgit.",
         "checkpoints": [
           "reckon"
         ]
@@ -127267,18 +127267,18 @@
     ],
     "examples": [
       {
-        "en": "We discussed “discovery” in today’s tutorial.",
-        "zh": "今天的辅导课我们讨论了「发现」。"
+        "en": "The discovery of the missing document solved the problem.",
+        "zh": "那份遗失文件的发现解决了问题。"
       },
       {
-        "en": "The article mentions “discovery” several times.",
-        "zh": "这篇文章多次提到「发现」。"
+        "en": "The team announced a major scientific discovery.",
+        "zh": "团队宣布了一项重要科学发现。"
       }
     ],
     "collocations": [
-      "prepare the discovery",
-      "bring the discovery",
-      "file the discovery"
+      "make a discovery",
+      "scientific discovery",
+      "discovery of evidence"
     ],
     "source": "seed",
     "priority": 6,
@@ -127287,9 +127287,9 @@
       {
         "id": "core-c2c45258cc99dd-cloze",
         "type": "cloze",
-        "prompt": "Complete: We discussed “_____” in today’s tutorial.",
+        "prompt": "Complete: The _____ of the missing document solved the problem.",
         "answer": "discovery",
-        "modelAnswer": "We discussed “discovery” in today’s tutorial.",
+        "modelAnswer": "The discovery of the missing document solved the problem.",
         "checkpoints": [
           "discovery"
         ]
@@ -127298,7 +127298,7 @@
         "id": "core-c2c45258cc99dd-sentence",
         "type": "sentence",
         "prompt": "用 “discovery” 写一句你真实会说的话。",
-        "modelAnswer": "We discussed “discovery” in today’s tutorial.",
+        "modelAnswer": "The discovery of the missing document solved the problem.",
         "checkpoints": [
           "discovery"
         ]
@@ -135656,29 +135656,29 @@
     "expression": "entitle",
     "lemma": "entitle",
     "senseKey": "core-eb6bf9034d5d",
-    "zhGloss": "给权利",
-    "enDefinition": "give the right to",
+    "zhGloss": "使有权",
+    "enDefinition": "to give someone a right to receive something or to do something",
     "partOfSpeech": "verb",
     "acceptedZhAnswers": [
-      "给权利"
+      "使有权"
     ],
     "acceptedEnVariants": [
       "entitle"
     ],
     "examples": [
       {
-        "en": "We need to entitle before the deadline.",
-        "zh": "截止日期前我们需要给权利。"
+        "en": "The membership fee will entitle you to use the library.",
+        "zh": "缴纳会费将使你有权使用图书馆。"
       },
       {
-        "en": "They decided to entitle the risky option.",
-        "zh": "他们决定给权利那个高风险选项。"
+        "en": "These tickets entitle visitors to free entry.",
+        "zh": "这些门票使访客有权免费入场。"
       }
     ],
     "collocations": [
-      "need to entitle",
-      "please entitle",
-      "refuse to entitle"
+      "entitle someone to",
+      "entitle someone to receive",
+      "entitle a member to use"
     ],
     "source": "seed",
     "priority": 6,
@@ -135687,9 +135687,9 @@
       {
         "id": "core-18cffff3f5a8d5-cloze",
         "type": "cloze",
-        "prompt": "Complete: We need to _____ before the deadline.",
+        "prompt": "Complete: The membership fee will _____ you to use the library.",
         "answer": "entitle",
-        "modelAnswer": "We need to entitle before the deadline.",
+        "modelAnswer": "The membership fee will entitle you to use the library.",
         "checkpoints": [
           "entitle"
         ]
@@ -135698,7 +135698,7 @@
         "id": "core-18cffff3f5a8d5-sentence",
         "type": "sentence",
         "prompt": "用 “entitle” 写一句你真实会说的话。",
-        "modelAnswer": "We need to entitle before the deadline.",
+        "modelAnswer": "The membership fee will entitle you to use the library.",
         "checkpoints": [
           "entitle"
         ]
@@ -136721,7 +136721,7 @@
     "lemma": "impress",
     "senseKey": "core-cd9e2ee072be",
     "zhGloss": "印象",
-    "enDefinition": "the act of coercing someone into government service",
+    "enDefinition": "a lasting mark or influence left by someone or something",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "印象"
@@ -136731,18 +136731,18 @@
     ],
     "examples": [
       {
-        "en": "We discussed “impress” in today’s tutorial.",
-        "zh": "今天的辅导课我们讨论了「印象」。"
+        "en": "The town still bears the impress of its industrial past.",
+        "zh": "这座小镇仍带有其工业历史的印记。"
       },
       {
-        "en": "The article mentions “impress” several times.",
-        "zh": "这篇文章多次提到「印象」。"
+        "en": "Her teaching left a deep impress on his thinking.",
+        "zh": "她的教学对他的思想留下了深刻影响。"
       }
     ],
     "collocations": [
-      "explain “impress”",
-      "use “impress”",
-      "learn “impress”"
+      "bear the impress of",
+      "leave an impress on",
+      "a lasting impress"
     ],
     "source": "seed",
     "priority": 6,
@@ -136751,9 +136751,9 @@
       {
         "id": "core-ad68fcd96e5cda-cloze",
         "type": "cloze",
-        "prompt": "Complete: We discussed “_____” in today’s tutorial.",
+        "prompt": "Complete: The town still bears the _____ of its industrial past.",
         "answer": "impress",
-        "modelAnswer": "We discussed “impress” in today’s tutorial.",
+        "modelAnswer": "The town still bears the impress of its industrial past.",
         "checkpoints": [
           "impress"
         ]
@@ -136762,7 +136762,7 @@
         "id": "core-ad68fcd96e5cda-sentence",
         "type": "sentence",
         "prompt": "用 “impress” 写一句你真实会说的话。",
-        "modelAnswer": "We discussed “impress” in today’s tutorial.",
+        "modelAnswer": "The town still bears the impress of its industrial past.",
         "checkpoints": [
           "impress"
         ]
@@ -138176,29 +138176,29 @@
     "expression": "admire",
     "lemma": "admire",
     "senseKey": "core-939967e1aac1",
-    "zhGloss": "赞美",
+    "zhGloss": "钦佩",
     "enDefinition": "feel admiration for",
     "partOfSpeech": "verb",
     "acceptedZhAnswers": [
-      "赞美"
+      "钦佩"
     ],
     "acceptedEnVariants": [
       "admire"
     ],
     "examples": [
       {
-        "en": "We need to admire before the deadline.",
-        "zh": "截止日期前我们需要赞美。"
+        "en": "I admire her patience with new students.",
+        "zh": "我钦佩她对新生的耐心。"
       },
       {
-        "en": "They decided to admire the risky option.",
-        "zh": "他们决定赞美那个高风险选项。"
+        "en": "Many colleagues admire his clear explanations.",
+        "zh": "许多同事赞赏他清楚的讲解。"
       }
     ],
     "collocations": [
-      "need to admire",
-      "please admire",
-      "refuse to admire"
+      "admire someone for",
+      "admire someone’s work",
+      "greatly admire"
     ],
     "source": "seed",
     "priority": 6,
@@ -138207,9 +138207,9 @@
       {
         "id": "core-af964fdf7b367e-cloze",
         "type": "cloze",
-        "prompt": "Complete: We need to _____ before the deadline.",
+        "prompt": "Complete: I _____ her patience with new students.",
         "answer": "admire",
-        "modelAnswer": "We need to admire before the deadline.",
+        "modelAnswer": "I admire her patience with new students.",
         "checkpoints": [
           "admire"
         ]
@@ -138218,7 +138218,7 @@
         "id": "core-af964fdf7b367e-sentence",
         "type": "sentence",
         "prompt": "用 “admire” 写一句你真实会说的话。",
-        "modelAnswer": "We need to admire before the deadline.",
+        "modelAnswer": "I admire her patience with new students.",
         "checkpoints": [
           "admire"
         ]
@@ -140259,18 +140259,18 @@
     ],
     "examples": [
       {
-        "en": "They decided to advertise the risky option.",
-        "zh": "他们决定做广告那个高风险选项。"
+        "en": "The shop will advertise its summer sale online.",
+        "zh": "这家店将在网上为夏季促销做广告。"
       },
       {
-        "en": "Please advertise the delivery date in writing.",
-        "zh": "请书面做广告交货日期。"
+        "en": "We plan to advertise the vacant position next week.",
+        "zh": "我们计划下周刊登这个空缺职位的招聘广告。"
       }
     ],
     "collocations": [
-      "need to advertise",
-      "please advertise",
-      "refuse to advertise"
+      "advertise a product",
+      "advertise a vacancy",
+      "advertise online"
     ],
     "source": "seed",
     "priority": 4,
@@ -140279,9 +140279,9 @@
       {
         "id": "core-210787a5d144bc-cloze",
         "type": "cloze",
-        "prompt": "Complete: They decided to _____ the risky option.",
+        "prompt": "Complete: The shop will _____ its summer sale online.",
         "answer": "advertise",
-        "modelAnswer": "They decided to advertise the risky option.",
+        "modelAnswer": "The shop will advertise its summer sale online.",
         "checkpoints": [
           "advertise"
         ]
@@ -140290,7 +140290,7 @@
         "id": "core-210787a5d144bc-sentence",
         "type": "sentence",
         "prompt": "用 “advertise” 写一句你真实会说的话。",
-        "modelAnswer": "They decided to advertise the risky option.",
+        "modelAnswer": "The shop will advertise its summer sale online.",
         "checkpoints": [
           "advertise"
         ]
@@ -140651,18 +140651,18 @@
     ],
     "examples": [
       {
-        "en": "Can you entertain the latest figures?",
-        "zh": "你能娱乐最新数字吗？"
+        "en": "The performers entertain the audience with music.",
+        "zh": "表演者用音乐给观众带来欢乐。"
       },
       {
-        "en": "I will entertain with the supplier tomorrow.",
-        "zh": "我明天会与供应商娱乐。"
+        "en": "We need games to entertain the children during the trip.",
+        "zh": "旅途中我们需要游戏来让孩子们开心。"
       }
     ],
     "collocations": [
-      "need to entertain",
-      "please entertain",
-      "refuse to entertain"
+      "entertain an audience",
+      "entertain children",
+      "entertain guests"
     ],
     "source": "seed",
     "priority": 4,
@@ -140671,9 +140671,9 @@
       {
         "id": "core-52a0a5c23a0af9-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you _____ the latest figures?",
+        "prompt": "Complete: The performers _____ the audience with music.",
         "answer": "entertain",
-        "modelAnswer": "Can you entertain the latest figures?",
+        "modelAnswer": "The performers entertain the audience with music.",
         "checkpoints": [
           "entertain"
         ]
@@ -140682,7 +140682,7 @@
         "id": "core-52a0a5c23a0af9-sentence",
         "type": "sentence",
         "prompt": "用 “entertain” 写一句你真实会说的话。",
-        "modelAnswer": "Can you entertain the latest figures?",
+        "modelAnswer": "The performers entertain the audience with music.",
         "checkpoints": [
           "entertain"
         ]
@@ -141324,18 +141324,18 @@
     ],
     "examples": [
       {
-        "en": "I looked up “consideration” before the quiz.",
-        "zh": "小测前我查阅了「考虑」。"
+        "en": "The proposal needs careful consideration.",
+        "zh": "这项提案需要仔细考虑。"
       },
       {
-        "en": "We discussed “consideration” in today’s tutorial.",
-        "zh": "今天的辅导课我们讨论了「考虑」。"
+        "en": "After much consideration, we decided to postpone the launch.",
+        "zh": "经过充分考虑，我们决定推迟发布。"
       }
     ],
     "collocations": [
-      "calculate the consideration",
-      "interpret the consideration",
-      "compare the consideration"
+      "careful consideration",
+      "give something consideration",
+      "take something into consideration"
     ],
     "source": "seed",
     "priority": 4,
@@ -141344,9 +141344,9 @@
       {
         "id": "core-5e05bd281cbeb3-cloze",
         "type": "cloze",
-        "prompt": "Complete: I looked up “_____” before the quiz.",
+        "prompt": "Complete: The proposal needs careful _____.",
         "answer": "consideration",
-        "modelAnswer": "I looked up “consideration” before the quiz.",
+        "modelAnswer": "The proposal needs careful consideration.",
         "checkpoints": [
           "consideration"
         ]
@@ -141355,7 +141355,7 @@
         "id": "core-5e05bd281cbeb3-sentence",
         "type": "sentence",
         "prompt": "用 “consideration” 写一句你真实会说的话。",
-        "modelAnswer": "I looked up “consideration” before the quiz.",
+        "modelAnswer": "The proposal needs careful consideration.",
         "checkpoints": [
           "consideration"
         ]
@@ -141482,7 +141482,7 @@
     "lemma": "introduction",
     "senseKey": "core-c4380b7d737c",
     "zhGloss": "介绍",
-    "enDefinition": "the act of beginning something new",
+    "enDefinition": "the act of presenting a person to someone who has not met them before",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "介绍"
@@ -141492,18 +141492,18 @@
     ],
     "examples": [
       {
-        "en": "Please use “introduction” correctly in your essay.",
-        "zh": "请在作文里正确使用「介绍」。"
+        "en": "After a brief introduction, the two colleagues shook hands.",
+        "zh": "简短介绍后，两位同事握了手。"
       },
       {
-        "en": "Can you explain “introduction” in one sentence?",
-        "zh": "你能用一句话解释「介绍」吗？"
+        "en": "Thank you for the introduction to your research supervisor.",
+        "zh": "谢谢你把我介绍给你的研究导师。"
       }
     ],
     "collocations": [
-      "explain “introduction”",
-      "use “introduction”",
-      "learn “introduction”"
+      "formal introduction",
+      "brief introduction",
+      "introduction to someone"
     ],
     "source": "seed",
     "priority": 4,
@@ -141512,9 +141512,9 @@
       {
         "id": "core-26aca7941a99d9-cloze",
         "type": "cloze",
-        "prompt": "Complete: Please use “_____” correctly in your essay.",
+        "prompt": "Complete: After a brief _____, the two colleagues shook hands.",
         "answer": "introduction",
-        "modelAnswer": "Please use “introduction” correctly in your essay.",
+        "modelAnswer": "After a brief introduction, the two colleagues shook hands.",
         "checkpoints": [
           "introduction"
         ]
@@ -141523,7 +141523,7 @@
         "id": "core-26aca7941a99d9-sentence",
         "type": "sentence",
         "prompt": "用 “introduction” 写一句你真实会说的话。",
-        "modelAnswer": "Please use “introduction” correctly in your essay.",
+        "modelAnswer": "After a brief introduction, the two colleagues shook hands.",
         "checkpoints": [
           "introduction"
         ]
@@ -142220,18 +142220,18 @@
     ],
     "examples": [
       {
-        "en": "The article mentions “prayer” several times.",
-        "zh": "这篇文章多次提到「祈祷」。"
+        "en": "The family gathered for evening prayer.",
+        "zh": "这家人聚在一起做晚间祈祷。"
       },
       {
-        "en": "Please use “prayer” correctly in your essay.",
-        "zh": "请在作文里正确使用「祈祷」。"
+        "en": "She spent a few quiet minutes in prayer.",
+        "zh": "她安静地祈祷了几分钟。"
       }
     ],
     "collocations": [
-      "prepare the prayer",
-      "bring the prayer",
-      "file the prayer"
+      "evening prayer",
+      "a moment of prayer",
+      "in prayer"
     ],
     "source": "seed",
     "priority": 4,
@@ -142240,9 +142240,9 @@
       {
         "id": "core-12df55dfe072a7-cloze",
         "type": "cloze",
-        "prompt": "Complete: The article mentions “_____” several times.",
+        "prompt": "Complete: The family gathered for evening _____.",
         "answer": "prayer",
-        "modelAnswer": "The article mentions “prayer” several times.",
+        "modelAnswer": "The family gathered for evening prayer.",
         "checkpoints": [
           "prayer"
         ]
@@ -142251,7 +142251,7 @@
         "id": "core-12df55dfe072a7-sentence",
         "type": "sentence",
         "prompt": "用 “prayer” 写一句你真实会说的话。",
-        "modelAnswer": "The article mentions “prayer” several times.",
+        "modelAnswer": "The family gathered for evening prayer.",
         "checkpoints": [
           "prayer"
         ]
@@ -145132,18 +145132,18 @@
     ],
     "examples": [
       {
-        "en": "Please educate the delivery date in writing.",
-        "zh": "请书面教育交货日期。"
+        "en": "The programme aims to educate children about road safety.",
+        "zh": "该项目旨在对儿童进行道路安全教育。"
       },
       {
-        "en": "Can you educate the latest figures?",
-        "zh": "你能教育最新数字吗？"
+        "en": "Schools educate students through lessons and practical activities.",
+        "zh": "学校通过课堂和实践活动教育学生。"
       }
     ],
     "collocations": [
-      "need to educate",
-      "please educate",
-      "refuse to educate"
+      "educate students",
+      "educate someone about",
+      "educate the public"
     ],
     "source": "seed",
     "priority": 4,
@@ -145152,9 +145152,9 @@
       {
         "id": "core-a62a96702da958-cloze",
         "type": "cloze",
-        "prompt": "Complete: Please _____ the delivery date in writing.",
+        "prompt": "Complete: The programme aims to _____ children about road safety.",
         "answer": "educate",
-        "modelAnswer": "Please educate the delivery date in writing.",
+        "modelAnswer": "The programme aims to educate children about road safety.",
         "checkpoints": [
           "educate"
         ]
@@ -145163,7 +145163,7 @@
         "id": "core-a62a96702da958-sentence",
         "type": "sentence",
         "prompt": "用 “educate” 写一句你真实会说的话。",
-        "modelAnswer": "Please educate the delivery date in writing.",
+        "modelAnswer": "The programme aims to educate children about road safety.",
         "checkpoints": [
           "educate"
         ]
@@ -150218,7 +150218,7 @@
     "lemma": "reproduce",
     "senseKey": "core-b72726a3affe",
     "zhGloss": "繁殖",
-    "enDefinition": "make a copy or equivalent of",
+    "enDefinition": "to produce young or offspring of the same kind",
     "partOfSpeech": "verb",
     "acceptedZhAnswers": [
       "繁殖"
@@ -150228,18 +150228,18 @@
     ],
     "examples": [
       {
-        "en": "I will reproduce with the supplier tomorrow.",
-        "zh": "我明天会与供应商繁殖。"
+        "en": "These fish reproduce in warm, shallow water.",
+        "zh": "这些鱼在温暖的浅水中繁殖。"
       },
       {
-        "en": "We need to reproduce before the deadline.",
-        "zh": "截止日期前我们需要繁殖。"
+        "en": "Some plants can reproduce without seeds.",
+        "zh": "有些植物不靠种子也能繁殖。"
       }
     ],
     "collocations": [
-      "need to reproduce",
-      "please reproduce",
-      "refuse to reproduce"
+      "reproduce naturally",
+      "reproduce rapidly",
+      "reproduce without seeds"
     ],
     "source": "seed",
     "priority": 4,
@@ -150248,9 +150248,9 @@
       {
         "id": "core-e1fc5057de419f-cloze",
         "type": "cloze",
-        "prompt": "Complete: I will _____ with the supplier tomorrow.",
+        "prompt": "Complete: These fish _____ in warm, shallow water.",
         "answer": "reproduce",
-        "modelAnswer": "I will reproduce with the supplier tomorrow.",
+        "modelAnswer": "These fish reproduce in warm, shallow water.",
         "checkpoints": [
           "reproduce"
         ]
@@ -150259,7 +150259,7 @@
         "id": "core-e1fc5057de419f-sentence",
         "type": "sentence",
         "prompt": "用 “reproduce” 写一句你真实会说的话。",
-        "modelAnswer": "I will reproduce with the supplier tomorrow.",
+        "modelAnswer": "These fish reproduce in warm, shallow water.",
         "checkpoints": [
           "reproduce"
         ]
@@ -154092,18 +154092,18 @@
     ],
     "examples": [
       {
-        "en": "I looked up “shave” before the quiz.",
-        "zh": "小测前我查阅了「修面」。"
+        "en": "He had a quick shave before the meeting.",
+        "zh": "他在会议前匆匆刮了脸。"
       },
       {
-        "en": "We discussed “shave” in today’s tutorial.",
-        "zh": "今天的辅导课我们讨论了「修面」。"
+        "en": "A careful shave left his face smooth.",
+        "zh": "仔细修面后，他的脸变得光滑。"
       }
     ],
     "collocations": [
-      "prepare the shave",
-      "bring the shave",
-      "file the shave"
+      "have a shave",
+      "a close shave",
+      "a quick shave"
     ],
     "source": "seed",
     "priority": 4,
@@ -154112,9 +154112,9 @@
       {
         "id": "core-abbb2b2b2d783c-cloze",
         "type": "cloze",
-        "prompt": "Complete: I looked up “_____” before the quiz.",
+        "prompt": "Complete: He had a quick _____ before the meeting.",
         "answer": "shave",
-        "modelAnswer": "I looked up “shave” before the quiz.",
+        "modelAnswer": "He had a quick shave before the meeting.",
         "checkpoints": [
           "shave"
         ]
@@ -154123,7 +154123,7 @@
         "id": "core-abbb2b2b2d783c-sentence",
         "type": "sentence",
         "prompt": "用 “shave” 写一句你真实会说的话。",
-        "modelAnswer": "I looked up “shave” before the quiz.",
+        "modelAnswer": "He had a quick shave before the meeting.",
         "checkpoints": [
           "shave"
         ]
@@ -155034,7 +155034,7 @@
     "lemma": "step",
     "senseKey": "core-37b00c20cc4c",
     "zhGloss": "步骤",
-    "enDefinition": "the act of changing location by raising the foot and setting it down",
+    "enDefinition": "an action or stage in a sequence used to complete a task",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "步骤"
@@ -155044,18 +155044,18 @@
     ],
     "examples": [
       {
-        "en": "Can you explain “step” in one sentence?",
-        "zh": "你能用一句话解释「步骤」吗？"
+        "en": "Checking the totals is the first step in the process.",
+        "zh": "核对总数是这个流程的第一步。"
       },
       {
-        "en": "I looked up “step” before the quiz.",
-        "zh": "小测前我查阅了「步骤」。"
+        "en": "Follow each step in the installation guide.",
+        "zh": "请按照安装指南中的每个步骤操作。"
       }
     ],
     "collocations": [
-      "explain “step”",
-      "use “step”",
-      "learn “step”"
+      "first step",
+      "next step",
+      "step in a process"
     ],
     "source": "seed",
     "priority": 8,
@@ -155064,9 +155064,9 @@
       {
         "id": "core-bd370d1b6f9b35-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you explain “_____” in one sentence?",
+        "prompt": "Complete: Checking the totals is the first _____ in the process.",
         "answer": "step",
-        "modelAnswer": "Can you explain “step” in one sentence?",
+        "modelAnswer": "Checking the totals is the first step in the process.",
         "checkpoints": [
           "step"
         ]
@@ -155075,7 +155075,7 @@
         "id": "core-bd370d1b6f9b35-sentence",
         "type": "sentence",
         "prompt": "用 “step” 写一句你真实会说的话。",
-        "modelAnswer": "Can you explain “step” in one sentence?",
+        "modelAnswer": "Checking the totals is the first step in the process.",
         "checkpoints": [
           "step"
         ]
@@ -157722,7 +157722,7 @@
     "lemma": "task",
     "senseKey": "core-9f7326fc66cc",
     "zhGloss": "工作",
-    "enDefinition": "assign a task to",
+    "enDefinition": "a piece of work that needs to be done",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "工作"
@@ -157732,18 +157732,18 @@
     ],
     "examples": [
       {
-        "en": "The article mentions “task” several times.",
-        "zh": "这篇文章多次提到「工作」。"
+        "en": "Our first task is to check the figures.",
+        "zh": "我们的第一项工作是核对数字。"
       },
       {
-        "en": "Please use “task” correctly in your essay.",
-        "zh": "请在作文里正确使用「工作」。"
+        "en": "She completed the task before lunch.",
+        "zh": "她在午饭前完成了这项任务。"
       }
     ],
     "collocations": [
-      "explain “task”",
-      "use “task”",
-      "learn “task”"
+      "complete a task",
+      "assign a task",
+      "difficult task"
     ],
     "source": "seed",
     "priority": 8,
@@ -157752,9 +157752,9 @@
       {
         "id": "core-7fbb727db4b2b6-cloze",
         "type": "cloze",
-        "prompt": "Complete: The article mentions “_____” several times.",
+        "prompt": "Complete: Our first _____ is to check the figures.",
         "answer": "task",
-        "modelAnswer": "The article mentions “task” several times.",
+        "modelAnswer": "Our first task is to check the figures.",
         "checkpoints": [
           "task"
         ]
@@ -157763,7 +157763,7 @@
         "id": "core-7fbb727db4b2b6-sentence",
         "type": "sentence",
         "prompt": "用 “task” 写一句你真实会说的话。",
-        "modelAnswer": "The article mentions “task” several times.",
+        "modelAnswer": "Our first task is to check the figures.",
         "checkpoints": [
           "task"
         ]
@@ -159458,7 +159458,7 @@
     "lemma": "hurt",
     "senseKey": "core-ec2742655316",
     "zhGloss": "伤害",
-    "enDefinition": "give trouble or pain to",
+    "enDefinition": "physical pain or emotional distress",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "伤害"
@@ -159468,18 +159468,18 @@
     ],
     "examples": [
       {
-        "en": "Please use “hurt” correctly in your essay.",
-        "zh": "请在作文里正确使用「伤害」。"
+        "en": "There was real hurt in her voice after the argument.",
+        "zh": "争吵过后，她的声音里透着真切的伤痛。"
       },
       {
-        "en": "Can you explain “hurt” in one sentence?",
-        "zh": "你能用一句话解释「伤害」吗？"
+        "en": "The apology did little to ease his hurt.",
+        "zh": "这句道歉没能减轻他的伤痛。"
       }
     ],
     "collocations": [
-      "explain “hurt”",
-      "use “hurt”",
-      "learn “hurt”"
+      "emotional hurt",
+      "deep hurt",
+      "ease the hurt"
     ],
     "source": "seed",
     "priority": 8,
@@ -159488,9 +159488,9 @@
       {
         "id": "core-7ee201fb09fb76-cloze",
         "type": "cloze",
-        "prompt": "Complete: Please use “_____” correctly in your essay.",
+        "prompt": "Complete: There was real _____ in her voice after the argument.",
         "answer": "hurt",
-        "modelAnswer": "Please use “hurt” correctly in your essay.",
+        "modelAnswer": "There was real hurt in her voice after the argument.",
         "checkpoints": [
           "hurt"
         ]
@@ -159499,7 +159499,7 @@
         "id": "core-7ee201fb09fb76-sentence",
         "type": "sentence",
         "prompt": "用 “hurt” 写一句你真实会说的话。",
-        "modelAnswer": "Please use “hurt” correctly in your essay.",
+        "modelAnswer": "There was real hurt in her voice after the argument.",
         "checkpoints": [
           "hurt"
         ]
@@ -160802,7 +160802,7 @@
     "lemma": "lift",
     "senseKey": "core-256da6f432bd",
     "zhGloss": "举起",
-    "enDefinition": "the act of giving temporary assistance",
+    "enDefinition": "an act of raising something to a higher position",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "举起"
@@ -160812,18 +160812,18 @@
     ],
     "examples": [
       {
-        "en": "Can you explain “lift” in one sentence?",
-        "zh": "你能用一句话解释「举起」吗？"
+        "en": "The crane completed the lift without damaging the equipment.",
+        "zh": "起重机完成了这次吊起作业，没有损坏设备。"
       },
       {
-        "en": "I looked up “lift” before the quiz.",
-        "zh": "小测前我查阅了「举起」。"
+        "en": "Use both hands for a controlled lift of the box.",
+        "zh": "请用双手稳稳地举起箱子。"
       }
     ],
     "collocations": [
-      "explain “lift”",
-      "use “lift”",
-      "learn “lift”"
+      "heavy lift",
+      "controlled lift",
+      "complete a lift"
     ],
     "source": "seed",
     "priority": 6,
@@ -160832,9 +160832,9 @@
       {
         "id": "core-d9090bfdcd31d9-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you explain “_____” in one sentence?",
+        "prompt": "Complete: The crane completed the _____ without damaging the equipment.",
         "answer": "lift",
-        "modelAnswer": "Can you explain “lift” in one sentence?",
+        "modelAnswer": "The crane completed the lift without damaging the equipment.",
         "checkpoints": [
           "lift"
         ]
@@ -160843,7 +160843,7 @@
         "id": "core-d9090bfdcd31d9-sentence",
         "type": "sentence",
         "prompt": "用 “lift” 写一句你真实会说的话。",
-        "modelAnswer": "Can you explain “lift” in one sentence?",
+        "modelAnswer": "The crane completed the lift without damaging the equipment.",
         "checkpoints": [
           "lift"
         ]
@@ -161988,18 +161988,18 @@
     ],
     "examples": [
       {
-        "en": "Can you explain “kick” in one sentence?",
-        "zh": "你能用一句话解释「踢」吗？"
+        "en": "A powerful kick sent the ball over the fence.",
+        "zh": "有力的一脚把球踢过了围栏。"
       },
       {
-        "en": "I looked up “kick” before the quiz.",
-        "zh": "小测前我查阅了「踢」。"
+        "en": "The door opened after a single kick.",
+        "zh": "门被踢了一脚后打开了。"
       }
     ],
     "collocations": [
-      "prepare the kick",
-      "bring the kick",
-      "file the kick"
+      "give something a kick",
+      "a powerful kick",
+      "a kick at the ball"
     ],
     "source": "seed",
     "priority": 6,
@@ -162008,9 +162008,9 @@
       {
         "id": "core-eac6136556a96e-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you explain “_____” in one sentence?",
+        "prompt": "Complete: A powerful _____ sent the ball over the fence.",
         "answer": "kick",
-        "modelAnswer": "Can you explain “kick” in one sentence?",
+        "modelAnswer": "A powerful kick sent the ball over the fence.",
         "checkpoints": [
           "kick"
         ]
@@ -162019,7 +162019,7 @@
         "id": "core-eac6136556a96e-sentence",
         "type": "sentence",
         "prompt": "用 “kick” 写一句你真实会说的话。",
-        "modelAnswer": "Can you explain “kick” in one sentence?",
+        "modelAnswer": "A powerful kick sent the ball over the fence.",
         "checkpoints": [
           "kick"
         ]
@@ -163826,7 +163826,7 @@
     "lemma": "lean",
     "senseKey": "core-0751a6a456e1",
     "zhGloss": "瘦肉",
-    "enDefinition": "to incline or bend from a vertical position",
+    "enDefinition": "the part of a piece of meat that contains little fat",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "瘦肉"
@@ -163836,18 +163836,18 @@
     ],
     "examples": [
       {
-        "en": "I looked up “lean” before the quiz.",
-        "zh": "小测前我查阅了「瘦肉」。"
+        "en": "This cut has more lean than fat.",
+        "zh": "这块肉的瘦肉比肥肉多。"
       },
       {
-        "en": "We discussed “lean” in today’s tutorial.",
-        "zh": "今天的辅导课我们讨论了「瘦肉」。"
+        "en": "Separate the lean from the visible fat before cooking.",
+        "zh": "烹饪前把瘦肉和看得见的肥肉分开。"
       }
     ],
     "collocations": [
-      "explain “lean”",
-      "use “lean”",
-      "learn “lean”"
+      "lean and fat",
+      "a piece of lean",
+      "separate the lean"
     ],
     "source": "seed",
     "priority": 6,
@@ -163856,9 +163856,9 @@
       {
         "id": "core-8be47d2b8549b5-cloze",
         "type": "cloze",
-        "prompt": "Complete: I looked up “_____” before the quiz.",
+        "prompt": "Complete: This cut has more _____ than fat.",
         "answer": "lean",
-        "modelAnswer": "I looked up “lean” before the quiz.",
+        "modelAnswer": "This cut has more lean than fat.",
         "checkpoints": [
           "lean"
         ]
@@ -163867,7 +163867,7 @@
         "id": "core-8be47d2b8549b5-sentence",
         "type": "sentence",
         "prompt": "用 “lean” 写一句你真实会说的话。",
-        "modelAnswer": "I looked up “lean” before the quiz.",
+        "modelAnswer": "This cut has more lean than fat.",
         "checkpoints": [
           "lean"
         ]
@@ -164610,7 +164610,7 @@
     "lemma": "busy",
     "senseKey": "core-7f008510d1b9",
     "zhGloss": "忙碌的",
-    "enDefinition": "keep busy with",
+    "enDefinition": "occupied with work or another activity, with little time available",
     "partOfSpeech": "adjective",
     "acceptedZhAnswers": [
       "忙碌的"
@@ -164620,18 +164620,18 @@
     ],
     "examples": [
       {
-        "en": "Keep busy records for the audit.",
-        "zh": "请为审计保留忙碌的的记录。"
+        "en": "She is busy preparing the presentation.",
+        "zh": "她正忙着准备演示。"
       },
       {
-        "en": "They offered a busy alternative.",
-        "zh": "他们提供了一个忙碌的的替代方案。"
+        "en": "The manager is too busy to answer the call.",
+        "zh": "经理太忙，无法接电话。"
       }
     ],
     "collocations": [
-      "a busy option",
-      "remain busy",
-      "busy terms"
+      "busy with work",
+      "busy preparing",
+      "too busy to"
     ],
     "source": "seed",
     "priority": 6,
@@ -164640,9 +164640,9 @@
       {
         "id": "core-e18a89f9cc5b6b-cloze",
         "type": "cloze",
-        "prompt": "Complete: Keep _____ records for the audit.",
+        "prompt": "Complete: She is _____ preparing the presentation.",
         "answer": "busy",
-        "modelAnswer": "Keep busy records for the audit.",
+        "modelAnswer": "She is busy preparing the presentation.",
         "checkpoints": [
           "busy"
         ]
@@ -164651,7 +164651,7 @@
         "id": "core-e18a89f9cc5b6b-sentence",
         "type": "sentence",
         "prompt": "用 “busy” 写一句你真实会说的话。",
-        "modelAnswer": "Keep busy records for the audit.",
+        "modelAnswer": "She is busy preparing the presentation.",
         "checkpoints": [
           "busy"
         ]
@@ -167084,18 +167084,18 @@
     ],
     "examples": [
       {
-        "en": "I looked up “kiss” before the quiz.",
-        "zh": "小测前我查阅了「吻」。"
+        "en": "She gave her mother a kiss before leaving.",
+        "zh": "她离开前吻了母亲一下。"
       },
       {
-        "en": "We discussed “kiss” in today’s tutorial.",
-        "zh": "今天的辅导课我们讨论了「吻」。"
+        "en": "He greeted his partner with a kiss.",
+        "zh": "他用一个吻迎接伴侣。"
       }
     ],
     "collocations": [
-      "prepare the kiss",
-      "bring the kiss",
-      "file the kiss"
+      "give someone a kiss",
+      "a gentle kiss",
+      "a kiss on the cheek"
     ],
     "source": "seed",
     "priority": 6,
@@ -167104,9 +167104,9 @@
       {
         "id": "core-07a2e25662f8c7-cloze",
         "type": "cloze",
-        "prompt": "Complete: I looked up “_____” before the quiz.",
+        "prompt": "Complete: She gave her mother a _____ before leaving.",
         "answer": "kiss",
-        "modelAnswer": "I looked up “kiss” before the quiz.",
+        "modelAnswer": "She gave her mother a kiss before leaving.",
         "checkpoints": [
           "kiss"
         ]
@@ -167115,7 +167115,7 @@
         "id": "core-07a2e25662f8c7-sentence",
         "type": "sentence",
         "prompt": "用 “kiss” 写一句你真实会说的话。",
-        "modelAnswer": "I looked up “kiss” before the quiz.",
+        "modelAnswer": "She gave her mother a kiss before leaving.",
         "checkpoints": [
           "kiss"
         ]
@@ -169090,7 +169090,7 @@
     "lemma": "harm",
     "senseKey": "core-ece30d67366a",
     "zhGloss": "伤害",
-    "enDefinition": "cause or do harm to",
+    "enDefinition": "physical or mental damage or injury",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "伤害"
@@ -169100,18 +169100,18 @@
     ],
     "examples": [
       {
-        "en": "Please use “harm” correctly in your essay.",
-        "zh": "请在作文里正确使用「伤害」。"
+        "en": "The chemical can cause harm to wildlife.",
+        "zh": "这种化学品可能对野生动物造成伤害。"
       },
       {
-        "en": "Can you explain “harm” in one sentence?",
-        "zh": "你能用一句话解释「伤害」吗？"
+        "en": "No lasting harm was done to the equipment.",
+        "zh": "设备没有受到持久损坏。"
       }
     ],
     "collocations": [
-      "explain “harm”",
-      "use “harm”",
-      "learn “harm”"
+      "cause harm",
+      "do harm to",
+      "lasting harm"
     ],
     "source": "seed",
     "priority": 6,
@@ -169120,9 +169120,9 @@
       {
         "id": "core-8bd24ba3a83c3d-cloze",
         "type": "cloze",
-        "prompt": "Complete: Please use “_____” correctly in your essay.",
+        "prompt": "Complete: The chemical can cause _____ to wildlife.",
         "answer": "harm",
-        "modelAnswer": "Please use “harm” correctly in your essay.",
+        "modelAnswer": "The chemical can cause harm to wildlife.",
         "checkpoints": [
           "harm"
         ]
@@ -169131,7 +169131,7 @@
         "id": "core-8bd24ba3a83c3d-sentence",
         "type": "sentence",
         "prompt": "用 “harm” 写一句你真实会说的话。",
-        "modelAnswer": "Please use “harm” correctly in your essay.",
+        "modelAnswer": "The chemical can cause harm to wildlife.",
         "checkpoints": [
           "harm"
         ]
@@ -172180,18 +172180,18 @@
     ],
     "examples": [
       {
-        "en": "Can you obey the latest figures?",
-        "zh": "你能服从最新数字吗？"
+        "en": "Drivers must obey the speed limit.",
+        "zh": "驾驶员必须遵守限速规定。"
       },
       {
-        "en": "I will obey with the supplier tomorrow.",
-        "zh": "我明天会与供应商服从。"
+        "en": "The children were told to obey the safety instructions.",
+        "zh": "孩子们被要求服从安全指示。"
       }
     ],
     "collocations": [
-      "need to obey",
-      "please obey",
-      "refuse to obey"
+      "obey an order",
+      "obey the law",
+      "obey instructions"
     ],
     "source": "seed",
     "priority": 4,
@@ -172200,9 +172200,9 @@
       {
         "id": "core-a65b8e1769245c-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you _____ the latest figures?",
+        "prompt": "Complete: Drivers must _____ the speed limit.",
         "answer": "obey",
-        "modelAnswer": "Can you obey the latest figures?",
+        "modelAnswer": "Drivers must obey the speed limit.",
         "checkpoints": [
           "obey"
         ]
@@ -172211,7 +172211,7 @@
         "id": "core-a65b8e1769245c-sentence",
         "type": "sentence",
         "prompt": "用 “obey” 写一句你真实会说的话。",
-        "modelAnswer": "Can you obey the latest figures?",
+        "modelAnswer": "Drivers must obey the speed limit.",
         "checkpoints": [
           "obey"
         ]
@@ -176202,7 +176202,7 @@
     "lemma": "clap",
     "senseKey": "core-c20e24ee82d7",
     "zhGloss": "拍手",
-    "enDefinition": "to strike the palms of the hands together, especially to show approval",
+    "enDefinition": "a strike of the palms together that makes a short sound, often to show approval",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "拍手"
@@ -176212,18 +176212,18 @@
     ],
     "examples": [
       {
-        "en": "The article mentions “clap” several times.",
-        "zh": "这篇文章多次提到「拍手」。"
+        "en": "She gave a loud clap to get everyone’s attention.",
+        "zh": "她响亮地拍了一下手，引起大家的注意。"
       },
       {
-        "en": "Please use “clap” correctly in your essay.",
-        "zh": "请在作文里正确使用「拍手」。"
+        "en": "The speaker received a clap from the audience.",
+        "zh": "演讲者得到了观众的鼓掌。"
       }
     ],
     "collocations": [
-      "explain “clap”",
-      "use “clap”",
-      "learn “clap”"
+      "a loud clap",
+      "a single clap",
+      "give someone a clap"
     ],
     "source": "seed",
     "priority": 4,
@@ -176232,9 +176232,9 @@
       {
         "id": "core-c19ab8d3c2c942-cloze",
         "type": "cloze",
-        "prompt": "Complete: The article mentions “_____” several times.",
+        "prompt": "Complete: She gave a loud _____ to get everyone’s attention.",
         "answer": "clap",
-        "modelAnswer": "The article mentions “clap” several times.",
+        "modelAnswer": "She gave a loud clap to get everyone’s attention.",
         "checkpoints": [
           "clap"
         ]
@@ -176243,7 +176243,7 @@
         "id": "core-c19ab8d3c2c942-sentence",
         "type": "sentence",
         "prompt": "用 “clap” 写一句你真实会说的话。",
-        "modelAnswer": "The article mentions “clap” several times.",
+        "modelAnswer": "She gave a loud clap to get everyone’s attention.",
         "checkpoints": [
           "clap"
         ]
@@ -190772,18 +190772,18 @@
     ],
     "examples": [
       {
-        "en": "I looked up “suicide” before the quiz.",
-        "zh": "小测前我查阅了「自杀」。"
+        "en": "The report includes a chapter on suicide prevention.",
+        "zh": "报告包含一章自杀预防的内容。"
       },
       {
-        "en": "We discussed “suicide” in today’s tutorial.",
-        "zh": "今天的辅导课我们讨论了「自杀」。"
+        "en": "The researchers examined long-term changes in suicide rates.",
+        "zh": "研究人员考察了自杀率的长期变化。"
       }
     ],
     "collocations": [
-      "prepare the suicide",
-      "bring the suicide",
-      "file the suicide"
+      "suicide prevention",
+      "risk of suicide",
+      "suicide rates"
     ],
     "source": "seed",
     "priority": 4,
@@ -190792,9 +190792,9 @@
       {
         "id": "core-b6928c296eb29f-cloze",
         "type": "cloze",
-        "prompt": "Complete: I looked up “_____” before the quiz.",
+        "prompt": "Complete: The report includes a chapter on _____ prevention.",
         "answer": "suicide",
-        "modelAnswer": "I looked up “suicide” before the quiz.",
+        "modelAnswer": "The report includes a chapter on suicide prevention.",
         "checkpoints": [
           "suicide"
         ]
@@ -190803,7 +190803,7 @@
         "id": "core-b6928c296eb29f-sentence",
         "type": "sentence",
         "prompt": "用 “suicide” 写一句你真实会说的话。",
-        "modelAnswer": "I looked up “suicide” before the quiz.",
+        "modelAnswer": "The report includes a chapter on suicide prevention.",
         "checkpoints": [
           "suicide"
         ]
@@ -195308,18 +195308,18 @@
     ],
     "examples": [
       {
-        "en": "Can you compose the latest figures?",
-        "zh": "你能组成最新数字吗？"
+        "en": "Ten elected members compose the committee.",
+        "zh": "十名当选成员组成该委员会。"
       },
       {
-        "en": "I will compose with the supplier tomorrow.",
-        "zh": "我明天会与供应商组成。"
+        "en": "The panel is composed of three independent experts.",
+        "zh": "这个小组由三位独立专家组成。"
       }
     ],
     "collocations": [
-      "need to compose",
-      "please compose",
-      "refuse to compose"
+      "be composed of",
+      "compose a committee",
+      "elements that compose"
     ],
     "source": "seed",
     "priority": 4,
@@ -195328,9 +195328,9 @@
       {
         "id": "core-537bac49fb3815-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you _____ the latest figures?",
+        "prompt": "Complete: Ten elected members _____ the committee.",
         "answer": "compose",
-        "modelAnswer": "Can you compose the latest figures?",
+        "modelAnswer": "Ten elected members compose the committee.",
         "checkpoints": [
           "compose"
         ]
@@ -195339,7 +195339,7 @@
         "id": "core-537bac49fb3815-sentence",
         "type": "sentence",
         "prompt": "用 “compose” 写一句你真实会说的话。",
-        "modelAnswer": "Can you compose the latest figures?",
+        "modelAnswer": "Ten elected members compose the committee.",
         "checkpoints": [
           "compose"
         ]
@@ -195690,7 +195690,7 @@
     "lemma": "condemn",
     "senseKey": "core-374490a6bd6b",
     "zhGloss": "判刑",
-    "enDefinition": "express strong disapproval of",
+    "enDefinition": "to sentence someone to a punishment",
     "partOfSpeech": "verb",
     "acceptedZhAnswers": [
       "判刑"
@@ -195700,18 +195700,18 @@
     ],
     "examples": [
       {
-        "en": "Can you condemn the latest figures?",
-        "zh": "你能判刑最新数字吗？"
+        "en": "The court may condemn a convicted person to imprisonment.",
+        "zh": "法院可能判处已定罪者监禁。"
       },
       {
-        "en": "I will condemn with the supplier tomorrow.",
-        "zh": "我明天会与供应商判刑。"
+        "en": "The judge refused to condemn the defendant without evidence.",
+        "zh": "法官拒绝在没有证据的情况下判处被告刑罚。"
       }
     ],
     "collocations": [
-      "need to condemn",
-      "please condemn",
-      "refuse to condemn"
+      "condemn someone to",
+      "condemn to imprisonment",
+      "condemn a defendant"
     ],
     "source": "seed",
     "priority": 4,
@@ -195720,9 +195720,9 @@
       {
         "id": "core-7177fe0a582820-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you _____ the latest figures?",
+        "prompt": "Complete: The court may _____ a convicted person to imprisonment.",
         "answer": "condemn",
-        "modelAnswer": "Can you condemn the latest figures?",
+        "modelAnswer": "The court may condemn a convicted person to imprisonment.",
         "checkpoints": [
           "condemn"
         ]
@@ -195731,7 +195731,7 @@
         "id": "core-7177fe0a582820-sentence",
         "type": "sentence",
         "prompt": "用 “condemn” 写一句你真实会说的话。",
-        "modelAnswer": "Can you condemn the latest figures?",
+        "modelAnswer": "The court may condemn a convicted person to imprisonment.",
         "checkpoints": [
           "condemn"
         ]
@@ -197538,7 +197538,7 @@
     "lemma": "sponsor",
     "senseKey": "core-2bf495140702",
     "zhGloss": "保证人",
-    "enDefinition": "assume sponsorship of",
+    "enDefinition": "a person or organisation that accepts responsibility for another person",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "保证人"
@@ -197548,18 +197548,18 @@
     ],
     "examples": [
       {
-        "en": "We discussed “sponsor” in today’s tutorial.",
-        "zh": "今天的辅导课我们讨论了「保证人」。"
+        "en": "Her uncle agreed to act as her sponsor.",
+        "zh": "她的叔叔同意担任她的担保人。"
       },
       {
-        "en": "The article mentions “sponsor” several times.",
-        "zh": "这篇文章多次提到「保证人」。"
+        "en": "The application asks for the name of a sponsor.",
+        "zh": "申请表要求填写担保人的姓名。"
       }
     ],
     "collocations": [
-      "explain “sponsor”",
-      "use “sponsor”",
-      "learn “sponsor”"
+      "act as a sponsor",
+      "a sponsor’s responsibility",
+      "name a sponsor"
     ],
     "source": "seed",
     "priority": 4,
@@ -197568,9 +197568,9 @@
       {
         "id": "core-ab2137f0fe797b-cloze",
         "type": "cloze",
-        "prompt": "Complete: We discussed “_____” in today’s tutorial.",
+        "prompt": "Complete: Her uncle agreed to act as her _____.",
         "answer": "sponsor",
-        "modelAnswer": "We discussed “sponsor” in today’s tutorial.",
+        "modelAnswer": "Her uncle agreed to act as her sponsor.",
         "checkpoints": [
           "sponsor"
         ]
@@ -197579,7 +197579,7 @@
         "id": "core-ab2137f0fe797b-sentence",
         "type": "sentence",
         "prompt": "用 “sponsor” 写一句你真实会说的话。",
-        "modelAnswer": "We discussed “sponsor” in today’s tutorial.",
+        "modelAnswer": "Her uncle agreed to act as her sponsor.",
         "checkpoints": [
           "sponsor"
         ]
@@ -198881,29 +198881,29 @@
     "expression": "boost",
     "lemma": "boost",
     "senseKey": "core-fed6a8b384fd",
-    "zhGloss": "推进",
-    "enDefinition": "the act of giving hope or support to someone",
+    "zhGloss": "提升",
+    "enDefinition": "an increase or improvement that helps something develop",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
-      "推进"
+      "提升"
     ],
     "acceptedEnVariants": [
       "boost"
     ],
     "examples": [
       {
-        "en": "Can you explain “boost” in one sentence?",
-        "zh": "你能用一句话解释「推进」吗？"
+        "en": "The new order gave sales a welcome boost.",
+        "zh": "这笔新订单使销售额得到可喜的提升。"
       },
       {
-        "en": "I looked up “boost” before the quiz.",
-        "zh": "小测前我查阅了「推进」。"
+        "en": "Extra practice can give your confidence a boost.",
+        "zh": "额外练习可以提升你的信心。"
       }
     ],
     "collocations": [
-      "explain “boost”",
-      "use “boost”",
-      "learn “boost”"
+      "a boost to sales",
+      "give something a boost",
+      "a confidence boost"
     ],
     "source": "seed",
     "priority": 4,
@@ -198912,9 +198912,9 @@
       {
         "id": "core-f7d80df03888d6-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you explain “_____” in one sentence?",
+        "prompt": "Complete: The new order gave sales a welcome _____.",
         "answer": "boost",
-        "modelAnswer": "Can you explain “boost” in one sentence?",
+        "modelAnswer": "The new order gave sales a welcome boost.",
         "checkpoints": [
           "boost"
         ]
@@ -198923,7 +198923,7 @@
         "id": "core-f7d80df03888d6-sentence",
         "type": "sentence",
         "prompt": "用 “boost” 写一句你真实会说的话。",
-        "modelAnswer": "Can you explain “boost” in one sentence?",
+        "modelAnswer": "The new order gave sales a welcome boost.",
         "checkpoints": [
           "boost"
         ]
@@ -201020,18 +201020,18 @@
     ],
     "examples": [
       {
-        "en": "They decided to weaken the risky option.",
-        "zh": "他们决定削弱那个高风险选项。"
+        "en": "Repeated losses can weaken a company’s finances.",
+        "zh": "持续亏损可能削弱公司的财务实力。"
       },
       {
-        "en": "Please weaken the delivery date in writing.",
-        "zh": "请书面削弱交货日期。"
+        "en": "A lack of evidence would weaken the argument.",
+        "zh": "证据不足会削弱这个论点。"
       }
     ],
     "collocations": [
-      "need to weaken",
-      "please weaken",
-      "refuse to weaken"
+      "weaken an argument",
+      "weaken confidence",
+      "weaken a position"
     ],
     "source": "seed",
     "priority": 4,
@@ -201040,9 +201040,9 @@
       {
         "id": "core-fcb9e7c68cc7ae-cloze",
         "type": "cloze",
-        "prompt": "Complete: They decided to _____ the risky option.",
+        "prompt": "Complete: Repeated losses can _____ a company’s finances.",
         "answer": "weaken",
-        "modelAnswer": "They decided to weaken the risky option.",
+        "modelAnswer": "Repeated losses can weaken a company’s finances.",
         "checkpoints": [
           "weaken"
         ]
@@ -201051,7 +201051,7 @@
         "id": "core-fcb9e7c68cc7ae-sentence",
         "type": "sentence",
         "prompt": "用 “weaken” 写一句你真实会说的话。",
-        "modelAnswer": "They decided to weaken the risky option.",
+        "modelAnswer": "Repeated losses can weaken a company’s finances.",
         "checkpoints": [
           "weaken"
         ]
@@ -205377,29 +205377,29 @@
     "expression": "victimize",
     "lemma": "victimize",
     "senseKey": "core-f9e0cd96cc5c",
-    "zhGloss": "使牺牲",
-    "enDefinition": "make a victim of",
+    "zhGloss": "使受害",
+    "enDefinition": "to treat someone unfairly or make them suffer",
     "partOfSpeech": "verb",
     "acceptedZhAnswers": [
-      "使牺牲"
+      "使受害"
     ],
     "acceptedEnVariants": [
       "victimize"
     ],
     "examples": [
       {
-        "en": "Can you victimize the latest figures?",
-        "zh": "你能使牺牲最新数字吗？"
+        "en": "The policy must not victimize employees who raise concerns.",
+        "zh": "这项规定不得使提出问题的员工受到不公对待。"
       },
       {
-        "en": "I will victimize with the supplier tomorrow.",
-        "zh": "我明天会与供应商使牺牲。"
+        "en": "Fraudsters often victimize people who trust them.",
+        "zh": "诈骗者常使信任他们的人受害。"
       }
     ],
     "collocations": [
-      "need to victimize",
-      "please victimize",
-      "refuse to victimize"
+      "victimize an employee",
+      "victimize vulnerable people",
+      "unfairly victimize"
     ],
     "source": "seed",
     "priority": 4,
@@ -205408,9 +205408,9 @@
       {
         "id": "core-3a10ff016030a4-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you _____ the latest figures?",
+        "prompt": "Complete: The policy must not _____ employees who raise concerns.",
         "answer": "victimize",
-        "modelAnswer": "Can you victimize the latest figures?",
+        "modelAnswer": "The policy must not victimize employees who raise concerns.",
         "checkpoints": [
           "victimize"
         ]
@@ -205419,7 +205419,7 @@
         "id": "core-3a10ff016030a4-sentence",
         "type": "sentence",
         "prompt": "用 “victimize” 写一句你真实会说的话。",
-        "modelAnswer": "Can you victimize the latest figures?",
+        "modelAnswer": "The policy must not victimize employees who raise concerns.",
         "checkpoints": [
           "victimize"
         ]
@@ -207292,18 +207292,18 @@
     ],
     "examples": [
       {
-        "en": "We need to evaluate before the deadline.",
-        "zh": "截止日期前我们需要评估。"
+        "en": "We need to evaluate the risks before signing.",
+        "zh": "签字前我们需要评估风险。"
       },
       {
-        "en": "They decided to evaluate the risky option.",
-        "zh": "他们决定评估那个高风险选项。"
+        "en": "The tutor will evaluate each student’s progress.",
+        "zh": "导师将评估每位学生的进步。"
       }
     ],
     "collocations": [
-      "need to evaluate",
-      "please evaluate",
-      "refuse to evaluate"
+      "evaluate a proposal",
+      "evaluate the risks",
+      "evaluate performance"
     ],
     "source": "seed",
     "priority": 4,
@@ -207312,9 +207312,9 @@
       {
         "id": "core-3709214fb349c5-cloze",
         "type": "cloze",
-        "prompt": "Complete: We need to _____ before the deadline.",
+        "prompt": "Complete: We need to _____ the risks before signing.",
         "answer": "evaluate",
-        "modelAnswer": "We need to evaluate before the deadline.",
+        "modelAnswer": "We need to evaluate the risks before signing.",
         "checkpoints": [
           "evaluate"
         ]
@@ -207323,7 +207323,7 @@
         "id": "core-3709214fb349c5-sentence",
         "type": "sentence",
         "prompt": "用 “evaluate” 写一句你真实会说的话。",
-        "modelAnswer": "We need to evaluate before the deadline.",
+        "modelAnswer": "We need to evaluate the risks before signing.",
         "checkpoints": [
           "evaluate"
         ]
@@ -208356,18 +208356,18 @@
     ],
     "examples": [
       {
-        "en": "We need to comprise before the deadline.",
-        "zh": "截止日期前我们需要包含。"
+        "en": "The course will comprise six weekly sessions.",
+        "zh": "该课程将包含六次每周课程。"
       },
       {
-        "en": "They decided to comprise the risky option.",
-        "zh": "他们决定包含那个高风险选项。"
+        "en": "The collection comprises letters, photographs, and maps.",
+        "zh": "这批藏品包含信件、照片和地图。"
       }
     ],
     "collocations": [
-      "need to comprise",
-      "please comprise",
-      "refuse to comprise"
+      "comprise several parts",
+      "comprise a collection",
+      "comprise six sessions"
     ],
     "source": "seed",
     "priority": 4,
@@ -208376,9 +208376,9 @@
       {
         "id": "core-48ce988583a65c-cloze",
         "type": "cloze",
-        "prompt": "Complete: We need to _____ before the deadline.",
+        "prompt": "Complete: The course will _____ six weekly sessions.",
         "answer": "comprise",
-        "modelAnswer": "We need to comprise before the deadline.",
+        "modelAnswer": "The course will comprise six weekly sessions.",
         "checkpoints": [
           "comprise"
         ]
@@ -208387,7 +208387,7 @@
         "id": "core-48ce988583a65c-sentence",
         "type": "sentence",
         "prompt": "用 “comprise” 写一句你真实会说的话。",
-        "modelAnswer": "We need to comprise before the deadline.",
+        "modelAnswer": "The course will comprise six weekly sessions.",
         "checkpoints": [
           "comprise"
         ]
@@ -208961,29 +208961,29 @@
     "expression": "storage",
     "lemma": "storage",
     "senseKey": "core-c0d8c04e9355",
-    "zhGloss": "存储器",
+    "zhGloss": "储存",
     "enDefinition": "the act of storing something",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
-      "存储器"
+      "储存"
     ],
     "acceptedEnVariants": [
       "storage"
     ],
     "examples": [
       {
-        "en": "Can you explain “storage” in one sentence?",
-        "zh": "你能用一句话解释「存储器」吗？"
+        "en": "The warehouse provides storage for imported furniture.",
+        "zh": "这座仓库为进口家具提供储存空间。"
       },
       {
-        "en": "I looked up “storage” before the quiz.",
-        "zh": "小测前我查阅了「存储器」。"
+        "en": "Keep these files in secure storage.",
+        "zh": "请把这些文件妥善储存。"
       }
     ],
     "collocations": [
-      "prepare the storage",
-      "bring the storage",
-      "file the storage"
+      "secure storage",
+      "storage space",
+      "storage of goods"
     ],
     "source": "seed",
     "priority": 4,
@@ -208992,9 +208992,9 @@
       {
         "id": "core-3d48292e4d2714-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you explain “_____” in one sentence?",
+        "prompt": "Complete: The warehouse provides _____ for imported furniture.",
         "answer": "storage",
-        "modelAnswer": "Can you explain “storage” in one sentence?",
+        "modelAnswer": "The warehouse provides storage for imported furniture.",
         "checkpoints": [
           "storage"
         ]
@@ -209003,7 +209003,7 @@
         "id": "core-3d48292e4d2714-sentence",
         "type": "sentence",
         "prompt": "用 “storage” 写一句你真实会说的话。",
-        "modelAnswer": "Can you explain “storage” in one sentence?",
+        "modelAnswer": "The warehouse provides storage for imported furniture.",
         "checkpoints": [
           "storage"
         ]
@@ -213172,18 +213172,18 @@
     ],
     "examples": [
       {
-        "en": "Can you explain “registration” in one sentence?",
-        "zh": "你能用一句话解释「登记」吗？"
+        "en": "Registration for the course closes on Friday.",
+        "zh": "这门课程的登记报名于周五截止。"
       },
       {
-        "en": "I looked up “registration” before the quiz.",
-        "zh": "小测前我查阅了「登记」。"
+        "en": "Please complete registration before attending the workshop.",
+        "zh": "参加工作坊前请完成登记。"
       }
     ],
     "collocations": [
-      "calculate the registration",
-      "compare the registration",
-      "interpret the registration"
+      "complete registration",
+      "registration form",
+      "registration deadline"
     ],
     "source": "seed",
     "priority": 4,
@@ -213192,9 +213192,9 @@
       {
         "id": "core-5b0df6a8b9a96c-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you explain “_____” in one sentence?",
+        "prompt": "Complete: _____ for the course closes on Friday.",
         "answer": "registration",
-        "modelAnswer": "Can you explain “registration” in one sentence?",
+        "modelAnswer": "Registration for the course closes on Friday.",
         "checkpoints": [
           "registration"
         ]
@@ -213203,7 +213203,7 @@
         "id": "core-5b0df6a8b9a96c-sentence",
         "type": "sentence",
         "prompt": "用 “registration” 写一句你真实会说的话。",
-        "modelAnswer": "Can you explain “registration” in one sentence?",
+        "modelAnswer": "Registration for the course closes on Friday.",
         "checkpoints": [
           "registration"
         ]
@@ -213834,7 +213834,7 @@
     "lemma": "grin",
     "senseKey": "core-74a307fbc67c",
     "zhGloss": "露齿笑",
-    "enDefinition": "to draw back the lips and reveal the teeth, in a smile, grimace, or snarl",
+    "enDefinition": "a broad smile in which the teeth are visible",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "露齿笑"
@@ -213844,18 +213844,18 @@
     ],
     "examples": [
       {
-        "en": "Please use “grin” correctly in your essay.",
-        "zh": "请在作文里正确使用「露齿笑」。"
+        "en": "A wide grin spread across his face.",
+        "zh": "他的脸上露出了咧嘴的笑容。"
       },
       {
-        "en": "Can you explain “grin” in one sentence?",
-        "zh": "你能用一句话解释「露齿笑」吗？"
+        "en": "She greeted us with a cheerful grin.",
+        "zh": "她咧嘴笑着迎接我们。"
       }
     ],
     "collocations": [
-      "explain “grin”",
-      "use “grin”",
-      "learn “grin”"
+      "wide grin",
+      "cheerful grin",
+      "a grin on someone’s face"
     ],
     "source": "seed",
     "priority": 4,
@@ -213864,9 +213864,9 @@
       {
         "id": "core-a266986861f0c3-cloze",
         "type": "cloze",
-        "prompt": "Complete: Please use “_____” correctly in your essay.",
+        "prompt": "Complete: A wide _____ spread across his face.",
         "answer": "grin",
-        "modelAnswer": "Please use “grin” correctly in your essay.",
+        "modelAnswer": "A wide grin spread across his face.",
         "checkpoints": [
           "grin"
         ]
@@ -213875,7 +213875,7 @@
         "id": "core-a266986861f0c3-sentence",
         "type": "sentence",
         "prompt": "用 “grin” 写一句你真实会说的话。",
-        "modelAnswer": "Please use “grin” correctly in your essay.",
+        "modelAnswer": "A wide grin spread across his face.",
         "checkpoints": [
           "grin"
         ]
@@ -213946,7 +213946,7 @@
     "lemma": "accordingly",
     "senseKey": "core-20aeaafa071f",
     "zhGloss": "相应地",
-    "enDefinition": "in accordance with",
+    "enDefinition": "in a way that is appropriate to the situation or information available",
     "partOfSpeech": "adverb",
     "acceptedZhAnswers": [
       "相应地"
@@ -213956,18 +213956,18 @@
     ],
     "examples": [
       {
-        "en": "He spoke accordingly during the client call.",
-        "zh": "他在客户电话中说得相应地。"
+        "en": "The deadline has changed, so please adjust the schedule accordingly.",
+        "zh": "截止日期变了，请相应地调整日程。"
       },
       {
-        "en": "The numbers moved accordingly in line with the plan.",
-        "zh": "数字相应地按计划变动。"
+        "en": "We reviewed the results and updated the plan accordingly.",
+        "zh": "我们复核了结果，并相应地更新了计划。"
       }
     ],
     "collocations": [
-      "speak accordingly",
-      "work accordingly",
-      "answer accordingly"
+      "adjust accordingly",
+      "respond accordingly",
+      "act accordingly"
     ],
     "source": "seed",
     "priority": 4,
@@ -213976,9 +213976,9 @@
       {
         "id": "core-e5fc8009f8bf27-cloze",
         "type": "cloze",
-        "prompt": "Complete: He spoke _____ during the client call.",
+        "prompt": "Complete: The deadline has changed, so please adjust the schedule _____.",
         "answer": "accordingly",
-        "modelAnswer": "He spoke accordingly during the client call.",
+        "modelAnswer": "The deadline has changed, so please adjust the schedule accordingly.",
         "checkpoints": [
           "accordingly"
         ]
@@ -213987,7 +213987,7 @@
         "id": "core-e5fc8009f8bf27-sentence",
         "type": "sentence",
         "prompt": "用 “accordingly” 写一句你真实会说的话。",
-        "modelAnswer": "He spoke accordingly during the client call.",
+        "modelAnswer": "The deadline has changed, so please adjust the schedule accordingly.",
         "checkpoints": [
           "accordingly"
         ]
@@ -218268,18 +218268,18 @@
     ],
     "examples": [
       {
-        "en": "The article mentions “theft” several times.",
-        "zh": "这篇文章多次提到「盗窃」。"
+        "en": "The police are investigating the theft of a bicycle.",
+        "zh": "警方正在调查一辆自行车被盗的案件。"
       },
       {
-        "en": "Please use “theft” correctly in your essay.",
-        "zh": "请在作文里正确使用「盗窃」。"
+        "en": "The shop installed cameras to prevent theft.",
+        "zh": "商店安装了摄像头以防止盗窃。"
       }
     ],
     "collocations": [
-      "prepare the theft",
-      "bring the theft",
-      "file the theft"
+      "report a theft",
+      "prevent theft",
+      "theft of property"
     ],
     "source": "seed",
     "priority": 4,
@@ -218288,9 +218288,9 @@
       {
         "id": "core-3df6031b290ad4-cloze",
         "type": "cloze",
-        "prompt": "Complete: The article mentions “_____” several times.",
+        "prompt": "Complete: The police are investigating the _____ of a bicycle.",
         "answer": "theft",
-        "modelAnswer": "The article mentions “theft” several times.",
+        "modelAnswer": "The police are investigating the theft of a bicycle.",
         "checkpoints": [
           "theft"
         ]
@@ -218299,7 +218299,7 @@
         "id": "core-3df6031b290ad4-sentence",
         "type": "sentence",
         "prompt": "用 “theft” 写一句你真实会说的话。",
-        "modelAnswer": "The article mentions “theft” several times.",
+        "modelAnswer": "The police are investigating the theft of a bicycle.",
         "checkpoints": [
           "theft"
         ]
@@ -225146,7 +225146,7 @@
     "lemma": "ban",
     "senseKey": "core-d13653fd3c06",
     "zhGloss": "禁止",
-    "enDefinition": "to officially or legally prohibit",
+    "enDefinition": "an official rule that prohibits an activity or thing",
     "partOfSpeech": "noun",
     "acceptedZhAnswers": [
       "禁止"
@@ -225156,18 +225156,18 @@
     ],
     "examples": [
       {
-        "en": "Can you explain “ban” in one sentence?",
-        "zh": "你能用一句话解释「禁止」吗？"
+        "en": "The school introduced a ban on smoking near the entrance.",
+        "zh": "学校禁止在入口附近吸烟。"
       },
       {
-        "en": "I looked up “ban” before the quiz.",
-        "zh": "小测前我查阅了「禁止」。"
+        "en": "The ban applies to all visitors.",
+        "zh": "这项禁令适用于所有访客。"
       }
     ],
     "collocations": [
-      "explain “ban”",
-      "use “ban”",
-      "learn “ban”"
+      "a ban on smoking",
+      "introduce a ban",
+      "lift a ban"
     ],
     "source": "seed",
     "priority": 6,
@@ -225176,9 +225176,9 @@
       {
         "id": "core-2580d49ff40608-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you explain “_____” in one sentence?",
+        "prompt": "Complete: The school introduced a _____ on smoking near the entrance.",
         "answer": "ban",
-        "modelAnswer": "Can you explain “ban” in one sentence?",
+        "modelAnswer": "The school introduced a ban on smoking near the entrance.",
         "checkpoints": [
           "ban"
         ]
@@ -225187,7 +225187,7 @@
         "id": "core-2580d49ff40608-sentence",
         "type": "sentence",
         "prompt": "用 “ban” 写一句你真实会说的话。",
-        "modelAnswer": "Can you explain “ban” in one sentence?",
+        "modelAnswer": "The school introduced a ban on smoking near the entrance.",
         "checkpoints": [
           "ban"
         ]
@@ -227273,8 +227273,8 @@
     "lemma": "fry",
     "senseKey": "core-8ca97b3ba50c",
     "zhGloss": "油炸",
-    "enDefinition": "to cook in hot fat or oil; young fish",
-    "partOfSpeech": "noun",
+    "enDefinition": "to cook food in hot oil or fat",
+    "partOfSpeech": "verb",
     "acceptedZhAnswers": [
       "油炸"
     ],
@@ -227283,18 +227283,18 @@
     ],
     "examples": [
       {
-        "en": "Please use “fry” correctly in your essay.",
-        "zh": "请在作文里正确使用「油炸」。"
+        "en": "Fry the onions gently until they soften.",
+        "zh": "用小火把洋葱煎至变软。"
       },
       {
-        "en": "Can you explain “fry” in one sentence?",
-        "zh": "你能用一句话解释「油炸」吗？"
+        "en": "We fry the fish in a shallow pan.",
+        "zh": "我们用浅锅煎鱼。"
       }
     ],
     "collocations": [
-      "explain “fry”",
-      "use “fry”",
-      "learn “fry”"
+      "fry an egg",
+      "fry in oil",
+      "fry until golden"
     ],
     "source": "seed",
     "priority": 4,
@@ -227303,9 +227303,9 @@
       {
         "id": "core-00c7103750bf7b-cloze",
         "type": "cloze",
-        "prompt": "Complete: Please use “_____” correctly in your essay.",
+        "prompt": "Complete: _____ the onions gently until they soften.",
         "answer": "fry",
-        "modelAnswer": "Please use “fry” correctly in your essay.",
+        "modelAnswer": "Fry the onions gently until they soften.",
         "checkpoints": [
           "fry"
         ]
@@ -227314,7 +227314,7 @@
         "id": "core-00c7103750bf7b-sentence",
         "type": "sentence",
         "prompt": "用 “fry” 写一句你真实会说的话。",
-        "modelAnswer": "Please use “fry” correctly in your essay.",
+        "modelAnswer": "Fry the onions gently until they soften.",
         "checkpoints": [
           "fry"
         ]
@@ -227329,8 +227329,8 @@
     "lemma": "fit",
     "senseKey": "core-431eb514b70b",
     "zhGloss": "适合",
-    "enDefinition": "to be the right size or shape; physically healthy; suitable",
-    "partOfSpeech": "noun",
+    "enDefinition": "to have the size or shape needed for a person, object, or space",
+    "partOfSpeech": "verb",
     "acceptedZhAnswers": [
       "适合"
     ],
@@ -227339,18 +227339,18 @@
     ],
     "examples": [
       {
-        "en": "The article mentions “fit” several times.",
-        "zh": "这篇文章多次提到「适合」。"
+        "en": "These shoes fit me comfortably.",
+        "zh": "这双鞋我穿着很合脚。"
       },
       {
-        "en": "Please use “fit” correctly in your essay.",
-        "zh": "请在作文里正确使用「适合」。"
+        "en": "The new desk will fit in the corner.",
+        "zh": "这张新书桌能放进角落。"
       }
     ],
     "collocations": [
-      "explain “fit”",
-      "use “fit”",
-      "learn “fit”"
+      "fit comfortably",
+      "fit in a space",
+      "fit someone perfectly"
     ],
     "source": "seed",
     "priority": 4,
@@ -227359,9 +227359,9 @@
       {
         "id": "core-9c20b9ba55a293-cloze",
         "type": "cloze",
-        "prompt": "Complete: The article mentions “_____” several times.",
+        "prompt": "Complete: These shoes _____ me comfortably.",
         "answer": "fit",
-        "modelAnswer": "The article mentions “fit” several times.",
+        "modelAnswer": "These shoes fit me comfortably.",
         "checkpoints": [
           "fit"
         ]
@@ -227370,7 +227370,7 @@
         "id": "core-9c20b9ba55a293-sentence",
         "type": "sentence",
         "prompt": "用 “fit” 写一句你真实会说的话。",
-        "modelAnswer": "The article mentions “fit” several times.",
+        "modelAnswer": "These shoes fit me comfortably.",
         "checkpoints": [
           "fit"
         ]
@@ -268209,7 +268209,7 @@
     "lemma": "consolidation by purchase",
     "senseKey": "econ-d3dd57dcf3d3",
     "zhGloss": "购买合并",
-    "enDefinition": "a purchase of consolidation by",
+    "enDefinition": "a business combination in which one company gains control of another by purchasing it",
     "partOfSpeech": "phrase",
     "acceptedZhAnswers": [
       "购买合并"
@@ -268219,18 +268219,18 @@
     ],
     "examples": [
       {
-        "en": "The article mentions “consolidation by purchase” several times.",
-        "zh": "这篇文章多次提到「购买合并」。"
+        "en": "The report describes the acquisition as a consolidation by purchase.",
+        "zh": "这份报告把此次收购描述为购买合并。"
       },
       {
-        "en": "Please use “consolidation by purchase” correctly in your essay.",
-        "zh": "请在作文里正确使用「购买合并」。"
+        "en": "In a consolidation by purchase, the buyer acquires control of another business.",
+        "zh": "在购买合并中，买方取得另一家企业的控制权。"
       }
     ],
     "collocations": [
-      "prioritise the consolidation by purchase",
-      "standardise the consolidation by purchase",
-      "monitor the consolidation by purchase"
+      "consolidation by purchase agreement",
+      "accounting for consolidation by purchase",
+      "consolidation by purchase transaction"
     ],
     "source": "seed",
     "priority": 6,
@@ -268239,9 +268239,9 @@
       {
         "id": "econ-7ffd974082a5e4-cloze",
         "type": "cloze",
-        "prompt": "Complete: The article mentions “_____” several times.",
+        "prompt": "Complete: The report describes the acquisition as a _____.",
         "answer": "consolidation by purchase",
-        "modelAnswer": "The article mentions “consolidation by purchase” several times.",
+        "modelAnswer": "The report describes the acquisition as a consolidation by purchase.",
         "checkpoints": [
           "consolidation by purchase"
         ]
@@ -268250,7 +268250,7 @@
         "id": "econ-7ffd974082a5e4-sentence",
         "type": "sentence",
         "prompt": "用 “consolidation by purchase” 写一句你真实会说的话。",
-        "modelAnswer": "The article mentions “consolidation by purchase” several times.",
+        "modelAnswer": "The report describes the acquisition as a consolidation by purchase.",
         "checkpoints": [
           "consolidation by purchase"
         ]
@@ -286245,7 +286245,7 @@
     "lemma": "offer by tender",
     "senseKey": "econ-25e55da21a10",
     "zhGloss": "经过投标报价",
-    "enDefinition": "a tender for offer by",
+    "enDefinition": "an offer to sell shares or other assets by inviting potential buyers to submit bids",
     "partOfSpeech": "phrase",
     "acceptedZhAnswers": [
       "经过投标报价"
@@ -286255,18 +286255,18 @@
     ],
     "examples": [
       {
-        "en": "The tender pack explains the offer by tender.",
-        "zh": "招标文件说明了「经过投标报价」。"
+        "en": "The share sale will take the form of an offer by tender.",
+        "zh": "此次股票出售将采用投标报价方式。"
       },
       {
-        "en": "Customs applied the offer by tender at clearance.",
-        "zh": "清关时海关适用了「经过投标报价」。"
+        "en": "An offer by tender invites investors to submit bids for the shares.",
+        "zh": "投标报价邀请投资者对股票提交报价。"
       }
     ],
     "collocations": [
-      "prioritise the offer by tender",
-      "standardise the offer by tender",
-      "monitor the offer by tender"
+      "share offer by tender",
+      "offer by tender document",
+      "announce an offer by tender"
     ],
     "source": "seed",
     "priority": 4,
@@ -286275,9 +286275,9 @@
       {
         "id": "econ-789fab831202c8-cloze",
         "type": "cloze",
-        "prompt": "Complete: The tender pack explains the _____.",
+        "prompt": "Complete: The share sale will take the form of an _____.",
         "answer": "offer by tender",
-        "modelAnswer": "The tender pack explains the offer by tender.",
+        "modelAnswer": "The share sale will take the form of an offer by tender.",
         "checkpoints": [
           "offer by tender"
         ]
@@ -286286,7 +286286,7 @@
         "id": "econ-789fab831202c8-sentence",
         "type": "sentence",
         "prompt": "用 “offer by tender” 写一句你真实会说的话。",
-        "modelAnswer": "The tender pack explains the offer by tender.",
+        "modelAnswer": "The share sale will take the form of an offer by tender.",
         "checkpoints": [
           "offer by tender"
         ]
@@ -301140,29 +301140,29 @@
     "expression": "balanced budget with surplus",
     "lemma": "balanced budget with surplus",
     "senseKey": "econ-66d958983911",
-    "zhGloss": "收支平衡并有盈余的预算",
-    "enDefinition": "a surplus of balanced budget with",
+    "zhGloss": "有盈余的预算",
+    "enDefinition": "a budget in which planned revenue exceeds planned spending, leaving money available for other uses",
     "partOfSpeech": "phrase",
     "acceptedZhAnswers": [
-      "收支平衡并有盈余的预算"
+      "有盈余的预算"
     ],
     "acceptedEnVariants": [
       "balanced budget with surplus"
     ],
     "examples": [
       {
-        "en": "Management explained the balanced budget with surplus to the board.",
-        "zh": "管理层向董事会解释了「收支平衡并有盈余的预算」。"
+        "en": "The council approved a balanced budget with surplus funds reserved for repairs.",
+        "zh": "议会批准了一份有盈余的预算，把余款留作维修之用。"
       },
       {
-        "en": "We built a contingency for the balanced budget with surplus.",
-        "zh": "我们为「收支平衡并有盈余的预算」准备了应急预案。"
+        "en": "A balanced budget with surplus revenue leaves room to repay debt.",
+        "zh": "有盈余收入的预算为偿还债务留出了空间。"
       }
     ],
     "collocations": [
-      "monitor the balanced budget with surplus",
-      "explain the balanced budget with surplus",
-      "mitigate the balanced budget with surplus"
+      "balanced budget with surplus revenue",
+      "balanced budget with surplus funds",
+      "plan a balanced budget with surplus revenue"
     ],
     "source": "seed",
     "priority": 4,
@@ -301171,9 +301171,9 @@
       {
         "id": "econ-958c40cd88613d-cloze",
         "type": "cloze",
-        "prompt": "Complete: Management explained the _____ to the board.",
+        "prompt": "Complete: The council approved a _____ funds reserved for repairs.",
         "answer": "balanced budget with surplus",
-        "modelAnswer": "Management explained the balanced budget with surplus to the board.",
+        "modelAnswer": "The council approved a balanced budget with surplus funds reserved for repairs.",
         "checkpoints": [
           "balanced budget with surplus"
         ]
@@ -301182,7 +301182,7 @@
         "id": "econ-958c40cd88613d-sentence",
         "type": "sentence",
         "prompt": "用 “balanced budget with surplus” 写一句你真实会说的话。",
-        "modelAnswer": "Management explained the balanced budget with surplus to the board.",
+        "modelAnswer": "The council approved a balanced budget with surplus funds reserved for repairs.",
         "checkpoints": [
           "balanced budget with surplus"
         ]
@@ -334240,7 +334240,7 @@
     "lemma": "cost accounting by products",
     "senseKey": "econ-73bd163c3ba9",
     "zhGloss": "产品别成本会计",
-    "enDefinition": "products of cost accounting by",
+    "enDefinition": "the measurement and allocation of production costs to individual products",
     "partOfSpeech": "phrase",
     "acceptedZhAnswers": [
       "产品别成本会计"
@@ -334250,18 +334250,18 @@
     ],
     "examples": [
       {
-        "en": "Can you explain “cost accounting by products” in one sentence?",
-        "zh": "你能用一句话解释「产品别成本会计」吗？"
+        "en": "Cost accounting by products helps the factory compare the cost of making each item.",
+        "zh": "产品别成本会计帮助工厂比较制造各项产品的成本。"
       },
       {
-        "en": "I looked up “cost accounting by products” before the quiz.",
-        "zh": "小测前我查阅了「产品别成本会计」。"
+        "en": "The accountant uses cost accounting by products to assign production costs.",
+        "zh": "会计人员使用产品别成本会计分配生产成本。"
       }
     ],
     "collocations": [
-      "classify cost accounting by products",
-      "measure cost accounting by products",
-      "disclose cost accounting by products"
+      "cost accounting by products system",
+      "cost accounting by products report",
+      "apply cost accounting by products"
     ],
     "source": "seed",
     "priority": 6,
@@ -334270,9 +334270,9 @@
       {
         "id": "econ-6cd37e2cb48af4-cloze",
         "type": "cloze",
-        "prompt": "Complete: Can you explain “_____” in one sentence?",
+        "prompt": "Complete: _____ helps the factory compare the cost of making each item.",
         "answer": "cost accounting by products",
-        "modelAnswer": "Can you explain “cost accounting by products” in one sentence?",
+        "modelAnswer": "Cost accounting by products helps the factory compare the cost of making each item.",
         "checkpoints": [
           "cost accounting by products"
         ]
@@ -334281,7 +334281,7 @@
         "id": "econ-6cd37e2cb48af4-sentence",
         "type": "sentence",
         "prompt": "用 “cost accounting by products” 写一句你真实会说的话。",
-        "modelAnswer": "Can you explain “cost accounting by products” in one sentence?",
+        "modelAnswer": "Cost accounting by products helps the factory compare the cost of making each item.",
         "checkpoints": [
           "cost accounting by products"
         ]
@@ -382175,8 +382175,8 @@
     "lemma": "issue by tender",
     "senseKey": "econ-cee23bfb5a90",
     "zhGloss": "以投标发行证券",
-    "enDefinition": "a tender for issue by",
-    "partOfSpeech": "phrase",
+    "enDefinition": "to sell newly issued securities through competitive bids from investors",
+    "partOfSpeech": "verb phrase",
     "acceptedZhAnswers": [
       "以投标发行证券"
     ],
@@ -382185,18 +382185,18 @@
     ],
     "examples": [
       {
-        "en": "The brief tells the team to issue by tender.",
-        "zh": "简报要求团队「以投标发行证券」。"
+        "en": "The government plans to issue by tender a new series of Treasury bills.",
+        "zh": "政府计划通过投标发行一批新的国库券。"
       },
       {
-        "en": "We failed to issue by tender before the deadline.",
-        "zh": "我们未能在截止前「以投标发行证券」。"
+        "en": "The issuer may issue by tender securities with different maturities.",
+        "zh": "发行人可以通过投标发行不同期限的证券。"
       }
     ],
     "collocations": [
-      "explain “issue by tender”",
-      "use “issue by tender”",
-      "learn “issue by tender”"
+      "issue by tender Treasury bills",
+      "issue by tender new securities",
+      "issue by tender a series of bills"
     ],
     "source": "seed",
     "priority": 6,
@@ -382205,9 +382205,9 @@
       {
         "id": "econ-6d7e7a80f3e7b7-cloze",
         "type": "cloze",
-        "prompt": "Complete: The brief tells the team to _____.",
+        "prompt": "Complete: The government plans to _____ a new series of Treasury bills.",
         "answer": "issue by tender",
-        "modelAnswer": "The brief tells the team to issue by tender.",
+        "modelAnswer": "The government plans to issue by tender a new series of Treasury bills.",
         "checkpoints": [
           "issue by tender"
         ]
@@ -382216,7 +382216,7 @@
         "id": "econ-6d7e7a80f3e7b7-sentence",
         "type": "sentence",
         "prompt": "用 “issue by tender” 写一句你真实会说的话。",
-        "modelAnswer": "The brief tells the team to issue by tender.",
+        "modelAnswer": "The government plans to issue by tender a new series of Treasury bills.",
         "checkpoints": [
           "issue by tender"
         ]

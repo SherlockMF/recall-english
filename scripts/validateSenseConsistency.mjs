@@ -36,7 +36,7 @@ function posClass(pos) {
 }
 
 function defLooksVerbal(def) {
-  return /^(to |the act of |the process of )/i.test(String(def || '').trim())
+  return /^to /i.test(String(def || '').trim())
 }
 function zhLooksAdjective(zh) {
   return String(zh || '').trim().endsWith('的')
@@ -90,7 +90,7 @@ for (const item of bundled) {
   if (pos === 'noun' && defLooksVerbal(def) && !/gerund|ing\b/i.test(item.expression)) {
     warn(item, 'noun_def_looks_verbal', def.slice(0, 120))
   }
-  if (pos === 'adjective' && defLooksVerbal(def)) {
+  if (pos === 'adjective' && (defLooksVerbal(def) || /^(the act of |the process of )/i.test(def.trim()))) {
     warn(item, 'adj_def_looks_verbal', def.slice(0, 120))
   }
   if (pos === 'adjective' && zh && !zhLooksAdjective(zh) && answers.every((a) => !zhLooksAdjective(a))) {

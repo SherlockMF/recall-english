@@ -1,0 +1,4661 @@
+{
+  "reviewedAt": "2026-10-22",
+  "baselineRevision": "5.3.0",
+  "targetRevision": "5.3.1",
+  "originalFindings": 130,
+  "correctedEntries": 93,
+  "retainedEntries": 37,
+  "note": "释义为所选义项的自行概括；替换例句为项目编写，非词典引文。未更改 ID、expression、senseKey 或 memberships。",
+  "findings": [
+    {
+      "id": "v1-account-management-5bc2ba54",
+      "expression": "account management",
+      "layer": "v1",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the process of managing relationships with business customers",
+      "decision": "corrected",
+      "reason": "名词过程定义正确；替换泛化例句及不自然的 prepare/confirm 搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "We put the account management on the agenda for Thursday.",
+            "zh": "我们把「客户管理」放进周四议程。"
+          },
+          {
+            "en": "Before we sign, let’s confirm the account management in writing.",
+            "zh": "签字前，我们书面确认一下「客户管理」。"
+          }
+        ],
+        "collocations": [
+          "confirm the account management",
+          "prepare the account management",
+          "follow up on the account management"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "Our account management team meets each client every month.",
+            "zh": "我们的客户管理团队每月与各位客户会面。"
+          },
+          {
+            "en": "Good account management helps us understand each customer’s needs.",
+            "zh": "良好的客户管理有助于我们了解各位客户的需求。"
+          }
+        ],
+        "collocations": [
+          "account management team",
+          "account management strategy",
+          "key account management"
+        ]
+      }
+    },
+    {
+      "id": "v1-cost-allocation-af1d3c2f",
+      "expression": "cost allocation",
+      "layer": "v1",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the process of assigning costs to products, departments, or other cost objects",
+      "decision": "corrected",
+      "reason": "名词定义正确；allocate the cost allocation 循环搭配不能示范成本分配。",
+      "before": {
+        "examples": [
+          {
+            "en": "I can now explain the cost allocation without reading the notes.",
+            "zh": "我现在可以不看笔记解释「成本分配」。"
+          },
+          {
+            "en": "In class we applied a cost allocation to a short case study.",
+            "zh": "课上我们把「成本分配」用到一个短案例中。"
+          }
+        ],
+        "collocations": [
+          "allocate the cost allocation",
+          "analyse the cost allocation",
+          "control the cost allocation"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "We use machine hours as the basis for cost allocation.",
+            "zh": "我们以机器工时作为成本分配的依据。"
+          },
+          {
+            "en": "The cost allocation assigns factory rent to each product line.",
+            "zh": "这项成本分配把厂房租金分配到各条产品线。"
+          }
+        ],
+        "collocations": [
+          "cost allocation method",
+          "basis for cost allocation",
+          "cost allocation process"
+        ]
+      }
+    },
+    {
+      "id": "v1-customs-clearance-659f6972",
+      "expression": "customs clearance",
+      "layer": "v1",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the process of completing customs requirements for imported or exported goods",
+      "decision": "corrected",
+      "reason": "名词定义正确；替换 ship against 等不成立的搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "We put the customs clearance on the agenda for Thursday.",
+            "zh": "我们把「清关」放进周四议程。"
+          },
+          {
+            "en": "Before we sign, let’s confirm the customs clearance in writing.",
+            "zh": "签字前，我们书面确认一下「清关」。"
+          }
+        ],
+        "collocations": [
+          "ship against the customs clearance",
+          "update the customs clearance",
+          "check the customs clearance"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The shipment is waiting for customs clearance at the port.",
+            "zh": "这批货物正在港口等待清关。"
+          },
+          {
+            "en": "Missing documents delayed customs clearance.",
+            "zh": "文件缺失延误了清关。"
+          }
+        ],
+        "collocations": [
+          "customs clearance documents",
+          "complete customs clearance",
+          "delay in customs clearance"
+        ]
+      }
+    },
+    {
+      "id": "v1-delivery-4c55ec36",
+      "expression": "delivery",
+      "layer": "v1",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of taking goods to the buyer or final destination",
+      "decision": "corrected",
+      "reason": "名词定义正确；ship against the delivery 不自然，改为具体配送语境。",
+      "before": {
+        "examples": [
+          {
+            "en": "We put the delivery on the agenda for Thursday.",
+            "zh": "我们把「配送，交付」放进周四议程。"
+          },
+          {
+            "en": "Before we sign, let’s confirm the delivery in writing.",
+            "zh": "签字前，我们书面确认一下「配送，交付」。"
+          }
+        ],
+        "collocations": [
+          "ship against the delivery",
+          "update the delivery",
+          "check the delivery"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The shop offers free delivery for orders over fifty ringgit.",
+            "zh": "该店为超过五十令吉的订单提供免费配送。"
+          },
+          {
+            "en": "Please confirm the delivery address before we send the parcel.",
+            "zh": "我们寄出包裹前，请确认配送地址。"
+          }
+        ],
+        "collocations": [
+          "delivery address",
+          "free delivery",
+          "delivery service"
+        ]
+      }
+    },
+    {
+      "id": "v1-enrolment-1ff742b0",
+      "expression": "enrolment",
+      "layer": "v1",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the process of officially registering for a course or institution",
+      "decision": "corrected",
+      "reason": "注册入学过程不能 download，改为过程及截止日期的搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "I sorted out the enrolment on campus this afternoon.",
+            "zh": "今天下午我在校园把「注册入学，选课注册」办妥了。"
+          },
+          {
+            "en": "Could you show me where to find the enrolment?",
+            "zh": "你能告诉我在哪里找「注册入学，选课注册」吗？"
+          }
+        ],
+        "collocations": [
+          "submit the enrolment",
+          "check the enrolment",
+          "download the enrolment"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "Online enrolment opens a week before classes begin.",
+            "zh": "网上注册入学在开课前一周开放。"
+          },
+          {
+            "en": "Complete your enrolment before the deadline.",
+            "zh": "请在截止日期前完成注册入学。"
+          }
+        ],
+        "collocations": [
+          "online enrolment",
+          "enrolment deadline",
+          "complete enrolment"
+        ]
+      }
+    },
+    {
+      "id": "v1-market-entry-409aea6e",
+      "expression": "market entry",
+      "layer": "v1",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the process of introducing a product or business into a new market",
+      "decision": "corrected",
+      "reason": "替换把市场进入过程作为 prepare/confirm 直接宾语的泛化示例。",
+      "before": {
+        "examples": [
+          {
+            "en": "Before we sign, let’s confirm the market entry in writing.",
+            "zh": "签字前，我们书面确认一下「市场进入」。"
+          },
+          {
+            "en": "The ops lead owns follow-up on the market entry.",
+            "zh": "运营负责人跟进「市场进入」。"
+          }
+        ],
+        "collocations": [
+          "confirm the market entry",
+          "prepare the market entry",
+          "follow up on the market entry"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The company’s market entry strategy starts with online sales.",
+            "zh": "该公司的市场进入策略从线上销售开始。"
+          },
+          {
+            "en": "High licence fees can create a barrier to market entry.",
+            "zh": "高额许可费可能构成市场进入壁垒。"
+          }
+        ],
+        "collocations": [
+          "market entry strategy",
+          "barrier to market entry",
+          "market entry costs"
+        ]
+      }
+    },
+    {
+      "id": "v1-non-current-asset-8ada4b0e",
+      "expression": "non-current asset",
+      "layer": "v1",
+      "rule": "example_missing_expression",
+      "detail": "An asset is non-current when it fails the current-asset classification tests.",
+      "decision": "retained",
+      "reason": "第二例是非流动资产分类测试的正确改述，第一例已包含完整词头。",
+      "retainedDefinition": "an asset that does not meet the criteria for classification as a current asset (for example property, plant and equipment held for long-term use)"
+    },
+    {
+      "id": "v1-non-current-liability-bacb84ca",
+      "expression": "non-current liability",
+      "layer": "v1",
+      "rule": "example_missing_expression",
+      "detail": "The entity reclassified the portion due within a year out of non-current liabilities.",
+      "decision": "retained",
+      "reason": "第二例 liabilities 是 liability 的正常复数；第一例包含单数词头。",
+      "retainedDefinition": "a liability that does not meet the criteria for classification as a current liability"
+    },
+    {
+      "id": "v1-quality-control-db1be02d",
+      "expression": "quality control",
+      "layer": "v1",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the process of checking whether products meet defined quality standards",
+      "decision": "corrected",
+      "reason": "替换 prepare the quality control 等泛化搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "The ops lead owns follow-up on the quality control.",
+            "zh": "运营负责人跟进「质量控制」。"
+          },
+          {
+            "en": "We put the quality control on the agenda for Thursday.",
+            "zh": "我们把「质量控制」放进周四议程。"
+          }
+        ],
+        "collocations": [
+          "confirm the quality control",
+          "prepare the quality control",
+          "follow up on the quality control"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The factory checks every batch as part of quality control.",
+            "zh": "工厂在质量控制中检查每批产品。"
+          },
+          {
+            "en": "A quality control inspector rejected the damaged items.",
+            "zh": "质量控制检验员拒收了受损产品。"
+          }
+        ],
+        "collocations": [
+          "quality control inspector",
+          "quality control checks",
+          "quality control procedures"
+        ]
+      }
+    },
+    {
+      "id": "v1-stocktake-2a464717",
+      "expression": "stocktake",
+      "layer": "v1",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the process of physically counting inventory",
+      "decision": "corrected",
+      "reason": "盘点不是被 count/value/move 的货物，改为执行盘点。",
+      "before": {
+        "examples": [
+          {
+            "en": "I can now explain the stocktake without reading the notes.",
+            "zh": "我现在可以不看笔记解释「盘点」。"
+          },
+          {
+            "en": "Warehouse staff counted items linked to the stocktake.",
+            "zh": "仓管清点了与「盘点」相关的存货。"
+          }
+        ],
+        "collocations": [
+          "count the stocktake",
+          "value the stocktake",
+          "move the stocktake"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The warehouse will close on Friday for a stocktake.",
+            "zh": "仓库周五将为盘点而关闭。"
+          },
+          {
+            "en": "We found three missing items during the stocktake.",
+            "zh": "我们在盘点时发现少了三件物品。"
+          }
+        ],
+        "collocations": [
+          "annual stocktake",
+          "carry out a stocktake",
+          "stocktake results"
+        ]
+      }
+    },
+    {
+      "id": "v1-submission-14b2fcf8",
+      "expression": "submission",
+      "layer": "v1",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of handing in work, or the work that is handed in",
+      "decision": "corrected",
+      "reason": "submit the submission 与 download the submission 不适合所选提交行为义项。",
+      "before": {
+        "examples": [
+          {
+            "en": "Could you show me where to find the submission?",
+            "zh": "你能告诉我在哪里找「提交，提交物」吗？"
+          },
+          {
+            "en": "Once I understood the submission, the process felt easier.",
+            "zh": "弄懂「提交，提交物」后，流程就顺多了。"
+          }
+        ],
+        "collocations": [
+          "submit the submission",
+          "check the submission",
+          "download the submission"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "Online submission of the assignment closes at noon.",
+            "zh": "这份作业的网上提交于中午截止。"
+          },
+          {
+            "en": "Keep a copy of the report before submission.",
+            "zh": "提交报告前请保留副本。"
+          }
+        ],
+        "collocations": [
+          "online submission",
+          "submission deadline",
+          "submission of a report"
+        ]
+      }
+    },
+    {
+      "id": "v1-tax-compliance-17d2e063",
+      "expression": "tax compliance",
+      "layer": "v1",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the process of meeting tax filing, payment, and record-keeping requirements",
+      "decision": "corrected",
+      "reason": "税务合规不是税额，不能 compute/file/estimate the tax compliance。",
+      "before": {
+        "examples": [
+          {
+            "en": "The tax team estimated the tax compliance for the return.",
+            "zh": "税务团队为报税估算了「税务合规」。"
+          },
+          {
+            "en": "Supporting workings for the tax compliance were filed with the pack.",
+            "zh": "「税务合规」的支持性计算已归入资料包。"
+          }
+        ],
+        "collocations": [
+          "compute the tax compliance",
+          "file the tax compliance",
+          "estimate the tax compliance"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "Accurate records help a business maintain tax compliance.",
+            "zh": "准确的记录有助于企业保持税务合规。"
+          },
+          {
+            "en": "The company reviews its tax compliance procedures each year.",
+            "zh": "该公司每年复核税务合规程序。"
+          }
+        ],
+        "collocations": [
+          "tax compliance procedures",
+          "tax compliance costs",
+          "maintain tax compliance"
+        ]
+      }
+    },
+    {
+      "id": "v1-valuation-ea71fbc8",
+      "expression": "valuation",
+      "layer": "v1",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the process of estimating the economic value of an asset or business",
+      "decision": "corrected",
+      "reason": "定义和原搭配正确；原模型对估值假设的示例含混，改为估值对象和依据。",
+      "before": {
+        "examples": [
+          {
+            "en": "Our model is sensitive to assumptions about the valuation.",
+            "zh": "我们的模型对「估值」相关假设很敏感。"
+          },
+          {
+            "en": "The memo highlights why the valuation matters for this deal.",
+            "zh": "备忘录强调了「估值」对本交易的重要性。"
+          }
+        ],
+        "collocations": [
+          "prepare a valuation",
+          "update the valuation",
+          "review the valuation"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The bank requested an independent valuation of the property.",
+            "zh": "银行要求对该房产进行独立估值。"
+          },
+          {
+            "en": "Our valuation depends on the expected future cash flows.",
+            "zh": "我们的估值取决于预计未来现金流。"
+          }
+        ],
+        "collocations": [
+          "independent valuation",
+          "property valuation",
+          "valuation method"
+        ]
+      }
+    },
+    {
+      "id": "v1-visa-renewal-6197f8c8",
+      "expression": "visa renewal",
+      "layer": "v1",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the process of extending or renewing permission to stay in a country",
+      "decision": "corrected",
+      "reason": "替换 use/remember the visa renewal 的泛化搭配，不增加具体签证规则。",
+      "before": {
+        "examples": [
+          {
+            "en": "Once I understood the visa renewal, the process felt easier.",
+            "zh": "弄懂「签证续签」后，流程就顺多了。"
+          },
+          {
+            "en": "I sorted out the visa renewal on campus this afternoon.",
+            "zh": "今天下午我在校园把「签证续签」办妥了。"
+          }
+        ],
+        "collocations": [
+          "use the visa renewal",
+          "ask about the visa renewal",
+          "remember the visa renewal"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "She submitted the documents required for visa renewal.",
+            "zh": "她提交了签证续签所需的文件。"
+          },
+          {
+            "en": "Start the visa renewal process before your current visa expires.",
+            "zh": "请在现有签证到期前启动续签流程。"
+          }
+        ],
+        "collocations": [
+          "visa renewal application",
+          "visa renewal process",
+          "visa renewal fee"
+        ]
+      }
+    },
+    {
+      "id": "v1-visitor-registration-026dd902",
+      "expression": "visitor registration",
+      "layer": "v1",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the process of recording a visitor before they enter a building",
+      "decision": "corrected",
+      "reason": "calculate/compare the visitor registration 误把登记过程当作数值。",
+      "before": {
+        "examples": [
+          {
+            "en": "I sorted out the visitor registration on campus this afternoon.",
+            "zh": "今天下午我在校园把「访客登记」办妥了。"
+          },
+          {
+            "en": "Could you show me where to find the visitor registration?",
+            "zh": "你能告诉我在哪里找「访客登记」吗？"
+          }
+        ],
+        "collocations": [
+          "calculate the visitor registration",
+          "interpret the visitor registration",
+          "compare the visitor registration"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "Visitor registration takes place at the reception desk.",
+            "zh": "访客登记在接待处办理。"
+          },
+          {
+            "en": "Please complete visitor registration before entering the laboratory.",
+            "zh": "进入实验室前请完成访客登记。"
+          }
+        ],
+        "collocations": [
+          "visitor registration form",
+          "visitor registration desk",
+          "visitor registration system"
+        ]
+      }
+    },
+    {
+      "id": "econ-03503cd82262dd",
+      "expression": "ensure",
+      "layer": "econ",
+      "rule": "def_short_trailing_function_word",
+      "detail": "make certain of",
+      "decision": "corrected",
+      "reason": "短定义 make certain of 正确；原例句缺宾语或使用 risky option 等错误语境。",
+      "before": {
+        "examples": [
+          {
+            "en": "Please ensure the delivery date in writing.",
+            "zh": "请书面确保交货日期。"
+          },
+          {
+            "en": "Can you ensure the latest figures?",
+            "zh": "你能确保最新数字吗？"
+          }
+        ],
+        "collocations": [
+          "need to ensure",
+          "please ensure",
+          "refuse to ensure",
+          "ensure carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "Please ensure that every file has a backup.",
+            "zh": "请确保每份文件都有备份。"
+          },
+          {
+            "en": "Clear instructions help ensure a smooth handover.",
+            "zh": "清楚的说明有助于确保顺利交接。"
+          }
+        ],
+        "collocations": [
+          "ensure safety",
+          "ensure that",
+          "ensure a smooth handover"
+        ]
+      }
+    },
+    {
+      "id": "econ-4f6c0a36ad32b8",
+      "expression": "acknowledge",
+      "layer": "econ",
+      "rule": "def_short_trailing_function_word",
+      "detail": "report the receipt of",
+      "decision": "corrected",
+      "reason": "承认与确认收讫不是同一个义项。",
+      "before": {
+        "enDefinition": "report the receipt of",
+        "examples": [
+          {
+            "en": "I will acknowledge with the supplier tomorrow.",
+            "zh": "我明天会与供应商承认。"
+          },
+          {
+            "en": "We need to acknowledge before the deadline.",
+            "zh": "截止日期前我们需要承认。"
+          }
+        ],
+        "collocations": [
+          "need to acknowledge",
+          "please acknowledge",
+          "refuse to acknowledge",
+          "acknowledge carefully"
+        ]
+      },
+      "after": {
+        "enDefinition": "to accept or admit that something is true or exists",
+        "examples": [
+          {
+            "en": "The manager had to acknowledge the mistake.",
+            "zh": "经理不得不承认这个错误。"
+          },
+          {
+            "en": "We acknowledge that the first estimate was too low.",
+            "zh": "我们承认第一次估算过低。"
+          }
+        ],
+        "collocations": [
+          "acknowledge a mistake",
+          "acknowledge that",
+          "acknowledge a problem"
+        ]
+      },
+      "source": "https://www.merriam-webster.com/dictionary/acknowledge"
+    },
+    {
+      "id": "econ-4d04521b659a98",
+      "expression": "comparison",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of examining resemblances",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of examining resemblances"
+    },
+    {
+      "id": "econ-7933e585a909e0",
+      "expression": "arrival",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of arriving; someone or something that has arrived",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of arriving; someone or something that has arrived"
+    },
+    {
+      "id": "econ-914fb82ef86c6b",
+      "expression": "possession",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of having and controlling property",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of having and controlling property"
+    },
+    {
+      "id": "econ-8eb9612e70b5f2",
+      "expression": "departure",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of departing",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of departing"
+    },
+    {
+      "id": "econ-a14a944d6c5879",
+      "expression": "transportation",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of moving something from one location to another",
+      "decision": "corrected",
+      "reason": "移动人或货物对应运输，不是机器运转。",
+      "before": {
+        "zhGloss": "运转",
+        "examples": [
+          {
+            "en": "Can you explain “transportation” in one sentence?",
+            "zh": "你能用一句话解释「运转」吗？"
+          },
+          {
+            "en": "I looked up “transportation” before the quiz.",
+            "zh": "小测前我查阅了「运转」。"
+          }
+        ],
+        "collocations": [
+          "prioritise the transportation",
+          "standardise the transportation",
+          "monitor the transportation"
+        ],
+        "acceptedZhAnswers": [
+          "运转"
+        ]
+      },
+      "after": {
+        "zhGloss": "运输",
+        "examples": [
+          {
+            "en": "Rail transportation carries goods between the two cities.",
+            "zh": "铁路运输在这两座城市之间运送货物。"
+          },
+          {
+            "en": "The company is trying to reduce transportation costs.",
+            "zh": "该公司正设法降低运输成本。"
+          }
+        ],
+        "collocations": [
+          "transportation costs",
+          "rail transportation",
+          "transportation of goods"
+        ],
+        "acceptedZhAnswers": [
+          "运输"
+        ]
+      }
+    },
+    {
+      "id": "econ-e6520fc7576842",
+      "expression": "acquisition",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of contracting or assuming or acquiring possession of something",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of contracting or assuming or acquiring possession of something"
+    },
+    {
+      "id": "econ-c2d0f75d679b71",
+      "expression": "accredit",
+      "layer": "econ",
+      "rule": "def_short_trailing_function_word",
+      "detail": "grant credentials to",
+      "decision": "corrected",
+      "reason": "授予资格的正式认可义项应与例句及中文一致。",
+      "before": {
+        "zhGloss": "授权",
+        "enDefinition": "grant credentials to",
+        "examples": [
+          {
+            "en": "They decided to accredit the risky option.",
+            "zh": "他们决定授权那个高风险选项。"
+          },
+          {
+            "en": "Please accredit the delivery date in writing.",
+            "zh": "请书面授权交货日期。"
+          }
+        ],
+        "collocations": [
+          "need to accredit",
+          "please accredit",
+          "refuse to accredit",
+          "accredit carefully"
+        ],
+        "acceptedZhAnswers": [
+          "授权"
+        ]
+      },
+      "after": {
+        "zhGloss": "认可",
+        "enDefinition": "to officially recognise that a person or organisation meets required standards",
+        "examples": [
+          {
+            "en": "The national body will accredit the training programme.",
+            "zh": "全国性机构将对这个培训项目进行认证。"
+          },
+          {
+            "en": "Only an approved agency can accredit the laboratory.",
+            "zh": "只有获准机构才能认可这间实验室的资质。"
+          }
+        ],
+        "collocations": [
+          "accredit a programme",
+          "accredit a laboratory",
+          "officially accredit"
+        ],
+        "acceptedZhAnswers": [
+          "认可"
+        ]
+      }
+    },
+    {
+      "id": "econ-341604db7002e8",
+      "expression": "admission",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of admitting someone to enter",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of admitting someone to enter"
+    },
+    {
+      "id": "econ-5194d926dde85c",
+      "expression": "abolish",
+      "layer": "econ",
+      "rule": "def_short_trailing_function_word",
+      "detail": "do away with",
+      "decision": "corrected",
+      "reason": "do away with 是完整字典式同义释义；替换不合宾语要求的例句。",
+      "before": {
+        "examples": [
+          {
+            "en": "Please abolish the delivery date in writing.",
+            "zh": "请书面废除交货日期。"
+          },
+          {
+            "en": "Can you abolish the latest figures?",
+            "zh": "你能废除最新数字吗？"
+          }
+        ],
+        "collocations": [
+          "need to abolish",
+          "please abolish",
+          "refuse to abolish",
+          "abolish carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The council voted to abolish the outdated fee.",
+            "zh": "议会投票废除了这项过时的收费。"
+          },
+          {
+            "en": "The proposal would abolish the current reporting requirement.",
+            "zh": "该提案将废除现行的报告要求。"
+          }
+        ],
+        "collocations": [
+          "abolish a law",
+          "abolish a fee",
+          "abolish a requirement"
+        ]
+      }
+    },
+    {
+      "id": "econ-27d2ad547b5b96",
+      "expression": "procurement",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of getting possession of something",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of getting possession of something"
+    },
+    {
+      "id": "econ-31fd83086d505d",
+      "expression": "defray",
+      "layer": "econ",
+      "rule": "def_short_trailing_function_word",
+      "detail": "bear the expenses of",
+      "decision": "corrected",
+      "reason": "bear the expenses of 正确；defray 的宾语应为费用。",
+      "before": {
+        "examples": [
+          {
+            "en": "We need to defray before the deadline.",
+            "zh": "截止日期前我们需要支付或准备支付。"
+          },
+          {
+            "en": "They decided to defray the risky option.",
+            "zh": "他们决定支付或准备支付那个高风险选项。"
+          }
+        ],
+        "collocations": [
+          "need to defray",
+          "please defray",
+          "refuse to defray",
+          "defray carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The grant will help defray the cost of travel.",
+            "zh": "这笔补助将帮助支付差旅费用。"
+          },
+          {
+            "en": "Registration fees defray part of the conference expenses.",
+            "zh": "报名费支付了部分会议开支。"
+          }
+        ],
+        "collocations": [
+          "defray the cost",
+          "defray expenses",
+          "help defray"
+        ]
+      }
+    },
+    {
+      "id": "econ-988b8889339e70",
+      "expression": "redeem",
+      "layer": "econ",
+      "rule": "def_short_trailing_function_word",
+      "detail": "restore the honor or worth of",
+      "decision": "corrected",
+      "reason": "履行契约/承诺与挽回名誉的定义不一致。",
+      "before": {
+        "enDefinition": "restore the honor or worth of",
+        "examples": [
+          {
+            "en": "They decided to redeem the risky option.",
+            "zh": "他们决定履行(契约)那个高风险选项。"
+          },
+          {
+            "en": "Please redeem the delivery date in writing.",
+            "zh": "请书面履行(契约)交货日期。"
+          }
+        ],
+        "collocations": [
+          "need to redeem",
+          "please redeem",
+          "refuse to redeem",
+          "redeem carefully"
+        ]
+      },
+      "after": {
+        "enDefinition": "to fulfil a promise or an obligation",
+        "examples": [
+          {
+            "en": "The company must redeem its promise to improve safety.",
+            "zh": "公司必须兑现改善安全的承诺。"
+          },
+          {
+            "en": "She worked hard to redeem the pledge she had made.",
+            "zh": "她努力兑现自己许下的诺言。"
+          }
+        ],
+        "collocations": [
+          "redeem a promise",
+          "redeem a pledge",
+          "redeem an obligation"
+        ]
+      },
+      "source": "https://www.merriam-webster.com/dictionary/redeem"
+    },
+    {
+      "id": "econ-a615d64b122566",
+      "expression": "intervention",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of intervening (as to mediate a dispute, etc.)",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of intervening (as to mediate a dispute, etc.)"
+    },
+    {
+      "id": "econ-0714e345b9be53",
+      "expression": "exploitation",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of making some area of land or water more profitable or productive or useful",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of making some area of land or water more profitable or productive or useful"
+    },
+    {
+      "id": "econ-064122cb792ff9",
+      "expression": "certification",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of certifying or bestowing a franchise on",
+      "decision": "corrected",
+      "reason": "原定义混入 franchise 授权，改为认证的正式证明义项。",
+      "before": {
+        "enDefinition": "the act of certifying or bestowing a franchise on",
+        "examples": [
+          {
+            "en": "We discussed “certification” in today’s tutorial.",
+            "zh": "今天的辅导课我们讨论了「证明」。"
+          },
+          {
+            "en": "The article mentions “certification” several times.",
+            "zh": "这篇文章多次提到「证明」。"
+          }
+        ],
+        "collocations": [
+          "define “certification”",
+          "teach “certification”",
+          "revise “certification”"
+        ]
+      },
+      "after": {
+        "enDefinition": "formal confirmation that a person, product, or organisation meets specified requirements",
+        "examples": [
+          {
+            "en": "The product received certification after independent testing.",
+            "zh": "该产品经独立检测后获得了认证。"
+          },
+          {
+            "en": "The course prepares technicians for professional certification.",
+            "zh": "该课程帮助技术人员准备专业认证。"
+          }
+        ],
+        "collocations": [
+          "professional certification",
+          "certification requirements",
+          "product certification"
+        ]
+      }
+    },
+    {
+      "id": "econ-26375e688cd0d7",
+      "expression": "enrollment",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of enrolling",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of enrolling"
+    },
+    {
+      "id": "econ-89415c7d82c3f4",
+      "expression": "demolition",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of pulling down or destroying a building or structure",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of pulling down or destroying a building or structure"
+    },
+    {
+      "id": "econ-9942b261a9138d",
+      "expression": "abandonment",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of giving something up",
+      "decision": "corrected",
+      "reason": "保留海上保险的委付义项，不能只定义为一般放弃。",
+      "before": {
+        "enDefinition": "the act of giving something up",
+        "examples": [
+          {
+            "en": "We discussed “abandonment” in today’s tutorial.",
+            "zh": "今天的辅导课我们讨论了「委付」。"
+          },
+          {
+            "en": "The article mentions “abandonment” several times.",
+            "zh": "这篇文章多次提到「委付」。"
+          }
+        ],
+        "collocations": [
+          "clarify “abandonment”",
+          "apply “abandonment”",
+          "update “abandonment”"
+        ]
+      },
+      "after": {
+        "enDefinition": "the surrender of an insured interest to the insurer when claiming a total loss under marine insurance",
+        "examples": [
+          {
+            "en": "The shipowner gave notice of abandonment to the insurer.",
+            "zh": "船东向保险人发出了委付通知。"
+          },
+          {
+            "en": "A valid abandonment allows the insurer to take over the remaining insured interest.",
+            "zh": "有效的委付使保险人有权接收剩余的被保险利益。"
+          }
+        ],
+        "collocations": [
+          "notice of abandonment",
+          "valid abandonment",
+          "acceptance of abandonment"
+        ]
+      },
+      "source": "https://www.legislation.gov.uk/ukpga/Edw7/6/41/2013-04-06/data.html"
+    },
+    {
+      "id": "econ-2abb64379ec0c4",
+      "expression": "authorization",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of conferring legality or sanction or formal warrant",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of conferring legality or sanction or formal warrant"
+    },
+    {
+      "id": "econ-ca7db6d03ec492",
+      "expression": "amid",
+      "layer": "econ",
+      "rule": "def_short_trailing_function_word",
+      "detail": "in the middle of; surrounded by",
+      "decision": "corrected",
+      "reason": "surrounded by 是有效介词释义，替换不能说明 amid 用法的示例。",
+      "before": {
+        "examples": [
+          {
+            "en": "Compare cost amid quality before you decide.",
+            "zh": "决定前请比较成本在…之中质量。"
+          },
+          {
+            "en": "Put the keys amid the laptop.",
+            "zh": "把钥匙放在笔记本电脑在…之中。"
+          }
+        ],
+        "collocations": [
+          "amid work",
+          "amid that",
+          "go amid"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The team continued working amid the noise.",
+            "zh": "团队在嘈杂声中继续工作。"
+          },
+          {
+            "en": "The announcement came amid growing uncertainty.",
+            "zh": "这项公告是在不确定性增加之际发布的。"
+          }
+        ],
+        "collocations": [
+          "amid the noise",
+          "amid uncertainty",
+          "amid the crowd"
+        ]
+      }
+    },
+    {
+      "id": "econ-db47156d1a1a22",
+      "expression": "inwards",
+      "layer": "econ",
+      "rule": "def_short_trailing_function_word",
+      "detail": "to or toward the inside of",
+      "decision": "corrected",
+      "reason": "副词不能以进口税作中文答案。",
+      "before": {
+        "zhGloss": "进口税",
+        "acceptedZhAnswers": [
+          "进口税"
+        ],
+        "enDefinition": "to or toward the inside of",
+        "examples": [
+          {
+            "en": "I can explain “inwards” without looking at the notes.",
+            "zh": "我不看笔记也能解释「进口税」。"
+          },
+          {
+            "en": "The tutor asked how “inwards” affects the accounts.",
+            "zh": "导师问「进口税」如何影响账目。"
+          }
+        ],
+        "collocations": [
+          "define “inwards”",
+          "teach “inwards”",
+          "revise “inwards”"
+        ]
+      },
+      "after": {
+        "zhGloss": "向内",
+        "acceptedZhAnswers": [
+          "向内"
+        ],
+        "enDefinition": "towards the inside or centre of something",
+        "examples": [
+          {
+            "en": "The door opens inwards.",
+            "zh": "这扇门向内开。"
+          },
+          {
+            "en": "Fold the edges inwards before sealing the envelope.",
+            "zh": "封好信封前把边缘向内折。"
+          }
+        ],
+        "collocations": [
+          "open inwards",
+          "fold inwards",
+          "turn inwards"
+        ]
+      }
+    },
+    {
+      "id": "econ-034fd631466459",
+      "expression": "cancellation",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of cancelling; calling off some arrangement",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of cancelling; calling off some arrangement"
+    },
+    {
+      "id": "econ-4f9d50b636c46a",
+      "expression": "cession",
+      "layer": "econ",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of ceding",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of ceding"
+    },
+    {
+      "id": "econ-e6be4939542747",
+      "expression": "underwriting",
+      "layer": "econ",
+      "rule": "def_short_trailing_function_word",
+      "detail": "guarantee financial support of",
+      "decision": "corrected",
+      "reason": "保留保险业语境，定义为承保过程而非普通财务支持的动词。",
+      "before": {
+        "zhGloss": "(海上)保险业",
+        "enDefinition": "guarantee financial support of",
+        "examples": [
+          {
+            "en": "The model is sensitive to assumptions about “underwriting”.",
+            "zh": "模型对「(海上)保险业」相关假设很敏感。"
+          },
+          {
+            "en": "Our memo flags why “underwriting” matters for this deal.",
+            "zh": "备忘录标出「(海上)保险业」对本交易为何重要。"
+          }
+        ],
+        "collocations": [
+          "an underwriting decision",
+          "remain underwriting",
+          "sound underwriting"
+        ],
+        "acceptedZhAnswers": [
+          "(海上)保险业"
+        ]
+      },
+      "after": {
+        "zhGloss": "承保",
+        "enDefinition": "the business or process of accepting insurance risks in exchange for premiums",
+        "examples": [
+          {
+            "en": "The insurer tightened its underwriting standards.",
+            "zh": "该保险公司收紧了承保标准。"
+          },
+          {
+            "en": "Marine underwriting involves assessing risks to ships and cargo.",
+            "zh": "海上保险承保涉及评估船舶和货物风险。"
+          }
+        ],
+        "collocations": [
+          "underwriting standards",
+          "marine underwriting",
+          "underwriting risk"
+        ],
+        "acceptedZhAnswers": [
+          "承保"
+        ]
+      },
+      "source": "https://www.merriam-webster.com/dictionary/underwriting"
+    },
+    {
+      "id": "core-a28100fa6a50a3",
+      "expression": "cover",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of concealing the existence of something by obstructing the view of it",
+      "decision": "corrected",
+      "reason": "盖子是物体，不是遮掩行为。",
+      "before": {
+        "enDefinition": "the act of concealing the existence of something by obstructing the view of it",
+        "examples": [
+          {
+            "en": "We discussed “cover” in today’s tutorial.",
+            "zh": "今天的辅导课我们讨论了「盖子」。"
+          },
+          {
+            "en": "The article mentions “cover” several times.",
+            "zh": "这篇文章多次提到「盖子」。"
+          }
+        ],
+        "collocations": [
+          "explain “cover”",
+          "use “cover”",
+          "learn “cover”"
+        ]
+      },
+      "after": {
+        "enDefinition": "a lid or other object placed over something to close or protect it",
+        "examples": [
+          {
+            "en": "Put the cover back on the container.",
+            "zh": "把盖子重新盖在容器上。"
+          },
+          {
+            "en": "The plastic cover keeps dust out of the machine.",
+            "zh": "这个塑料盖防止灰尘进入机器。"
+          }
+        ],
+        "collocations": [
+          "plastic cover",
+          "protective cover",
+          "remove the cover"
+        ]
+      }
+    },
+    {
+      "id": "core-517bd000b74cbc",
+      "expression": "fight",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of fighting; any contest or struggle",
+      "decision": "corrected",
+      "reason": "名词定义正确，但 bring/file the fight 与该义项不成立；替换相应模板例句与搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "Please use “fight” correctly in your essay.",
+            "zh": "请在作文里正确使用「打架」。"
+          },
+          {
+            "en": "Can you explain “fight” in one sentence?",
+            "zh": "你能用一句话解释「打架」吗？"
+          }
+        ],
+        "collocations": [
+          "prepare the fight",
+          "bring the fight",
+          "file the fight"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "A fight broke out outside the stadium.",
+            "zh": "体育场外发生了一场打架事件。"
+          },
+          {
+            "en": "Two teachers stepped in to stop the fight.",
+            "zh": "两位老师上前制止了打架。"
+          }
+        ],
+        "collocations": [
+          "break up a fight",
+          "get into a fight",
+          "a fight between classmates"
+        ]
+      }
+    },
+    {
+      "id": "core-056f118278992d",
+      "expression": "design",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of working out the form of something (as by making a sketch or outline or plan)",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of working out the form of something (as by making a sketch or outline or plan)"
+    },
+    {
+      "id": "core-a41f18cb110cde",
+      "expression": "visit",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of going to see some person or place or thing for a short time",
+      "decision": "corrected",
+      "reason": "名词定义正确，但 bring/file the visit 与该义项不成立；替换相应模板例句与搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "Can you explain “visit” in one sentence?",
+            "zh": "你能用一句话解释「拜访」吗？"
+          },
+          {
+            "en": "I looked up “visit” before the quiz.",
+            "zh": "小测前我查阅了「拜访」。"
+          }
+        ],
+        "collocations": [
+          "prepare the visit",
+          "bring the visit",
+          "file the visit"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "We paid a visit to our former teacher.",
+            "zh": "我们拜访了以前的老师。"
+          },
+          {
+            "en": "Her visit lasted only an hour.",
+            "zh": "她的拜访只持续了一个小时。"
+          }
+        ],
+        "collocations": [
+          "pay a visit",
+          "a brief visit",
+          "a visit to someone"
+        ]
+      }
+    },
+    {
+      "id": "core-c1380af4865911",
+      "expression": "contain",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "be divisible by",
+      "decision": "corrected",
+      "reason": "包含的普通义项不是数学中的整除。",
+      "before": {
+        "enDefinition": "be divisible by",
+        "examples": [
+          {
+            "en": "They decided to contain the risky option.",
+            "zh": "他们决定包含那个高风险选项。"
+          },
+          {
+            "en": "Please contain the delivery date in writing.",
+            "zh": "请书面包含交货日期。"
+          }
+        ],
+        "collocations": [
+          "need to contain",
+          "please contain",
+          "refuse to contain",
+          "contain carefully"
+        ]
+      },
+      "after": {
+        "enDefinition": "to have something inside or as a part of something larger",
+        "examples": [
+          {
+            "en": "This box can contain up to twenty files.",
+            "zh": "这个箱子最多可装二十份文件。"
+          },
+          {
+            "en": "The report may contain confidential information.",
+            "zh": "这份报告可能包含机密信息。"
+          }
+        ],
+        "collocations": [
+          "contain information",
+          "contain details",
+          "contain ingredients"
+        ]
+      }
+    },
+    {
+      "id": "core-cae355b615b613",
+      "expression": "please",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "give pleasure to or be pleasing to",
+      "decision": "corrected",
+      "reason": "保留表示请的副词，删除使人高兴的动词定义。",
+      "before": {
+        "enDefinition": "give pleasure to or be pleasing to",
+        "examples": [
+          {
+            "en": "She finished the report please before the deadline.",
+            "zh": "她在截止日期前请完成了报告。"
+          },
+          {
+            "en": "We please agree with the revised forecast.",
+            "zh": "我们请同意修订后的预测。"
+          }
+        ],
+        "collocations": [
+          "speak please",
+          "work please",
+          "answer please"
+        ]
+      },
+      "after": {
+        "enDefinition": "used in a request to make it more polite",
+        "examples": [
+          {
+            "en": "Please send the report by Friday.",
+            "zh": "请在周五前发送报告。"
+          },
+          {
+            "en": "Could you close the window, please?",
+            "zh": "请你关上窗，好吗？"
+          }
+        ],
+        "collocations": [
+          "please send",
+          "yes please",
+          "could you please"
+        ]
+      },
+      "source": "https://www.merriam-webster.com/dictionary/please"
+    },
+    {
+      "id": "core-3dbcdc08e11750",
+      "expression": "recognize",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "be fully aware or cognizant of",
+      "decision": "corrected",
+      "reason": "认出不等于意识到某事，定义与例句对齐识别义项。",
+      "before": {
+        "enDefinition": "be fully aware or cognizant of",
+        "examples": [
+          {
+            "en": "We need to recognize before the deadline.",
+            "zh": "截止日期前我们需要认出。"
+          },
+          {
+            "en": "They decided to recognize the risky option.",
+            "zh": "他们决定认出那个高风险选项。"
+          }
+        ],
+        "collocations": [
+          "need to recognize",
+          "please recognize",
+          "refuse to recognize",
+          "recognize carefully"
+        ]
+      },
+      "after": {
+        "enDefinition": "to identify someone or something because you have encountered them before",
+        "examples": [
+          {
+            "en": "I did not recognize him at first.",
+            "zh": "我起初没有认出他。"
+          },
+          {
+            "en": "Can you recognize the building in this photograph?",
+            "zh": "你能认出这张照片里的建筑吗？"
+          }
+        ],
+        "collocations": [
+          "recognize a face",
+          "recognize a voice",
+          "recognize someone immediately"
+        ]
+      }
+    },
+    {
+      "id": "core-6df580aee7e3c8",
+      "expression": "suffer",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "undergo or be subjected to",
+      "decision": "corrected",
+      "reason": "undergo or be subjected to 是有效动词释义；原例句的宾语和搭配错误。",
+      "before": {
+        "examples": [
+          {
+            "en": "Please suffer the delivery date in writing.",
+            "zh": "请书面遭受交货日期。"
+          },
+          {
+            "en": "Can you suffer the latest figures?",
+            "zh": "你能遭受最新数字吗？"
+          }
+        ],
+        "collocations": [
+          "need to suffer",
+          "please suffer",
+          "refuse to suffer",
+          "suffer carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "Small firms may suffer heavy losses after a flood.",
+            "zh": "小企业可能在洪水后遭受重大损失。"
+          },
+          {
+            "en": "Passengers suffer delays when the line is closed.",
+            "zh": "线路关闭时，乘客会遭遇延误。"
+          }
+        ],
+        "collocations": [
+          "suffer losses",
+          "suffer damage",
+          "suffer delays"
+        ]
+      }
+    },
+    {
+      "id": "core-f7956b2763e6ff",
+      "expression": "travel",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of going from one place to another",
+      "decision": "corrected",
+      "reason": "名词定义正确，但 bring/file the travel 与该义项不成立；替换相应模板例句与搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "Please use “travel” correctly in your essay.",
+            "zh": "请在作文里正确使用「旅行」。"
+          },
+          {
+            "en": "Can you explain “travel” in one sentence?",
+            "zh": "你能用一句话解释「旅行」吗？"
+          }
+        ],
+        "collocations": [
+          "prepare the travel",
+          "bring the travel",
+          "file the travel"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "Air travel can be tiring on a long journey.",
+            "zh": "长途航空旅行可能令人疲惫。"
+          },
+          {
+            "en": "Her job involves frequent travel.",
+            "zh": "她的工作需要频繁旅行。"
+          }
+        ],
+        "collocations": [
+          "air travel",
+          "business travel",
+          "travel arrangements"
+        ]
+      }
+    },
+    {
+      "id": "core-5aaf8905f32a43",
+      "expression": "progress",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of moving forward (as toward a goal)",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of moving forward (as toward a goal)"
+    },
+    {
+      "id": "core-ace6752be4cc24",
+      "expression": "colleague",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "an associate that one works with",
+      "decision": "retained",
+      "reason": "an associate that one works with 是完整的关系从句名词定义，with 的介词宾语由关系从句先行词补足。",
+      "retainedDefinition": "an associate that one works with"
+    },
+    {
+      "id": "core-f57b2d312d9efe",
+      "expression": "equal",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "be identical or equivalent to",
+      "decision": "corrected",
+      "reason": "对手是名词，不能使用 be identical 的动词定义。",
+      "before": {
+        "enDefinition": "be identical or equivalent to",
+        "examples": [
+          {
+            "en": "Can you explain “equal” in one sentence?",
+            "zh": "你能用一句话解释「对手」吗？"
+          },
+          {
+            "en": "Please use “equal” correctly in your essay.",
+            "zh": "请在作文里正确使用「对手」。"
+          }
+        ],
+        "collocations": [
+          "explain “equal”",
+          "use “equal”",
+          "learn “equal”"
+        ]
+      },
+      "after": {
+        "enDefinition": "a person or thing with the same ability, status, or value as another",
+        "examples": [
+          {
+            "en": "She has no equal in this field.",
+            "zh": "在这个领域她没有对手。"
+          },
+          {
+            "en": "The younger player finally met his equal in the final.",
+            "zh": "这位年轻选手终于在决赛中遇到了旗鼓相当的对手。"
+          }
+        ],
+        "collocations": [
+          "have no equal",
+          "meet one’s equal",
+          "treat someone as an equal"
+        ]
+      }
+    },
+    {
+      "id": "core-d015cc465bdb4e",
+      "expression": "secure",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "assure payment of",
+      "decision": "corrected",
+      "reason": "保留无忧虑的形容词义项，不使用确保付款的动词释义。",
+      "before": {
+        "zhGloss": "无虑的",
+        "enDefinition": "assure payment of",
+        "examples": [
+          {
+            "en": "Is the apartment secure?",
+            "zh": "这套公寓是无虑的的吗？"
+          },
+          {
+            "en": "The terms are secure, so we can still discuss price.",
+            "zh": "条款是无虑的的，所以价格仍可谈。"
+          }
+        ],
+        "collocations": [
+          "a secure option",
+          "remain secure",
+          "secure terms",
+          "clearly secure"
+        ],
+        "acceptedZhAnswers": [
+          "无虑的"
+        ]
+      },
+      "after": {
+        "zhGloss": "安心的",
+        "enDefinition": "feeling safe and confident, without fear or worry",
+        "examples": [
+          {
+            "en": "A reliable income helps her feel secure.",
+            "zh": "稳定的收入让她感到安心。"
+          },
+          {
+            "en": "The children feel secure in a familiar environment.",
+            "zh": "孩子们在熟悉的环境里感到安心。"
+          }
+        ],
+        "collocations": [
+          "feel secure",
+          "emotionally secure",
+          "secure in the knowledge that"
+        ],
+        "acceptedZhAnswers": [
+          "安心的"
+        ]
+      },
+      "source": "https://www.merriam-webster.com/dictionary/secure"
+    },
+    {
+      "id": "core-cdecabe1520a39",
+      "expression": "escape",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of escaping physically",
+      "decision": "corrected",
+      "reason": "名词定义正确，但 bring/file the escape 与该义项不成立；替换相应模板例句与搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "We discussed “escape” in today’s tutorial.",
+            "zh": "今天的辅导课我们讨论了「逃亡」。"
+          },
+          {
+            "en": "The article mentions “escape” several times.",
+            "zh": "这篇文章多次提到「逃亡」。"
+          }
+        ],
+        "collocations": [
+          "prepare the escape",
+          "bring the escape",
+          "file the escape"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The police blocked every possible route of escape.",
+            "zh": "警方封锁了所有可能的逃亡路线。"
+          },
+          {
+            "en": "The prisoner’s escape was discovered at dawn.",
+            "zh": "囚犯的逃亡在黎明时被发现。"
+          }
+        ],
+        "collocations": [
+          "make an escape",
+          "route of escape",
+          "prevent an escape"
+        ]
+      }
+    },
+    {
+      "id": "core-a4555a4be0d70c",
+      "expression": "defend",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "argue or speak in defense of",
+      "decision": "corrected",
+      "reason": "保护义项不能仅定义为发表辩护意见；替换混入另一义项的示例。",
+      "before": {
+        "zhGloss": "防护",
+        "enDefinition": "argue or speak in defense of",
+        "acceptedZhAnswers": [
+          "防护"
+        ],
+        "examples": [
+          {
+            "en": "We need to defend before the deadline.",
+            "zh": "截止日期前我们需要防护。"
+          },
+          {
+            "en": "They decided to defend the risky option.",
+            "zh": "他们决定防护那个高风险选项。"
+          }
+        ],
+        "collocations": [
+          "need to defend",
+          "please defend",
+          "refuse to defend",
+          "defend carefully"
+        ]
+      },
+      "after": {
+        "zhGloss": "保护",
+        "enDefinition": "to protect someone or something from attack, criticism, or harm",
+        "acceptedZhAnswers": [
+          "保护",
+          "保卫"
+        ],
+        "examples": [
+          {
+            "en": "A strong wall can defend the village against attack.",
+            "zh": "坚固的城墙可以保护村庄免遭攻击。"
+          },
+          {
+            "en": "The team must defend its lead in the final minutes.",
+            "zh": "球队必须在最后几分钟保住领先优势。"
+          }
+        ],
+        "collocations": [
+          "defend a client",
+          "defend a position",
+          "defend against criticism"
+        ]
+      }
+    },
+    {
+      "id": "core-e4788b8afee677",
+      "expression": "approve",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "give sanction to",
+      "decision": "corrected",
+      "reason": "give sanction to 完整；示范 approve 和 approve of 的实际用法。",
+      "before": {
+        "examples": [
+          {
+            "en": "We need to approve before the deadline.",
+            "zh": "截止日期前我们需要赞同。"
+          },
+          {
+            "en": "They decided to approve the risky option.",
+            "zh": "他们决定赞同那个高风险选项。"
+          }
+        ],
+        "collocations": [
+          "need to approve",
+          "please approve",
+          "refuse to approve",
+          "approve carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The board must approve the annual budget.",
+            "zh": "董事会必须批准年度预算。"
+          },
+          {
+            "en": "Do you approve of the proposed changes?",
+            "zh": "你赞同这些拟议的改动吗？"
+          }
+        ],
+        "collocations": [
+          "approve a budget",
+          "approve a proposal",
+          "approve of something"
+        ]
+      }
+    },
+    {
+      "id": "core-672fccd70b672e",
+      "expression": "except",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "take exception to",
+      "decision": "corrected",
+      "reason": "保留动词排除义项；原中文除与反对义项的英文混配。",
+      "before": {
+        "zhGloss": "除",
+        "enDefinition": "take exception to",
+        "examples": [
+          {
+            "en": "We need to except before the deadline.",
+            "zh": "截止日期前我们需要除。"
+          },
+          {
+            "en": "They decided to except the risky option.",
+            "zh": "他们决定除那个高风险选项。"
+          }
+        ],
+        "collocations": [
+          "need to except",
+          "please except",
+          "refuse to except",
+          "except carefully"
+        ],
+        "acceptedZhAnswers": [
+          "除"
+        ]
+      },
+      "after": {
+        "zhGloss": "排除",
+        "enDefinition": "to leave someone or something out of a group or statement",
+        "examples": [
+          {
+            "en": "The policy will except students from the additional charge.",
+            "zh": "这项规定将把学生排除在额外收费范围之外。"
+          },
+          {
+            "en": "We cannot except one applicant without a clear reason.",
+            "zh": "没有明确理由，我们不能把某位申请者排除在外。"
+          }
+        ],
+        "collocations": [
+          "except someone from",
+          "except a case",
+          "except an applicant"
+        ],
+        "acceptedZhAnswers": [
+          "排除"
+        ]
+      },
+      "source": "https://www.merriam-webster.com/dictionary/except"
+    },
+    {
+      "id": "core-84774ba193af24",
+      "expression": "relate",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "give an account of",
+      "decision": "corrected",
+      "reason": "give an account of 正确；交货日期和数字不宜直接套入讲述模板。",
+      "before": {
+        "examples": [
+          {
+            "en": "Please relate the delivery date in writing.",
+            "zh": "请书面讲交货日期。"
+          },
+          {
+            "en": "Can you relate the latest figures?",
+            "zh": "你能讲最新数字吗？"
+          }
+        ],
+        "collocations": [
+          "need to relate",
+          "please relate",
+          "refuse to relate",
+          "relate carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The witness will relate what happened that evening.",
+            "zh": "证人将讲述当晚发生的事情。"
+          },
+          {
+            "en": "Please relate the events in the order they occurred.",
+            "zh": "请按发生顺序讲述这些事件。"
+          }
+        ],
+        "collocations": [
+          "relate a story",
+          "relate the events",
+          "relate an experience"
+        ]
+      }
+    },
+    {
+      "id": "core-b5c5697f83be28",
+      "expression": "obtain",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "come into possession of",
+      "decision": "corrected",
+      "reason": "come into possession of 完整；替换获得 risky option 的不成立示例。",
+      "before": {
+        "examples": [
+          {
+            "en": "They decided to obtain the risky option.",
+            "zh": "他们决定获得那个高风险选项。"
+          },
+          {
+            "en": "Please obtain the delivery date in writing.",
+            "zh": "请书面获得交货日期。"
+          }
+        ],
+        "collocations": [
+          "need to obtain",
+          "please obtain",
+          "refuse to obtain",
+          "obtain carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "You must obtain permission before entering the archive.",
+            "zh": "进入档案室前必须获得许可。"
+          },
+          {
+            "en": "We can obtain a copy of the report from the library.",
+            "zh": "我们可以从图书馆获得这份报告的副本。"
+          }
+        ],
+        "collocations": [
+          "obtain permission",
+          "obtain information",
+          "obtain a copy"
+        ]
+      }
+    },
+    {
+      "id": "core-f45f2bc801bb77",
+      "expression": "experiment",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of conducting a controlled test or investigation",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of conducting a controlled test or investigation"
+    },
+    {
+      "id": "core-7da33f49740772",
+      "expression": "journey",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of traveling from one place to another",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of traveling from one place to another"
+    },
+    {
+      "id": "core-fbc259d1f78c5c",
+      "expression": "capture",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of forcibly dispossessing an owner of property",
+      "decision": "corrected",
+      "reason": "捕获是抓住人或动物并控制的义项，与数据抓取区分；原定义错误地只涉及剥夺财产。",
+      "before": {
+        "zhGloss": "抓取",
+        "enDefinition": "the act of forcibly dispossessing an owner of property",
+        "acceptedZhAnswers": [
+          "抓取"
+        ],
+        "examples": [
+          {
+            "en": "Please use “capture” correctly in your essay.",
+            "zh": "请在作文里正确使用「抓取」。"
+          },
+          {
+            "en": "Can you explain “capture” in one sentence?",
+            "zh": "你能用一句话解释「抓取」吗？"
+          }
+        ],
+        "collocations": [
+          "prepare the capture",
+          "bring the capture",
+          "file the capture"
+        ]
+      },
+      "after": {
+        "zhGloss": "捕获",
+        "enDefinition": "the act of catching someone or something and bringing them under control",
+        "acceptedZhAnswers": [
+          "捕获",
+          "抓获"
+        ],
+        "examples": [
+          {
+            "en": "The rescue team planned the safe capture of the escaped animal.",
+            "zh": "救援队计划安全捕获逃出的动物。"
+          },
+          {
+            "en": "The capture of the suspect ended the search.",
+            "zh": "嫌疑人的落网结束了搜捕。"
+          }
+        ],
+        "collocations": [
+          "capture of a suspect",
+          "safe capture",
+          "avoid capture"
+        ]
+      }
+    },
+    {
+      "id": "core-a62731f64fcef4",
+      "expression": "passage",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of passing from one state or place to the next",
+      "decision": "corrected",
+      "reason": "通道是可通行的地方，不是状态转变行为。",
+      "before": {
+        "enDefinition": "the act of passing from one state or place to the next",
+        "examples": [
+          {
+            "en": "Please use “passage” correctly in your essay.",
+            "zh": "请在作文里正确使用「通道」。"
+          },
+          {
+            "en": "Can you explain “passage” in one sentence?",
+            "zh": "你能用一句话解释「通道」吗？"
+          }
+        ],
+        "collocations": [
+          "prepare the passage",
+          "bring the passage",
+          "file the passage"
+        ]
+      },
+      "after": {
+        "enDefinition": "a corridor or narrow way through which people can move",
+        "examples": [
+          {
+            "en": "A narrow passage connects the kitchen to the courtyard.",
+            "zh": "一条狭窄通道连接厨房和庭院。"
+          },
+          {
+            "en": "Keep the passage clear in case of an emergency.",
+            "zh": "请保持通道畅通，以备紧急情况。"
+          }
+        ],
+        "collocations": [
+          "narrow passage",
+          "underground passage",
+          "passage entrance"
+        ]
+      }
+    },
+    {
+      "id": "core-1899fd45244bce",
+      "expression": "somewhat",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "to a small degree or extent",
+      "decision": "corrected",
+      "reason": "英文定义为程度副词，原词性 noun 和中文某物属于另一用法。",
+      "before": {
+        "partOfSpeech": "noun",
+        "zhGloss": "某物",
+        "acceptedZhAnswers": [
+          "某物"
+        ],
+        "enDefinition": "to a small degree or extent",
+        "examples": [
+          {
+            "en": "Please use “somewhat” correctly in your essay.",
+            "zh": "请在作文里正确使用「某物」。"
+          },
+          {
+            "en": "Can you explain “somewhat” in one sentence?",
+            "zh": "你能用一句话解释「某物」吗？"
+          }
+        ],
+        "collocations": [
+          "prepare the somewhat",
+          "bring the somewhat",
+          "file the somewhat"
+        ]
+      },
+      "after": {
+        "partOfSpeech": "adverb",
+        "zhGloss": "有点",
+        "acceptedZhAnswers": [
+          "有点"
+        ],
+        "enDefinition": "to a limited degree; a little rather than completely",
+        "examples": [
+          {
+            "en": "The revised plan is somewhat simpler than the original.",
+            "zh": "修改后的计划比原计划简单一些。"
+          },
+          {
+            "en": "I was somewhat surprised by the result.",
+            "zh": "这个结果让我有点惊讶。"
+          }
+        ],
+        "collocations": [
+          "somewhat different",
+          "somewhat surprised",
+          "somewhat easier"
+        ]
+      },
+      "source": "https://www.merriam-webster.com/dictionary/somewhat"
+    },
+    {
+      "id": "core-84900cb68e875d",
+      "expression": "accompany",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "go or travel along with",
+      "decision": "corrected",
+      "reason": "go or travel along with 完整；陪伴的宾语应为人而不是 risky option。",
+      "before": {
+        "examples": [
+          {
+            "en": "We need to accompany before the deadline.",
+            "zh": "截止日期前我们需要陪伴。"
+          },
+          {
+            "en": "They decided to accompany the risky option.",
+            "zh": "他们决定陪伴那个高风险选项。"
+          }
+        ],
+        "collocations": [
+          "need to accompany",
+          "please accompany",
+          "refuse to accompany",
+          "accompany carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "A colleague will accompany me to the meeting.",
+            "zh": "一位同事将陪我去开会。"
+          },
+          {
+            "en": "Parents may accompany their children on the visit.",
+            "zh": "家长可以陪孩子参加这次参观。"
+          }
+        ],
+        "collocations": [
+          "accompany someone to",
+          "accompany a visitor",
+          "accompany a child"
+        ]
+      }
+    },
+    {
+      "id": "core-35a522e9ebedfe",
+      "expression": "oppose",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "be against; express opposition to",
+      "decision": "corrected",
+      "reason": "定义正确；删除 oppose with the supplier 的错误介词搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "I will oppose with the supplier tomorrow.",
+            "zh": "我明天会与供应商反对。"
+          },
+          {
+            "en": "We need to oppose before the deadline.",
+            "zh": "截止日期前我们需要反对。"
+          }
+        ],
+        "collocations": [
+          "need to oppose",
+          "please oppose",
+          "refuse to oppose",
+          "oppose carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "Several residents oppose the road-building proposal.",
+            "zh": "几位居民反对这项修路提案。"
+          },
+          {
+            "en": "The committee may oppose any further increase in fees.",
+            "zh": "委员会可能反对进一步提高费用。"
+          }
+        ],
+        "collocations": [
+          "oppose a proposal",
+          "oppose a decision",
+          "strongly oppose"
+        ]
+      }
+    },
+    {
+      "id": "core-736d58ea8a0e11",
+      "expression": "alter",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "make an alteration to",
+      "decision": "corrected",
+      "reason": "定义正确；具体化改变的对象，移除不说明词义的模板。",
+      "before": {
+        "examples": [
+          {
+            "en": "They decided to alter the risky option.",
+            "zh": "他们决定改变那个高风险选项。"
+          },
+          {
+            "en": "Please alter the delivery date in writing.",
+            "zh": "请书面改变交货日期。"
+          }
+        ],
+        "collocations": [
+          "need to alter",
+          "please alter",
+          "refuse to alter",
+          "alter carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "Please alter the delivery date on the order form.",
+            "zh": "请更改订单上的交货日期。"
+          },
+          {
+            "en": "A small change could alter the final result.",
+            "zh": "小小的变化就可能改变最终结果。"
+          }
+        ],
+        "collocations": [
+          "alter a plan",
+          "alter the result",
+          "alter a date"
+        ]
+      }
+    },
+    {
+      "id": "core-b66ea8d754da74",
+      "expression": "reckon",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "take account of",
+      "decision": "corrected",
+      "reason": "计算/估算与 reckon with 的考虑义项混淆。",
+      "before": {
+        "enDefinition": "take account of",
+        "examples": [
+          {
+            "en": "Can you reckon the latest figures?",
+            "zh": "你能计算最新数字吗？"
+          },
+          {
+            "en": "I will reckon with the supplier tomorrow.",
+            "zh": "我明天会与供应商计算。"
+          }
+        ],
+        "collocations": [
+          "need to reckon",
+          "please reckon",
+          "refuse to reckon",
+          "reckon carefully"
+        ]
+      },
+      "after": {
+        "enDefinition": "to calculate or estimate an amount or number",
+        "examples": [
+          {
+            "en": "We reckon the total cost at about two thousand ringgit.",
+            "zh": "我们估算总费用约为两千令吉。"
+          },
+          {
+            "en": "I reckon we will need six more chairs.",
+            "zh": "我估计我们还需要六把椅子。"
+          }
+        ],
+        "collocations": [
+          "reckon the cost",
+          "reckon that",
+          "reckon an amount at"
+        ]
+      }
+    },
+    {
+      "id": "core-c2c45258cc99dd",
+      "expression": "discovery",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of discovering something",
+      "decision": "corrected",
+      "reason": "名词定义正确，但 bring/file the discovery 与该义项不成立；替换相应模板例句与搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "We discussed “discovery” in today’s tutorial.",
+            "zh": "今天的辅导课我们讨论了「发现」。"
+          },
+          {
+            "en": "The article mentions “discovery” several times.",
+            "zh": "这篇文章多次提到「发现」。"
+          }
+        ],
+        "collocations": [
+          "prepare the discovery",
+          "bring the discovery",
+          "file the discovery"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The discovery of the missing document solved the problem.",
+            "zh": "那份遗失文件的发现解决了问题。"
+          },
+          {
+            "en": "The team announced a major scientific discovery.",
+            "zh": "团队宣布了一项重要科学发现。"
+          }
+        ],
+        "collocations": [
+          "make a discovery",
+          "scientific discovery",
+          "discovery of evidence"
+        ]
+      }
+    },
+    {
+      "id": "core-18cffff3f5a8d5",
+      "expression": "entitle",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "give the right to",
+      "decision": "corrected",
+      "reason": "entitle 需要人及其权利内容，原句缺少必要宾语结构。",
+      "before": {
+        "zhGloss": "给权利",
+        "enDefinition": "give the right to",
+        "examples": [
+          {
+            "en": "We need to entitle before the deadline.",
+            "zh": "截止日期前我们需要给权利。"
+          },
+          {
+            "en": "They decided to entitle the risky option.",
+            "zh": "他们决定给权利那个高风险选项。"
+          }
+        ],
+        "collocations": [
+          "need to entitle",
+          "please entitle",
+          "refuse to entitle",
+          "entitle carefully"
+        ],
+        "acceptedZhAnswers": [
+          "给权利"
+        ]
+      },
+      "after": {
+        "zhGloss": "使有权",
+        "enDefinition": "to give someone a right to receive something or to do something",
+        "examples": [
+          {
+            "en": "The membership fee will entitle you to use the library.",
+            "zh": "缴纳会费将使你有权使用图书馆。"
+          },
+          {
+            "en": "These tickets entitle visitors to free entry.",
+            "zh": "这些门票使访客有权免费入场。"
+          }
+        ],
+        "collocations": [
+          "entitle someone to",
+          "entitle someone to receive",
+          "entitle a member to use"
+        ],
+        "acceptedZhAnswers": [
+          "使有权"
+        ]
+      }
+    },
+    {
+      "id": "core-a1259b421aa704",
+      "expression": "squeeze",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of gripping and pressing firmly",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of gripping and pressing firmly"
+    },
+    {
+      "id": "core-e8a7d6f2bc4132",
+      "expression": "repair",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of putting something in working order again",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of putting something in working order again"
+    },
+    {
+      "id": "core-ad68fcd96e5cda",
+      "expression": "impress",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of coercing someone into government service",
+      "decision": "corrected",
+      "reason": "保留名词的印象/印记义项；原英文为强制服役的另一义项。",
+      "before": {
+        "enDefinition": "the act of coercing someone into government service",
+        "examples": [
+          {
+            "en": "We discussed “impress” in today’s tutorial.",
+            "zh": "今天的辅导课我们讨论了「印象」。"
+          },
+          {
+            "en": "The article mentions “impress” several times.",
+            "zh": "这篇文章多次提到「印象」。"
+          }
+        ],
+        "collocations": [
+          "explain “impress”",
+          "use “impress”",
+          "learn “impress”"
+        ]
+      },
+      "after": {
+        "enDefinition": "a lasting mark or influence left by someone or something",
+        "examples": [
+          {
+            "en": "The town still bears the impress of its industrial past.",
+            "zh": "这座小镇仍带有其工业历史的印记。"
+          },
+          {
+            "en": "Her teaching left a deep impress on his thinking.",
+            "zh": "她的教学对他的思想留下了深刻影响。"
+          }
+        ],
+        "collocations": [
+          "bear the impress of",
+          "leave an impress on",
+          "a lasting impress"
+        ]
+      },
+      "source": "https://www.merriam-webster.com/dictionary/impress"
+    },
+    {
+      "id": "core-af964fdf7b367e",
+      "expression": "admire",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "feel admiration for",
+      "decision": "corrected",
+      "reason": "所选 feel admiration for 对应钦佩或赞赏，不要求实际说出赞美。",
+      "before": {
+        "zhGloss": "赞美",
+        "acceptedZhAnswers": [
+          "赞美"
+        ],
+        "examples": [
+          {
+            "en": "We need to admire before the deadline.",
+            "zh": "截止日期前我们需要赞美。"
+          },
+          {
+            "en": "They decided to admire the risky option.",
+            "zh": "他们决定赞美那个高风险选项。"
+          }
+        ],
+        "collocations": [
+          "need to admire",
+          "please admire",
+          "refuse to admire",
+          "admire carefully"
+        ]
+      },
+      "after": {
+        "zhGloss": "钦佩",
+        "acceptedZhAnswers": [
+          "钦佩",
+          "赞赏"
+        ],
+        "examples": [
+          {
+            "en": "I admire her patience with new students.",
+            "zh": "我钦佩她对新生的耐心。"
+          },
+          {
+            "en": "Many colleagues admire his clear explanations.",
+            "zh": "许多同事赞赏他清楚的讲解。"
+          }
+        ],
+        "collocations": [
+          "admire someone for",
+          "admire someone’s work",
+          "greatly admire"
+        ]
+      },
+      "source": "https://www.ahdictionary.com/word/search.html?q=admire"
+    },
+    {
+      "id": "core-210787a5d144bc",
+      "expression": "advertise",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "call attention to",
+      "decision": "corrected",
+      "reason": "call attention to 可表达广告义项；改为真实广告对象。",
+      "before": {
+        "examples": [
+          {
+            "en": "They decided to advertise the risky option.",
+            "zh": "他们决定做广告那个高风险选项。"
+          },
+          {
+            "en": "Please advertise the delivery date in writing.",
+            "zh": "请书面做广告交货日期。"
+          }
+        ],
+        "collocations": [
+          "need to advertise",
+          "please advertise",
+          "refuse to advertise",
+          "advertise carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The shop will advertise its summer sale online.",
+            "zh": "这家店将在网上为夏季促销做广告。"
+          },
+          {
+            "en": "We plan to advertise the vacant position next week.",
+            "zh": "我们计划下周刊登这个空缺职位的招聘广告。"
+          }
+        ],
+        "collocations": [
+          "advertise a product",
+          "advertise a vacancy",
+          "advertise online"
+        ]
+      }
+    },
+    {
+      "id": "core-52a0a5c23a0af9",
+      "expression": "entertain",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "provide entertainment for",
+      "decision": "corrected",
+      "reason": "不能 entertain the latest figures；娱乐义项需要人作对象。",
+      "before": {
+        "examples": [
+          {
+            "en": "Can you entertain the latest figures?",
+            "zh": "你能娱乐最新数字吗？"
+          },
+          {
+            "en": "I will entertain with the supplier tomorrow.",
+            "zh": "我明天会与供应商娱乐。"
+          }
+        ],
+        "collocations": [
+          "need to entertain",
+          "please entertain",
+          "refuse to entertain",
+          "entertain carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The performers entertain the audience with music.",
+            "zh": "表演者用音乐给观众带来欢乐。"
+          },
+          {
+            "en": "We need games to entertain the children during the trip.",
+            "zh": "旅途中我们需要游戏来让孩子们开心。"
+          }
+        ],
+        "collocations": [
+          "entertain an audience",
+          "entertain children",
+          "entertain guests"
+        ]
+      }
+    },
+    {
+      "id": "core-5e05bd281cbeb3",
+      "expression": "consideration",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the process of giving careful thought to something",
+      "decision": "corrected",
+      "reason": "思考不是货币对价，删除 calculate/compare 等混配；名词过程定义保留。",
+      "before": {
+        "examples": [
+          {
+            "en": "I looked up “consideration” before the quiz.",
+            "zh": "小测前我查阅了「考虑」。"
+          },
+          {
+            "en": "We discussed “consideration” in today’s tutorial.",
+            "zh": "今天的辅导课我们讨论了「考虑」。"
+          }
+        ],
+        "collocations": [
+          "calculate the consideration",
+          "interpret the consideration",
+          "compare the consideration"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The proposal needs careful consideration.",
+            "zh": "这项提案需要仔细考虑。"
+          },
+          {
+            "en": "After much consideration, we decided to postpone the launch.",
+            "zh": "经过充分考虑，我们决定推迟发布。"
+          }
+        ],
+        "collocations": [
+          "careful consideration",
+          "give something consideration",
+          "take something into consideration"
+        ]
+      }
+    },
+    {
+      "id": "core-26aca7941a99d9",
+      "expression": "introduction",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of beginning something new",
+      "decision": "corrected",
+      "reason": "对齐介绍人的义项，避免仅定义为开始新事物。",
+      "before": {
+        "enDefinition": "the act of beginning something new",
+        "examples": [
+          {
+            "en": "Please use “introduction” correctly in your essay.",
+            "zh": "请在作文里正确使用「介绍」。"
+          },
+          {
+            "en": "Can you explain “introduction” in one sentence?",
+            "zh": "你能用一句话解释「介绍」吗？"
+          }
+        ],
+        "collocations": [
+          "explain “introduction”",
+          "use “introduction”",
+          "learn “introduction”"
+        ]
+      },
+      "after": {
+        "enDefinition": "the act of presenting a person to someone who has not met them before",
+        "examples": [
+          {
+            "en": "After a brief introduction, the two colleagues shook hands.",
+            "zh": "简短介绍后，两位同事握了手。"
+          },
+          {
+            "en": "Thank you for the introduction to your research supervisor.",
+            "zh": "谢谢你把我介绍给你的研究导师。"
+          }
+        ],
+        "collocations": [
+          "formal introduction",
+          "brief introduction",
+          "introduction to someone"
+        ]
+      }
+    },
+    {
+      "id": "core-12df55dfe072a7",
+      "expression": "prayer",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of communicating with a deity (especially as a petition or in adoration or contrition or thanksgiving)",
+      "decision": "corrected",
+      "reason": "名词定义正确，但 bring/file the prayer 与该义项不成立；替换相应模板例句与搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "The article mentions “prayer” several times.",
+            "zh": "这篇文章多次提到「祈祷」。"
+          },
+          {
+            "en": "Please use “prayer” correctly in your essay.",
+            "zh": "请在作文里正确使用「祈祷」。"
+          }
+        ],
+        "collocations": [
+          "prepare the prayer",
+          "bring the prayer",
+          "file the prayer"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The family gathered for evening prayer.",
+            "zh": "这家人聚在一起做晚间祈祷。"
+          },
+          {
+            "en": "She spent a few quiet minutes in prayer.",
+            "zh": "她安静地祈祷了几分钟。"
+          }
+        ],
+        "collocations": [
+          "evening prayer",
+          "a moment of prayer",
+          "in prayer"
+        ]
+      }
+    },
+    {
+      "id": "core-6285e5dd34339f",
+      "expression": "punishment",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of punishing",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of punishing"
+    },
+    {
+      "id": "core-a62a96702da958",
+      "expression": "educate",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "give an education to",
+      "decision": "corrected",
+      "reason": "不能 educate 交货日期或数字，改为教育人。",
+      "before": {
+        "examples": [
+          {
+            "en": "Please educate the delivery date in writing.",
+            "zh": "请书面教育交货日期。"
+          },
+          {
+            "en": "Can you educate the latest figures?",
+            "zh": "你能教育最新数字吗？"
+          }
+        ],
+        "collocations": [
+          "need to educate",
+          "please educate",
+          "refuse to educate",
+          "educate carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The programme aims to educate children about road safety.",
+            "zh": "该项目旨在对儿童进行道路安全教育。"
+          },
+          {
+            "en": "Schools educate students through lessons and practical activities.",
+            "zh": "学校通过课堂和实践活动教育学生。"
+          }
+        ],
+        "collocations": [
+          "educate students",
+          "educate someone about",
+          "educate the public"
+        ]
+      }
+    },
+    {
+      "id": "core-f15c5a0dd5ec33",
+      "expression": "refusal",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of refusing",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of refusing"
+    },
+    {
+      "id": "core-e1fc5057de419f",
+      "expression": "reproduce",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "make a copy or equivalent of",
+      "decision": "corrected",
+      "reason": "保留中文繁殖义项，不使用复制的定义和供应商模板。",
+      "before": {
+        "enDefinition": "make a copy or equivalent of",
+        "examples": [
+          {
+            "en": "I will reproduce with the supplier tomorrow.",
+            "zh": "我明天会与供应商繁殖。"
+          },
+          {
+            "en": "We need to reproduce before the deadline.",
+            "zh": "截止日期前我们需要繁殖。"
+          }
+        ],
+        "collocations": [
+          "need to reproduce",
+          "please reproduce",
+          "refuse to reproduce",
+          "reproduce carefully"
+        ]
+      },
+      "after": {
+        "enDefinition": "to produce young or offspring of the same kind",
+        "examples": [
+          {
+            "en": "These fish reproduce in warm, shallow water.",
+            "zh": "这些鱼在温暖的浅水中繁殖。"
+          },
+          {
+            "en": "Some plants can reproduce without seeds.",
+            "zh": "有些植物不靠种子也能繁殖。"
+          }
+        ],
+        "collocations": [
+          "reproduce naturally",
+          "reproduce rapidly",
+          "reproduce without seeds"
+        ]
+      }
+    },
+    {
+      "id": "core-abbb2b2b2d783c",
+      "expression": "shave",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of removing hair with a razor",
+      "decision": "corrected",
+      "reason": "名词定义正确，但 bring/file the shave 与该义项不成立；替换相应模板例句与搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "I looked up “shave” before the quiz.",
+            "zh": "小测前我查阅了「修面」。"
+          },
+          {
+            "en": "We discussed “shave” in today’s tutorial.",
+            "zh": "今天的辅导课我们讨论了「修面」。"
+          }
+        ],
+        "collocations": [
+          "prepare the shave",
+          "bring the shave",
+          "file the shave"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "He had a quick shave before the meeting.",
+            "zh": "他在会议前匆匆刮了脸。"
+          },
+          {
+            "en": "A careful shave left his face smooth.",
+            "zh": "仔细修面后，他的脸变得光滑。"
+          }
+        ],
+        "collocations": [
+          "have a shave",
+          "a close shave",
+          "a quick shave"
+        ]
+      }
+    },
+    {
+      "id": "core-5b0113bfaebc39",
+      "expression": "decay",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the process of gradually becoming inferior",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the process of gradually becoming inferior"
+    },
+    {
+      "id": "core-bd370d1b6f9b35",
+      "expression": "step",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of changing location by raising the foot and setting it down",
+      "decision": "corrected",
+      "reason": "步骤不是抬脚移动的一步。",
+      "before": {
+        "enDefinition": "the act of changing location by raising the foot and setting it down",
+        "examples": [
+          {
+            "en": "Can you explain “step” in one sentence?",
+            "zh": "你能用一句话解释「步骤」吗？"
+          },
+          {
+            "en": "I looked up “step” before the quiz.",
+            "zh": "小测前我查阅了「步骤」。"
+          }
+        ],
+        "collocations": [
+          "explain “step”",
+          "use “step”",
+          "learn “step”"
+        ]
+      },
+      "after": {
+        "enDefinition": "an action or stage in a sequence used to complete a task",
+        "examples": [
+          {
+            "en": "Checking the totals is the first step in the process.",
+            "zh": "核对总数是这个流程的第一步。"
+          },
+          {
+            "en": "Follow each step in the installation guide.",
+            "zh": "请按照安装指南中的每个步骤操作。"
+          }
+        ],
+        "collocations": [
+          "first step",
+          "next step",
+          "step in a process"
+        ]
+      }
+    },
+    {
+      "id": "core-dc867c03d6f1f4",
+      "expression": "push",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of applying force in order to move something away",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of applying force in order to move something away"
+    },
+    {
+      "id": "core-7fbb727db4b2b6",
+      "expression": "task",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "assign a task to",
+      "decision": "corrected",
+      "reason": "工作/任务是名词，不能定义为分派任务的动词。",
+      "before": {
+        "enDefinition": "assign a task to",
+        "examples": [
+          {
+            "en": "The article mentions “task” several times.",
+            "zh": "这篇文章多次提到「工作」。"
+          },
+          {
+            "en": "Please use “task” correctly in your essay.",
+            "zh": "请在作文里正确使用「工作」。"
+          }
+        ],
+        "collocations": [
+          "explain “task”",
+          "use “task”",
+          "learn “task”"
+        ]
+      },
+      "after": {
+        "enDefinition": "a piece of work that needs to be done",
+        "examples": [
+          {
+            "en": "Our first task is to check the figures.",
+            "zh": "我们的第一项工作是核对数字。"
+          },
+          {
+            "en": "She completed the task before lunch.",
+            "zh": "她在午饭前完成了这项任务。"
+          }
+        ],
+        "collocations": [
+          "complete a task",
+          "assign a task",
+          "difficult task"
+        ]
+      }
+    },
+    {
+      "id": "core-7ee201fb09fb76",
+      "expression": "hurt",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "give trouble or pain to",
+      "decision": "corrected",
+      "reason": "保留伤害名词，改掉使人痛苦的动词定义。",
+      "before": {
+        "enDefinition": "give trouble or pain to",
+        "examples": [
+          {
+            "en": "Please use “hurt” correctly in your essay.",
+            "zh": "请在作文里正确使用「伤害」。"
+          },
+          {
+            "en": "Can you explain “hurt” in one sentence?",
+            "zh": "你能用一句话解释「伤害」吗？"
+          }
+        ],
+        "collocations": [
+          "explain “hurt”",
+          "use “hurt”",
+          "learn “hurt”"
+        ]
+      },
+      "after": {
+        "enDefinition": "physical pain or emotional distress",
+        "examples": [
+          {
+            "en": "There was real hurt in her voice after the argument.",
+            "zh": "争吵过后，她的声音里透着真切的伤痛。"
+          },
+          {
+            "en": "The apology did little to ease his hurt.",
+            "zh": "这句道歉没能减轻他的伤痛。"
+          }
+        ],
+        "collocations": [
+          "emotional hurt",
+          "deep hurt",
+          "ease the hurt"
+        ]
+      }
+    },
+    {
+      "id": "core-d9090bfdcd31d9",
+      "expression": "lift",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of giving temporary assistance",
+      "decision": "corrected",
+      "reason": "举起义项与 temporary assistance 不对应。",
+      "before": {
+        "enDefinition": "the act of giving temporary assistance",
+        "examples": [
+          {
+            "en": "Can you explain “lift” in one sentence?",
+            "zh": "你能用一句话解释「举起」吗？"
+          },
+          {
+            "en": "I looked up “lift” before the quiz.",
+            "zh": "小测前我查阅了「举起」。"
+          }
+        ],
+        "collocations": [
+          "explain “lift”",
+          "use “lift”",
+          "learn “lift”"
+        ]
+      },
+      "after": {
+        "enDefinition": "an act of raising something to a higher position",
+        "examples": [
+          {
+            "en": "The crane completed the lift without damaging the equipment.",
+            "zh": "起重机完成了这次吊起作业，没有损坏设备。"
+          },
+          {
+            "en": "Use both hands for a controlled lift of the box.",
+            "zh": "请用双手稳稳地举起箱子。"
+          }
+        ],
+        "collocations": [
+          "heavy lift",
+          "controlled lift",
+          "complete a lift"
+        ]
+      }
+    },
+    {
+      "id": "core-eac6136556a96e",
+      "expression": "kick",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of delivering a blow with the foot",
+      "decision": "corrected",
+      "reason": "名词定义正确，但 bring/file the kick 与该义项不成立；替换相应模板例句与搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "Can you explain “kick” in one sentence?",
+            "zh": "你能用一句话解释「踢」吗？"
+          },
+          {
+            "en": "I looked up “kick” before the quiz.",
+            "zh": "小测前我查阅了「踢」。"
+          }
+        ],
+        "collocations": [
+          "prepare the kick",
+          "bring the kick",
+          "file the kick"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "A powerful kick sent the ball over the fence.",
+            "zh": "有力的一脚把球踢过了围栏。"
+          },
+          {
+            "en": "The door opened after a single kick.",
+            "zh": "门被踢了一脚后打开了。"
+          }
+        ],
+        "collocations": [
+          "give something a kick",
+          "a powerful kick",
+          "a kick at the ball"
+        ]
+      }
+    },
+    {
+      "id": "core-8be47d2b8549b5",
+      "expression": "lean",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "to incline or bend from a vertical position",
+      "decision": "corrected",
+      "reason": "保留真实存在的瘦肉名词义项，删除倾斜的动词定义。",
+      "before": {
+        "enDefinition": "to incline or bend from a vertical position",
+        "examples": [
+          {
+            "en": "I looked up “lean” before the quiz.",
+            "zh": "小测前我查阅了「瘦肉」。"
+          },
+          {
+            "en": "We discussed “lean” in today’s tutorial.",
+            "zh": "今天的辅导课我们讨论了「瘦肉」。"
+          }
+        ],
+        "collocations": [
+          "explain “lean”",
+          "use “lean”",
+          "learn “lean”"
+        ]
+      },
+      "after": {
+        "enDefinition": "the part of a piece of meat that contains little fat",
+        "examples": [
+          {
+            "en": "This cut has more lean than fat.",
+            "zh": "这块肉的瘦肉比肥肉多。"
+          },
+          {
+            "en": "Separate the lean from the visible fat before cooking.",
+            "zh": "烹饪前把瘦肉和看得见的肥肉分开。"
+          }
+        ],
+        "collocations": [
+          "lean and fat",
+          "a piece of lean",
+          "separate the lean"
+        ]
+      },
+      "source": "https://www.merriam-webster.com/dictionary/lean"
+    },
+    {
+      "id": "core-e18a89f9cc5b6b",
+      "expression": "busy",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "keep busy with",
+      "decision": "corrected",
+      "reason": "忙碌形容词不等于使忙碌的动词；原例句出现忙碌的记录等错配。",
+      "before": {
+        "enDefinition": "keep busy with",
+        "examples": [
+          {
+            "en": "Keep busy records for the audit.",
+            "zh": "请为审计保留忙碌的的记录。"
+          },
+          {
+            "en": "They offered a busy alternative.",
+            "zh": "他们提供了一个忙碌的的替代方案。"
+          }
+        ],
+        "collocations": [
+          "a busy option",
+          "remain busy",
+          "busy terms",
+          "clearly busy"
+        ]
+      },
+      "after": {
+        "enDefinition": "occupied with work or another activity, with little time available",
+        "examples": [
+          {
+            "en": "She is busy preparing the presentation.",
+            "zh": "她正忙着准备演示。"
+          },
+          {
+            "en": "The manager is too busy to answer the call.",
+            "zh": "经理太忙，无法接电话。"
+          }
+        ],
+        "collocations": [
+          "busy with work",
+          "busy preparing",
+          "too busy to"
+        ]
+      }
+    },
+    {
+      "id": "core-07a2e25662f8c7",
+      "expression": "kiss",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of caressing with the lips (or an instance thereof)",
+      "decision": "corrected",
+      "reason": "名词定义正确，但 bring/file the kiss 与该义项不成立；替换相应模板例句与搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "I looked up “kiss” before the quiz.",
+            "zh": "小测前我查阅了「吻」。"
+          },
+          {
+            "en": "We discussed “kiss” in today’s tutorial.",
+            "zh": "今天的辅导课我们讨论了「吻」。"
+          }
+        ],
+        "collocations": [
+          "prepare the kiss",
+          "bring the kiss",
+          "file the kiss"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "She gave her mother a kiss before leaving.",
+            "zh": "她离开前吻了母亲一下。"
+          },
+          {
+            "en": "He greeted his partner with a kiss.",
+            "zh": "他用一个吻迎接伴侣。"
+          }
+        ],
+        "collocations": [
+          "give someone a kiss",
+          "a gentle kiss",
+          "a kiss on the cheek"
+        ]
+      }
+    },
+    {
+      "id": "core-8bd24ba3a83c3d",
+      "expression": "harm",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "cause or do harm to",
+      "decision": "corrected",
+      "reason": "保留名词，去掉 cause/do harm 的动词定义。",
+      "before": {
+        "enDefinition": "cause or do harm to",
+        "examples": [
+          {
+            "en": "Please use “harm” correctly in your essay.",
+            "zh": "请在作文里正确使用「伤害」。"
+          },
+          {
+            "en": "Can you explain “harm” in one sentence?",
+            "zh": "你能用一句话解释「伤害」吗？"
+          }
+        ],
+        "collocations": [
+          "explain “harm”",
+          "use “harm”",
+          "learn “harm”"
+        ]
+      },
+      "after": {
+        "enDefinition": "physical or mental damage or injury",
+        "examples": [
+          {
+            "en": "The chemical can cause harm to wildlife.",
+            "zh": "这种化学品可能对野生动物造成伤害。"
+          },
+          {
+            "en": "No lasting harm was done to the equipment.",
+            "zh": "设备没有受到持久损坏。"
+          }
+        ],
+        "collocations": [
+          "cause harm",
+          "do harm to",
+          "lasting harm"
+        ]
+      }
+    },
+    {
+      "id": "core-a65b8e1769245c",
+      "expression": "obey",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "be obedient to",
+      "decision": "corrected",
+      "reason": "be obedient to 是有效短释义；数字和供应商不能套作服从对象。",
+      "before": {
+        "examples": [
+          {
+            "en": "Can you obey the latest figures?",
+            "zh": "你能服从最新数字吗？"
+          },
+          {
+            "en": "I will obey with the supplier tomorrow.",
+            "zh": "我明天会与供应商服从。"
+          }
+        ],
+        "collocations": [
+          "need to obey",
+          "please obey",
+          "refuse to obey",
+          "obey carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "Drivers must obey the speed limit.",
+            "zh": "驾驶员必须遵守限速规定。"
+          },
+          {
+            "en": "The children were told to obey the safety instructions.",
+            "zh": "孩子们被要求服从安全指示。"
+          }
+        ],
+        "collocations": [
+          "obey an order",
+          "obey the law",
+          "obey instructions"
+        ]
+      }
+    },
+    {
+      "id": "core-c19ab8d3c2c942",
+      "expression": "clap",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "to strike the palms of the hands together, especially to show approval",
+      "decision": "corrected",
+      "reason": "保留拍手名词，改掉动词不定式定义。",
+      "before": {
+        "enDefinition": "to strike the palms of the hands together, especially to show approval",
+        "examples": [
+          {
+            "en": "The article mentions “clap” several times.",
+            "zh": "这篇文章多次提到「拍手」。"
+          },
+          {
+            "en": "Please use “clap” correctly in your essay.",
+            "zh": "请在作文里正确使用「拍手」。"
+          }
+        ],
+        "collocations": [
+          "explain “clap”",
+          "use “clap”",
+          "learn “clap”"
+        ]
+      },
+      "after": {
+        "enDefinition": "a strike of the palms together that makes a short sound, often to show approval",
+        "examples": [
+          {
+            "en": "She gave a loud clap to get everyone’s attention.",
+            "zh": "她响亮地拍了一下手，引起大家的注意。"
+          },
+          {
+            "en": "The speaker received a clap from the audience.",
+            "zh": "演讲者得到了观众的鼓掌。"
+          }
+        ],
+        "collocations": [
+          "a loud clap",
+          "a single clap",
+          "give someone a clap"
+        ]
+      }
+    },
+    {
+      "id": "core-eae79d6e0cff76",
+      "expression": "revision",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of revising or altering (involving reconsideration and modification)",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of revising or altering (involving reconsideration and modification)"
+    },
+    {
+      "id": "core-b6928c296eb29f",
+      "expression": "suicide",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of killing yourself",
+      "decision": "corrected",
+      "reason": "名词定义正确，但 bring/file the suicide 与该义项不成立；替换相应模板例句与搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "I looked up “suicide” before the quiz.",
+            "zh": "小测前我查阅了「自杀」。"
+          },
+          {
+            "en": "We discussed “suicide” in today’s tutorial.",
+            "zh": "今天的辅导课我们讨论了「自杀」。"
+          }
+        ],
+        "collocations": [
+          "prepare the suicide",
+          "bring the suicide",
+          "file the suicide"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The report includes a chapter on suicide prevention.",
+            "zh": "报告包含一章自杀预防的内容。"
+          },
+          {
+            "en": "The researchers examined long-term changes in suicide rates.",
+            "zh": "研究人员考察了自杀率的长期变化。"
+          }
+        ],
+        "collocations": [
+          "suicide prevention",
+          "risk of suicide",
+          "suicide rates"
+        ]
+      }
+    },
+    {
+      "id": "core-537bac49fb3815",
+      "expression": "compose",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "form the substance of",
+      "decision": "corrected",
+      "reason": "form the substance of 与组成一致；删除 compose with the supplier 等错句。",
+      "before": {
+        "examples": [
+          {
+            "en": "Can you compose the latest figures?",
+            "zh": "你能组成最新数字吗？"
+          },
+          {
+            "en": "I will compose with the supplier tomorrow.",
+            "zh": "我明天会与供应商组成。"
+          }
+        ],
+        "collocations": [
+          "need to compose",
+          "please compose",
+          "refuse to compose",
+          "compose carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "Ten elected members compose the committee.",
+            "zh": "十名当选成员组成该委员会。"
+          },
+          {
+            "en": "The panel is composed of three independent experts.",
+            "zh": "这个小组由三位独立专家组成。"
+          }
+        ],
+        "collocations": [
+          "be composed of",
+          "compose a committee",
+          "elements that compose"
+        ]
+      }
+    },
+    {
+      "id": "core-7177fe0a582820",
+      "expression": "condemn",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "express strong disapproval of",
+      "decision": "corrected",
+      "reason": "所选中文判刑与谴责的英文释义不一致；保留判刑义项。",
+      "before": {
+        "enDefinition": "express strong disapproval of",
+        "examples": [
+          {
+            "en": "Can you condemn the latest figures?",
+            "zh": "你能判刑最新数字吗？"
+          },
+          {
+            "en": "I will condemn with the supplier tomorrow.",
+            "zh": "我明天会与供应商判刑。"
+          }
+        ],
+        "collocations": [
+          "need to condemn",
+          "please condemn",
+          "refuse to condemn",
+          "condemn carefully"
+        ]
+      },
+      "after": {
+        "enDefinition": "to sentence someone to a punishment",
+        "examples": [
+          {
+            "en": "The court may condemn a convicted person to imprisonment.",
+            "zh": "法院可能判处已定罪者监禁。"
+          },
+          {
+            "en": "The judge refused to condemn the defendant without evidence.",
+            "zh": "法官拒绝在没有证据的情况下判处被告刑罚。"
+          }
+        ],
+        "collocations": [
+          "condemn someone to",
+          "condemn to imprisonment",
+          "condemn a defendant"
+        ]
+      },
+      "source": "https://www.merriam-webster.com/dictionary/condemn"
+    },
+    {
+      "id": "core-ab2137f0fe797b",
+      "expression": "sponsor",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "assume sponsorship of",
+      "decision": "corrected",
+      "reason": "保留保证人名词义项，不能定义为承担赞助的动词。",
+      "before": {
+        "enDefinition": "assume sponsorship of",
+        "examples": [
+          {
+            "en": "We discussed “sponsor” in today’s tutorial.",
+            "zh": "今天的辅导课我们讨论了「保证人」。"
+          },
+          {
+            "en": "The article mentions “sponsor” several times.",
+            "zh": "这篇文章多次提到「保证人」。"
+          }
+        ],
+        "collocations": [
+          "explain “sponsor”",
+          "use “sponsor”",
+          "learn “sponsor”"
+        ]
+      },
+      "after": {
+        "enDefinition": "a person or organisation that accepts responsibility for another person",
+        "examples": [
+          {
+            "en": "Her uncle agreed to act as her sponsor.",
+            "zh": "她的叔叔同意担任她的担保人。"
+          },
+          {
+            "en": "The application asks for the name of a sponsor.",
+            "zh": "申请表要求填写担保人的姓名。"
+          }
+        ],
+        "collocations": [
+          "act as a sponsor",
+          "a sponsor’s responsibility",
+          "name a sponsor"
+        ]
+      },
+      "source": "https://www.merriam-webster.com/dictionary/sponsor"
+    },
+    {
+      "id": "core-f7d80df03888d6",
+      "expression": "boost",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of giving hope or support to someone",
+      "decision": "corrected",
+      "reason": "提升/促进与单纯给予希望的旧定义不完全对应，改为增加或改善的名词义项。",
+      "before": {
+        "zhGloss": "推进",
+        "enDefinition": "the act of giving hope or support to someone",
+        "acceptedZhAnswers": [
+          "推进"
+        ],
+        "examples": [
+          {
+            "en": "Can you explain “boost” in one sentence?",
+            "zh": "你能用一句话解释「推进」吗？"
+          },
+          {
+            "en": "I looked up “boost” before the quiz.",
+            "zh": "小测前我查阅了「推进」。"
+          }
+        ],
+        "collocations": [
+          "explain “boost”",
+          "use “boost”",
+          "learn “boost”"
+        ]
+      },
+      "after": {
+        "zhGloss": "提升",
+        "enDefinition": "an increase or improvement that helps something develop",
+        "acceptedZhAnswers": [
+          "提升",
+          "促进"
+        ],
+        "examples": [
+          {
+            "en": "The new order gave sales a welcome boost.",
+            "zh": "这笔新订单使销售额得到可喜的提升。"
+          },
+          {
+            "en": "Extra practice can give your confidence a boost.",
+            "zh": "额外练习可以提升你的信心。"
+          }
+        ],
+        "collocations": [
+          "a boost to sales",
+          "give something a boost",
+          "a confidence boost"
+        ]
+      }
+    },
+    {
+      "id": "core-fcb9e7c68cc7ae",
+      "expression": "weaken",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "lessen the strength of",
+      "decision": "corrected",
+      "reason": "lessen the strength of 完整；不能削弱交货日期。",
+      "before": {
+        "examples": [
+          {
+            "en": "They decided to weaken the risky option.",
+            "zh": "他们决定削弱那个高风险选项。"
+          },
+          {
+            "en": "Please weaken the delivery date in writing.",
+            "zh": "请书面削弱交货日期。"
+          }
+        ],
+        "collocations": [
+          "need to weaken",
+          "please weaken",
+          "refuse to weaken",
+          "weaken carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "Repeated losses can weaken a company’s finances.",
+            "zh": "持续亏损可能削弱公司的财务实力。"
+          },
+          {
+            "en": "A lack of evidence would weaken the argument.",
+            "zh": "证据不足会削弱这个论点。"
+          }
+        ],
+        "collocations": [
+          "weaken an argument",
+          "weaken confidence",
+          "weaken a position"
+        ]
+      }
+    },
+    {
+      "id": "core-3a10ff016030a4",
+      "expression": "victimize",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "make a victim of",
+      "decision": "corrected",
+      "reason": "原中文使牺牲含混；宾语应为受害者而不是数字。",
+      "before": {
+        "zhGloss": "使牺牲",
+        "enDefinition": "make a victim of",
+        "examples": [
+          {
+            "en": "Can you victimize the latest figures?",
+            "zh": "你能使牺牲最新数字吗？"
+          },
+          {
+            "en": "I will victimize with the supplier tomorrow.",
+            "zh": "我明天会与供应商使牺牲。"
+          }
+        ],
+        "collocations": [
+          "need to victimize",
+          "please victimize",
+          "refuse to victimize",
+          "victimize carefully"
+        ],
+        "acceptedZhAnswers": [
+          "使牺牲"
+        ]
+      },
+      "after": {
+        "zhGloss": "使受害",
+        "enDefinition": "to treat someone unfairly or make them suffer",
+        "examples": [
+          {
+            "en": "The policy must not victimize employees who raise concerns.",
+            "zh": "这项规定不得使提出问题的员工受到不公对待。"
+          },
+          {
+            "en": "Fraudsters often victimize people who trust them.",
+            "zh": "诈骗者常使信任他们的人受害。"
+          }
+        ],
+        "collocations": [
+          "victimize an employee",
+          "victimize vulnerable people",
+          "unfairly victimize"
+        ],
+        "acceptedZhAnswers": [
+          "使受害"
+        ]
+      }
+    },
+    {
+      "id": "core-3709214fb349c5",
+      "expression": "evaluate",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "form a critical opinion of",
+      "decision": "corrected",
+      "reason": "form a critical opinion of 是有效动词释义；替换不完整或不说明意义的例句。",
+      "before": {
+        "examples": [
+          {
+            "en": "We need to evaluate before the deadline.",
+            "zh": "截止日期前我们需要评估。"
+          },
+          {
+            "en": "They decided to evaluate the risky option.",
+            "zh": "他们决定评估那个高风险选项。"
+          }
+        ],
+        "collocations": [
+          "need to evaluate",
+          "please evaluate",
+          "refuse to evaluate",
+          "evaluate carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "We need to evaluate the risks before signing.",
+            "zh": "签字前我们需要评估风险。"
+          },
+          {
+            "en": "The tutor will evaluate each student’s progress.",
+            "zh": "导师将评估每位学生的进步。"
+          }
+        ],
+        "collocations": [
+          "evaluate a proposal",
+          "evaluate the risks",
+          "evaluate performance"
+        ]
+      }
+    },
+    {
+      "id": "core-c88f94de74abd5",
+      "expression": "embrace",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of clasping another person in the arms (as in greeting or affection)",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of clasping another person in the arms (as in greeting or affection)"
+    },
+    {
+      "id": "core-48ce988583a65c",
+      "expression": "comprise",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "be composed of",
+      "decision": "corrected",
+      "reason": "be composed of 完整；comprise 不能在所选包含义项中无宾语使用。",
+      "before": {
+        "examples": [
+          {
+            "en": "We need to comprise before the deadline.",
+            "zh": "截止日期前我们需要包含。"
+          },
+          {
+            "en": "They decided to comprise the risky option.",
+            "zh": "他们决定包含那个高风险选项。"
+          }
+        ],
+        "collocations": [
+          "need to comprise",
+          "please comprise",
+          "refuse to comprise",
+          "comprise carefully"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The course will comprise six weekly sessions.",
+            "zh": "该课程将包含六次每周课程。"
+          },
+          {
+            "en": "The collection comprises letters, photographs, and maps.",
+            "zh": "这批藏品包含信件、照片和地图。"
+          }
+        ],
+        "collocations": [
+          "comprise several parts",
+          "comprise a collection",
+          "comprise six sessions"
+        ]
+      }
+    },
+    {
+      "id": "core-3d48292e4d2714",
+      "expression": "storage",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of storing something",
+      "decision": "corrected",
+      "reason": "所选定义是储存过程，不是计算机存储器。",
+      "before": {
+        "zhGloss": "存储器",
+        "examples": [
+          {
+            "en": "Can you explain “storage” in one sentence?",
+            "zh": "你能用一句话解释「存储器」吗？"
+          },
+          {
+            "en": "I looked up “storage” before the quiz.",
+            "zh": "小测前我查阅了「存储器」。"
+          }
+        ],
+        "collocations": [
+          "prepare the storage",
+          "bring the storage",
+          "file the storage"
+        ],
+        "acceptedZhAnswers": [
+          "存储器"
+        ]
+      },
+      "after": {
+        "zhGloss": "储存",
+        "examples": [
+          {
+            "en": "The warehouse provides storage for imported furniture.",
+            "zh": "这座仓库为进口家具提供储存空间。"
+          },
+          {
+            "en": "Keep these files in secure storage.",
+            "zh": "请把这些文件妥善储存。"
+          }
+        ],
+        "collocations": [
+          "secure storage",
+          "storage space",
+          "storage of goods"
+        ],
+        "acceptedZhAnswers": [
+          "储存"
+        ]
+      }
+    },
+    {
+      "id": "core-5b0df6a8b9a96c",
+      "expression": "registration",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of enrolling",
+      "decision": "corrected",
+      "reason": "登记行为不是用于计算、比较、解释的数值，替换不成立的泛化搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "Can you explain “registration” in one sentence?",
+            "zh": "你能用一句话解释「登记」吗？"
+          },
+          {
+            "en": "I looked up “registration” before the quiz.",
+            "zh": "小测前我查阅了「登记」。"
+          }
+        ],
+        "collocations": [
+          "calculate the registration",
+          "compare the registration",
+          "interpret the registration"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "Registration for the course closes on Friday.",
+            "zh": "这门课程的登记报名于周五截止。"
+          },
+          {
+            "en": "Please complete registration before attending the workshop.",
+            "zh": "参加工作坊前请完成登记。"
+          }
+        ],
+        "collocations": [
+          "complete registration",
+          "registration form",
+          "registration deadline"
+        ]
+      }
+    },
+    {
+      "id": "core-a266986861f0c3",
+      "expression": "grin",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "to draw back the lips and reveal the teeth, in a smile, grimace, or snarl",
+      "decision": "corrected",
+      "reason": "露齿笑名词不能使用 draw back 的动词定义。",
+      "before": {
+        "enDefinition": "to draw back the lips and reveal the teeth, in a smile, grimace, or snarl",
+        "examples": [
+          {
+            "en": "Please use “grin” correctly in your essay.",
+            "zh": "请在作文里正确使用「露齿笑」。"
+          },
+          {
+            "en": "Can you explain “grin” in one sentence?",
+            "zh": "你能用一句话解释「露齿笑」吗？"
+          }
+        ],
+        "collocations": [
+          "explain “grin”",
+          "use “grin”",
+          "learn “grin”"
+        ]
+      },
+      "after": {
+        "enDefinition": "a broad smile in which the teeth are visible",
+        "examples": [
+          {
+            "en": "A wide grin spread across his face.",
+            "zh": "他的脸上露出了咧嘴的笑容。"
+          },
+          {
+            "en": "She greeted us with a cheerful grin.",
+            "zh": "她咧嘴笑着迎接我们。"
+          }
+        ],
+        "collocations": [
+          "wide grin",
+          "cheerful grin",
+          "a grin on someone’s face"
+        ]
+      }
+    },
+    {
+      "id": "core-e5fc8009f8bf27",
+      "expression": "accordingly",
+      "layer": "core",
+      "rule": "def_short_trailing_function_word",
+      "detail": "in accordance with",
+      "decision": "corrected",
+      "reason": "相应地是副词；in accordance with 是缺少补语的介词片段，原中文说得相应地不成立。",
+      "before": {
+        "enDefinition": "in accordance with",
+        "examples": [
+          {
+            "en": "He spoke accordingly during the client call.",
+            "zh": "他在客户电话中说得相应地。"
+          },
+          {
+            "en": "The numbers moved accordingly in line with the plan.",
+            "zh": "数字相应地按计划变动。"
+          }
+        ],
+        "collocations": [
+          "speak accordingly",
+          "work accordingly",
+          "answer accordingly"
+        ]
+      },
+      "after": {
+        "enDefinition": "in a way that is appropriate to the situation or information available",
+        "examples": [
+          {
+            "en": "The deadline has changed, so please adjust the schedule accordingly.",
+            "zh": "截止日期变了，请相应地调整日程。"
+          },
+          {
+            "en": "We reviewed the results and updated the plan accordingly.",
+            "zh": "我们复核了结果，并相应地更新了计划。"
+          }
+        ],
+        "collocations": [
+          "adjust accordingly",
+          "respond accordingly",
+          "act accordingly"
+        ]
+      }
+    },
+    {
+      "id": "core-3df6031b290ad4",
+      "expression": "theft",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of taking something from someone unlawfully",
+      "decision": "corrected",
+      "reason": "名词定义正确，但 bring/file the theft 与该义项不成立；替换相应模板例句与搭配。",
+      "before": {
+        "examples": [
+          {
+            "en": "The article mentions “theft” several times.",
+            "zh": "这篇文章多次提到「盗窃」。"
+          },
+          {
+            "en": "Please use “theft” correctly in your essay.",
+            "zh": "请在作文里正确使用「盗窃」。"
+          }
+        ],
+        "collocations": [
+          "prepare the theft",
+          "bring the theft",
+          "file the theft"
+        ]
+      },
+      "after": {
+        "examples": [
+          {
+            "en": "The police are investigating the theft of a bicycle.",
+            "zh": "警方正在调查一辆自行车被盗的案件。"
+          },
+          {
+            "en": "The shop installed cameras to prevent theft.",
+            "zh": "商店安装了摄像头以防止盗窃。"
+          }
+        ],
+        "collocations": [
+          "report a theft",
+          "prevent theft",
+          "theft of property"
+        ]
+      }
+    },
+    {
+      "id": "core-34899a33e3d7e3",
+      "expression": "transmission",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of sending a message; causing a message to be transmitted",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of sending a message; causing a message to be transmitted"
+    },
+    {
+      "id": "core-4e8c064919566e",
+      "expression": "pursuit",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of pursuing in an effort to overtake or capture",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of pursuing in an effort to overtake or capture"
+    },
+    {
+      "id": "core-2580d49ff40608",
+      "expression": "ban",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "to officially or legally prohibit",
+      "decision": "corrected",
+      "reason": "保留名词，明确是禁令而非禁止的动作。",
+      "before": {
+        "enDefinition": "to officially or legally prohibit",
+        "examples": [
+          {
+            "en": "Can you explain “ban” in one sentence?",
+            "zh": "你能用一句话解释「禁止」吗？"
+          },
+          {
+            "en": "I looked up “ban” before the quiz.",
+            "zh": "小测前我查阅了「禁止」。"
+          }
+        ],
+        "collocations": [
+          "explain “ban”",
+          "use “ban”",
+          "learn “ban”"
+        ]
+      },
+      "after": {
+        "enDefinition": "an official rule that prohibits an activity or thing",
+        "examples": [
+          {
+            "en": "The school introduced a ban on smoking near the entrance.",
+            "zh": "学校禁止在入口附近吸烟。"
+          },
+          {
+            "en": "The ban applies to all visitors.",
+            "zh": "这项禁令适用于所有访客。"
+          }
+        ],
+        "collocations": [
+          "a ban on smoking",
+          "introduce a ban",
+          "lift a ban"
+        ]
+      }
+    },
+    {
+      "id": "core-c033816b54c9ec",
+      "expression": "bet",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of gambling",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of gambling"
+    },
+    {
+      "id": "core-00c7103750bf7b",
+      "expression": "fry",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "to cook in hot fat or oil; young fish",
+      "decision": "corrected",
+      "reason": "油炸对应动词；原定义把烹饪和鱼苗两个义项混在一起。",
+      "before": {
+        "partOfSpeech": "noun",
+        "enDefinition": "to cook in hot fat or oil; young fish",
+        "examples": [
+          {
+            "en": "Please use “fry” correctly in your essay.",
+            "zh": "请在作文里正确使用「油炸」。"
+          },
+          {
+            "en": "Can you explain “fry” in one sentence?",
+            "zh": "你能用一句话解释「油炸」吗？"
+          }
+        ],
+        "collocations": [
+          "explain “fry”",
+          "use “fry”",
+          "learn “fry”"
+        ]
+      },
+      "after": {
+        "partOfSpeech": "verb",
+        "enDefinition": "to cook food in hot oil or fat",
+        "examples": [
+          {
+            "en": "Fry the onions gently until they soften.",
+            "zh": "用小火把洋葱煎至变软。"
+          },
+          {
+            "en": "We fry the fish in a shallow pan.",
+            "zh": "我们用浅锅煎鱼。"
+          }
+        ],
+        "collocations": [
+          "fry an egg",
+          "fry in oil",
+          "fry until golden"
+        ]
+      },
+      "source": "https://www.merriam-webster.com/dictionary/fry"
+    },
+    {
+      "id": "core-9c20b9ba55a293",
+      "expression": "fit",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "to be the right size or shape; physically healthy; suitable",
+      "decision": "corrected",
+      "reason": "选择与适合相符的尺寸动词义项，删除健康和适宜形容词的混合定义。",
+      "before": {
+        "partOfSpeech": "noun",
+        "enDefinition": "to be the right size or shape; physically healthy; suitable",
+        "examples": [
+          {
+            "en": "The article mentions “fit” several times.",
+            "zh": "这篇文章多次提到「适合」。"
+          },
+          {
+            "en": "Please use “fit” correctly in your essay.",
+            "zh": "请在作文里正确使用「适合」。"
+          }
+        ],
+        "collocations": [
+          "explain “fit”",
+          "use “fit”",
+          "learn “fit”"
+        ]
+      },
+      "after": {
+        "partOfSpeech": "verb",
+        "enDefinition": "to have the size or shape needed for a person, object, or space",
+        "examples": [
+          {
+            "en": "These shoes fit me comfortably.",
+            "zh": "这双鞋我穿着很合脚。"
+          },
+          {
+            "en": "The new desk will fit in the corner.",
+            "zh": "这张新书桌能放进角落。"
+          }
+        ],
+        "collocations": [
+          "fit comfortably",
+          "fit in a space",
+          "fit someone perfectly"
+        ]
+      },
+      "source": "https://www.merriam-webster.com/dictionary/fit"
+    },
+    {
+      "id": "core-0eb10e9f96754c",
+      "expression": "rub",
+      "layer": "core",
+      "rule": "noun_def_looks_verbal",
+      "detail": "the act of rubbing or wiping",
+      "decision": "retained",
+      "reason": "the act/process of 引出名词定义，词性与当前中文含义对应；现有通用例句未形成词性错误。",
+      "retainedDefinition": "the act of rubbing or wiping"
+    },
+    {
+      "id": "econ-7ffd974082a5e4",
+      "expression": "consolidation by purchase",
+      "layer": "econ",
+      "rule": "def_short_trailing_function_word",
+      "detail": "a purchase of consolidation by",
+      "decision": "corrected",
+      "reason": "原定义只是颠倒词序；用购买取得控制权说明概念，不把历史措辞宣称为现行准则名称。",
+      "before": {
+        "enDefinition": "a purchase of consolidation by",
+        "examples": [
+          {
+            "en": "The article mentions “consolidation by purchase” several times.",
+            "zh": "这篇文章多次提到「购买合并」。"
+          },
+          {
+            "en": "Please use “consolidation by purchase” correctly in your essay.",
+            "zh": "请在作文里正确使用「购买合并」。"
+          }
+        ],
+        "collocations": [
+          "prioritise the consolidation by purchase",
+          "standardise the consolidation by purchase",
+          "monitor the consolidation by purchase"
+        ]
+      },
+      "after": {
+        "enDefinition": "a business combination in which one company gains control of another by purchasing it",
+        "examples": [
+          {
+            "en": "The report describes the acquisition as a consolidation by purchase.",
+            "zh": "这份报告把此次收购描述为购买合并。"
+          },
+          {
+            "en": "In a consolidation by purchase, the buyer acquires control of another business.",
+            "zh": "在购买合并中，买方取得另一家企业的控制权。"
+          }
+        ],
+        "collocations": [
+          "consolidation by purchase agreement",
+          "accounting for consolidation by purchase",
+          "consolidation by purchase transaction"
+        ]
+      },
+      "source": "https://www.ifrs.org/content/dam/ifrs/publications/pdf-standards/english/2022/issued/part-a/ifrs-3-business-combinations.pdf?bypass=on"
+    },
+    {
+      "id": "econ-789fab831202c8",
+      "expression": "offer by tender",
+      "layer": "econ",
+      "rule": "def_short_trailing_function_word",
+      "detail": "a tender for offer by",
+      "decision": "corrected",
+      "reason": "原定义机械倒装，清关例句混入无关海关义项。",
+      "before": {
+        "enDefinition": "a tender for offer by",
+        "examples": [
+          {
+            "en": "The tender pack explains the offer by tender.",
+            "zh": "招标文件说明了「经过投标报价」。"
+          },
+          {
+            "en": "Customs applied the offer by tender at clearance.",
+            "zh": "清关时海关适用了「经过投标报价」。"
+          }
+        ],
+        "collocations": [
+          "prioritise the offer by tender",
+          "standardise the offer by tender",
+          "monitor the offer by tender"
+        ]
+      },
+      "after": {
+        "enDefinition": "an offer to sell shares or other assets by inviting potential buyers to submit bids",
+        "examples": [
+          {
+            "en": "The share sale will take the form of an offer by tender.",
+            "zh": "此次股票出售将采用投标报价方式。"
+          },
+          {
+            "en": "An offer by tender invites investors to submit bids for the shares.",
+            "zh": "投标报价邀请投资者对股票提交报价。"
+          }
+        ],
+        "collocations": [
+          "share offer by tender",
+          "offer by tender document",
+          "announce an offer by tender"
+        ]
+      },
+      "source": "https://dictionary.cambridge.org/dictionary/english/tender?topic=business-general-words"
+    },
+    {
+      "id": "econ-958c40cd88613d",
+      "expression": "balanced budget with surplus",
+      "layer": "econ",
+      "rule": "def_short_trailing_function_word",
+      "detail": "a surplus of balanced budget with",
+      "decision": "corrected",
+      "reason": "删除机械倒装释义；按不出现赤字的广义 balanced 表达盈余，不把严格收支相等与盈余混为一谈。",
+      "before": {
+        "zhGloss": "收支平衡并有盈余的预算",
+        "enDefinition": "a surplus of balanced budget with",
+        "examples": [
+          {
+            "en": "Management explained the balanced budget with surplus to the board.",
+            "zh": "管理层向董事会解释了「收支平衡并有盈余的预算」。"
+          },
+          {
+            "en": "We built a contingency for the balanced budget with surplus.",
+            "zh": "我们为「收支平衡并有盈余的预算」准备了应急预案。"
+          }
+        ],
+        "collocations": [
+          "monitor the balanced budget with surplus",
+          "explain the balanced budget with surplus",
+          "mitigate the balanced budget with surplus"
+        ],
+        "acceptedZhAnswers": [
+          "收支平衡并有盈余的预算"
+        ]
+      },
+      "after": {
+        "zhGloss": "有盈余的预算",
+        "enDefinition": "a budget in which planned revenue exceeds planned spending, leaving money available for other uses",
+        "examples": [
+          {
+            "en": "The council approved a balanced budget with surplus funds reserved for repairs.",
+            "zh": "议会批准了一份有盈余的预算，把余款留作维修之用。"
+          },
+          {
+            "en": "A balanced budget with surplus revenue leaves room to repay debt.",
+            "zh": "有盈余收入的预算为偿还债务留出了空间。"
+          }
+        ],
+        "collocations": [
+          "balanced budget with surplus revenue",
+          "balanced budget with surplus funds",
+          "plan a balanced budget with surplus revenue"
+        ],
+        "acceptedZhAnswers": [
+          "有盈余的预算"
+        ]
+      },
+      "source": "https://dictionary.cambridge.org/dictionary/english/balanced?topic=justice-and-fairness"
+    },
+    {
+      "id": "econ-495421c0113fea",
+      "expression": "national association of accountants",
+      "layer": "econ",
+      "rule": "example_missing_expression",
+      "detail": "The NAA was renamed and is now the IMA.",
+      "decision": "retained",
+      "reason": "第二例使用第一例已展开的 NAA 缩写。",
+      "retainedDefinition": "historical name (to 1991) of the U.S. professional body now known as the Institute of Management Accountants (IMA)"
+    },
+    {
+      "id": "econ-6cd37e2cb48af4",
+      "expression": "cost accounting by products",
+      "layer": "econ",
+      "rule": "def_short_trailing_function_word",
+      "detail": "products of cost accounting by",
+      "decision": "corrected",
+      "reason": "原定义无意义；保留按产品核算成本的概念，不误改为副产品 by-products 会计。",
+      "before": {
+        "enDefinition": "products of cost accounting by",
+        "examples": [
+          {
+            "en": "Can you explain “cost accounting by products” in one sentence?",
+            "zh": "你能用一句话解释「产品别成本会计」吗？"
+          },
+          {
+            "en": "I looked up “cost accounting by products” before the quiz.",
+            "zh": "小测前我查阅了「产品别成本会计」。"
+          }
+        ],
+        "collocations": [
+          "classify cost accounting by products",
+          "measure cost accounting by products",
+          "disclose cost accounting by products"
+        ]
+      },
+      "after": {
+        "enDefinition": "the measurement and allocation of production costs to individual products",
+        "examples": [
+          {
+            "en": "Cost accounting by products helps the factory compare the cost of making each item.",
+            "zh": "产品别成本会计帮助工厂比较制造各项产品的成本。"
+          },
+          {
+            "en": "The accountant uses cost accounting by products to assign production costs.",
+            "zh": "会计人员使用产品别成本会计分配生产成本。"
+          }
+        ],
+        "collocations": [
+          "cost accounting by products system",
+          "cost accounting by products report",
+          "apply cost accounting by products"
+        ]
+      },
+      "source": "https://curriculumresources.edu.gh/wp-content/uploads/2024/09/Business-Studies-Manual-2.pdf"
+    },
+    {
+      "id": "econ-6d7e7a80f3e7b7",
+      "expression": "issue by tender",
+      "layer": "econ",
+      "rule": "def_short_trailing_function_word",
+      "detail": "a tender for issue by",
+      "decision": "corrected",
+      "reason": "原定义机械倒装，明确发行证券的动词短语及投标方式。",
+      "before": {
+        "partOfSpeech": "phrase",
+        "enDefinition": "a tender for issue by",
+        "examples": [
+          {
+            "en": "The brief tells the team to issue by tender.",
+            "zh": "简报要求团队「以投标发行证券」。"
+          },
+          {
+            "en": "We failed to issue by tender before the deadline.",
+            "zh": "我们未能在截止前「以投标发行证券」。"
+          }
+        ],
+        "collocations": [
+          "explain “issue by tender”",
+          "use “issue by tender”",
+          "learn “issue by tender”"
+        ]
+      },
+      "after": {
+        "partOfSpeech": "verb phrase",
+        "enDefinition": "to sell newly issued securities through competitive bids from investors",
+        "examples": [
+          {
+            "en": "The government plans to issue by tender a new series of Treasury bills.",
+            "zh": "政府计划通过投标发行一批新的国库券。"
+          },
+          {
+            "en": "The issuer may issue by tender securities with different maturities.",
+            "zh": "发行人可以通过投标发行不同期限的证券。"
+          }
+        ],
+        "collocations": [
+          "issue by tender Treasury bills",
+          "issue by tender new securities",
+          "issue by tender a series of bills"
+        ]
+      },
+      "source": "https://www.dmo.gov.uk/media/n20pqriq/prosp100381.pdf"
+    },
+    {
+      "id": "econ-87c704c9cfeba5",
+      "expression": "overseas private investment corporation",
+      "layer": "econ",
+      "rule": "example_missing_expression",
+      "detail": "OPIC political-risk cover is now discussed under the DFC.",
+      "decision": "retained",
+      "reason": "OPIC 为同条另一例已展开的机构缩写。",
+      "retainedDefinition": "historical U.S. agency (OPIC) that supported private investment abroad; succeeded by the U.S. International Development Finance Corporation (DFC) from 2019"
+    },
+    {
+      "id": "econ-981ba82bc6b197",
+      "expression": "federal home loan bank board",
+      "layer": "econ",
+      "rule": "example_missing_expression",
+      "detail": "Histories of the thrift crisis often mention the FHLBB.",
+      "decision": "retained",
+      "reason": "FHLBB 为同条另一例已展开的机构缩写。",
+      "retainedDefinition": "historical U.S. regulator of federal home loan banks and thrifts; abolished in 1989 under FIRREA"
+    },
+    {
+      "id": "econ-20ec77253a5975",
+      "expression": "singapore inter-bank offering rate",
+      "layer": "econ",
+      "rule": "example_missing_expression",
+      "detail": "New contracts should use SORA instead of SIBOR.",
+      "decision": "retained",
+      "reason": "SIBOR 为同条另一例已展开的历史基准缩写。",
+      "retainedDefinition": "historical Singapore dollar interbank offered rate (SIBOR); last published 31 Dec 2024 and discontinued from 1 Jan 2025, with SGD markets transitioning to SORA"
+    }
+  ],
+  "generationScope": {
+    "bundledWords": 7257,
+    "correctedExistingIds": 93,
+    "excludedUnreviewedAdditionalIds": 100,
+    "reason": "现行 seed:pack 的去重策略与已发布资产存在历史差异；仅回填本次已复核的原有 ID，保持资产规模与成员关系。"
+  }
+}

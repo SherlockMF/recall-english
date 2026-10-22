@@ -9,7 +9,7 @@
 | **产品名** | Recall English |
 | **仓库** | `recall-english` |
 | **npm 包名** | `recall-english` |
-| **版本** | 0.1.0（词库 **V5.3**） |
+| **版本** | 0.1.0（词库 **V5.3**，内容修订 **5.3.1**） |
 | **技术栈** | React 19 · Vite · TypeScript · IndexedDB (`idb`) · FSRS (`ts-fsrs`) |
 
 ## 功能概览
@@ -50,6 +50,8 @@ npm run seed:validate-sense # 义项一致性（strict）
 ```
 
 CI 在构建后运行 `npm run share:check -- --skip-build`。检查包含完整种子一致性、静态资源、语音运行时、凭证排除和无效 URL 后服务仍可访问。两个导出命令支持 `-- --output-dir <directory>`，不会覆盖同名 ZIP；Windows 使用 PowerShell，macOS/Linux 需要 `zip` 和 `unzip`。构建与导出需要项目开发依赖，分享包运行只需要 Node.js 22+。
+
+2026-10-22 已复核 130 条义项提示，修正 93 个既有条目的义项、例句或搭配，内容修订升至 5.3.1；见[逐项复核及验证记录](docs/vocabulary-review-2026-10-22.md)。现行 `seed:pack` 全量重建会比已发布资产多出 100 个待去重复核的条目，本次没有纳入这些条目；完整重建前请先查阅记录中的生成器差异。
 
 DeepSeek Key 按浏览器地址保存：`localhost` 与 `127.0.0.1`、不同端口的配置互相独立。换启动地址后显示未配置时，可先检查以前使用的地址；Key 不包含在备份中。
 

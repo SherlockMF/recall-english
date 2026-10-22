@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process'
 import { afterEach, describe, expect, it } from 'vitest'
 import { createServer, type ViteDevServer } from 'vite'
 import { rolldown } from 'rolldown'
+import { SEED_CONTENT_REVISION } from '../src/data/seedContentRevision'
 
 let server: ViteDevServer | undefined
 afterEach(async () => { await server?.close(); server = undefined })
@@ -33,6 +34,6 @@ describe('Node export entries', () => {
     expect(diskSeed.words).toEqual(browserSeed.words)
     expect(diskSeed.memberships).toEqual(browserSeed.memberships)
     expect(diskSeed.lists).toHaveLength(5)
-    expect(diskSeed.revision).toBe('5.3.0')
+    expect(diskSeed.revision).toBe(SEED_CONTENT_REVISION)
   })
 })
