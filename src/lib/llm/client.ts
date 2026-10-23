@@ -5,6 +5,8 @@ import {
   DEEPSEEK_TIMEOUT_MS,
 } from './constants'
 import { getDeepseekApiKey } from './config'
+import { apiFetch } from '../apiFetch'
+import { isCloudEnabled } from '../cloud/config'
 
 export type LlmErrorCode =
   | 'missing-key'
@@ -66,7 +68,8 @@ export async function chatJson(options: ChatJsonOptions): Promise<unknown> {
 
 async function chatJsonOnce(options: ChatJsonOptions): Promise<unknown> {
   const apiKey = getDeepseekApiKey()
-  if (!apiKey) {
+  const managed = isCloudEnabled()
+  if (!managed && !apiKey) {
     throw new LlmError('missing-key', '未配置 DeepSeek API Key。')
   }
 
@@ -77,11 +80,11 @@ async function chatJsonOnce(options: ChatJsonOptions): Promise<unknown> {
   const timer = setTimeout(() => controller.abort(), timeoutMs)
 
   try {
-    const response = await fetch(`${DEEPSEEK_API_BASE}${DEEPSEEK_CHAT_PATH}`, {
+    const response = await apiFetch(`${DEEPSEEK_API_BASE}${DEEPSEEK_CHAT_PATH}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
+        ...(!managed ? { Authorization: `Bearer ${apiKey}` } : {}),
       },
       body: JSON.stringify({
         model: DEEPSEEK_MODEL,

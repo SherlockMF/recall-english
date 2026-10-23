@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useVoiceConfig, VOICE_CONFIG_CHANGED_EVENT } from '../lib/voice/config'
 import { asRecord } from '../lib/voice/transcript'
 import { KeyStatusBadge, type KeyStatus } from './KeyStatusBadge'
+import { isCloudEnabled } from '../lib/cloud/config'
+import { apiFetch } from '../lib/apiFetch'
 
 export function VoiceServiceStatus() {
   const { config, error, reload } = useVoiceConfig()
@@ -28,7 +30,7 @@ export function VoiceServiceStatus() {
     setUpdateFailed(false)
     const timeout = setTimeout(() => controller.abort(), 10_000)
     try {
-      const response = await fetch('/api/voice/config', {
+      const response = await apiFetch('/api/voice/config', {
         method, signal: controller.signal,
         ...(method === 'PUT' ? { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ apiKey: apiKey.trim(), workspaceId: workspaceId.trim() }) } : {}),
       })
@@ -53,6 +55,11 @@ export function VoiceServiceStatus() {
       if (requestRef.current === controller) { setBusy(false); requestRef.current = null }
     }
   }
+
+  if (isCloudEnabled()) return <section className="settings-section" aria-labelledby="voice-service-title">
+    <div className="settings-copy"><h3 id="voice-service-title">千问口语陪练</h3><p>由管理员配置北京地域语音服务。</p><p role="status">{error || (config ? config.configured ? '千问语音已配置' : '语音服务尚未配置，请联系管理员' : '正在检查语音服务…')}</p></div>
+    <button className="secondary-button" type="button" onClick={reload}>重新检查语音服务</button>
+  </section>
 
   return <form className="settings-section" aria-labelledby="voice-service-title" onSubmit={(event) => { event.preventDefault(); void update('PUT') }}>
     <div className="settings-copy">

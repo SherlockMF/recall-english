@@ -37,6 +37,10 @@ npm run dev
 
 浏览器打开 Vite 输出的本地地址即可。首次启动会把缺失的种子词写入 IndexedDB。
 
+### 部署到 lomivex.top
+
+邀请制云版本使用 Render 常驻 Node.js 服务和 Supabase，支持邮箱登录、账号数据同步，以及管理员托管的 AI / 口语服务。按[部署手册](docs/deployment.md)配置数据库、邀请邮件、环境变量和域名；仓库包含 `render.yaml`，生产入口为 `npm start`。本地版不填写 Supabase 构建变量即可保持原用法。真实账号后台和 DNS 配置需由管理员执行。
+
 ```bash
 npm test                    # 单元 / 组件测试
 npm run test:e2e            # 生产构建后的 Chromium 关键流程（首次需安装浏览器，见下文）

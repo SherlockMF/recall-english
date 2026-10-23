@@ -111,6 +111,22 @@ function backupV1(overrides: Partial<BackupV1> = {}): BackupV1 {
 }
 
 describe('backup import and export', () => {
+  it('round-trips scheduling baselines and rejects a baseline from another track', () => {
+    const data: BackupV3 = { version: 3, exportedAt: newer, words: [word()], lists: [...ALL_VOCABULARY_LISTS], memberships: [], tracks: [track()], attempts: [attempt({ desiredRetention: 0.85, trackBefore: track() })], timeEntries: [], settings: DEFAULT_SETTINGS }
+    expect(parseBackupV3(JSON.stringify(data)).attempts[0].trackBefore).toEqual(track())
+    expect(() => parseBackupV3({ ...data, attempts: [attempt({ desiredRetention: 0.85, trackBefore: track({ itemId: 'other' }) })] })).toThrow()
+  })
+  it('remaps nested scheduling baselines when equivalent words and tracks are deduplicated', () => {
+    const words = [word({ id: 'first' }), word({ id: 'second' })]
+    const tracks = [track({ id: 'first-track', itemId: 'first' }), track({ id: 'second-track', itemId: 'second' })]
+    const attempts = [attempt({ itemId: 'second', trackId: 'second-track', desiredRetention: 0.9, trackBefore: tracks[1] })]
+    const modern = parseBackupV3({ version: 3, exportedAt: newer, words, lists: ALL_VOCABULARY_LISTS, memberships: [], tracks, attempts, timeEntries: [], settings: DEFAULT_SETTINGS })
+    expect(() => parseBackupV3(JSON.stringify(modern))).not.toThrow()
+    expect(modern.attempts[0].trackBefore?.id).toBe(modern.attempts[0].trackId)
+    const legacy = parseBackup(backupV1({ vocabulary: words.map(value => ({ ...value, category: 'daily' })), tracks, attempts }))
+    expect(() => parseBackup(JSON.stringify(legacy))).not.toThrow()
+    expect(legacy.attempts[0].trackBefore?.itemId).toBe(legacy.attempts[0].itemId)
+  })
   beforeEach(async () => {
     await closeDatabase()
     await deleteDB(DATABASE_NAME)

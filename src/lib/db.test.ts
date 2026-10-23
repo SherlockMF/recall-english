@@ -12,6 +12,7 @@ import {
 import { ALL_VOCABULARY_LISTS, LIST_IDS } from '../data/vocabularyLists'
 import {
   DATABASE_NAME,
+  DATABASE_VERSION,
   clearDatabase,
   clearUserData,
   closeDatabase,
@@ -156,7 +157,7 @@ describe('IndexedDB persistence', () => {
     previous.close()
 
     const snapshot = await getUserDataSnapshot()
-    expect((await getDatabase()).version).toBe(3)
+    expect((await getDatabase()).version).toBe(DATABASE_VERSION)
     expect(snapshot.settings.dailyMinutes).toBe(20)
     expect(snapshot.tracks).toEqual([track({ reps: 8, stability: 12 })])
     expect(snapshot.attempts).toEqual([attempt()])

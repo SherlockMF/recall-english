@@ -1,6 +1,7 @@
 import { voiceInstructions, type VoiceOptions } from './scenarios'
 import { asRecord, createTranscriptReducer, type VoiceTurn } from './transcript'
 import { monitorMicrophone } from './audio'
+import { apiFetch } from '../apiFetch'
 
 export interface VoiceSnapshot {
   phase: 'idle' | 'connecting' | 'ready' | 'listening' | 'thinking' | 'speaking' | 'paused' | 'resuming' | 'ended' | 'error'
@@ -138,7 +139,7 @@ export class VoiceSession {
           gathered()
         }))
       }
-      const response = await this.wait(fetch('/api/voice/session', {
+      const response = await this.wait(apiFetch('/api/voice/session', {
         method: 'POST', headers: { 'Content-Type': 'application/sdp' }, body: pc.localDescription?.sdp,
         signal: this.controller.signal,
       }))

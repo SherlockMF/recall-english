@@ -44,7 +44,7 @@ import {
   initializeDatabase,
   putSettings,
   putStudyTimeEntry,
-  putWord,
+  patchWord,
   recordReview,
   removeWordFromList,
   writeBatch,
@@ -90,7 +90,7 @@ const pageFallback = <p role="status">正在打开页面…</p>
 const studyFallback = <div className="study-overlay" role="status">正在准备训练…</div>
 const settingsFallback = <div className="dialog-backdrop" role="status">正在打开设置…</div>
 
-function App() {
+function App({ onReady, onBusyChange }: { onReady?: () => void; onBusyChange?: (busy: boolean) => void } = {}) {
   const [tab, setTab] = useState<AppTab>('today')
   const [items, setItems] = useState<VocabularyItem[]>([])
   const [tracks, setTracks] = useState<LearningTrack[]>([])
@@ -116,6 +116,14 @@ function App() {
     setTimeEntries(snapshot.timeEntries)
     setSettings(snapshot.settings)
   }, [])
+
+  useEffect(() => {
+    const refresh = () => { void refreshData().catch(() => setLoadError('无法读取同步后的学习数据，请重新载入。')) }
+    window.addEventListener('recall-cloud-data-applied', refresh)
+    return () => window.removeEventListener('recall-cloud-data-applied', refresh)
+  }, [refreshData])
+  useEffect(() => { if (!loading && !loadError) onReady?.() }, [loading, loadError, onReady])
+  useEffect(() => { onBusyChange?.(Boolean(session || settingsOpen)) }, [session, settingsOpen, onBusyChange])
 
   const syncDictionaryContent = useCallback(async () => {
     setDictionaryBusy(true)
@@ -299,12 +307,7 @@ function App() {
     } catch {
       prompts = buildFallbackUsagePrompts(item.expression, item.examples[0]?.en)
     }
-    const updated: VocabularyItem = {
-      ...item,
-      usagePrompts: prompts,
-      updatedAt: new Date().toISOString(),
-    }
-    await putWord(stripHydration(updated))
+    const updated: VocabularyItem = { ...item, ...await patchWord(item.id, { usagePrompts: prompts }) }
     setItems((current) => current.map((candidate) => (
       candidate.id === updated.id ? { ...updated, listSlugs: candidate.listSlugs, category: candidate.category } : candidate
     )))
@@ -350,12 +353,7 @@ function App() {
   }
 
   async function toggleKnown(item: VocabularyItem) {
-    const snapshot = await getUserDataSnapshot()
-    const current = snapshot.words.find((word) => word.id === item.id)
-    if (!current) throw new Error('词条不存在，请刷新词库。')
-    const updated = { ...current, knownAt: current.knownAt ? undefined : new Date().toISOString(),
-      contentEdited: current.contentEdited ?? current.updatedAt !== current.createdAt, updatedAt: new Date().toISOString() }
-    await putWord(updated)
+    const updated = await patchWord(item.id, { knownAt: item.knownAt ? undefined : new Date().toISOString() })
     setItems((previous) => previous.map((word) => word.id === updated.id ? { ...word, ...updated } : word))
     setNow(new Date())
   }
@@ -475,14 +473,9 @@ function App() {
       showToast('请先编辑补充中文义项，再恢复训练。', 'error')
       return
     }
-    const updatedWord: Word = stripHydration({
-      ...item,
-      contentEdited: item.contentEdited ?? item.updatedAt !== item.createdAt,
-      status: item.status === 'active' ? 'paused' : 'active',
-      updatedAt: new Date().toISOString(),
-    })
+    let updatedWord: Word
     try {
-      await putWord(updatedWord)
+      updatedWord = await patchWord(item.id, { status: item.status === 'active' ? 'paused' : 'active' })
     } catch (error) {
       showToast(error instanceof Error ? `保存暂停状态失败：${error.message}` : '保存暂停状态失败。', 'error')
       return
@@ -505,6 +498,7 @@ function App() {
       category: EditCategory
       scenarioNote?: string
       vocabularyLevel?: VocabularyItem['vocabularyLevel']
+      expectedWord?: VocabularyItem
     },
   ) {
     const current = items.find((item) => item.id === id)
@@ -513,7 +507,7 @@ function App() {
       ? current.usagePrompts
       : buildUsagePrompts(current.expression, patch.examples)
     const listSlugs = resolveListSlugsForEdit(current.listSlugs, current.category, patch.category)
-    const { category: _editCategory, scenarioNote: patchScenarioNote, ...contentPatch } = patch
+    const { category: _editCategory, scenarioNote: patchScenarioNote, expectedWord, ...contentPatch } = patch
     const scenarioNote = patch.category === 'other'
       ? (patchScenarioNote?.trim() || current.scenarioNote)
       : undefined
@@ -554,6 +548,7 @@ function App() {
     }))
     await writeBatch({
       words: [stripHydration(updated)],
+      expectedWords: [stripHydration(expectedWord ?? current)],
       memberships,
       deleteMembershipIds,
       tracks: newUsageTrack,

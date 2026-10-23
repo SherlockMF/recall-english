@@ -1,3 +1,4 @@
+import { apiFetch } from './apiFetch'
 import type {
   DictionaryMeaning,
   DictionaryResult,
@@ -268,7 +269,7 @@ async function fetchFreeDictionary(
   query: string,
   signal: AbortSignal,
 ): Promise<DictionaryResult> {
-  const response = await fetch(
+  const response = await apiFetch(
     `${DICTIONARY_API_BASE_URL}/${encodeURIComponent(query)}`,
     { signal },
   )

@@ -8,6 +8,9 @@ import {
 import { ALL_VOCABULARY_LISTS, listIdForSlug } from '../data/vocabularyLists'
 import { SEED_CONTENT_REVISION } from '../data/seedContentRevision'
 import { isVocabularyLevel } from './studyDifficulty'
+import { trackDatabase } from './cloud/tracking'
+import type { CloudMeta, QueueEntry } from './cloud/types'
+import { sameCloudData } from './cloud/merge'
 import {
   createInitialTracks,
   scheduleReview,
@@ -37,9 +40,11 @@ import {
 } from '../domain/types'
 
 export const DATABASE_NAME = 'recall-english'
-export const DATABASE_VERSION = 3
+export const DATABASE_VERSION = 4
 
 export interface RecallEnglishDatabase extends DBSchema {
+  cloudQueue: { key: string; value: QueueEntry }
+  cloudMeta: { key: string; value: CloudMeta }
   words: {
     key: string
     value: Word
@@ -103,6 +108,7 @@ export interface RecallEnglishDatabase extends DBSchema {
 }
 
 export interface DatabaseBatch {
+  expectedWords?: Word[]
   words?: Word[]
   lists?: VocabularyList[]
   memberships?: WordListItem[]
@@ -126,6 +132,25 @@ export interface UserDataSnapshot {
 }
 
 let databasePromise: Promise<IDBPDatabase<RecallEnglishDatabase>> | undefined
+let databaseAccount: string | null = null
+let trackingEnabled = false
+let rawDatabasePromise: Promise<IDBPDatabase<RecallEnglishDatabase>> | undefined
+
+export function setDatabaseTrackingEnabled(enabled: boolean) { trackingEnabled = enabled }
+export function getDatabaseAccount() { return databaseAccount }
+
+export async function selectDatabaseAccount(account: string | null) {
+  if (account !== null && !/^[a-z\d-]{1,80}$/i.test(account)) throw new Error('账号标识无效。')
+  trackingEnabled = false
+  if (databaseAccount === account) return
+  await closeDatabase()
+  databaseAccount = account
+}
+
+export async function getRawDatabase() {
+  await getDatabase()
+  return rawDatabasePromise!
+}
 
 function createDefaultSettings(): UserSettings {
   return {
@@ -370,8 +395,11 @@ function createStores(
 
 export function getDatabase(): Promise<IDBPDatabase<RecallEnglishDatabase>> {
   if (!databasePromise) {
-    databasePromise = openDB<RecallEnglishDatabase>(DATABASE_NAME, DATABASE_VERSION, {
+    const account = databaseAccount
+    rawDatabasePromise = openDB<RecallEnglishDatabase>(account ? `${DATABASE_NAME}:${account}` : DATABASE_NAME, DATABASE_VERSION, {
       async upgrade(database, oldVersion, _newVersion, transaction) {
+        if (!database.objectStoreNames.contains('cloudQueue')) database.createObjectStore('cloudQueue', { keyPath: 'id' })
+        if (!database.objectStoreNames.contains('cloudMeta')) database.createObjectStore('cloudMeta', { keyPath: 'key' })
         if (oldVersion < 1) {
           // Create legacy vocabulary only if we somehow open empty DB as v1 path — skip, go straight to v2 stores.
         }
@@ -395,8 +423,10 @@ export function getDatabase(): Promise<IDBPDatabase<RecallEnglishDatabase>> {
         if (settings) await settingsStore.put(normalizeUserSettings(settings))
       },
     })
+    databasePromise = rawDatabasePromise.then(database => account ? trackDatabase(database, () => trackingEnabled) : database)
     databasePromise.catch(() => {
       databasePromise = undefined
+      rawDatabasePromise = undefined
     })
   }
 
@@ -449,7 +479,7 @@ export async function initializeDatabase(
 ): Promise<InitializeDatabaseResult> {
   const database = await getDatabase()
   const transaction = database.transaction(
-    ['words', 'vocabularyLists', 'wordListItems', 'tracks', 'settings'],
+    ['words', 'vocabularyLists', 'wordListItems', 'tracks', 'settings', 'cloudMeta'],
     'readwrite',
   )
   const wordStore = transaction.objectStore('words')
@@ -457,6 +487,14 @@ export async function initializeDatabase(
   const membershipStore = transaction.objectStore('wordListItems')
   const trackStore = transaction.objectStore('tracks')
   const settingsStore = transaction.objectStore('settings')
+
+  if (databaseAccount && seedWords.length) {
+    const meta = transaction.objectStore('cloudMeta')
+    const existing = await meta.get('sharedSeedIds')
+    const ids = new Set((existing?.value ?? []) as string[])
+    for (const word of seedWords) ids.add(word.id)
+    await meta.put({ key: 'sharedSeedIds', value: [...ids] })
+  }
 
   for (const list of seedLists) {
     if (!(await listStore.get(list.id))) {
@@ -639,6 +677,17 @@ export async function getWordsByStatus(status: VocabularyStatus): Promise<Word[]
 
 export async function putWord(word: Word): Promise<void> {
   await (await getDatabase()).put('words', word)
+}
+
+export async function patchWord(id: string, patch: Partial<Word> | ((current: Word) => Partial<Word>)): Promise<Word> {
+  const tx = (await getDatabase()).transaction('words', 'readwrite')
+  const current = await tx.store.get(id)
+  if (!current) throw new Error('词条不存在，请刷新词库。')
+  const changes = typeof patch === 'function' ? patch(current) : patch
+  const updated = { ...current, ...changes, id: current.id, contentEdited: changes.contentEdited ?? current.contentEdited ?? current.updatedAt !== current.createdAt, updatedAt: new Date().toISOString() }
+  await tx.store.put(updated)
+  await tx.done
+  return updated
 }
 
 export async function putWords(words: Word[]): Promise<void> {
@@ -835,6 +884,8 @@ export async function recordReview(input: RecordReviewInput): Promise<RecordRevi
     trackId: input.trackId,
     rating: input.rating,
     reviewedAt: reviewedAt.toISOString(),
+    desiredRetention: input.desiredRetention,
+    trackBefore: currentTrack,
   }
   const itemAttempts = await transaction.objectStore('attempts').index('by-item').getAll(currentTrack.itemId)
   const nextTracks = unlockEligibleUsageTracks(replacedTracks, reviewedAt, [...itemAttempts, attempt])
@@ -960,7 +1011,7 @@ export async function writeBatch(batch: DatabaseBatch): Promise<void> {
   const stores = new Set<
     'words' | 'vocabularyLists' | 'wordListItems' | 'tracks' | 'attempts' | 'timeEntries' | 'settings' | 'dictionaryCache'
   >()
-  if (batch.words?.length) stores.add('words')
+  if (batch.words?.length || batch.expectedWords?.length) stores.add('words')
   if (batch.lists?.length) stores.add('vocabularyLists')
   if (batch.memberships?.length || batch.deleteMembershipIds?.length) stores.add('wordListItems')
   if (batch.tracks?.length) stores.add('tracks')
@@ -972,6 +1023,11 @@ export async function writeBatch(batch: DatabaseBatch): Promise<void> {
 
   const database = await getDatabase()
   const transaction = database.transaction([...stores], 'readwrite')
+
+  for (const expected of batch.expectedWords ?? []) {
+    const current = await transaction.objectStore('words').get(expected.id)
+    if (!sameCloudData(current, expected)) throw new Error('词条已在其他页面更新。编辑内容仍保留，请先复制修改，再重新打开词条核对。')
+  }
 
   for (const word of batch.words ?? []) transaction.objectStore('words').put(word)
   for (const list of batch.lists ?? []) transaction.objectStore('vocabularyLists').put(list)
@@ -1124,6 +1180,7 @@ export async function clearDatabase(): Promise<void> {
 export async function closeDatabase(): Promise<void> {
   const currentDatabasePromise = databasePromise
   databasePromise = undefined
+  rawDatabasePromise = undefined
   if (currentDatabasePromise) {
     const database = await currentDatabasePromise
     database.close()

@@ -107,6 +107,9 @@ export interface LearningTrack {
 }
 
 export interface ReviewAttempt {
+  /** Scheduling inputs retained for deterministic cross-device conflict replay. */
+  desiredRetention?: number
+  trackBefore?: LearningTrack
   id: string
   trackId: string
   itemId: string

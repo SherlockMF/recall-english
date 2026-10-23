@@ -1,5 +1,6 @@
 import { asRecord } from './transcript'
 import { toBase64 } from './audio'
+import { apiFetch } from '../apiFetch'
 
 export class VoiceMessageError extends Error {
   constructor(message: string, readonly sessionEnded: boolean) { super(message) }
@@ -28,7 +29,7 @@ export class VoiceMessageSession {
     this.controller.signal.addEventListener('abort', cancel, { once: true })
     if (this.closed) cancel()
     try {
-      const response = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: controller.signal })
+      const response = await apiFetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: controller.signal })
       const value = asRecord(await response.json())
       if (!response.ok) throw new VoiceMessageError(typeof asRecord(value.error).message === 'string' ? String(asRecord(value.error).message) : '发送失败，请重试。', [410, 502].includes(response.status))
       return value
@@ -39,7 +40,7 @@ export class VoiceMessageSession {
     } finally { clearTimeout(timeout); this.controller.signal.removeEventListener('abort', cancel) }
   }
   private remove() {
-    if (this.id) void fetch(`/api/voice/messages/${this.id}`, { method: 'DELETE', keepalive: true }).catch(() => undefined)
+    if (this.id) void apiFetch(`/api/voice/messages/${this.id}`, { method: 'DELETE', keepalive: true }).catch(() => undefined)
     this.id = ''
   }
   end() { this.closed = true; this.controller.abort(); this.remove() }

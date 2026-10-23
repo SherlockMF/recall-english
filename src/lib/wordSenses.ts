@@ -71,8 +71,21 @@ function dictionaryUsagePrompts(word: Pick<Word, 'id' | 'expression' | 'zhGloss'
   ] : []
 }
 
+export function dictionaryWordId(expression: string, senseKey: string) {
+  const identity = JSON.stringify([expressionKey(expression), senseKey])
+  let first = 0xcbf29ce484222325n
+  let second = 0x84222325cbf29ce4n
+  for (const character of identity) {
+    const code = BigInt(character.codePointAt(0)!)
+    first = BigInt.asUintN(64, (first ^ code) * 0x100000001b3n)
+    second = BigInt.asUintN(64, (second ^ code) * 0x100000001b3n)
+  }
+  return `dictionary-${first.toString(16).padStart(16, '0')}${second.toString(16).padStart(16, '0')}`
+}
+
 function dictionaryWord(result: DictionaryResult, meaning: DictionaryMeaning, now: string): Word {
-  const id = `dictionary-${crypto.randomUUID()}`
+  // Existing matches retain their IDs; new senses agree across browser installations.
+  const id = dictionaryWordId(result.word, dictionarySenseKey(meaning))
   const example = meaning.example?.trim()
   const gloss = meaning.zhGloss?.trim() ?? ''
   const expression = result.word.trim()

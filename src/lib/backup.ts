@@ -354,7 +354,7 @@ function validateVocabularyItem(value: unknown, path: string): BackupV1['vocabul
   return record as unknown as BackupV1['vocabulary'][number]
 }
 
-function validateLearningTrack(value: unknown, path: string): LearningTrack {
+export function validateLearningTrack(value: unknown, path: string): LearningTrack {
   const record = objectAt(value, path, [
     'id',
     'itemId',
@@ -394,7 +394,7 @@ function validateLearningTrack(value: unknown, path: string): LearningTrack {
   return record as unknown as LearningTrack
 }
 
-function validateReviewAttempt(value: unknown, path: string): ReviewAttempt {
+export function validateReviewAttempt(value: unknown, path: string): ReviewAttempt {
   const record = objectAt(value, path, [
     'id',
     'trackId',
@@ -417,6 +417,8 @@ function validateReviewAttempt(value: unknown, path: string): ReviewAttempt {
     'suggestedRating',
     'wasPriorityStudy',
     'wasNewItem',
+    'desiredRetention',
+    'trackBefore',
   ])
   stringAt(record.id, `${path}.id`, true)
   stringAt(record.trackId, `${path}.trackId`, true)
@@ -441,6 +443,11 @@ function validateReviewAttempt(value: unknown, path: string): ReviewAttempt {
   ] as const satisfies readonly HintLevel[])
   finiteNumberAt(record.responseMs, `${path}.responseMs`, { min: 0 })
   dateAt(record.reviewedAt, `${path}.reviewedAt`)
+  if (record.desiredRetention !== undefined) finiteNumberAt(record.desiredRetention, `${path}.desiredRetention`, { min: 0.7, max: 0.97 })
+  if (record.trackBefore !== undefined) {
+    const baseline = validateLearningTrack(record.trackBefore, `${path}.trackBefore`)
+    if (baseline.id !== record.trackId || baseline.itemId !== record.itemId || baseline.type !== record.trackType) fail(`${path}.trackBefore`, '排程基线与作答轨道不一致')
+  }
   if (record.wasPriorityStudy !== undefined) booleanAt(record.wasPriorityStudy, `${path}.wasPriorityStudy`)
   if (record.wasNewItem !== undefined) booleanAt(record.wasNewItem, `${path}.wasNewItem`)
   if (record.wasOverride !== undefined) {
@@ -468,7 +475,7 @@ function validateReviewAttempt(value: unknown, path: string): ReviewAttempt {
   return record as unknown as ReviewAttempt
 }
 
-function validateSettings(value: unknown, path: string, requireDailyMinutes = false): UserSettings {
+export function validateSettings(value: unknown, path: string, requireDailyMinutes = false): UserSettings {
   const record = objectAt(value, path, [
     'id',
     'dailyMinutes',
@@ -587,7 +594,7 @@ export function validateBackupV3(value: unknown): asserts value is BackupV3 {
   validateModernBackup(value, 3)
 }
 
-function validateStudyTimeEntry(value: unknown, path: string): StudyTimeEntry {
+export function validateStudyTimeEntry(value: unknown, path: string): StudyTimeEntry {
   const record = objectAt(value, path, ['id', 'sessionId', 'localDate', 'activeMs', 'updatedAt'])
   stringAt(record.id, `${path}.id`, true)
   stringAt(record.sessionId, `${path}.sessionId`, true)
@@ -749,7 +756,7 @@ export function deduplicateBackup(backup: BackupV1): BackupV1 {
     if (track.itemId !== itemId || track.type !== sourceAttempt.trackType) {
       fail('$.attempts', `复习记录 ${sourceAttempt.id} 与学习轨道不一致`)
     }
-    const attempt = { ...sourceAttempt, itemId, trackId }
+    const attempt = { ...sourceAttempt, itemId, trackId, ...(sourceAttempt.trackBefore ? { trackBefore: { ...sourceAttempt.trackBefore, id: trackId, itemId, type: sourceAttempt.trackType } } : {}) }
     const existingIndex = attemptIndexById.get(attempt.id)
     if (existingIndex === undefined) {
       attemptIndexById.set(attempt.id, attempts.length)
@@ -919,7 +926,7 @@ export function deduplicateBackupV2<T extends BackupV2 | BackupV3>(backup: T): T
     if (track.itemId !== itemId || track.type !== sourceAttempt.trackType) {
       fail('$.attempts', `复习记录 ${sourceAttempt.id} 与学习轨道不一致`)
     }
-    const attempt = { ...sourceAttempt, itemId, trackId }
+    const attempt = { ...sourceAttempt, itemId, trackId, ...(sourceAttempt.trackBefore ? { trackBefore: { ...sourceAttempt.trackBefore, id: trackId, itemId, type: sourceAttempt.trackType } } : {}) }
     const existingIndex = attemptIndexById.get(attempt.id)
     if (existingIndex === undefined) {
       attemptIndexById.set(attempt.id, attempts.length)

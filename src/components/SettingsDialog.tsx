@@ -11,6 +11,7 @@ import { useFocusTrap } from '../lib/useFocusTrap'
 import { Icon } from './Icon'
 import { VoiceServiceStatus } from './VoiceServiceStatus'
 import { KeyStatusBadge } from './KeyStatusBadge'
+import { isCloudEnabled } from '../lib/cloud/config'
 
 interface SettingsDialogProps {
   settings: UserSettings
@@ -35,6 +36,7 @@ export function SettingsDialog({
   onExportVocabulary,
   onImportVocabulary,
 }: SettingsDialogProps) {
+  const managed = isCloudEnabled()
   const [newItems, setNewItems] = useState(String(settings.newItemsPerDay))
   const [speechAccent, setSpeechAccent] = useState<SpeechAccent>(settings.speechAccent)
   const [vocabularyLevel, setVocabularyLevel] = useState<VocabularyLevel>(settings.vocabularyLevel ?? 'B1')
@@ -128,7 +130,7 @@ export function SettingsDialog({
     }}>
       <section ref={dialogRef} aria-labelledby="settings-title" aria-modal="true" className="dialog-card settings-dialog" role="dialog">
         <div className="dialog-heading">
-          <div><p className="eyebrow">LOCAL & PRIVATE</p><h2 id="settings-title">学习设置</h2></div>
+          <div><p className="eyebrow">{managed ? 'PRIVATE ACCOUNT' : 'LOCAL & PRIVATE'}</p><h2 id="settings-title">学习设置</h2></div>
           <button aria-label="关闭设置" className="icon-button" onClick={onClose} type="button"><Icon name="close" size={20} /></button>
         </div>
 
@@ -185,7 +187,7 @@ export function SettingsDialog({
           </div>
         </div>
 
-        <div className="settings-section">
+        {managed ? <div className="settings-section"><div className="settings-copy"><h3>DeepSeek 辅助</h3><p>由管理员提供，用于判分、提示和词条补全。是否可用及剩余额度以实际调用结果为准。</p></div></div> : <div className="settings-section">
           <div className="settings-copy">
             <div className="settings-service-heading"><h3>DeepSeek 辅助</h3><KeyStatusBadge service="DeepSeek" status={apiKeyFailed ? 'error' : apiKey.trim() !== savedApiKey ? 'pending' : savedApiKey ? 'saved' : 'missing'} /></div>
             <p>可选。用于语义判分、提示、造题与词条补全；开放造句需主动点击 AI 验证。Key 只存在本机，不会进入备份；未验证的造句不会计为已通过。</p>
@@ -207,7 +209,7 @@ export function SettingsDialog({
           </div>
           {apiKeyNotice && <p className="key-status-help" role={apiKeyFailed ? 'alert' : 'status'}>{apiKeyNotice}</p>}
           <p className="key-status-help">点击「保存 DeepSeek Key」后立即生效，不需要保存其他设置。已保存仅表示保留在本机；接口是否可用以实际调用结果为准。</p>
-        </div>
+        </div>}
 
         <VoiceServiceStatus />
 
@@ -238,7 +240,7 @@ export function SettingsDialog({
         <div className="settings-section">
           <div className="settings-copy">
             <h3>学习备份</h3>
-            <p>{vocabularyCount} 个义项 · {attemptCount} 次作答。导出含词条、进度、证据、学习计时与设置；导入会整库替换。数据只保存在这个浏览器中。</p>
+            <p>{vocabularyCount} 个义项 · {attemptCount} 次作答。导出含词条、进度、证据、学习计时与设置；导入会整库替换。{managed ? '当前账号的本机缓存会同步到云端；导入后的替换也会同步，请先导出原数据。' : '数据只保存在这个浏览器中。'}</p>
           </div>
           <div className="backup-actions">
             <button className="secondary-button" disabled={backupBusy} onClick={() => void runBackupAction(onExport)} type="button"><Icon name="download" size={18} /> 导出学习备份</button>
@@ -250,7 +252,7 @@ export function SettingsDialog({
                 const file = event.target.files?.[0]
                 event.target.value = ''
                 if (!file) return
-                if (!window.confirm('导入会用备份中的进度替换当前本地数据。确认继续吗？')) return
+                if (!window.confirm(managed ? '导入会替换当前账号的学习数据，并同步到其他设备。请先导出原数据备份。确认继续吗？' : '导入会用备份中的进度替换当前本地数据。确认继续吗？')) return
                 await importFromFile(file, onImport)
               }}
               ref={backupFileRef}

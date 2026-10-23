@@ -42,9 +42,17 @@ function providerMessage(error) {
   return '百炼语音消息服务返回错误，请重新开始练习。'
 }
 
-export function createVoiceMessageHandler({ connect = (url, options) => new WebSocket(url, options) } = {}) {
+export function createVoiceMessageHandler({ connect = (url, options) => new WebSocket(url, options), production = false, reserveUsage } = {}) {
   const sessions = new Map()
-  let starts = []
+  const starts = new Map()
+  const pendingOwners = new Set()
+  const clean = () => {
+    const now = Date.now()
+    for (const [owner, times] of starts) { const recent = times.filter(time => now - time < 60000); if (recent.length) starts.set(owner, recent); else starts.delete(owner) }
+    if (production) for (const session of sessions.values()) if (!session.current && now - session.lastUsed > 15 * 60000) dispose(session)
+  }
+  const idleTimer = production ? setInterval(clean, 60000) : undefined
+  idleTimer?.unref()
   function dispose(session, message = '语音消息会话已结束。') {
     if (session.closed) return
     session.closed = true
@@ -128,22 +136,33 @@ export function createVoiceMessageHandler({ connect = (url, options) => new WebS
     const path = (req.url || '').split('?')[0]
     if (path !== '/api/voice/messages' && !path.startsWith('/api/voice/messages/')) return false
     if (!req.headers.origin) { failure(res, 403, '缺少同源请求信息。'); return true }
+    const owner = production ? req.authUserId : 'local'
+    if (!owner) { failure(res, 401, '请先登录。'); return true }
+    clean()
+    const busy = () => pendingOwners.has(owner) || [...sessions.values()].some(session => session.owner === owner) || (starts.get(owner)?.length || 0) >= 3 || sessions.size + pendingOwners.size >= (production ? 50 : 1)
     const parts = path.slice('/api/voice/messages'.length).split('/').filter(Boolean)
     if (!parts.length) {
       if (req.method !== 'POST') { failure(res, 405, '建立语音消息会话需要 POST。'); return true }
       if (!credentials) { failure(res, 503, '请先在学习设置中保存千问口语配置。'); return true }
-      starts = starts.filter((time) => Date.now() - time < 60000)
-      if (sessions.size || starts.length >= 3) { failure(res, 429, '语音消息会话尚未结束，或连接请求过于频繁，请稍后重试。'); return true }
+      if (busy()) { failure(res, 429, '语音消息会话尚未结束，或连接请求过于频繁，请稍后重试。'); return true }
       if (req.headers['content-type']?.split(';')[0] !== 'application/json') { failure(res, 415, '需要 JSON 请求。'); return true }
       let session
+      let ownsReservation = false
       try {
         const value = await body(req, 8192)
         if (!value || typeof value.instructions !== 'string' || !value.instructions.trim() || value.instructions.length > 6000) { failure(res, 400, '练习场景信息无效。'); return true }
         // Recheck after reading the body so parallel requests cannot reserve two sessions.
-        if (sessions.size || starts.filter((time) => Date.now() - time < 60000).length >= 3) { failure(res, 429, '已有语音消息会话，或连接请求过于频繁，请稍后重试。'); return true }
-        starts.push(Date.now())
+        if (busy()) { failure(res, 429, '已有语音消息会话，或连接请求过于频繁，请稍后重试。'); return true }
+        pendingOwners.add(owner)
+        ownsReservation = true
+        if (production) {
+          let allowed
+          try { allowed = await reserveUsage(owner, 'voice_session') } catch { failure(res, 503, '暂时无法检查口语额度。'); return true }
+          if (!allowed) { failure(res, 429, '今日口语额度已用完。'); return true }
+        }
+        starts.set(owner, [...(starts.get(owner) || []), Date.now()])
         const socket = connect(`wss://${credentials.workspaceId}.cn-beijing.maas.aliyuncs.com/api-ws/v1/realtime?model=qwen3.8-omni-flash-realtime`, { headers: { Authorization: `Bearer ${credentials.apiKey}` }, handshakeTimeout: 15000, maxPayload: 8 * 1024 * 1024 })
-        session = { id: randomUUID(), socket, instructions: value.instructions, closed: false, seen: new Map() }
+        session = { id: randomUUID(), owner, lastUsed: Date.now(), socket, instructions: value.instructions, closed: false, seen: new Map() }
         sessions.set(session.id, session)
         const ready = new Promise((resolve, reject) => { session.setupResolve = resolve; session.setupReject = reject })
         session.setupTimeout = setTimeout(() => dispose(session, '建立语音消息连接超时，请重试。'), 20000)
@@ -159,12 +178,14 @@ export function createVoiceMessageHandler({ connect = (url, options) => new WebS
       } catch (error) {
         if (session) dispose(session)
         failure(res, error instanceof RangeError ? 413 : session ? 502 : 400, session ? error.message : '语音消息请求无效或过大。')
-      }
+      } finally { if (ownsReservation) pendingOwners.delete(owner) }
       return true
     }
     const session = sessions.get(parts[0])
+    if (session && session.owner !== owner) { failure(res, 410, '语音消息会话已结束，请重新开始。'); return true }
     if (parts.length === 1 && req.method === 'DELETE') { if (session) dispose(session); json(res, 204); return true }
     if (!session) { failure(res, 410, '语音消息会话已结束，请重新开始。'); return true }
+    session.lastUsed = Date.now()
     if (parts.length !== 2 || parts[1] !== 'turns') { failure(res, 404, '语音消息接口不存在。'); return true }
     if (req.method !== 'POST') { failure(res, 405, '发送语音需要 POST。'); return true }
     if (req.headers['content-type']?.split(';')[0] !== 'application/json') { failure(res, 415, '需要 JSON 请求。'); return true }
@@ -184,6 +205,18 @@ export function createVoiceMessageHandler({ connect = (url, options) => new WebS
         return true
       }
       if (session.current) { failure(res, 409, 'AI 正在回复，请稍后发送下一条。'); return true }
+      if (session.reserving) { failure(res, 409, '消息正在提交，请稍后重试。'); return true }
+      if (production) {
+        session.reserving = true
+        try {
+          const hex = createHash('sha256').update(`${owner}/${session.id}/${value.id}`).digest('hex')
+          const requestId = `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-8${hex.slice(17, 20)}-${hex.slice(20, 32)}`
+          let allowed
+          try { allowed = await reserveUsage(owner, 'voice_message', requestId) } catch { failure(res, 503, '暂时无法检查口语额度。'); return true }
+          if (!allowed) { failure(res, 429, '今日语音消息额度已用完。'); return true }
+          if (session.closed) { failure(res, 410, '语音消息会话已结束。'); return true }
+        } finally { session.reserving = false }
+      }
       session.seen.set(value.id, hash)
       const turn = { id: value.id, hash, chunks: [], bytes: 0, userText: '', text: '' }
       turn.promise = new Promise((resolve, reject) => {
@@ -205,6 +238,6 @@ export function createVoiceMessageHandler({ connect = (url, options) => new WebS
     }
     return true
   }
-  handler.close = () => { for (const session of sessions.values()) dispose(session) }
+  handler.close = () => { clearInterval(idleTimer); for (const session of sessions.values()) dispose(session) }
   return handler
 }

@@ -2469,3 +2469,20 @@ p {
 .word-difficulty { margin: 8px 0 16px; color: #59736a; font-size: .85rem; }
 .word-card-bottom { flex-wrap: wrap; }
 .text-setting input[type="checkbox"] { width: 20px; height: 20px; padding: 0; accent-color: var(--green); }
+/* Account controls use the same typography and controls as the local application. */
+.auth-page { min-height: 100dvh; display: grid; place-items: center; padding: 24px; }
+.auth-card { width: min(100%, 420px); display: grid; gap: 20px; padding: 32px; border: 1px solid #dce3e5; border-radius: 24px; background: #fff; }
+.auth-card h1, .auth-card p { margin: 0; }
+.auth-card small { color: #59666a; line-height: 1.7; }
+.auth-error { color: #a33432; }
+.cloud-account-bar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; padding: 10px 24px; background: #edf3ef; font-size: 13px; }
+.cloud-account-bar > span:first-child { overflow-wrap: anywhere; }
+.cloud-account-bar > span[role="status"] { flex: 1; min-width: 180px; }
+.cloud-account-bar button, .cloud-conflicts button { border: 1px solid #a9b7ae; border-radius: 8px; background: #fff; padding: 6px 12px; cursor: pointer; }
+.cloud-account-bar button:disabled { cursor: default; opacity: .5; }
+.cloud-conflicts { margin: 16px auto; padding: 16px; max-width: 1100px; border: 1px solid #cbb37a; border-radius: 12px; background: #fffaf0; }
+.cloud-conflicts > div { margin-block: 12px; }
+.cloud-conflicts button { margin: 8px 8px 0 0; }
+.conflict-versions { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.conflict-versions pre { max-height: 260px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; }
+.cloud-cache-wait { text-align: center; padding: 16px; }

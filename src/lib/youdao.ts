@@ -1,4 +1,5 @@
 import type { DictionaryMeaning, SpeechAccent } from '../domain/types'
+import { apiFetch } from './apiFetch'
 
 export const YOUDAO_API_BASE_URL = '/api/youdao/jsonapi'
 /** Absolute URL — `<audio>` can load cross-origin without the Vite proxy. */
@@ -393,7 +394,7 @@ export async function lookupYoudao(
   options.signal?.addEventListener('abort', onAbort, { once: true })
 
   try {
-    const response = await fetch(
+    const response = await apiFetch(
       `${YOUDAO_API_BASE_URL}?doctype=json&jsonversion=4&q=${encodeURIComponent(cleaned)}`,
       // No User-Agent here: browsers forbid overriding it and the extra header
       // can break CORS-preflight for a cross-origin proxy.

@@ -16,7 +16,7 @@ type LibraryFilter = 'all' | 'my-vocabulary' | SystemListSlug
 type VocabularyEditPatch = Pick<
   VocabularyItem,
   'zhGloss' | 'enDefinition' | 'partOfSpeech' | 'examples' | 'collocations'
-> & { category: EditCategory; scenarioNote?: string; vocabularyLevel?: VocabularyLevel }
+> & { category: EditCategory; scenarioNote?: string; vocabularyLevel?: VocabularyLevel; expectedWord?: VocabularyItem }
 
 interface LibraryViewProps {
   items: VocabularyItem[]
@@ -209,7 +209,7 @@ export function LibraryView({
           item={editing.item}
           onClose={() => setEditing(null)}
           onSave={async (patch) => {
-            await onUpdate(editing.item.id, patch)
+            await onUpdate(editing.item.id, { ...patch, expectedWord: editing.item })
             setEditing((current) => current === editing ? null : current)
           }}
         />

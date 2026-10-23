@@ -1,4 +1,5 @@
 import { DEEPSEEK_API_KEY_STORAGE } from './constants'
+import { isCloudEnabled } from '../cloud/config'
 
 export function getDeepseekApiKey(): string {
   try {
@@ -26,5 +27,5 @@ export function clearDeepseekApiKey(): void {
 }
 
 export function hasDeepseekApiKey(): boolean {
-  return getDeepseekApiKey().length > 0
+  return isCloudEnabled() || getDeepseekApiKey().length > 0
 }

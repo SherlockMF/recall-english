@@ -73,13 +73,13 @@ function persistCredentials(path, value) {
   }
 }
 
-export function createVoiceHandler({ env = process.env, fetch: request = globalThis.fetch, credentialFile, messageConnect } = {}) {
-  const messages = createVoiceMessageHandler({ connect: messageConnect })
-  let inFlight = false
-  let starts = []
+export function createVoiceHandler({ env = process.env, fetch: request = globalThis.fetch, credentialFile, messageConnect, productionOrigin, reserveUsage } = {}) {
+  if (productionOrigin && typeof reserveUsage !== 'function') throw new Error('Production voice quota is required')
+  const messages = createVoiceMessageHandler({ connect: messageConnect, production: Boolean(productionOrigin), reserveUsage })
+  const rateStates = new Map()
   let savedCredentials
   let storageError = false
-  if (credentialFile && existsSync(credentialFile)) {
+  if (!productionOrigin && credentialFile && existsSync(credentialFile)) {
     try {
       const saved = JSON.parse(readFileSync(credentialFile, 'utf8'))
       if (!validCredentials(saved) && !(saved?.apiKey === '' && saved?.workspaceId === '')) throw new Error('Invalid saved credentials')
@@ -92,12 +92,13 @@ export function createVoiceHandler({ env = process.env, fetch: request = globalT
     const host = req.headers.host || ''
     const origin = req.headers.origin
     const localAddress = ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(req.socket.remoteAddress)
-    if (!localAddress || !LOCAL_HOST.test(host) || req.headers['sec-fetch-site'] === 'cross-site'
-      || (origin && origin !== `http://${host}` && origin !== `https://${host}`)) {
+    if (productionOrigin ? !req.authUserId || req.headers['sec-fetch-site'] === 'cross-site' || (origin && origin !== productionOrigin) || (req.method !== 'GET' && origin !== productionOrigin)
+      : !localAddress || !LOCAL_HOST.test(host) || req.headers['sec-fetch-site'] === 'cross-site' || (origin && origin !== `http://${host}` && origin !== `https://${host}`)) {
       fail(res, 403, 'local-only', '语音接口仅允许本机同源访问。')
       return true
     }
     if (path === '/api/voice/config' && ['PUT', 'DELETE'].includes(req.method)) {
+      if (productionOrigin) { fail(res, 403, 'managed', '口语服务由管理员配置。'); return true }
       if (!origin) { fail(res, 403, 'origin', '缺少同源请求信息。'); return true }
       const controller = new AbortController()
       const timeout = setTimeout(() => controller.abort(), 5000)
@@ -130,7 +131,7 @@ export function createVoiceHandler({ env = process.env, fetch: request = globalT
     const workspace = savedCredentials ? savedCredentials.workspaceId : env.DASHSCOPE_WORKSPACE_ID?.trim()
     const configured = Boolean(validCredentials({ apiKey: key, workspaceId: workspace }))
     if (path === '/api/voice/config' && req.method === 'GET') {
-      reply(res, 200, { configured, model: MODEL, maxSeconds: null })
+      reply(res, 200, { configured, model: MODEL, maxSeconds: null, ...(productionOrigin ? { managed: true } : {}) })
       return true
     }
     if (path === '/api/voice/config') { fail(res, 405, 'method', '此接口仅接受 GET、PUT 或 DELETE。', { Allow: 'GET, PUT, DELETE' }); return true }
@@ -159,12 +160,16 @@ export function createVoiceHandler({ env = process.env, fetch: request = globalT
       fail(res, 413, 'too-large', '连接请求过大。')
       return true
     }
-    starts = starts.filter((time) => Date.now() - time < 60_000)
-    if (inFlight || starts.length >= 3) {
+    const rateKey = productionOrigin ? req.authUserId : 'local'
+    for (const [id, state] of rateStates) if (!state.inFlight && state.starts.every(time => Date.now() - time >= 60_000)) rateStates.delete(id)
+    const rate = rateStates.get(rateKey) || { inFlight: false, starts: [] }
+    rateStates.set(rateKey, rate)
+    rate.starts = rate.starts.filter((time) => Date.now() - time < 60_000)
+    if (rate.inFlight || rate.starts.length >= 3 || rateStates.size > 100) {
       fail(res, 429, 'rate-limit', '连接请求过于频繁，请一分钟后重试。', { 'Retry-After': '60' })
       return true
     }
-    inFlight = true
+    rate.inFlight = true
     const controller = new AbortController()
     const timer = setTimeout(() => controller.abort(), 20_000)
     const onClose = () => { if (!res.writableEnded) controller.abort() }
@@ -176,7 +181,12 @@ export function createVoiceHandler({ env = process.env, fetch: request = globalT
         return true
       }
       if (controller.signal.aborted) throw new Error('aborted')
-      starts.push(Date.now())
+      if (productionOrigin) {
+        let allowed
+        try { allowed = await reserveUsage(req.authUserId, 'voice_session') } catch { fail(res, 503, 'quota-unavailable', '暂时无法检查口语额度。'); return true }
+        if (!allowed) { fail(res, 429, 'quota', '今日口语额度已用完。'); return true }
+      }
+      rate.starts.push(Date.now())
       const upstream = await request(`https://${workspace}.cn-beijing.maas.aliyuncs.com/api/v1/webrtc/realtime?model=${MODEL}`, {
         method: 'POST', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/sdp' },
         body: sdp, signal: controller.signal, redirect: 'error',
@@ -200,7 +210,7 @@ export function createVoiceHandler({ env = process.env, fetch: request = globalT
     } finally {
       clearTimeout(timer)
       res.off('close', onClose)
-      inFlight = false
+      rate.inFlight = false
     }
     return true
   }
