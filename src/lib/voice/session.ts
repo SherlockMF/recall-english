@@ -174,12 +174,12 @@ export class VoiceSession {
       if (!this.configured && event.type === 'session.created' && channel.readyState === 'open') {
         this.channel = channel
         this.configured = true
+        // Keep default automatic VAD; the WebRTC endpoint rejects overriding turn_detection.
         this.send({ type: 'session.update', session: {
           modalities: ['text', 'audio'],
           audio: { output: { voice: 'Tina' } },
           instructions: voiceInstructions(this.options),
           input_audio_transcription: { model: 'qwen3-asr-flash-realtime' },
-          turn_detection: { type: 'semantic_vad', threshold: 0.5, silence_duration_ms: 1200 },
           enable_search: false, max_tokens: 512,
         } })
         void this.wait(Promise.all(this.senders.map(({ sender, track }) => sender.replaceTrack(track))))

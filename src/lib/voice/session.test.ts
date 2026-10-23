@@ -110,14 +110,15 @@ describe('voice lifecycle', () => {
     expect(call.snapshot.phase).toBe('error')
   })
 
-  it('configures the server-created txt channel and only enables capture after acknowledgement', async () => {
+  it('keeps provider turn detection defaults and only enables capture after acknowledgement', async () => {
     const call = session()
     await call.start()
     const pc = Peer.instances[0]
     const txt = new Channel()
     pc.dispatchEvent(Object.assign(new Event('datachannel'), { channel: txt }))
     txt.event({ type: 'session.created' })
-    expect(txt.sent[0]).toMatchObject({ type: 'session.update', session: { input_audio_transcription: { model: 'qwen3-asr-flash-realtime' }, turn_detection: { type: 'semantic_vad' } } })
+    expect(txt.sent[0]).toMatchObject({ type: 'session.update', session: { input_audio_transcription: { model: 'qwen3-asr-flash-realtime' } } })
+    expect(txt.sent[0].session).not.toHaveProperty('turn_detection')
     expect(track.enabled).toBe(false)
     txt.event({ type: 'session.updated' })
     expect(track.enabled).toBe(true)
