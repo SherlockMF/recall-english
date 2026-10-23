@@ -2,7 +2,7 @@
 
 用户已确认：lomivex.top、Render、Supabase、少量邀请用户，关闭公开注册。
 
-生产使用 Singapore 单个常驻 Node.js Web Service，Node 22，构建 npm ci && npm run build，启动 npm start；本地开发和分享包保持原行为。配置 Supabase 的构建才启用邮箱邀请登录。浏览器按 user.id 隔离 IndexedDB；所有 API 验证用户及 app_memberships.active，生产不允许通过 UI 更改服务密钥。DeepSeek 与 DashScope 密钥仅服务端保存。
+用户后续确认先以 Singapore 单个免费 Node.js Web Service 试运行，接受空闲休眠及冷启动；Node 22，构建 npm ci && npm run build，启动 npm start；本地开发和分享包保持原行为。配置 Supabase 的构建才启用邮箱邀请登录。浏览器按 user.id 隔离 IndexedDB；所有 API 验证用户及 app_memberships.active，生产不允许通过 UI 更改服务密钥。DeepSeek 与 DashScope 密钥仅服务端保存。
 
 共享 words 由管理员导入；user_words 保存用户变更后的词条覆盖。其他云表为 profiles、app_memberships、vocabulary_lists、word_list_items、learning_tracks、review_attempts、study_time_entries、user_settings、usage_events。用户表使用 RLS 限制本人及 active 成员；管理员权限、额度仅受控服务端可写。旧文本 ID 保持，外键同时约束 user_id。同步表保存 payload JSONB 和可查询索引列；不改变现有备份字段。
 

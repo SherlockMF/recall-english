@@ -4,8 +4,7 @@ services:
     name: recall-english
     runtime: node
     region: singapore
-    plan: starter
-    numInstances: 1
+    plan: free
     autoDeployTrigger: "off"
     buildCommand: npm ci && npm run build
     startCommand: npm start

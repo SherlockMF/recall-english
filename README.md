@@ -39,7 +39,7 @@ npm run dev
 
 ### 部署到 lomivex.top
 
-邀请制云版本使用 Render 常驻 Node.js 服务和 Supabase，支持邮箱登录、账号数据同步，以及管理员托管的 AI / 口语服务。按[部署手册](docs/deployment.md)配置数据库、邀请邮件、环境变量和域名；仓库包含 `render.yaml`，生产入口为 `npm start`。本地版不填写 Supabase 构建变量即可保持原用法。真实账号后台和 DNS 配置需由管理员执行。
+邀请制云版本使用 Render Node.js 服务和 Supabase，支持邮箱登录、账号数据同步，以及管理员托管的 AI / 口语服务。当前 Blueprint 使用免费实例试运行，空闲后会休眠。按[部署手册](docs/deployment.md)配置数据库、邀请邮件、环境变量和域名；仓库包含 `render.yaml`，生产入口为 `npm start`。本地版不填写 Supabase 构建变量即可保持原用法。真实账号后台和 DNS 配置需由管理员执行。
 
 ```bash
 npm test                    # 单元 / 组件测试

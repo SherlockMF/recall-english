@@ -4,7 +4,7 @@
 
 ## 1. 准备账号和发布版本
 
-需要可供 Render 读取的 Git 仓库、Render 付费服务权限、Singapore 地区的 Supabase 项目、`lomivex.top` DNS 管理权限、自定义 SMTP，以及 DeepSeek、百炼北京地域的可用凭证。凭证只填后台，不提交到 Git、聊天或截图。
+需要可供 Render 读取的 Git 仓库、Render 账号、Singapore 地区的 Supabase 项目、`lomivex.top` DNS 管理权限、自定义 SMTP，以及 DeepSeek、百炼北京地域的可用凭证。当前使用免费 Web Service 试运行。凭证只填后台，不提交到 Git、聊天或截图。
 
 在选定提交上运行：
 
@@ -22,7 +22,7 @@ npm run cloud:seed -- --dry-run
 
 1. 新建 Singapore 项目，妥善保存数据库密码。在 SQL Editor 执行 [数据库迁移](../supabase/migrations/202610230001_cloud.sql)，成功后确认表和 RPC 存在。迁移是一次性初始化，不要对已有生产库反复执行，也不要通过删表处理冲突。
 2. 在项目 Connect / API Keys 页面取得项目 URL、publishable key 和 secret key。publishable key 用于浏览器；secret key 仅服务端管理使用。
-3. 先执行 `npm run cloud:seed -- --dry-run`。正式导入时，从受控终端注入 `SUPABASE_URL`（或 `VITE_SUPABASE_URL`）和 `SUPABASE_SECRET_KEY`，再执行 `npm run cloud:seed`。也可先完成第 4 节创建服务，再使用 Render Shell 的已配置环境返回本步骤导入；上线验收前必须完成。不在命令行中写出密钥，工具不会自动读取 `.env.local`。
+3. 先执行 `npm run cloud:seed -- --dry-run`。正式导入时，从受控终端注入 `SUPABASE_URL`（或 `VITE_SUPABASE_URL`）和 `SUPABASE_SECRET_KEY`，再执行 `npm run cloud:seed`。免费实例没有 Render Shell，需要使用受控本机终端，或在 Supabase Table Editor 为 `words` 导入包含 `id,data` 两列的 CSV；上线验收前必须完成。不在命令行中写出密钥，工具不会自动读取 `.env.local`。
 4. 比较 dry-run 和实际导入数量，在 SQL Editor 用 `select count(*) from public.words;` 检查结果。导入每批 200 条按 ID upsert，不删除历史共享词。中断时修复原因后可重跑。
 
 表结构、RLS、CAS 同步和成员管理的详细约束见[数据库说明](../supabase/README.md)。
@@ -62,14 +62,16 @@ on conflict (user_id) do update set active = true;
 | 设置 | 值 |
 | --- | --- |
 | Runtime / Region | Node / Singapore |
-| Instance | 付费 Starter，单实例，禁用自动扩容 |
+| Instance | Free，单实例试运行 |
 | Node | `NODE_VERSION=22.x` |
 | Build Command | `npm ci && npm run build` |
 | Start Command | `npm start` |
 | Health Check Path | `/healthz` |
 | Auto Deploy | Off |
 
-Blueprint 使用兼容的 `plan: starter`；当前文档也以 `0.5c-512mb` 标识这档资源。确认创建页面显示付费常驻实例和当前费用。字段依据[官方 Blueprint 文档](https://render.com/docs/blueprint-spec)及[官方 JSON Schema](https://render.com/schema/render.yaml.json)；Node 版本按[官方配置方式](https://render.com/docs/node-version)固定。服务监听 `0.0.0.0`，端口读取 Render 的 `PORT`，无需手动设置。
+Blueprint 明确使用 `plan: free`，确认创建页面显示免费实例。工作区每月共享 750 个免费运行小时；空闲 15 分钟后会休眠，再次访问通常需要约 1 分钟唤醒。免费实例可能被重启，语音消息会话可能需要重新建立；学习数据保存在 Supabase。免费实例不支持 Shell、持久磁盘或多实例扩容。流量和构建另有额度，已绑定支付方式的工作区超额可能收费，创建前核对 Billing 的额度及可用费用限制。[免费实例官方说明](https://render.com/docs/free)
+
+字段依据[官方 Blueprint 文档](https://render.com/docs/blueprint-spec)及[官方 JSON Schema](https://render.com/schema/render.yaml.json)；Node 版本按[官方配置方式](https://render.com/docs/node-version)固定。服务监听 `0.0.0.0`，端口读取 Render 的 `PORT`，无需手动设置。
 
 在 Blueprint 初次创建时填写 `sync: false` 变量：
 
