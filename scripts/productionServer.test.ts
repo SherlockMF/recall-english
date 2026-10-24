@@ -93,7 +93,7 @@ it('preserves the existing fixed dictionary queries and never forwards user cred
   const { base, targets } = await fixture()
   expect((await fetch(`${base}/api/dictionary/api/v2/entries/en/coffee`, { headers: auth })).status).toBe(200)
   expect((await fetch(`${base}/api/youdao/jsonapi?doctype=json&jsonversion=4&q=coffee`, { headers: auth })).status).toBe(200)
-  expect(targets.map(target => target.url)).toEqual(['https://api.dictionaryapi.dev/api/v2/entries/en/coffee', 'https://dict.youdao.com/jsonapi?doctype=json&jsonversion=4&q=coffee'])
+  expect(targets.map(target => target.url)).toEqual(['https://api.dictionaryapi.dev/api/v2/entries/en/coffee', 'https://dict.youdao.com/jsonapi?doctype=json&jsonversion=2&q=coffee'])
   targets.forEach(target => expect(new Headers(target.headers).has('Authorization')).toBe(false))
 })
 it.each(['IFRS 16', 'COVID-19', 'e.g.', '24/7'])('looks up normal English expression %s through fixed encoded provider routes', async word => {
@@ -101,8 +101,29 @@ it.each(['IFRS 16', 'COVID-19', 'e.g.', '24/7'])('looks up normal English expres
   const encoded = encodeURIComponent(word)
   expect((await fetch(`${base}/api/dictionary/api/v2/entries/en/${encoded}`, { headers: auth })).status).toBe(200)
   expect((await fetch(`${base}/api/youdao/jsonapi?doctype=json&jsonversion=4&q=${encoded}`, { headers: auth })).status).toBe(200)
-  expect(targets.map(target => target.url)).toEqual([`https://api.dictionaryapi.dev/api/v2/entries/en/${encoded}`, `https://dict.youdao.com/jsonapi?doctype=json&jsonversion=4&q=${encoded}`])
+  expect(targets[0].url).toBe(`https://api.dictionaryapi.dev/api/v2/entries/en/${encoded}`)
+  const bilingual = new URL(targets[1].url)
+  expect(bilingual.origin + bilingual.pathname).toBe('https://dict.youdao.com/jsonapi')
+  expect(Object.fromEntries(bilingual.searchParams)).toEqual({ doctype: 'json', jsonversion: '2', q: word })
   targets.forEach(target => expect(new Headers(target.headers).has('Authorization')).toBe(false))
+})
+it('accepts current dictionary requests while normalizing cached legacy requests to the supported provider schema', async () => {
+  const { base, targets } = await fixture()
+  const accepted = await Promise.all(['2', '4'].map(version =>
+    fetch(`${base}/api/youdao/jsonapi?doctype=json&jsonversion=${version}&q=cover%20letter`, { headers: auth })))
+  expect(accepted.map(response => response.status)).toEqual([200, 200])
+  expect(targets).toHaveLength(2)
+  for (const target of targets) {
+    const url = new URL(target.url)
+    expect(url.origin + url.pathname).toBe('https://dict.youdao.com/jsonapi')
+    expect(url.searchParams.get('jsonversion')).toBe('2')
+    expect(url.searchParams.get('q')).toBe('cover letter')
+    expect(new Headers(target.headers).has('Authorization')).toBe(false)
+  }
+  const rejected = await Promise.all(['jsonversion=3', 'jsonversion=2&jsonversion=4'].map(query =>
+    fetch(`${base}/api/youdao/jsonapi?doctype=json&${query}&q=coffee`, { headers: auth })))
+  expect(rejected.map(response => response.status)).toEqual([400, 400])
+  expect(targets).toHaveLength(2)
 })
 it('rejects blank, control-character and oversized lookups and extra proxy query fields', async () => {
   const { base, targets } = await fixture()

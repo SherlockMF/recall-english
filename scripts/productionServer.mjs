@@ -88,8 +88,11 @@ export function createProductionServer({ env = process.env, fetch: request = glo
           await proxy(res, `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`); return
         }
         if (path === '/api/youdao/jsonapi' && req.method === 'GET') {
-          if ([...url.searchParams.keys()].some(key => !['q', 'doctype', 'jsonversion'].includes(key)) || ['q', 'doctype', 'jsonversion'].some(key => url.searchParams.getAll(key).length !== 1) || url.searchParams.get('doctype') !== 'json' || url.searchParams.get('jsonversion') !== '4' || !validLookup(url.searchParams.get('q'))) { fail(res, 400, 'query'); return }
-          await proxy(res, `https://dict.youdao.com/jsonapi${url.search}`); return
+          if ([...url.searchParams.keys()].some(key => !['q', 'doctype', 'jsonversion'].includes(key)) || ['q', 'doctype', 'jsonversion'].some(key => url.searchParams.getAll(key).length !== 1) || url.searchParams.get('doctype') !== 'json' || !['2', '4'].includes(url.searchParams.get('jsonversion')) || !validLookup(url.searchParams.get('q'))) { fail(res, 400, 'query'); return }
+          // Cached clients still request schema 4, which the provider rejects with HTTP 200.
+          const query = new URLSearchParams(url.search)
+          query.set('jsonversion', '2')
+          await proxy(res, `https://dict.youdao.com/jsonapi?${query}`); return
         }
         if (path === '/api/deepseek/v1/chat/completions' && req.method === 'POST' && !url.search) {
           if (!env.DEEPSEEK_API_KEY) { fail(res, 503, 'not-configured'); return }

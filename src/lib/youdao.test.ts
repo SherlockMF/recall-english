@@ -72,6 +72,18 @@ describe('Youdao POS normalization', () => {
 })
 
 describe('Youdao sense parsing', () => {
+  it('requests the supported schema instead of accepting an HTTP 200 provider error as empty senses', async () => {
+    const request = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+      const url = new URL(String(input), 'https://lomivex.top')
+      return new Response(JSON.stringify(url.searchParams.get('jsonversion') === '2'
+        ? youdaoProudPayload : { code: 40, message: '请求接口错误.应请求json或json_s！' }))
+    })
+    try {
+      const result = await lookupYoudao('proud')
+      expect(result.senses[0]).toMatchObject({ zhGloss: '自豪的，得意的' })
+    } finally { request.mockRestore() }
+  })
+
   it('fills a single sense from a single matching WordNet definition', () => {
     const parsed = parseYoudaoPayload({ ec: { word: { trs: [{ pos: 'adj.', tran: '保险精算的' }] } },
       ee: { source: { name: 'WordNet' }, word: { trs: [{ pos: 'adj.', tr: [{ l: { i: 'of or relating to the work of an actuary' } }] }] } } }, 'actuarial')

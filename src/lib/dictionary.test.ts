@@ -240,6 +240,19 @@ describe('dictionary lookup (Chinese-first)', () => {
     expect(result.meanings[0].zhGloss).toBe('流动性')
   })
 
+  it('keeps bilingual lookup usable when the optional English dictionary is unavailable', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (input: string) => {
+      const url = new URL(String(input), 'https://lomivex.top')
+      if (url.pathname.startsWith('/api/youdao/')) {
+        return response(url.searchParams.get('jsonversion') === '2'
+          ? youdaoProfitPayload : { code: 40, message: '请求接口错误.应请求json或json_s！' })
+      }
+      return response({ error: 'provider-failed' }, 502)
+    }))
+    const result = await lookupDictionary('profit margin')
+    expect(result.meanings[0]).toMatchObject({ zhGloss: '利润率' })
+  })
+
   it('reports a missing word separately from offline mode', async () => {
     const fetchMock = vi.fn().mockResolvedValue(response({ title: 'No Definitions Found' }, 404))
     vi.stubGlobal('fetch', fetchMock)

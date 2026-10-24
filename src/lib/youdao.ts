@@ -395,7 +395,7 @@ export async function lookupYoudao(
 
   try {
     const response = await apiFetch(
-      `${YOUDAO_API_BASE_URL}?doctype=json&jsonversion=4&q=${encodeURIComponent(cleaned)}`,
+      `${YOUDAO_API_BASE_URL}?doctype=json&jsonversion=2&q=${encodeURIComponent(cleaned)}`,
       // No User-Agent here: browsers forbid overriding it and the extra header
       // can break CORS-preflight for a cross-origin proxy.
       { signal: controller.signal, headers: { Accept: 'application/json' } },
