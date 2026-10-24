@@ -110,6 +110,30 @@ describe('voice lifecycle', () => {
     expect(call.snapshot.phase).toBe('error')
   })
 
+  it.each([
+    [null, 'null'],
+    [undefined, '未返回'],
+    [{ type: 'server_vad' }, 'server_vad'],
+    [{ type: 'semantic_vad' }, 'semantic_vad'],
+    [{ type: 'semantic_vad_ec' }, 'semantic_vad_ec'],
+    [{ type: 'private-session-value' }, '未知类型'],
+  ])('reports a safe initial VAD state for rejected default configuration: %j', async (vad, expected) => {
+    const call = session()
+    await call.start()
+    const pc = Peer.instances[0]
+    pc.channel.event({ type: 'session.created', session: { turn_detection: vad, id: 'private-session-id' } })
+    pc.channel.event({ type: 'error', error: {
+      type: 'invalid_request_error', param: 'session.turn_detection', message: 'private-provider-message',
+    } })
+    expect(call.snapshot.notice).toContain('RTC-D1')
+    expect(call.snapshot.notice).toContain(`初始 VAD=${expected}`)
+    expect(call.snapshot.notice).toContain('客户端未发送 turn_detection')
+    expect(call.snapshot.notice).not.toContain('private')
+    expect(pc.channel.sent[0].session).not.toHaveProperty('turn_detection')
+    expect(track.enabled).toBe(false)
+    expect(track.stop).toHaveBeenCalledTimes(1)
+  })
+
   it('keeps provider turn detection defaults and only enables capture after acknowledgement', async () => {
     const call = session()
     await call.start()

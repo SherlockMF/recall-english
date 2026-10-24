@@ -19,6 +19,7 @@ const NO_RESPONSE_TO_CANCEL = /^(?:no (?:active|ongoing) response to cancel\.?|c
 const ERROR_TYPES = new Set(['invalid_request_error', 'authentication_error', 'permission_error', 'rate_limit_error', 'server_error'])
 const ERROR_CODES = new Set(['invalid_value', 'invalid_request', 'invalid_event', 'unknown_parameter', 'missing_required_parameter', 'unsupported_parameter', 'rate_limit_exceeded', 'server_error', 'response_already_in_progress', 'response_cancel_not_active', '400', '401', '403', '429', '500', '503'])
 const ERROR_PARAMS = new Set(['session', 'session.modalities', 'session.voice', 'session.audio', 'session.audio.output.voice', 'session.instructions', 'session.input_audio_transcription', 'session.input_audio_transcription.model', 'session.turn_detection', 'session.turn_detection.type', 'session.turn_detection.threshold', 'session.turn_detection.silence_duration_ms', 'session.enable_search', 'session.max_tokens', 'response.create', 'response.cancel'])
+const VAD_TYPES = new Set(['server_vad', 'semantic_vad', 'semantic_vad_ec'])
 
 function serviceErrorNotice(error: Record<string, unknown>, stage: string): string {
   // Never echo arbitrary provider messages, which may include private values.
@@ -47,6 +48,7 @@ export class VoiceSession {
   private channel?: RTCDataChannel
   private closed = false
   private configured = false
+  private initialVAD = '未返回'
   private acknowledged = false
   private startedAt = 0
   private accumulatedMs = 0
@@ -172,9 +174,13 @@ export class VoiceSession {
       // Qwen creates a separate "txt" channel. Send configuration on the
       // channel delivering session.created, after the server is ready.
       if (!this.configured && event.type === 'session.created' && channel.readyState === 'open') {
+        const vad = asRecord(event.session).turn_detection
+        const vadType = asRecord(vad).type
+        this.initialVAD = vad === null ? 'null' : vad === undefined ? '未返回'
+          : typeof vadType === 'string' && VAD_TYPES.has(vadType) ? vadType : '未知类型'
         this.channel = channel
         this.configured = true
-        // Keep default automatic VAD; the WebRTC endpoint rejects overriding turn_detection.
+        // Leave VAD unchanged while diagnosing the provider's turn_detection rejection.
         this.send({ type: 'session.update', session: {
           modalities: ['text', 'audio'],
           audio: { output: { voice: 'Tina' } },
@@ -213,7 +219,10 @@ export class VoiceSession {
         return
       }
       const stage = this.acknowledged ? '对话阶段' : this.configured ? '会话配置阶段' : '会话建立阶段'
-      this.finish('error', serviceErrorNotice(error, stage))
+      const diagnostic = this.configured && typeof error.param === 'string' && ERROR_PARAMS.has(error.param)
+        && error.param.startsWith('session.turn_detection')
+        ? ` 连接诊断 RTC-D1：初始 VAD=${this.initialVAD}；客户端未发送 turn_detection。` : ''
+      this.finish('error', serviceErrorNotice(error, stage) + diagnostic)
       return
     }
     if (event.type === 'session.updated' && this.acknowledged) {
