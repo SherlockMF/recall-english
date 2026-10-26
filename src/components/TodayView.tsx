@@ -159,7 +159,7 @@ export function TodayView({
               ? '可判定样本不足 10 条。首次学习、即时重试、提示与自评不计入此指标；每日新词数量保持设置值。'
               : noHintRate !== null && noHintRate < 80
                 ? '延迟回忆较弱，可加强复习；每日新词数量保持设置值，不自动减少。'
-                : '先完成到期复习，新词按固定每日数量安排，优先词不足时补充普通词。'}
+                : '先完成到期复习，新词约 80% 来自优先学习、20% 来自其他词库；一方不足由另一方补齐。'}
           </p>
           <p className="quiet-copy">{stats.delayedRecall.correct} / {stats.delayedRecall.total} 次可判定延迟回忆正确</p>
           <p className="quiet-copy">今日练习 {stats.practicedItems} 个表达 · {stats.taskCount} 道不同题 · {stats.attemptCount} 次作答</p>

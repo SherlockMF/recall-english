@@ -144,7 +144,7 @@ export function LibraryView({
         <span>找到 {entries.length} 个词条 · {filtered.length} 个义项</span>
         <span>已会或暂停的内容不会进入每日训练</span>
       </div>
-      {filter === 'my-vocabulary' && <p className="form-note">每日新词数量按设置固定：先按列表顺序安排优先词，剩余额度补充普通词；训练先完成优先词，再学习普通词。暂停的词不参与安排。</p>}
+      {filter === 'my-vocabulary' && <p className="form-note">每日新词约 80% 来自优先学习，约 20% 来自其他词库，四舍五入；一方不足由另一方补齐。普通词分类跨天累计，在相近难度下按日常、商业、金融、会计 4:3:2:1 加权选取，不每天重置。训练先完成优先词，再学习普通词；暂停的词不参与安排。</p>}
 
       {filtered.length ? (
         <>

@@ -355,6 +355,85 @@ describe('fixed daily target', () => {
 })
 
 describe('buildDailyPlan', () => {
+  it.each([false, true])('balances two ordinary words per day across five-day cycles, split sessions: %s', (splitSessions) => {
+    const categories = ['daily', 'business', 'finance', 'accounting'] as const
+    const priority = Array.from({ length: 80 }, (_, i) => makeItem(`p-${i}`, 'daily', {
+      listSlugs: ['daily', 'my-vocabulary'], vocabularyLevel: 'B1',
+    }))
+    const ordinary = categories.flatMap((category) => Array.from({ length: 20 }, (_, i) =>
+      makeItem(`${category}-${i}`, category, { vocabularyLevel: 'B1' })))
+    const items = [...priority, ...ordinary]
+    const tracks = createInitialTracks(items, NOW)
+    const attempts: ReviewAttempt[] = []
+    const counts = [0, 0, 0, 0]
+    for (let day = 0; day < 10; day += 1) {
+      const now = new Date(NOW.getTime() + day * 86_400_000)
+      let ordinaryToday = 0
+      for (let session = 0; session < (splitSessions ? 2 : 1); session += 1) {
+        const input = { items, tracks, attempts, settings: settings({ newItemsPerDay: 10, adaptiveDifficulty: false }), timeEntries: [], now }
+        const plan = buildDailyPlan(input)
+        expect(buildDailyPlan(input).tasks).toEqual(plan.tasks)
+        const ids = [...new Set(plan.tasks.filter((task) => task.isNew).map((task) => task.itemId))]
+        expect(ids).toHaveLength(session === 0 ? 10 : 1)
+        const studied = splitSessions && session === 0 ? ids.slice(0, 9) : ids
+        for (const id of studied) {
+          const item = items.find((candidate) => candidate.id === id)!
+          const wasPriorityStudy = item.listSlugs.includes('my-vocabulary')
+          if (!wasPriorityStudy) {
+            counts[categories.indexOf(item.category as typeof categories[number])] += 1
+            ordinaryToday += 1
+          }
+          attempts.push(makeAttempt(attempts.length, id, { reviewedAt: now.toISOString(), wasPriorityStudy }))
+          // Uneven retries must not consume more category quota.
+          if (item.category === 'daily') attempts.push(makeAttempt(attempts.length, id, {
+            reviewedAt: now.toISOString(), wasPriorityStudy, retryCount: 1,
+          }))
+        }
+      }
+      expect(ordinaryToday).toBe(2)
+      if ((day + 1) % 5 === 0) expect(counts).toEqual([4, 3, 2, 1].map((count) => count * (day + 1) / 5))
+    }
+  })
+
+  it.each([true, false])('preserves daily quotas across sessions and membership changes: %s', (priorityFirst) => {
+    const items = [...Array.from({ length: 10 }, (_, i) => makeItem(`p-${i}`, 'finance', { listSlugs: ['finance', 'my-vocabulary'] })),
+      ...Array.from({ length: 10 }, (_, i) => makeItem(`o-${i}`))]
+    const introduced = priorityFirst ? items.slice(0, 4) : items.slice(10, 11)
+    const attempts = introduced.map((item, i) => makeAttempt(i, item.id, { wasPriorityStudy: priorityFirst, reviewedAt: NOW.toISOString() }))
+    const changed = items.map((item) => introduced.includes(item) ? { ...item, listSlugs: priorityFirst ? ['finance' as const] : ['my-vocabulary' as const] } : item)
+    const plan = buildDailyPlan({ items: changed, tracks: createInitialTracks(changed, NOW), settings: settings({ newItemsPerDay: 5 }), attempts, timeEntries: [], now: NOW })
+    const fresh = [...new Set(plan.tasks.filter((task) => task.isNew).map((task) => task.itemId))]
+    expect(fresh).toHaveLength(priorityFirst ? 1 : 4)
+    expect(fresh.every((id) => id.startsWith(priorityFirst ? 'o-' : 'p-'))).toBe(true)
+  })
+
+  it('weights ordinary categories 40/30/20/10 independently of priority categories and legacy settings', () => {
+    const priority = Array.from({ length: 80 }, (_, i) => makeItem(`p-${i}`, 'daily', { listSlugs: ['daily', 'my-vocabulary'], vocabularyLevel: 'B1' }))
+    const categories = ['daily', 'business', 'finance', 'accounting'] as const
+    const ordinary = categories.flatMap((category) => Array.from({ length: 30 }, (_, i) => makeItem(`${category}-${i}`, category, { vocabularyLevel: 'B1' })))
+    const items = [...priority, ...ordinary]
+    const plan = buildDailyPlan({ items, tracks: createInitialTracks(items, NOW), settings: settings({ newItemsPerDay: 100, contentMix: { daily: 0, business: 0, finance: 0, accounting: 1 } }), attempts: [], timeEntries: [], now: NOW })
+    const ids = new Set(plan.tasks.map((task) => task.itemId))
+    expect(categories.map((category) => ordinary.filter((item) => item.category === category && ids.has(item.id)).length)).toEqual([8, 6, 4, 2])
+  })
+
+  it.each([0, 1, 2, 3, 5, 7, 10, 20])('uses rounded 80/20 quotas for %i new words', (total) => {
+    const items = [...Array.from({ length: 20 }, (_, i) => makeItem(`p-${i}`, 'finance', { listSlugs: ['finance', 'my-vocabulary'] })),
+      ...Array.from({ length: 20 }, (_, i) => makeItem(`o-${i}`))]
+    const plan = buildDailyPlan({ items, tracks: createInitialTracks(items, NOW), settings: settings({ newItemsPerDay: total }), attempts: [], timeEntries: [], now: NOW })
+    const ids = [...new Set(plan.tasks.map((task) => task.itemId))]
+    expect(ids).toHaveLength(total)
+    expect(ids.filter((id) => id.startsWith('p-'))).toHaveLength(Math.round(total * 0.8))
+  })
+
+  it('fills missing ordinary slots from priority words', () => {
+    const items = Array.from({ length: 12 }, (_, i) => makeItem(`p-${i}`, 'daily', { listSlugs: ['daily', 'my-vocabulary'] }))
+    items.push(makeItem('ordinary'))
+    const plan = buildDailyPlan({ items, tracks: createInitialTracks(items, NOW), settings: settings({ newItemsPerDay: 10 }), attempts: [], timeEntries: [], now: NOW })
+    expect(plan.newItemCount).toBe(10)
+    expect(new Set(plan.tasks.filter((task) => task.itemId.startsWith('p-')).map((task) => task.itemId)).size).toBe(9)
+  })
+
   it.each([{ count: 0, dailyLimit: 6 }, { count: 1, dailyLimit: 3 }, { count: 4, dailyLimit: 7 }, { count: 15, dailyLimit: 10 }])(
     'fills the configured quota with priority words first, then ordinary words: %j', ({ count, dailyLimit }) => {
     const priorityItems = Array.from({ length: count }, (_, index) => makeItem(`priority-${String(index).padStart(2, '0')}`, 'daily', {
@@ -369,8 +448,9 @@ describe('buildDailyPlan', () => {
       attempts: [], timeEntries: [], now: NOW })
     const selected = [...new Set(plan.tasks.map((task) => task.itemId))]
     expect(plan.newItemCount).toBe(dailyLimit)
-    expect(selected.slice(0, Math.min(count, dailyLimit))).toEqual(priorityItems.slice(0, dailyLimit).map((item) => item.id))
-    expect(selected.filter((id) => id.startsWith('ordinary-'))).toHaveLength(Math.max(0, dailyLimit - count))
+    const priorityCount = Math.min(count, Math.round(dailyLimit * 0.8))
+    expect(selected.slice(0, priorityCount)).toEqual(priorityItems.slice(0, priorityCount).map((item) => item.id))
+    expect(selected.filter((id) => id.startsWith('ordinary-'))).toHaveLength(dailyLimit - priorityCount)
     const ordinaryStart = plan.tasks.findIndex((task) => task.itemId.startsWith('ordinary-'))
     if (ordinaryStart >= 0) expect(plan.tasks.slice(ordinaryStart).every((task) => task.itemId.startsWith('ordinary-'))).toBe(true)
   })
@@ -513,15 +593,25 @@ describe('buildDailyPlan', () => {
     expect(plan.tasks.slice(0, 2).map((task) => task.itemId)).toEqual(['due', 'due'])
   })
 
-  it('balances today’s newly introduced categories without importing previous days into the mix', () => {
-    const items = [makeItem('old-daily'), makeItem('fresh-daily'), makeItem('fresh-business', 'business')]
+  it.each([
+    { wasPriorityStudy: undefined, future: false, expected: 'fresh-business' },
+    { wasPriorityStudy: false, future: false, expected: 'fresh-business' },
+    { wasPriorityStudy: true, future: false, expected: 'fresh-daily' },
+    { wasPriorityStudy: false, future: true, expected: 'fresh-daily' },
+  ])('carries ordinary history across days using first-study membership: %j', ({ wasPriorityStudy, future, expected }) => {
+    const items = [makeItem('old-daily', 'daily', {
+      status: 'paused', listSlugs: wasPriorityStudy === false ? ['daily', 'my-vocabulary'] : ['daily'],
+    }), makeItem('fresh-daily'), makeItem('fresh-business', 'business')]
     const tracks = [...createInitialTracks(items.slice(1), NOW),
       makeTrack('old-daily', 'receptive', { due: '2026-08-20T00:00:00.000Z' }),
       makeTrack('old-daily', 'productive', { due: '2026-08-20T00:00:00.000Z' })]
     const plan = buildDailyPlan({ items, tracks, settings: settings({ newItemsPerDay: 1,
       contentMix: { daily: 0.5, business: 0.5, finance: 0, accounting: 0 } }),
-      attempts: [makeAttempt(0, 'old-daily', { reviewedAt: '2026-08-09T00:00:00.000Z' })], timeEntries: [], now: NOW })
-    expect(new Set(plan.tasks.map((task) => task.itemId))).toEqual(new Set(['fresh-daily']))
+      attempts: [
+        makeAttempt(1, 'old-daily', { reviewedAt: '2026-08-11T00:00:00.000Z', wasPriorityStudy: !wasPriorityStudy }),
+        makeAttempt(0, 'old-daily', { reviewedAt: future ? '2026-08-12T00:00:00.000Z' : '2026-08-09T00:00:00.000Z', wasPriorityStudy }),
+      ], timeEntries: [], now: NOW })
+    expect(new Set(plan.tasks.map((task) => task.itemId))).toEqual(new Set([expected]))
   })
 
   it.each([

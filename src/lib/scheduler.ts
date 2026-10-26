@@ -180,16 +180,7 @@ function compareItems(left: VocabularyItem, right: VocabularyItem) {
   return createdDifference || left.id.localeCompare(right.id)
 }
 
-function normalizedMix(settings: UserSettings) {
-  const weights = Object.fromEntries(
-    CATEGORY_ORDER.map((category) => [category, Math.max(0, settings.contentMix[category] ?? 0)]),
-  ) as Record<MixedCategory, number>
-  const total = Object.values(weights).reduce((sum, weight) => sum + weight, 0)
-  if (total <= 0) return { daily: 0.25, business: 0.25, finance: 0.25, accounting: 0.25 }
-  return Object.fromEntries(
-    CATEGORY_ORDER.map((category) => [category, weights[category] / total]),
-  ) as Record<MixedCategory, number>
-}
+const ORDINARY_CATEGORY_WEIGHTS = { daily: 4, business: 3, finance: 2, accounting: 1 }
 
 function categoryCounts(items: VocabularyItem[]) {
   const counts: Record<MixedCategory, number> = {
@@ -209,7 +200,7 @@ function categoryCounts(items: VocabularyItem[]) {
 function selectNewItems(
   candidates: VocabularyItem[],
   limit: number,
-  settings: UserSettings,
+  priorityLimit: number,
   level: VocabularyLevel,
   initialCounts: Record<MixedCategory, number> = {
     daily: 0,
@@ -219,13 +210,13 @@ function selectNewItems(
   },
 ) {
   if (limit <= 0) return []
-  const selected = candidates.filter((item) => item.listSlugs.includes('my-vocabulary'))
-    .sort((left, right) => left.expression.localeCompare(right.expression) || left.id.localeCompare(right.id))
-    .slice(0, limit)
   const distance = (item: VocabularyItem) => Math.abs(VOCABULARY_LEVELS.indexOf(getVocabularyDifficulty(item).level) - VOCABULARY_LEVELS.indexOf(level))
   const sorted = candidates.filter((item) => !item.listSlugs.includes('my-vocabulary'))
     .sort((left, right) => distance(left) - distance(right) || compareItems(left, right))
   const personal = sorted.filter((item) => item.category === 'my-vocabulary')
+  const selected = candidates.filter((item) => item.listSlugs.includes('my-vocabulary'))
+    .sort((left, right) => left.expression.localeCompare(right.expression) || left.id.localeCompare(right.id))
+    .slice(0, Math.min(limit, Math.max(priorityLimit, limit - sorted.length)))
   if (selected.length >= limit) return selected
 
   const pools = Object.fromEntries(
@@ -234,11 +225,8 @@ function selectNewItems(
       sorted.filter((item) => item.category === category),
     ]),
   ) as Record<MixedCategory, VocabularyItem[]>
-  const priorityCounts = categoryCounts(selected)
-  const counts = Object.fromEntries(CATEGORY_ORDER.map((category) => [category,
-    initialCounts[category] + priorityCounts[category],
-  ])) as Record<MixedCategory, number>
-  const weights = normalizedMix(settings)
+  const counts = { ...initialCounts }
+  const weights = ORDINARY_CATEGORY_WEIGHTS
 
   while (selected.length < limit) {
     const nearest = Math.min(...CATEGORY_ORDER.map((category) => pools[category][0] ? distance(pools[category][0]) : Infinity), personal[0] ? distance(personal[0]) : Infinity)
@@ -420,16 +408,28 @@ export function buildDailyPlan(input: DailyPlanInput): DailyPlan {
       && !attemptedDirections.has(`${track.itemId}:${track.type}`)
     return unfinishedDirection || dateValue(track.due, Number.NEGATIVE_INFINITY) <= nowValue
   }).map((track) => trackCandidate(track, activeItems.get(track.itemId)!, 0, 'core', nowValue))
-  const introducedItems = items.filter((item) => introducedIds.has(item.id))
+  const firstAttempts = new Map<string, ReviewAttempt>()
+  for (const attempt of validAttempts) {
+    const previous = firstAttempts.get(attempt.itemId)
+    if (!previous || Date.parse(attempt.reviewedAt) < Date.parse(previous.reviewedAt)) firstAttempts.set(attempt.itemId, attempt)
+  }
+  const priorityIds = new Set(items.filter((item) => item.listSlugs.includes('my-vocabulary')).map((item) => item.id))
+  // Preserve the quota spent at first introduction even if the list membership changes later.
+  const wasPriority = (id: string) => firstAttempts.get(id)?.wasPriorityStudy ?? priorityIds.has(id)
+  const introducedPriority = [...introducedIds].filter(wasPriority).length
+  const priorityTarget = Math.round(dailyTarget * 0.8)
+  const remainingPriority = Math.max(0, priorityTarget - introducedPriority)
   const difficulty = getStudyDifficulty(settings, items, validAttempts, now)
-  const newItems = selectNewItems(freshItems, remainingNewItems, settings, difficulty.level, categoryCounts(introducedItems))
+  // Carry category counts across days; each ordinary word spends one slot at first introduction.
+  const ordinaryHistory = items.filter((item) => firstAttempts.has(item.id) && !wasPriority(item.id))
+  const newItems = selectNewItems(freshItems, remainingNewItems, remainingPriority, difficulty.level, categoryCounts(ordinaryHistory))
   const newCandidates = newItemCandidates(newItems, eligibleTracks, 1, 'core', nowValue)
   const selected = [...separateItems(due), ...separateItems(newCandidates)]
   const newIds = new Set(newItems.map((item) => item.id))
   const tasks = selected.map((candidate) => ({ ...candidate.task, isNew: newIds.has(candidate.task.itemId) }))
   const estimatedMinutes = selected.reduce((sum, candidate) => sum + candidate.minutes, 0)
   const reasons: string[] = []
-  reasons.push(`每日新表达数量固定为 ${dailyTarget} 个；优先词按列表顺序安排，不足的额度补充普通词。`)
+  reasons.push(`每日新表达 ${dailyTarget} 个：优先学习约 80%（${priorityTarget} 个），其他词库约 20%（${dailyTarget - priorityTarget} 个）；一方不足由另一方补齐。普通词跨天累计，按日常、商业、金融、会计 4:3:2:1 加权选取。`)
   reasons.push(`普通新词优先安排 ${difficulty.level}，同级不足时补充相邻等级。${settings.adaptiveDifficulty === false ? '自动调整已关闭。' : `自动调整已开启：连续轻松 ${difficulty.easyStreak}/3，连续困难 ${difficulty.hardStreak}/2；累计调整 ${difficulty.changes} 次。`}`)
   if (remainingNewItems === 0) reasons.push(settings.newItemsPerDay === 0
     ? '今日新表达上限为 0，只安排已学内容。' : '今日新表达额度已用完；其他方向与重试不重复计新表达。')

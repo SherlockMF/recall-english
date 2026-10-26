@@ -9,6 +9,7 @@ import { Icon } from './Icon'
 import { VoicePreparation, DEFAULT_VOICE_SELECTION, type VoicePreparationProps } from './VoicePreparation'
 import { MicrophoneIndicator, type MicrophoneIndicatorHandle } from './MicrophoneIndicator'
 import { VoiceMessages } from './VoiceMessages'
+import { VoiceTurnFeedback } from './VoiceTurnFeedback'
 
 const PHASE_LABELS: Record<VoiceSnapshot['phase'], string> = {
   idle: '准备开始', connecting: '正在连接', ready: '对话已连接', listening: '正在听你说', thinking: 'AI 正在思考', speaking: 'AI 正在回复', paused: '对话已暂停', resuming: '正在恢复麦克风', ended: '练习已结束', error: '连接未完成',
@@ -25,6 +26,7 @@ function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack }
   const sessionRef = useRef<VoiceSession | null>(null)
   const feedbackRef = useRef<AbortController | null>(null)
   const transcriptRef = useRef<HTMLDivElement>(null)
+  const transcriptContentRef = useRef<HTMLDivElement>(null)
   const meterRef = useRef<MicrophoneIndicatorHandle>(null)
   const active = !['idle', 'ended', 'error'].includes(snapshot.phase)
   const suspended = snapshot.phase === 'paused' || snapshot.phase === 'resuming'
@@ -33,6 +35,17 @@ function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack }
   const hasSpeech = snapshot.turns.some((turn) => turn.role === 'user' && turn.final && turn.text.trim())
   const currentScenario = VOICE_SCENARIOS.find((item) => item.id === scenario) ?? VOICE_SCENARIOS[0]
   const scenarioDescription = selection.descriptions[scenario]?.trim() ?? ''
+  const liveFeedbackAvailable = hasDeepseekApiKey()
+  const hasTurns = snapshot.turns.length > 0
+  const previousReplies = useMemo(() => {
+    let previous = ''
+    const contexts: string[] = []
+    for (const turn of snapshot.turns) {
+      contexts.push(previous)
+      if (turn.role === 'assistant' && turn.final && !turn.interrupted && turn.text.trim()) previous = turn.text
+    }
+    return contexts
+  }, [snapshot.turns])
 
   useEffect(() => () => {
     const call = sessionRef.current
@@ -46,6 +59,21 @@ function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack }
     const transcript = transcriptRef.current
     if (transcript) transcript.scrollTop = transcript.scrollHeight
   }, [snapshot.turns])
+
+  useEffect(() => {
+    if (!hasTurns) return
+    const transcript = transcriptRef.current
+    const content = transcriptContentRef.current
+    if (!transcript || !content || typeof ResizeObserver === 'undefined') return
+    let followingLatest = transcript.scrollHeight - transcript.scrollTop - transcript.clientHeight <= 48
+    const onScroll = () => { followingLatest = transcript.scrollHeight - transcript.scrollTop - transcript.clientHeight <= 48 }
+    const observer = new ResizeObserver(() => {
+      if (followingLatest) transcript.scrollTop = transcript.scrollHeight
+    })
+    transcript.addEventListener('scroll', onScroll, { passive: true })
+    observer.observe(content)
+    return () => { observer.disconnect(); transcript.removeEventListener('scroll', onScroll) }
+  }, [hasTurns])
 
   function start() {
     if (!config?.configured || active || !audioRef.current) return
@@ -114,7 +142,14 @@ function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack }
       <div className="voice-conversation">
         <div className="voice-call-status"><span role="status"><i className={connected ? 'is-live' : ''} aria-hidden="true" />{PHASE_LABELS[snapshot.phase]}{snapshot.muted && connected ? ' · 麦克风已静音' : ''}</span><span className="voice-countdown" aria-label={`已练习 ${snapshot.elapsedSeconds} 秒`}>{Math.floor(snapshot.elapsedSeconds / 60)}:{String(snapshot.elapsedSeconds % 60).padStart(2, '0')}</span></div>
         <div className="voice-transcript" ref={transcriptRef} role="log" aria-label="对话字幕" aria-live="polite" aria-relevant="additions text">
-          {snapshot.turns.length === 0 ? <div className="voice-empty"><span className="voice-mic-mark"><Icon name="mic" size={36} /></span><h2>{currentScenario.topic}</h2><p className="voice-scene-description">{scenarioDescription || '不必想好每句话。先开口，AI 会接着聊。'}</p><small>可以插话，也可以请 AI 用中文解释。</small></div> : snapshot.turns.map((turn) => <div className={`voice-turn voice-turn-${turn.role}`} key={turn.id}><span>{turn.role === 'user' ? '你' : 'AI 陪练'}</span><p>{turn.text || (active ? '正在识别…' : '未收到转写')}</p>{turn.interrupted ? <small>被打断 · 字幕可能包含未播放内容</small> : !turn.final ? <small>{active ? '文字生成中…' : '转写未完成'}</small> : null}</div>)}
+          {snapshot.turns.length === 0 ? <div className="voice-empty"><span className="voice-mic-mark"><Icon name="mic" size={36} /></span><h2>{currentScenario.topic}</h2><p className="voice-scene-description">{scenarioDescription || '不必想好每句话。先开口，AI 会接着聊。'}</p><small>可以插话，也可以请 AI 用中文解释。</small></div> : <div ref={transcriptContentRef}>{snapshot.turns.map((turn, index) => <div className={`voice-turn voice-turn-${turn.role}`} key={turn.id}>
+            <span>{turn.role === 'user' ? '你' : 'AI 陪练'}</span>
+            <div className="voice-turn-content">
+              <p>{turn.text || (active ? '正在识别…' : '未收到转写')}</p>
+              {liveFeedbackAvailable && turn.role === 'user' && turn.final && !turn.interrupted && turn.text.trim() && <VoiceTurnFeedback key={turn.text} text={turn.text} previousReply={previousReplies[index]} />}
+            </div>
+            {turn.interrupted ? <small>被打断 · 字幕可能包含未播放内容</small> : !turn.final ? <small>{active ? '文字生成中…' : '转写未完成'}</small> : null}
+          </div>)}</div>}
         </div>
         <MicrophoneIndicator ref={meterRef} enabled={connected && !snapshot.muted} label={suspended ? '对话已暂停，麦克风已关闭' : connected ? snapshot.muted ? '麦克风已静音' : '麦克风已开启，等待你说话' : active ? '连接后开启麦克风' : '麦克风已关闭'} confirmation={snapshot.phase === 'listening' ? 'AI 正在听你说' : snapshot.phase === 'thinking' ? 'AI 正在思考' : undefined} />
         {snapshot.notice && <p className="voice-notice" role={snapshot.phase === 'error' ? 'alert' : 'status'}>{snapshot.notice}</p>}
@@ -128,6 +163,7 @@ function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack }
           <button className="mini-text-button" disabled={!connected || snapshot.phase !== 'ready'} onClick={() => sessionRef.current?.requestHelp('hint')} type="button">给点提示</button>
         </div>
         <p className="voice-footnote">暂停时关闭麦克风并停止播放，保留当前对话；继续后由你接着说。口语练习不改变词汇掌握度或今日复习计划。字幕可能存在偏差。</p>
+        <p className="voice-footnote">{liveFeedbackAvailable ? '实时纠错已开启：每句转写完成后自动发送本句和上一条完整 AI 发言给 DeepSeek，结果显示在原句旁。仅检查文字表达，可能稍有延迟；不上传录音。' : '在学习设置中配置 DeepSeek 后可自动逐句纠错；语音对话可照常进行。'}</p>
       </div>
     </div>
     {snapshot.turns.some((turn) => turn.text) && <section className="voice-review" aria-labelledby="voice-review-title">

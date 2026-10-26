@@ -150,6 +150,7 @@ export interface UserSettings {
   extensionMinutes: number
   desiredRetention: number
   newItemsPerDay: number
+  /** Legacy backup field; new-word scheduling uses fixed daily/business/finance/accounting weights. */
   contentMix: Record<SystemListSlug, number>
   /** Preferred UK/US accent for study playback. */
   speechAccent: SpeechAccent
