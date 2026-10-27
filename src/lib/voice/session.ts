@@ -242,8 +242,8 @@ export class VoiceSession {
         this.update({ elapsedSeconds: Math.floor((this.accumulatedMs + Date.now() - this.startedAt) / 1000) })
         if (Date.now() - this.activityAt >= 120_000) this.pause('长时间没有交流，已自动暂停。点击继续对话即可接着聊。')
       }, 500)
-      this.pendingReplies.push(false)
-      this.send({ type: 'response.create' })
+      // WebRTC rejects response.create before the first user input. Let VAD
+      // start the first reply after the learner speaks.
     }
     if (!this.acknowledged) return
     const discardPending = event.type === 'response.created' ? this.pendingReplies.shift() : false
@@ -264,7 +264,7 @@ export class VoiceSession {
       this.activityAt = Date.now()
       this.options.audio.pause()
       this.cancelResponse()
-      this.update({ phase: 'listening' })
+      this.update({ phase: 'listening', notice: '' })
     } else if (event.type === 'input_audio_buffer.speech_stopped') {
       this.pendingReplies.push(false)
       this.update({ phase: 'thinking' })
@@ -383,6 +383,10 @@ export class VoiceSession {
 
   requestHelp(kind: 'slower' | 'chinese' | 'hint') {
     if (!this.acknowledged || this.closed || this.activeResponse || this.helpState !== 'idle' || this.snapshot.phase !== 'ready') return
+    if (!this.snapshot.turns.some(turn => turn.role === 'assistant' && turn.text.trim())) {
+      this.update({ notice: '请先开口说一句英语，AI 回复后就可以使用这些帮助。' })
+      return
+    }
     const instruction = {
       slower: 'For your next reply, repeat your last question slowly in simple English.',
       chinese: 'For your next reply, briefly explain your last question in Chinese, then repeat the English question.',
