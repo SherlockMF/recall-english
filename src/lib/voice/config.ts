@@ -5,7 +5,7 @@ import { apiFetch } from '../apiFetch'
 export interface VoiceConfig { configured: boolean; model: string; maxSeconds: null }
 export const VOICE_CONFIG_CHANGED_EVENT = 'recall-voice-config-changed'
 
-export function useVoiceConfig() {
+export function useVoiceConfig(enabled = true) {
   const [config, setConfig] = useState<VoiceConfig | null>(null)
   const [error, setError] = useState('')
   const [revision, setRevision] = useState(0)
@@ -15,6 +15,7 @@ export function useVoiceConfig() {
     return () => window.removeEventListener(VOICE_CONFIG_CHANGED_EVENT, reload)
   }, [reload])
   useEffect(() => {
+    if (!enabled) return
     let disposed = false
     const controller = new AbortController()
     const timeout = setTimeout(() => {
@@ -34,6 +35,6 @@ export function useVoiceConfig() {
     }
     void load()
     return () => { disposed = true; clearTimeout(timeout); controller.abort() }
-  }, [revision])
+  }, [revision, enabled])
   return { config, error, reload }
 }

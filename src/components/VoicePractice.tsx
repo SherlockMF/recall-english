@@ -15,8 +15,8 @@ const PHASE_LABELS: Record<VoiceSnapshot['phase'], string> = {
   idle: '准备开始', connecting: '正在连接', ready: '对话已连接', listening: '正在听你说', thinking: 'AI 正在思考', speaking: 'AI 正在回复', paused: '对话已暂停', resuming: '正在恢复麦克风', ended: '练习已结束', error: '连接未完成',
 }
 
-function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack }: VoicePreparationProps & { accent: SpeechAccent; onBack: () => void }) {
-  const { config, error: configError, reload } = useVoiceConfig()
+function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack, onRequestLogin }: VoicePreparationProps & { accent: SpeechAccent; onBack: () => void; onRequestLogin?: () => void }) {
+  const { config, error: configError, reload } = useVoiceConfig(!onRequestLogin)
   const { scenario, difficulty, selectedIds } = selection
   const [snapshot, setSnapshot] = useState(EMPTY_VOICE_SNAPSHOT)
   const [feedback, setFeedback] = useState<VoiceFeedback | null>(null)
@@ -76,6 +76,7 @@ function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack }
   }, [hasTurns])
 
   function start() {
+    if (onRequestLogin) { onRequestLogin(); return }
     if (!config?.configured || active || !audioRef.current) return
     feedbackRef.current?.abort()
     feedbackRef.current = null
@@ -138,7 +139,7 @@ function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack }
       <div className="voice-mode-heading"><span className="voice-provider">实时畅聊 · 千问北京</span><button className="mini-text-button" disabled={active} onClick={onBack} type="button">切换模式</button></div>
     </header>
     <div className="voice-layout">
-      <VoicePreparation items={items} selection={selection} onSelection={onSelection} active={active} serviceState={configError || (config ? config.configured ? '千问语音已配置' : '语音服务尚未配置。请在学习设置查看配置方法。' : '正在检查语音服务…')} onReload={configError || (config && !config.configured) ? reload : undefined} />
+      <VoicePreparation items={items} selection={selection} onSelection={onSelection} active={active} serviceState={onRequestLogin ? '可先选择场景和难度，开始练习时再登录。' : configError || (config ? config.configured ? '千问语音已配置' : '语音服务尚未配置。请在学习设置查看配置方法。' : '正在检查语音服务…')} onReload={configError || (config && !config.configured) ? reload : undefined} />
       <div className="voice-conversation">
         <div className="voice-call-status"><span role="status"><i className={connected ? 'is-live' : ''} aria-hidden="true" />{PHASE_LABELS[snapshot.phase]}{snapshot.muted && connected ? ' · 麦克风已静音' : ''}</span><span className="voice-countdown" aria-label={`已练习 ${snapshot.elapsedSeconds} 秒`}>{Math.floor(snapshot.elapsedSeconds / 60)}:{String(snapshot.elapsedSeconds % 60).padStart(2, '0')}</span></div>
         <div className="voice-transcript" ref={transcriptRef} role="log" aria-label="对话字幕" aria-live="polite" aria-relevant="additions text">
@@ -155,7 +156,7 @@ function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack }
         {snapshot.notice && <p className="voice-notice" role={snapshot.phase === 'error' ? 'alert' : 'status'}>{snapshot.notice}</p>}
         {snapshot.needsAudio && <button className="secondary-button" onClick={() => void sessionRef.current?.enableAudio()} type="button">启用声音</button>}
         <div className="voice-call-actions">
-          {active ? <>{suspended ? <button className="secondary-button" disabled={snapshot.phase === 'resuming'} onClick={() => void sessionRef.current?.resume()} type="button">{snapshot.phase === 'resuming' ? '正在继续…' : '继续对话'}</button> : <button className="secondary-button" disabled={!connected} onClick={() => sessionRef.current?.pause()} type="button">暂停对话</button>}<button className="secondary-button" disabled={!connected} onClick={() => sessionRef.current?.setMuted(!snapshot.muted)} type="button"><Icon name="mic" size={18} />{snapshot.muted ? '取消静音' : '静音麦克风'}</button><button className="primary-button voice-end" onClick={() => sessionRef.current?.end()} type="button">{snapshot.phase === 'connecting' ? '取消连接' : '结束对话'}</button></> : <button className="primary-button" disabled={!config?.configured || feedbackBusy} onClick={start} type="button"><Icon name="mic" size={19} />{snapshot.phase === 'idle' ? '开始对话' : '重新开始对话'}</button>}
+          {active ? <>{suspended ? <button className="secondary-button" disabled={snapshot.phase === 'resuming'} onClick={() => void sessionRef.current?.resume()} type="button">{snapshot.phase === 'resuming' ? '正在继续…' : '继续对话'}</button> : <button className="secondary-button" disabled={!connected} onClick={() => sessionRef.current?.pause()} type="button">暂停对话</button>}<button className="secondary-button" disabled={!connected} onClick={() => sessionRef.current?.setMuted(!snapshot.muted)} type="button"><Icon name="mic" size={18} />{snapshot.muted ? '取消静音' : '静音麦克风'}</button><button className="primary-button voice-end" onClick={() => sessionRef.current?.end()} type="button">{snapshot.phase === 'connecting' ? '取消连接' : '结束对话'}</button></> : <button className="primary-button" disabled={(!onRequestLogin && !config?.configured) || feedbackBusy} onClick={start} type="button"><Icon name="mic" size={19} />{snapshot.phase === 'idle' ? '开始对话' : '重新开始对话'}</button>}
         </div>
         <div className="voice-help-actions" aria-label="对话辅助">
           <button className="mini-text-button" disabled={!connected || snapshot.phase !== 'ready'} onClick={() => sessionRef.current?.requestHelp('slower')} type="button">说慢一点</button>
@@ -178,10 +179,10 @@ function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack }
   </section>
 }
 
-export function VoicePractice({ items, accent }: { items: VocabularyItem[]; accent: SpeechAccent }) {
+export function VoicePractice({ items, accent, onRequestLogin }: { items: VocabularyItem[]; accent: SpeechAccent; onRequestLogin?: () => void }) {
   const [mode, setMode] = useState<'realtime' | 'messages' | null>(null)
   const [selection, setSelection] = useState(DEFAULT_VOICE_SELECTION)
-  const shared = { items, accent, selection, onSelection: setSelection, onBack: () => setMode(null) }
+  const shared = { items, accent, selection, onSelection: setSelection, onBack: () => setMode(null), onRequestLogin }
   if (mode === 'realtime') return <RealtimeVoicePractice {...shared} />
   if (mode === 'messages') return <VoiceMessages {...shared} />
   return <section className="voice-page" aria-labelledby="voice-title">

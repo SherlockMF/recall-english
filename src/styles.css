@@ -2480,6 +2480,8 @@ p {
 .text-setting input[type="checkbox"] { width: 20px; height: 20px; padding: 0; accent-color: var(--green); }
 /* Account controls use the same typography and controls as the local application. */
 .auth-page { min-height: 100dvh; display: grid; place-items: center; padding: 24px; }
+.auth-backdrop { z-index: 500; overflow-y: auto; }
+.auth-backdrop .auth-card { max-height: calc(100dvh - 48px); overflow-y: auto; }
 .auth-card { width: min(100%, 420px); display: grid; gap: 20px; padding: 32px; border: 1px solid #dce3e5; border-radius: 24px; background: #fff; }
 .auth-card h1, .auth-card p { margin: 0; }
 .auth-card small { color: #59666a; line-height: 1.7; }

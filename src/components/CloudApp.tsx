@@ -8,6 +8,9 @@ import { createCloudSync, type CloudConflict, type CloudSyncState, type CloudTra
 import { restoreCloudCache } from '../lib/cloud/storage'
 import { createCloudBroadcast } from '../lib/cloud/broadcast'
 import { CLOUD_DATA_CHANGED } from '../lib/cloud/types'
+import { useEscapeToClose } from '../lib/useEscapeToClose'
+import { useFocusTrap } from '../lib/useFocusTrap'
+import type { AppTab } from './AppShell'
 
 export const CLOUD_APPLIED = 'recall-cloud-data-applied'
 
@@ -17,6 +20,10 @@ export function CloudApp() {
   const [readyAccount, setReadyAccount] = useState<string | null>(null)
   const [error, setError] = useState('')
   const [checking, setChecking] = useState(false)
+  const [loginOpen, setLoginOpen] = useState(false)
+  const [browsingTab, setBrowsingTab] = useState<AppTab>('today')
+  const requestLogin = useCallback(() => setLoginOpen(true), [])
+  const closeLogin = useCallback(() => setLoginOpen(false), [])
   const [passwordSetup, setPasswordSetup] = useState(['/auth/invite', '/auth/update-password'].includes(window.location.pathname))
   const boundAccount = useRef<string | null>(null)
   const userId = session?.user.id
@@ -76,16 +83,30 @@ export function CloudApp() {
   }
 
   if (session === undefined) return <div className="loading-screen" role="status">正在恢复登录…</div>
-  if (!session) return <AuthForm error={error} client={client} />
+  if (!session) return <>
+    <div inert={loginOpen ? true : undefined}>
+      <div className="cloud-account-bar"><span>访客浏览 · 开始使用时再登录</span><button type="button" onClick={requestLogin}>登录</button></div>
+      <App onRequestLogin={requestLogin} initialTab={browsingTab} onTabChange={setBrowsingTab} />
+    </div>
+    {loginOpen && <AuthForm error={error} client={client} onClose={closeLogin} />}
+  </>
   if (passwordSetup) return <PasswordSetup client={client} onComplete={() => { window.history.replaceState(null, '', '/'); setPasswordSetup(false) }} />
   if (checking || readyAccount !== session.user.id) return <div className="loading-screen">
     {error ? <p role="alert">{error}</p> : <p role="status">正在验证账号权限…</p>}
     {error && <div className="backup-actions"><button type="button" className="secondary-button" onClick={() => window.location.reload()}>重试</button><button type="button" className="secondary-button" onClick={() => void signOut()}>退出登录</button></div>}
   </div>
-  return <AccountWorkspace key={readyAccount} email={session.user.email ?? ''} client={client} onSignOut={() => void signOut()} />
+  return <AccountWorkspace key={readyAccount} initialTab={browsingTab} email={session.user.email ?? ''} client={client} onSignOut={() => void signOut()} />
 }
 
-function AuthForm({ client, error: initialError }: { client: ReturnType<typeof getCloudClient>; error: string }) {
+function AuthForm({ client, error: initialError, onClose }: { client: ReturnType<typeof getCloudClient>; error: string; onClose: () => void }) {
+  const dialogRef = useRef<HTMLFormElement>(null)
+  useFocusTrap(dialogRef)
+  useEscapeToClose(onClose)
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = previousOverflow }
+  }, [])
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
@@ -109,8 +130,8 @@ function AuthForm({ client, error: initialError }: { client: ReturnType<typeof g
     } catch { setError('邮件发送未完成，请检查网络后重试。') }
     finally { setBusy(false) }
   }
-  return <main className="auth-page"><form className="auth-card" onSubmit={event => { event.preventDefault(); void login() }}>
-    <span className="loading-mark">R</span><h1>Recall English</h1>
+  return <div className="dialog-backdrop auth-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) onClose() }}><form ref={dialogRef} className="auth-card" role="dialog" aria-modal="true" aria-labelledby="login-title" onSubmit={event => { event.preventDefault(); void login() }}>
+    <span className="loading-mark">R</span><h1 id="login-title">登录后继续</h1>
     <p>使用受邀邮箱登录，学习记录将同步到你的账号。</p>
     <label className="text-setting"><span>邮箱</span><input type="email" autoComplete="username" required value={email} disabled={busy} onChange={event => setEmail(event.target.value)} /></label>
     <label className="text-setting"><span>密码</span><input type="password" autoComplete="current-password" required value={password} disabled={busy} onChange={event => setPassword(event.target.value)} /></label>
@@ -118,8 +139,9 @@ function AuthForm({ client, error: initialError }: { client: ReturnType<typeof g
     {notice && <p role="status">{notice}</p>}
     <button className="primary-button" type="submit" disabled={busy}>{busy ? '正在处理…' : '登录'}</button>
     <button className="secondary-button" type="button" disabled={busy} onClick={() => void resetPassword()}>忘记密码</button>
+    <button className="mini-text-button" type="button" onClick={onClose}>继续浏览</button>
     <small>暂不开放注册。首次使用请打开管理员发送的邀请邮件。</small>
-  </form></main>
+  </form></div>
 }
 
 function PasswordSetup({ client, onComplete }: { client: ReturnType<typeof getCloudClient>; onComplete: () => void }) {
@@ -146,7 +168,7 @@ function PasswordSetup({ client, onComplete }: { client: ReturnType<typeof getCl
   </form></main>
 }
 
-function AccountWorkspace({ client, email, onSignOut }: { client: ReturnType<typeof getCloudClient>; email: string; onSignOut: () => void }) {
+function AccountWorkspace({ client, email, onSignOut, initialTab }: { client: ReturnType<typeof getCloudClient>; email: string; onSignOut: () => void; initialTab: AppTab }) {
   const [appReady, setAppReady] = useState(false)
   const [cacheReady, setCacheReady] = useState(false)
   const [state, setState] = useState<CloudSyncState>({ phase: 'waiting', message: '正在打开账号缓存…', conflicts: [] })
@@ -211,6 +233,6 @@ function AccountWorkspace({ client, email, onSignOut }: { client: ReturnType<typ
       </div>)}
     </section>}
     {!cacheReady && appReady && <p className="cloud-cache-wait" role="status">正在恢复账号数据…</p>}
-    <div inert={appReady && !cacheReady ? true : undefined}><App onReady={onReady} onBusyChange={onBusyChange} /></div>
+    <div inert={appReady && !cacheReady ? true : undefined}><App initialTab={initialTab} onReady={onReady} onBusyChange={onBusyChange} /></div>
   </>
 }

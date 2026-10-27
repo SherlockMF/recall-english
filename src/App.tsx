@@ -9,6 +9,7 @@ import { loadBundledDictionarySenses } from './data/dictionarySenses'
 import { ALL_VOCABULARY_LISTS, listIdForSlug } from './data/vocabularyLists'
 import {
   DEFAULT_SETTINGS,
+  hydrateWord,
   normalizeLemma,
   primaryListSlug,
   type HintLevel,
@@ -90,8 +91,17 @@ const pageFallback = <p role="status">正在打开页面…</p>
 const studyFallback = <div className="study-overlay" role="status">正在准备训练…</div>
 const settingsFallback = <div className="dialog-backdrop" role="status">正在打开设置…</div>
 
-function App({ onReady, onBusyChange }: { onReady?: () => void; onBusyChange?: (busy: boolean) => void } = {}) {
-  const [tab, setTab] = useState<AppTab>('today')
+interface AppProps {
+  onReady?: () => void
+  onBusyChange?: (busy: boolean) => void
+  onRequestLogin?: () => void
+  initialTab?: AppTab
+  onTabChange?: (tab: AppTab) => void
+}
+
+function App({ onReady, onBusyChange, onRequestLogin, initialTab = 'today', onTabChange }: AppProps = {}) {
+  const [tab, setTab] = useState<AppTab>(initialTab)
+  const preview = Boolean(onRequestLogin)
   const [items, setItems] = useState<VocabularyItem[]>([])
   const [tracks, setTracks] = useState<LearningTrack[]>([])
   const [attempts, setAttempts] = useState<ReviewAttempt[]>([])
@@ -118,10 +128,11 @@ function App({ onReady, onBusyChange }: { onReady?: () => void; onBusyChange?: (
   }, [])
 
   useEffect(() => {
+    if (preview) return
     const refresh = () => { void refreshData().catch(() => setLoadError('无法读取同步后的学习数据，请重新载入。')) }
     window.addEventListener('recall-cloud-data-applied', refresh)
     return () => window.removeEventListener('recall-cloud-data-applied', refresh)
-  }, [refreshData])
+  }, [refreshData, preview])
   useEffect(() => { if (!loading && !loadError) onReady?.() }, [loading, loadError, onReady])
   useEffect(() => { onBusyChange?.(Boolean(session || settingsOpen)) }, [session, settingsOpen, onBusyChange])
 
@@ -142,6 +153,20 @@ function App({ onReady, onBusyChange }: { onReady?: () => void; onBusyChange?: (
     let active = true
     async function boot() {
       try {
+        if (preview) {
+          const seed = await loadSeedPack()
+          if (!active) return
+          const lists = new Map(ALL_VOCABULARY_LISTS.map(list => [list.id, list.slug]))
+          const memberships = new Map<string, ListSlug[]>()
+          for (const membership of seed.memberships) {
+            const slug = lists.get(membership.listId)
+            if (slug) memberships.set(membership.wordId, [...(memberships.get(membership.wordId) ?? []), slug])
+          }
+          const vocabulary = seed.words.map(word => hydrateWord(word, memberships.get(word.id) ?? []))
+          setItems(vocabulary)
+          setTracks(createInitialTracks(vocabulary))
+          return
+        }
         // Returning users skip the ~12 MB seed pack: it is only fetched when
         // the library is empty or the stored seed revision has changed.
         const { needsBundledSeed } = await getLibrarySeedStatus()
@@ -169,7 +194,7 @@ function App({ onReady, onBusyChange }: { onReady?: () => void; onBusyChange?: (
     }
     void boot()
     return () => { active = false }
-  }, [refreshData, syncDictionaryContent])
+  }, [refreshData, syncDictionaryContent, preview])
 
   useEffect(() => {
     const interval = window.setInterval(() => setNow(new Date()), 60_000)
@@ -218,6 +243,7 @@ function App({ onReady, onBusyChange }: { onReady?: () => void; onBusyChange?: (
   }, [attempts, itemMap, stats.evidenceByItemId])
 
   function startSession() {
+    if (onRequestLogin) { onRequestLogin(); return }
     const current = new Date()
     if (current.toDateString() !== now.toDateString()) {
       void rebuildSession()
@@ -629,6 +655,7 @@ function App({ onReady, onBusyChange }: { onReady?: () => void; onBusyChange?: (
         activeTab={tab}
         onChangeTab={(nextTab) => {
           setTab(nextTab)
+          onTabChange?.(nextTab)
           window.scrollTo({ top: 0, behavior: 'smooth' })
         }}
         onOpenSettings={() => setSettingsOpen(true)}
@@ -657,6 +684,7 @@ function App({ onReady, onBusyChange }: { onReady?: () => void; onBusyChange?: (
         )}
         {tab === 'add' && (
           <AddView
+            onRequestLogin={onRequestLogin}
             onAdd={addCustomItem}
             onBulkAdd={bulkAdd}
             onAddWorkVocabulary={addSharedPowerBankVocabulary}
@@ -667,6 +695,7 @@ function App({ onReady, onBusyChange }: { onReady?: () => void; onBusyChange?: (
         )}
         {tab === 'library' && (
           <LibraryView
+            onRequestLogin={onRequestLogin}
             items={items}
             onAddToMyVocabulary={addToMyVocabulary}
             onRemoveFromMyVocabulary={removeFromMyVocabulary}
@@ -677,7 +706,7 @@ function App({ onReady, onBusyChange }: { onReady?: () => void; onBusyChange?: (
             onCompleteSenses={completeSenses}
           />
         )}
-        {tab === 'voice' && <VoicePractice items={items} accent={settings.speechAccent} />}
+        {tab === 'voice' && <VoicePractice items={items} accent={settings.speechAccent} onRequestLogin={onRequestLogin} />}
         </Suspense>
       </AppShell>
 
@@ -720,6 +749,7 @@ function App({ onReady, onBusyChange }: { onReady?: () => void; onBusyChange?: (
       {settingsOpen && (
         <Suspense fallback={settingsFallback}>
         <SettingsDialog
+          onRequestLogin={onRequestLogin ? () => { setSettingsOpen(false); onRequestLogin() } : undefined}
           attemptCount={attempts.length}
           onClose={() => setSettingsOpen(false)}
           onExport={downloadBackup}

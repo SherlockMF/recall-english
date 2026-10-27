@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { afterEach, expect, it, vi } from 'vitest'
 import type { Session } from '@supabase/supabase-js'
 
@@ -7,22 +7,38 @@ vi.mock('../lib/cloud/client', () => ({ getCloudClient: () => ({
   auth: { getSession: async () => ({ data: { session: fake.session }, error: null }), onAuthStateChange: () => ({ data: { subscription: { unsubscribe: vi.fn() } } }), signInWithPassword: fake.signIn, signOut: fake.signOut, resetPasswordForEmail: vi.fn() },
   from: () => ({ select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: { active: fake.active }, error: null }) }) }) }),
 }) }))
-vi.mock('../App', () => ({ default: () => <div>受保护的学习页面</div> }))
+vi.mock('../App', () => ({ default: ({ onRequestLogin }: { onRequestLogin?: () => void }) => onRequestLogin
+  ? <div>访客浏览页面<button onClick={onRequestLogin}>开始今天的训练</button></div>
+  : <div>受保护的学习页面</div> }))
 vi.mock('../lib/cloud/sync', () => ({ createCloudSync: () => ({ start: vi.fn(), stop: vi.fn(), sync: vi.fn(), resolve: vi.fn() }) }))
 import { CloudApp } from './CloudApp'
 import { selectDatabaseAccount } from '../lib/db'
 
 afterEach(async () => { cleanup(); fake.session = null; fake.active = true; vi.clearAllMocks(); await selectDatabaseAccount(null) })
 
-it('requires a login and does not expose public registration', async () => {
+it('allows browsing and opens a dismissible login only when requested', async () => {
+  render(<CloudApp />)
+  expect(await screen.findByText('访客浏览页面')).toBeInTheDocument()
+  expect(screen.queryByLabelText('邮箱')).not.toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: '开始今天的训练' }))
+  expect(screen.getByRole('dialog', { name: '登录后继续' })).toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: '继续浏览' }))
+  expect(screen.queryByLabelText('邮箱')).not.toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: '登录' }))
+  fireEvent.keyDown(window, { key: 'Escape' })
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+})
+
+it('requires a login for use and does not expose public registration', async () => {
   fake.signIn.mockResolvedValue({ error: { message: 'invalid' } })
   render(<CloudApp />)
+  fireEvent.click(await screen.findByRole('button', { name: '开始今天的训练' }))
   const email = await screen.findByLabelText('邮箱')
   expect(screen.queryByText('受保护的学习页面')).not.toBeInTheDocument()
   expect(screen.queryByRole('button', { name: '注册' })).not.toBeInTheDocument()
   fireEvent.change(email, { target: { value: 'invited@example.com' } })
   fireEvent.change(screen.getByLabelText('密码'), { target: { value: 'example-password' } })
-  fireEvent.click(screen.getByRole('button', { name: '登录' }))
+  fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: '登录' }))
   await waitFor(() => expect(fake.signIn).toHaveBeenCalledWith({ email: 'invited@example.com', password: 'example-password' }))
   expect(await screen.findByRole('alert')).toHaveTextContent('邮箱或密码')
 })

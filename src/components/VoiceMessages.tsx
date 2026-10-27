@@ -16,8 +16,8 @@ type Phase = 'idle' | 'connecting' | 'ready' | 'processing' | 'ended' | 'error'
 const PHASES: Record<Phase, string> = { idle: '准备开始', connecting: '正在连接', ready: '等待你的语音消息', processing: '已提交 · 等待识别和 AI 回复', ended: '练习已结束', error: '连接未完成' }
 const tokenCount = (value: unknown) => typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : 0
 
-export function VoiceMessages({ items, accent, selection, onSelection, onBack }: VoicePreparationProps & { accent: SpeechAccent; onBack: () => void }) {
-  const { config, error: configError, reload } = useVoiceConfig()
+export function VoiceMessages({ items, accent, selection, onSelection, onBack, onRequestLogin }: VoicePreparationProps & { accent: SpeechAccent; onBack: () => void; onRequestLogin?: () => void }) {
+  const { config, error: configError, reload } = useVoiceConfig(!onRequestLogin)
   const [phase, setPhase] = useState<Phase>('idle')
   const [messages, setMessages] = useState<VoiceMessage[]>([])
   const [notice, setNotice] = useState('')
@@ -86,6 +86,7 @@ export function VoiceMessages({ items, accent, selection, onSelection, onBack }:
   useEffect(() => { const element = transcriptRef.current; if (element) element.scrollTop = element.scrollHeight }, [messages])
 
   async function start(retryMessage?: VoiceMessage) {
+    if (onRequestLogin) { onRequestLogin(); return }
     if (!config?.configured || callRef.current) return
     feedbackRef.current?.abort(); setFeedbackBusy(false); setFeedback(null)
     if (!retryMessage) { clearAudio(); setMessages([]); setTokens({ input: 0, output: 0 }) }
@@ -207,7 +208,7 @@ export function VoiceMessages({ items, accent, selection, onSelection, onBack }:
   return <section className="voice-page" aria-labelledby="voice-title">
     <header className="voice-heading"><div><p className="eyebrow">ONE MESSAGE AT A TIME</p><h1 id="voice-title">想好一句，再说出来。</h1><p>像发语音消息一样练英语，每一条都能回听。</p></div><div className="voice-mode-heading"><span className="voice-provider">语音消息 · 千问北京</span><button className="mini-text-button" disabled={active || recording || feedbackBusy} onClick={onBack} type="button">切换模式</button></div></header>
     <div className="voice-layout">
-      <VoicePreparation items={items} selection={selection} onSelection={onSelection} active={active} messages serviceState={configError || (config ? config.configured ? '千问语音已配置' : '语音服务尚未配置，请在学习设置中输入 Key。' : '正在检查语音服务…')} onReload={configError || (config && !config.configured) ? reload : undefined} />
+      <VoicePreparation items={items} selection={selection} onSelection={onSelection} active={active} messages serviceState={onRequestLogin ? '可先选择场景和难度，开始练习时再登录。' : configError || (config ? config.configured ? '千问语音已配置' : '语音服务尚未配置，请在学习设置中输入 Key。' : '正在检查语音服务…')} onReload={configError || (config && !config.configured) ? reload : undefined} />
       <div className="voice-conversation">
         <div className="voice-call-status"><span role="status"><i className={active && phase !== 'connecting' ? 'is-live' : ''} aria-hidden="true" />{recording ? recordState === 'starting' ? '正在准备麦克风' : '正在录音' : PHASES[phase]}</span><span className="voice-countdown" aria-label={`已练习 ${elapsed} 秒`}>{Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, '0')}</span></div>
         <div className="voice-transcript" role="log" aria-label="语音消息记录" aria-live="polite" ref={transcriptRef}>
@@ -232,7 +233,7 @@ export function VoiceMessages({ items, accent, selection, onSelection, onBack }:
             <button type="button" className="mini-text-button" disabled={recording || phase !== 'ready'} onClick={() => setInputMode((current) => current === 'hold' ? 'click' : 'hold')}>{inputMode === 'hold' ? '改为点击录音' : '改为按住说话'}</button>
           </div>
           <div className="voice-call-actions"><button className="secondary-button" type="button" onClick={() => end()}>{phase === 'connecting' ? '取消连接' : '结束练习'}</button></div>
-        </> : <div className="voice-call-actions"><button type="button" className="primary-button" disabled={!config?.configured || feedbackBusy} onClick={() => void start()}>{phase === 'idle' ? '开始语音消息练习' : '重新开始语音消息练习'}</button></div>}
+        </> : <div className="voice-call-actions"><button type="button" className="primary-button" disabled={(!onRequestLogin && !config?.configured) || feedbackBusy} onClick={() => void start()}>{phase === 'idle' ? '开始语音消息练习' : '重新开始语音消息练习'}</button></div>}
         <p className="voice-footnote">语音条仅在此页保留。结束后仍可回听，刷新或离开后清理。费用以百炼控制台为准。</p>
       </div>
     </div>

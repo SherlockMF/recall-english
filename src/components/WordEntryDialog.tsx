@@ -12,6 +12,7 @@ import { Icon } from './Icon'
 import { LearningEvidenceDetails } from './LearningEvidenceDetails'
 
 interface WordEntryDialogProps {
+  onRequestLogin?: () => void
   entry: WordEntry
   item: VocabularyItem
   evidenceByItemId: ReadonlyMap<string, LearningEvidence>
@@ -26,7 +27,7 @@ interface WordEntryDialogProps {
 }
 
 export function WordEntryDialog({ entry, item, evidenceByItemId, onSelectSense, onClose, onEdit,
-  onToggleStatus, onToggleKnown, onAddToMyVocabulary, onRemoveFromMyVocabulary, onCompleteSenses }: WordEntryDialogProps) {
+  onToggleStatus, onToggleKnown, onAddToMyVocabulary, onRemoveFromMyVocabulary, onCompleteSenses, onRequestLogin }: WordEntryDialogProps) {
   const dialogRef = useRef<HTMLElement>(null)
   const [busy, setBusy] = useState<string | null>(null)
   const [feedback, setFeedback] = useState<{ itemId: string; message: string; error: boolean } | null>(null)
@@ -46,6 +47,7 @@ export function WordEntryDialog({ entry, item, evidenceByItemId, onSelectSense, 
   }, [])
 
   async function perform(action: string, operation: () => Promise<{ message: string; ok?: boolean } | void>) {
+    if (onRequestLogin) { onRequestLogin(); return }
     setBusy(action)
     setFeedback(null)
     try {
@@ -125,7 +127,7 @@ export function WordEntryDialog({ entry, item, evidenceByItemId, onSelectSense, 
               await onToggleKnown(item)
               return { message: item.knownAt ? `已恢复学习：${item.expression}` : `已设为已会：${item.expression}` }
             })}>{item.knownAt ? '撤销已会' : '已会，跳过'}</button>
-          <button className="word-detail-text-button" type="button" disabled={busy !== null} aria-label={`编辑 ${actionLabel}`} onClick={() => onEdit(item)}><Icon name="edit" size={16} />编辑</button>
+          <button className="word-detail-text-button" type="button" disabled={busy !== null} aria-label={`编辑 ${actionLabel}`} onClick={() => { if (onRequestLogin) onRequestLogin(); else onEdit(item) }}><Icon name="edit" size={16} />编辑</button>
           {onCompleteSenses && <button className="word-detail-text-button word-detail-complete" type="button" disabled={busy !== null} aria-label={`补全词义 ${entry.expression}`}
             onClick={() => void perform('complete', () => onCompleteSenses(item))}><Icon name="book" size={16} />{busy === 'complete' ? '补全中…' : '补全词义'}</button>}
         </footer>

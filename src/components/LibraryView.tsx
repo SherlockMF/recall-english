@@ -19,6 +19,7 @@ type VocabularyEditPatch = Pick<
 > & { category: EditCategory; scenarioNote?: string; vocabularyLevel?: VocabularyLevel; expectedWord?: VocabularyItem }
 
 interface LibraryViewProps {
+  onRequestLogin?: () => void
   items: VocabularyItem[]
   evidenceByItemId: ReadonlyMap<string, LearningEvidence>
   onToggleStatus: (item: VocabularyItem) => Promise<void>
@@ -52,6 +53,7 @@ export function LibraryView({
   onAddToMyVocabulary,
   onRemoveFromMyVocabulary,
   onCompleteSenses,
+  onRequestLogin,
 }: LibraryViewProps) {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState<LibraryFilter>('all')
@@ -198,6 +200,7 @@ export function LibraryView({
 
       {selectedEntry && selectedItem && !editing && (
         <WordEntryDialog entry={selectedEntry} item={selectedItem} evidenceByItemId={evidenceByItemId}
+          onRequestLogin={onRequestLogin ? () => { closeEntry(); onRequestLogin() } : undefined}
           onSelectSense={selectSense} onEdit={(item) => setEditing({ item })}
           onClose={closeEntry}
           onToggleStatus={onToggleStatus} onToggleKnown={onToggleKnown}

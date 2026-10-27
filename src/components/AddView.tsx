@@ -31,6 +31,7 @@ export interface CustomItemDraft {
 }
 
 interface AddViewProps {
+  onRequestLogin?: () => void
   onLookup: (query: string) => Promise<DictionaryResult>
   onAdd: (draft: CustomItemDraft) => Promise<{ ok: boolean; message: string }>
   onBulkAdd: (
@@ -55,7 +56,7 @@ function editableMeaningContent(meaning: DictionaryMeaning) {
     meaning.example?.trim() ?? '', meaning.exampleZh?.trim() ?? '', meaning.collocations ?? []])
 }
 
-export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich, onSaveDictionary, onAddWorkVocabulary }: AddViewProps) {
+export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich, onSaveDictionary, onAddWorkVocabulary, onRequestLogin }: AddViewProps) {
   const [mode, setMode] = useState<'single' | 'bulk'>('single')
   const [query, setQuery] = useState('')
   const [lookupState, setLookupState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
@@ -118,6 +119,7 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich, onSaveDictionary
   }
 
   async function handleLookup() {
+    if (onRequestLogin) { onRequestLogin(); return }
     const cleaned = query.trim()
     if (!cleaned) return
     setLookupState('loading')
@@ -141,6 +143,7 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich, onSaveDictionary
   }
 
   async function handleEnrich() {
+    if (onRequestLogin) { onRequestLogin(); return }
     const cleaned = (expression || query).trim()
     if (!cleaned || !onEnrich) return
     if (!hasDeepseekApiKey()) {
@@ -178,6 +181,7 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich, onSaveDictionary
 
   async function handleSave(event: FormEvent) {
     event.preventDefault()
+    if (onRequestLogin) { onRequestLogin(); return }
     const cleaned = (expression || query).trim()
     const isDictionaryEntry = dictionaryResult && onSaveDictionary
       && expressionKey(expression) === expressionKey(dictionaryResult.word)
@@ -254,6 +258,7 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich, onSaveDictionary
   }
 
   async function handleBulkSave() {
+    if (onRequestLogin) { onRequestLogin(); return }
     if (!bulkParsed.rows.length) return
     setSaving(true)
     setSaveMessage('')
@@ -281,6 +286,7 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich, onSaveDictionary
   }
 
   async function addWorkVocabulary() {
+    if (onRequestLogin) { onRequestLogin(); return }
     if (!onAddWorkVocabulary) return
     setSaving(true)
     setWorkMessage('')

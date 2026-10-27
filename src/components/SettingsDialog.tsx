@@ -14,6 +14,7 @@ import { KeyStatusBadge } from './KeyStatusBadge'
 import { isCloudEnabled } from '../lib/cloud/config'
 
 interface SettingsDialogProps {
+  onRequestLogin?: () => void
   settings: UserSettings
   vocabularyCount: number
   attemptCount: number
@@ -35,13 +36,14 @@ export function SettingsDialog({
   onImport,
   onExportVocabulary,
   onImportVocabulary,
+  onRequestLogin,
 }: SettingsDialogProps) {
-  const managed = isCloudEnabled()
+  const managed = Boolean(onRequestLogin) || isCloudEnabled()
   const [newItems, setNewItems] = useState(String(settings.newItemsPerDay))
   const [speechAccent, setSpeechAccent] = useState<SpeechAccent>(settings.speechAccent)
   const [vocabularyLevel, setVocabularyLevel] = useState<VocabularyLevel>(settings.vocabularyLevel ?? 'B1')
   const [adaptiveDifficulty, setAdaptiveDifficulty] = useState(settings.adaptiveDifficulty !== false)
-  const [savedApiKey, setSavedApiKey] = useState(() => getDeepseekApiKey())
+  const [savedApiKey, setSavedApiKey] = useState(() => onRequestLogin ? '' : getDeepseekApiKey())
   const [apiKey, setApiKey] = useState(savedApiKey)
   const [apiKeyNotice, setApiKeyNotice] = useState('')
   const [apiKeyFailed, setApiKeyFailed] = useState(false)
@@ -74,6 +76,7 @@ export function SettingsDialog({
   }, [settings.newItemsPerDay, settings.speechAccent, settings.vocabularyLevel, settings.adaptiveDifficulty])
 
   async function runBackupAction(action: () => Promise<void>) {
+    if (onRequestLogin) { onRequestLogin(); return }
     setBackupBusy(true)
     setMessage('')
     try {
@@ -86,6 +89,7 @@ export function SettingsDialog({
   }
 
   async function importFromFile(file: File, importAction: (content: string) => Promise<{ ok: boolean; message: string }>) {
+    if (onRequestLogin) { onRequestLogin(); return }
     setBackupBusy(true)
     setMessage('')
     try {
@@ -99,6 +103,7 @@ export function SettingsDialog({
   }
 
   async function requestPersistentStorage() {
+    if (onRequestLogin) { onRequestLogin(); return }
     if (!navigator.storage?.persist) {
       setPersistentState('unavailable')
       return
@@ -211,7 +216,7 @@ export function SettingsDialog({
           <p className="key-status-help">点击「保存 DeepSeek Key」后立即生效，不需要保存其他设置。已保存仅表示保留在本机；接口是否可用以实际调用结果为准。</p>
         </div>}
 
-        <VoiceServiceStatus />
+        {onRequestLogin ? <div className="settings-section"><div className="settings-copy"><h3>千问口语陪练</h3><p>可先浏览场景和难度，开始练习时再登录。</p></div></div> : <VoiceServiceStatus />}
 
         <div className="settings-section">
           <div className="settings-copy">
@@ -220,7 +225,7 @@ export function SettingsDialog({
           </div>
           <div className="backup-actions">
             <button className="secondary-button" disabled={backupBusy} onClick={() => void runBackupAction(onExportVocabulary)} type="button"><Icon name="download" size={18} /> 导出词库</button>
-            <button className="secondary-button" disabled={backupBusy} onClick={() => vocabularyFileRef.current?.click()} type="button"><Icon name="upload" size={18} /> 导入词库</button>
+            <button className="secondary-button" disabled={backupBusy} onClick={() => { if (onRequestLogin) onRequestLogin(); else vocabularyFileRef.current?.click() }} type="button"><Icon name="upload" size={18} /> 导入词库</button>
             <input
               accept="application/json,.json"
               className="sr-only"
@@ -244,7 +249,7 @@ export function SettingsDialog({
           </div>
           <div className="backup-actions">
             <button className="secondary-button" disabled={backupBusy} onClick={() => void runBackupAction(onExport)} type="button"><Icon name="download" size={18} /> 导出学习备份</button>
-            <button className="secondary-button" disabled={backupBusy} onClick={() => backupFileRef.current?.click()} type="button"><Icon name="upload" size={18} /> 导入学习备份</button>
+            <button className="secondary-button" disabled={backupBusy} onClick={() => { if (onRequestLogin) onRequestLogin(); else backupFileRef.current?.click() }} type="button"><Icon name="upload" size={18} /> 导入学习备份</button>
             <input
               accept="application/json,.json"
               className="sr-only"
@@ -277,6 +282,7 @@ export function SettingsDialog({
             className="primary-button"
             disabled={saving}
             onClick={async () => {
+              if (onRequestLogin) { onRequestLogin(); return }
               const limit = Number(newItems)
               if (!newItems.trim() || !Number.isInteger(limit) || limit < 0 || limit > 100) {
                 setMessage('新表达数量须为 0—100 的整数。')

@@ -4,6 +4,17 @@ import { useVoiceConfig, VOICE_CONFIG_CHANGED_EVENT } from './config'
 
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.useRealTimers() })
 
+it('does not request protected voice configuration during guest browsing', () => {
+  const fetch = vi.fn()
+  vi.stubGlobal('fetch', fetch)
+  const { result } = renderHook(() => useVoiceConfig(false))
+  act(() => result.current.reload())
+  act(() => window.dispatchEvent(new Event(VOICE_CONFIG_CHANGED_EVENT)))
+  expect(fetch).not.toHaveBeenCalled()
+  expect(result.current.config).toBeNull()
+  expect(result.current.error).toBe('')
+})
+
 it('refreshes every mounted consumer after settings change', async () => {
   let configured = false
   vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ configured, model: 'qwen3.8-omni-flash-realtime', maxSeconds: null }))))
