@@ -147,7 +147,7 @@ describe('voice lifecycle', () => {
     txt.event({ type: 'session.updated' })
     expect(track.enabled).toBe(true)
     expect(call.snapshot.phase).toBe('ready')
-    expect(txt.sent.at(-1)?.type).toBe('response.create')
+    expect(txt.sent.some(event => event.type === 'response.create')).toBe(false)
     call.end()
     expect(track.stop).toHaveBeenCalledTimes(1)
     expect(pc.close).toHaveBeenCalledTimes(1)
@@ -164,6 +164,35 @@ describe('voice lifecycle', () => {
     expect(track.stop).toHaveBeenCalledTimes(1)
     expect(Peer.instances).toHaveLength(0)
     expect(call.snapshot.phase).toBe('ended')
+  })
+
+  it('waits for user speech instead of generating a response with empty conversation history', async () => {
+    const call = session()
+    const pc = await ready(call)
+    expect(pc.channel.sent.map(event => event.type)).toEqual(['session.update'])
+    expect(track.enabled).toBe(true)
+    pc.channel.event({ type: 'input_audio_buffer.speech_started', item_id: 'first-user' })
+    pc.channel.event({ type: 'input_audio_buffer.speech_stopped' })
+    pc.channel.event({ type: 'response.created', response: { id: 'first-reply' } })
+    pc.channel.event({ type: 'response.audio_transcript.done', item_id: 'answer', response_id: 'first-reply', transcript: 'Hello. How can I help?' })
+    pc.channel.event({ type: 'response.done', response: { id: 'first-reply', status: 'completed' } })
+    expect(call.snapshot.phase).toBe('ready')
+    expect(call.snapshot.turns.some(turn => turn.text === 'Hello. How can I help?')).toBe(true)
+    expect(pc.channel.sent.some(event => event.type === 'response.create')).toBe(false)
+    call.end()
+  })
+
+  it.each(['slower', 'chinese', 'hint'] as const)('does not request %s help before the first assistant reply', async kind => {
+    const call = session()
+    const pc = await ready(call)
+    pc.channel.sent = []
+    call.requestHelp(kind)
+    expect(pc.channel.sent).toHaveLength(0)
+    expect(call.snapshot.phase).toBe('ready')
+    expect(call.snapshot.notice).toContain('请先开口')
+    pc.channel.event({ type: 'input_audio_buffer.speech_started', item_id: 'first-user' })
+    expect(call.snapshot.notice).toBe('')
+    call.end()
   })
 
   it('ignores a late SDP answer after the user ends the call', async () => {
@@ -292,6 +321,7 @@ describe('voice lifecycle', () => {
   it('does not request a help reply when paused while waiting for its settings acknowledgement', async () => {
     const call = session()
     const pc = await ready(call)
+    pc.channel.event({ type: 'response.audio_transcript.done', item_id: 'greeting-text', transcript: 'How are you?' })
     call.requestHelp('chinese')
     call.pause()
     const responses = pc.channel.sent.filter((event) => event.type === 'response.create').length
@@ -337,6 +367,7 @@ describe('voice lifecycle', () => {
     const call = session()
     const pc = await ready(call)
     pc.channel.event({ type: 'response.created', response: { id: 'greeting' } })
+    pc.channel.event({ type: 'response.audio_transcript.done', item_id: 'greeting-text', response_id: 'greeting', transcript: 'How are you?' })
     pc.channel.event({ type: 'response.done', response: { id: 'greeting', status: 'completed' } })
     pc.channel.sent = []
     call.requestHelp('chinese')
