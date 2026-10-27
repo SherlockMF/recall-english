@@ -38,6 +38,7 @@ interface AddViewProps {
     rows: VocabularyImportRow[],
     category: ImportCategory,
     onProgress?: (completed: number, total: number) => void,
+    retry?: boolean,
   ) => Promise<VocabularyImportSummary>
   onEnrich?: (
     expression: string,
@@ -81,6 +82,8 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich, onSaveDictionary
   const [bulkCategory, setBulkCategory] = useState<ImportCategory>('auto')
   const [bulkProgress, setBulkProgress] = useState('')
   const [bulkSummary, setBulkSummary] = useState<VocabularyImportSummary | null>(null)
+  const [bulkSummaryCategory, setBulkSummaryCategory] = useState<ImportCategory>('auto')
+  const retryRows = bulkSummary ? [...bulkSummary.failed.map(({ row }) => row), ...bulkSummary.enrichmentFailed] : []
   const [copyMessage, setCopyMessage] = useState('')
   const [workMessage, setWorkMessage] = useState('')
 
@@ -257,21 +260,24 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich, onSaveDictionary
     }
   }
 
-  async function handleBulkSave() {
+  async function handleBulkSave(retry = false) {
     if (onRequestLogin) { onRequestLogin(); return }
-    if (!bulkParsed.rows.length) return
+    const rows = retry ? retryRows : bulkParsed.rows
+    const importCategory = retry ? bulkSummaryCategory : bulkCategory
+    if (!rows.length || saving) return
     setSaving(true)
     setSaveMessage('')
-    setBulkSummary(null)
-    setBulkProgress(`正在补全 0 / ${bulkParsed.rows.length}`)
+    setBulkProgress(`正在${retry ? '重试' : '补全'} 0 / ${rows.length}`)
     try {
-      const result = await onBulkAdd(bulkParsed.rows, bulkCategory,
-        (completed, total) => setBulkProgress(`正在补全 ${completed} / ${total}`))
+      const onProgress = (completed: number, total: number) => setBulkProgress(`正在${retry ? '重试' : '补全'} ${completed} / ${total}`)
+      const result = retry ? await onBulkAdd(rows, importCategory, onProgress, true) : await onBulkAdd(rows, importCategory, onProgress)
       setBulkSummary(result)
-      setSaveMessage(`已处理 ${result.added} 条新增内容，新增 ${result.sensesAdded} 个义项；跳过 ${result.skipped} 条重复内容，失败 ${result.failed.length} 条。${bulkParsed.errors.length ? '还有格式待修正，已保留整段输入及表头；再次添加会跳过已有义项。' : ''}`)
+      setBulkSummaryCategory(importCategory)
+      const outcome = `保存失败 ${result.failed.length} 条，已保存但补全失败 ${result.enrichmentFailed.length} 条。`
+      setSaveMessage(`${retry ? '本次重试完成' : `已处理 ${result.added} 条新增内容`}，新增 ${result.sensesAdded} 个义项；${retry ? '' : `跳过 ${result.skipped} 条重复内容，`}${outcome}${!retry && bulkParsed.errors.length ? '还有格式待修正，已保留整段输入及表头；再次添加会跳过已有义项。' : ''}`)
       const failedLines = result.failed.map(({ row }) => !row.zhGloss && !row.partOfSpeech && !row.category && !row.enDefinition && !row.exampleEn && !row.exampleZh ? row.expression
         : [row.expression, row.zhGloss, row.partOfSpeech ?? '', row.category ?? '', row.enDefinition ?? '', row.exampleEn ?? '', row.exampleZh ?? ''].map((field) => `"${field.replaceAll('"', '""')}"`).join(','))
-      if (!bulkParsed.errors.length) setBulkText(failedLines.join('\n'))
+      if (!retry && !bulkParsed.errors.length) setBulkText(failedLines.join('\n'))
     } catch (error) {
       setSaveMessage(error instanceof Error ? error.message : '批量保存失败，请重试。')
     } finally {
@@ -547,6 +553,10 @@ export function AddView({ onLookup, onAdd, onBulkAdd, onEnrich, onSaveDictionary
           {bulkParsed.errors.length > 0 && <div className="inline-alert warning" role="alert">{bulkParsed.errors.map((error) => <p key={error.line}>第 {error.line} 行：{error.message}</p>)}</div>}
           {saveMessage && <div className="inline-alert" role="status">{saveMessage}</div>}
           {bulkSummary && (bulkSummary.failed.length > 0 || bulkSummary.warnings.length > 0) && <div className="inline-alert warning">
+            {retryRows.length > 0 && <>
+              <button className="secondary-button" disabled={saving} onClick={() => void handleBulkSave(true)} type="button">重试失败词条（{retryRows.length}）</button>
+              <p>只重试下方失败词条，保留已有内容和学习进度。重试列表仅在当前添加页保留。</p>
+            </>}
             {bulkSummary.failed.map(({ row, message }, index) => <p key={`failed-${index}`}>{row.expression}：{message}</p>)}
             {bulkSummary.warnings.map((message, index) => <p key={`warning-${index}`}>{message}</p>)}
           </div>}

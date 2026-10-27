@@ -19,6 +19,7 @@ export interface VocabularyImportSummary {
   skipped: number
   sensesAdded: number
   failed: Array<{ row: VocabularyImportRow; message: string }>
+  enrichmentFailed: VocabularyImportRow[]
   warnings: string[]
 }
 
@@ -130,11 +131,13 @@ export async function prepareVocabularyImportRow(
 ) {
   let result: DictionaryResult
   let warning: string | undefined
+  let enrichmentFailed = false
   try {
     result = await lookup(row.expression)
     if (!result.word.trim() || !result.meanings.some((meaning) => meaning.zhGloss?.trim() || meaning.definition.trim())) throw new Error('词典未返回可保存的词义。')
   } catch (error) {
     if (!row.zhGloss) throw error
+    enrichmentFailed = true
     warning = `${row.expression}：${error instanceof Error ? error.message : '补全失败'}；已保留提供的中文义项。`
     result = { query: row.expression, word: row.expression, fetchedAt: new Date().toISOString(), meanings: [] }
   }
@@ -151,7 +154,7 @@ export async function prepareVocabularyImportRow(
     ...meaning, definition: row.enDefinition || meaning.definition, example: row.exampleEn || meaning.example, exampleZh: row.exampleZh || meaning.exampleZh,
   }) }
   if (selected < 0 && !warning) warning = `${row.expression}：未找到${row.partOfSpeech ? ` ${row.partOfSpeech} 的` : ''}双语义项，已保存为暂停；补充中文或选择其他义项后可训练。`
-  return { result, selectedIndices: selected < 0 ? [] : [selected], category: row.category ?? category, warning }
+  return { result, selectedIndices: selected < 0 ? [] : [selected], category: row.category ?? category, warning, enrichmentFailed }
 }
 
 export const VOCABULARY_ADD_GUIDE = `词库添加说明
@@ -177,4 +180,5 @@ CSV 字段含逗号时用双引号包围，字段内的双引号写成两个双�
 自动保存词典返回的全部义项。纯英文默认训练首个有中文的义项；提供中文时训练对应义项，其余新增义项暂停，可在词库详情开启。来源不保证穷尽全部用法。
 重复添加保留已有分类、训练状态、已会和进度；不会把已有暂停义项自动恢复。
 补全仅在点击添加时查询现有词典，优先使用本地缓存。纯英文补全失败会保留待重试内容；已有中文可直接保存并提示补全失败。
+本次导入结果中的失败词条可点击「重试失败词条」单独补全，无需整批重新粘贴；重试列表仅在当前添加页保留。
 这里是粘贴文本格式；完整词库 JSON 文件请到设置中的词库导入入口。`

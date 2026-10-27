@@ -217,6 +217,44 @@ describe('App integration', () => {
     expect(after.tracks.filter((track) => before.tracks.some((old) => old.id === track.id))).toEqual(before.tracks)
   }, 30_000)
 
+  it('retries failed imports with fresh slower lookups while preserving saved senses and study progress', async () => {
+    let retrying = false
+    const lookup = vi.spyOn(dictionary, 'lookupDictionary').mockImplementation(async (query) => {
+      if (!retrying && query !== 'retry-wallet-probe') throw new Error('词典查询超时')
+      return { query, word: query, fetchedAt: '2026-10-27T00:00:00Z', meanings: [{
+        partOfSpeech: 'noun', zhGloss: query === 'retry-ratio-probe' ? '比例' : '释义',
+        definition: 'a dictionary definition', synonyms: [], senseKey: `dictionary:youdao:${query}:0`,
+      }] }
+    })
+    const user = userEvent.setup()
+    render(<App />)
+    await screen.findByText('今日学习计划', {}, { timeout: 20_000 })
+    await user.click(screen.getAllByRole('button', { name: '添加' })[0])
+    await user.click(await screen.findByRole('button', { name: '批量粘贴' }))
+    await user.type(screen.getByLabelText('批量词汇'), 'retry-ratio-probe,比例,noun,finance\nretry-ratio-probe,比例,noun,finance\nretry-competitor-probe\nretry-wallet-probe')
+    await user.click(screen.getByRole('button', { name: '补全并加入队列' }))
+    await screen.findByRole('button', { name: '重试失败词条（2）' }, { timeout: 10_000 })
+    const before = await getUserDataSnapshot()
+    const ratio = before.words.find((word) => word.expression === 'retry-ratio-probe')!
+    const tracks = before.tracks.filter((track) => track.itemId === ratio.id).map((track) => ({ ...track, reps: 7 }))
+    await writeBatch({ words: [{ ...ratio, status: 'paused', knownAt: '2026-10-27T00:00:00Z' }], tracks })
+    retrying = true
+    lookup.mockClear()
+    await user.click(screen.getByRole('button', { name: '重试失败词条（2）' }))
+    await screen.findByText(/本次重试完成/, {}, { timeout: 10_000 })
+    expect(lookup).toHaveBeenCalledTimes(2)
+    for (const query of ['retry-ratio-probe', 'retry-competitor-probe']) {
+      expect(lookup).toHaveBeenCalledWith(query, { forceRefresh: true, timeoutMs: 15_000 })
+    }
+    const after = await getUserDataSnapshot()
+    const ratios = after.words.filter((word) => word.expression === ratio.expression)
+    expect(ratios).toHaveLength(1)
+    expect(ratios[0]).toMatchObject({ id: ratio.id, status: 'paused', knownAt: '2026-10-27T00:00:00Z', enDefinition: 'a dictionary definition' })
+    expect(after.tracks.filter((track) => track.itemId === ratio.id)).toEqual(tracks)
+    expect(after.memberships.filter((membership) => membership.wordId === ratio.id)).toEqual(before.memberships.filter((membership) => membership.wordId === ratio.id))
+    expect(screen.queryByRole('button', { name: /重试失败词条/ })).not.toBeInTheDocument()
+  }, 30_000)
+
   it('loads supplemental senses at startup and keeps existing training state on subsequent boots', async () => {
     await initializeDatabase()
     const word = { ...handcraftedSeedWords[0], id: 'supplemental-probe', expression: 'supplemental-probe',

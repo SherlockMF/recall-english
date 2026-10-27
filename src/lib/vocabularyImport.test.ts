@@ -84,7 +84,16 @@ describe('dictionary completion during import', () => {
     const prepared = await prepareVocabularyImportRow({ expression: 'site acquisition', zhGloss: '点位拓展' }, lookup)
     expect(prepared.result.meanings[0].zhGloss).toBe('点位拓展')
     expect(prepared.warning).toContain('词典暂时离线')
+    expect(prepared.enrichmentFailed).toBe(true)
     await expect(prepareVocabularyImportRow({ expression: 'site acquisition', zhGloss: '' }, lookup)).rejects.toThrow('词典暂时离线')
+  })
+
+  it('does not mark a successful English-only dictionary response as a request failure', async () => {
+    const prepared = await prepareVocabularyImportRow({ expression: 'interest', zhGloss: '' }, async () => ({
+      ...dictionaryResult, meanings: [dictionaryResult.meanings[2]],
+    }))
+    expect(prepared.warning).toContain('未找到')
+    expect(prepared.enrichmentFailed).toBe(false)
   })
 
   it('keeps the supplied definition and examples even when dictionary completion is unavailable', async () => {

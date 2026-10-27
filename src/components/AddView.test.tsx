@@ -1,7 +1,8 @@
-import { cleanup, render, screen } from '@testing-library/react'
+import { act, cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, expect, it, vi } from 'vitest'
 import type { DictionaryResult } from '../domain/types'
+import type { VocabularyImportSummary } from '../lib/vocabularyImport'
 import { AddView } from './AddView'
 
 vi.mock('../lib/speech', () => ({ speakWord: vi.fn() }))
@@ -97,7 +98,7 @@ it('defaults bulk input to per-row classification, retains failed rows and expos
   const user = userEvent.setup()
   const failed = { expression: 'unavailable phrase', zhGloss: '', raw: 'unavailable phrase', line: 2 }
   const bulk = vi.fn().mockResolvedValue({ added: 1, skipped: 0, sensesAdded: 3,
-    failed: [{ row: failed, message: '词典离线' }], warnings: [] })
+    failed: [{ row: failed, message: '词典离线' }], enrichmentFailed: [], warnings: [] })
   render(<AddView onLookup={vi.fn()} onAdd={vi.fn()} onBulkAdd={bulk} />)
   await user.click(screen.getByRole('button', { name: '批量粘贴' }))
   await user.type(screen.getByLabelText('批量词汇'), 'interest\nunavailable phrase')
@@ -122,9 +123,62 @@ it('offers the prepared work vocabulary without requiring a dictionary lookup or
   expect(await screen.findByRole('status')).toHaveTextContent('已加入 42 个共享充电宝工作表达。')
 })
 
+it('retries only failed rows with original categories and fields, retaining failures and new input', async () => {
+  const user = userEvent.setup()
+  const incomplete = { expression: 'ratio', zhGloss: '比例', partOfSpeech: 'noun', exampleEn: 'A ratio.', category: 'finance' }
+  const failed = { expression: 'competitor', zhGloss: '' }
+  const bulk = vi.fn()
+    .mockResolvedValueOnce({ added: 2, skipped: 0, sensesAdded: 2, failed: [{ row: failed, message: '超时' }],
+      enrichmentFailed: [incomplete], warnings: ['ratio：超时；已保留提供的中文义项。'] })
+    .mockRejectedValueOnce(new Error('保存暂时不可用'))
+    .mockResolvedValueOnce({ added: 1, skipped: 1, sensesAdded: 1, failed: [], enrichmentFailed: [incomplete], warnings: ['ratio：超时'] })
+    .mockResolvedValueOnce({ added: 0, skipped: 1, sensesAdded: 0, failed: [], enrichmentFailed: [], warnings: [] })
+  render(<AddView onLookup={vi.fn()} onAdd={vi.fn()} onBulkAdd={bulk} />)
+  await user.click(screen.getByRole('button', { name: '批量粘贴' }))
+  await user.type(screen.getByLabelText('批量词汇'), 'ratio,比例,noun,finance,,A ratio.\ncompetitor\nwallet')
+  await user.selectOptions(screen.getByLabelText('批量分类方式'), 'business')
+  await user.click(screen.getByRole('button', { name: '补全并加入队列' }))
+  expect(screen.getByRole('status')).toHaveTextContent('已保存但补全失败 1 条')
+  await user.clear(screen.getByLabelText('批量词汇'))
+  await user.type(screen.getByLabelText('批量词汇'), 'new draft')
+  await user.selectOptions(screen.getByLabelText('批量分类方式'), 'daily')
+  await user.click(screen.getByRole('button', { name: '重试失败词条（2）' }))
+  expect(await screen.findByText('保存暂时不可用')).toBeInTheDocument()
+  await user.click(screen.getByRole('button', { name: '重试失败词条（2）' }))
+  expect(bulk.mock.calls[2]).toEqual([expect.arrayContaining([incomplete, failed]), 'business', expect.any(Function), true])
+  expect(bulk.mock.calls[2][0]).toHaveLength(2)
+  await user.click(screen.getByRole('button', { name: '重试失败词条（1）' }))
+  expect(bulk.mock.calls[3][0]).toEqual([incomplete])
+  expect(screen.queryByRole('button', { name: /重试失败词条/ })).not.toBeInTheDocument()
+  expect(screen.getByRole('status')).toHaveTextContent('本次重试完成')
+  expect(screen.getByLabelText('批量词汇')).toHaveValue('new draft')
+})
+
+it('prevents duplicate retry requests and locks input until the attempt finishes', async () => {
+  const user = userEvent.setup()
+  const incomplete = { expression: 'ratio', zhGloss: '比例' }
+  let finish!: (summary: VocabularyImportSummary) => void
+  const bulk = vi.fn()
+    .mockResolvedValueOnce({ added: 1, skipped: 0, sensesAdded: 1, failed: [], enrichmentFailed: [incomplete], warnings: ['ratio：超时'] })
+    .mockImplementationOnce(() => new Promise<VocabularyImportSummary>((resolve) => { finish = resolve }))
+  render(<AddView onLookup={vi.fn()} onAdd={vi.fn()} onBulkAdd={bulk} />)
+  await user.click(screen.getByRole('button', { name: '批量粘贴' }))
+  await user.type(screen.getByLabelText('批量词汇'), 'ratio,比例')
+  await user.click(screen.getByRole('button', { name: '补全并加入队列' }))
+  const retry = screen.getByRole('button', { name: '重试失败词条（1）' })
+  await user.click(retry)
+  expect(retry).toBeDisabled()
+  expect(screen.getByLabelText('批量词汇')).toBeDisabled()
+  await user.click(retry)
+  expect(bulk).toHaveBeenCalledTimes(2)
+  await act(async () => finish({ added: 0, skipped: 1, sensesAdded: 0, failed: [], enrichmentFailed: [], warnings: [] }))
+  expect(screen.getByLabelText('批量词汇')).toBeEnabled()
+  expect(screen.queryByRole('button', { name: /重试失败词条/ })).not.toBeInTheDocument()
+})
+
 it('retains a reordered header and the original input when format errors need correction', async () => {
   const user = userEvent.setup()
-  const bulk = vi.fn().mockResolvedValue({ added: 1, skipped: 0, sensesAdded: 1, failed: [], warnings: [] })
+  const bulk = vi.fn().mockResolvedValue({ added: 1, skipped: 0, sensesAdded: 1, failed: [], enrichmentFailed: [], warnings: [] })
   render(<AddView onLookup={vi.fn()} onAdd={vi.fn()} onBulkAdd={bulk} />)
   await user.click(screen.getByRole('button', { name: '批量粘贴' }))
   const source = 'category,zhGloss,expression\ndaily,钱包,wallet\nwrong,利息,interest'

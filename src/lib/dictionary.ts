@@ -205,7 +205,7 @@ function responseError(response: Response): DictionaryLookupError {
   if (response.status >= 500) {
     return new DictionaryLookupError(
       'server',
-      '词典服务暂时异常。请检查拼写，或改用 AI 补全 / 手动填写。',
+      '词典服务暂时异常，请稍后重试；这不代表词条拼写有误。',
       response.status,
     )
   }

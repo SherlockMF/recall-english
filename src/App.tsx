@@ -456,20 +456,25 @@ function App({ onReady, onBusyChange, onRequestLogin, initialTab = 'today', onTa
     rows: VocabularyImportRow[],
     category: ImportCategory,
     onProgress?: (completed: number, total: number) => void,
+    retry = false,
   ) {
     const original = await getUserDataSnapshot()
     const preserveExistingTrainingIds = new Set(original.words.map((word) => word.id))
     const seen = new Set<string>()
     const lookups = new Map<string, Promise<DictionaryResult>>()
-    const summary: VocabularyImportSummary = { added: 0, skipped: 0, sensesAdded: 0, failed: [], warnings: [] }
+    const summary: VocabularyImportSummary = { added: 0, skipped: 0, sensesAdded: 0, failed: [], enrichmentFailed: [], warnings: [] }
     const lookup = (expression: string) => {
       const key = expressionKey(expression)
       let pending = lookups.get(key)
-      if (!pending) { pending = lookupDictionary(expression); lookups.set(key, pending) }
+      if (!pending) {
+        pending = retry ? lookupDictionary(expression, { forceRefresh: true, timeoutMs: 15_000 }) : lookupDictionary(expression)
+        lookups.set(key, pending)
+      }
       return pending
     }
-    for (let start = 0; start < rows.length; start += 3) {
-      const batch = rows.slice(start, start + 3)
+    const batchSize = retry ? 1 : 3
+    for (let start = 0; start < rows.length; start += batchSize) {
+      const batch = rows.slice(start, start + batchSize)
       const prepared = await Promise.allSettled(batch.map((row) => prepareVocabularyImportRow(row, lookup, category)))
       for (const [index, row] of batch.entries()) {
         const key = JSON.stringify([expressionKey(row.expression), expressionKey(row.zhGloss), row.partOfSpeech ?? '', row.category ?? category, expressionKey(row.enDefinition ?? '')])
@@ -485,6 +490,7 @@ function App({ onReady, onBusyChange, onRequestLogin, initialTab = 'today', onTa
           else summary.skipped += 1
           summary.sensesAdded += saved.added
           if (entry.warning) summary.warnings.push(entry.warning)
+          if (entry.enrichmentFailed) summary.enrichmentFailed.push(row)
         } catch (error) {
           summary.failed.push({ row, message: error instanceof Error ? error.message : '补全或保存失败，请重试。' })
         } finally { onProgress?.(start + index + 1, rows.length) }

@@ -275,6 +275,7 @@ describe('dictionary lookup (Chinese-first)', () => {
     await expect(lookupDictionary('levarage')).rejects.toMatchObject({
       code: 'server',
       status: 502,
+      message: '词典服务暂时异常，请稍后重试；这不代表词条拼写有误。',
     })
   })
 
