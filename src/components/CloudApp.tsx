@@ -131,7 +131,7 @@ function AuthForm({ client, error: initialError, onClose }: { client: ReturnType
     finally { setBusy(false) }
   }
   return <div className="dialog-backdrop auth-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) onClose() }}><form ref={dialogRef} className="auth-card" role="dialog" aria-modal="true" aria-labelledby="login-title" onSubmit={event => { event.preventDefault(); void login() }}>
-    <span className="loading-mark">R</span><h1 id="login-title">登录后继续</h1>
+    <span className="loading-mark">L</span><h1 id="login-title">登录后继续</h1>
     <p>使用受邀邮箱登录，学习记录将同步到你的账号。</p>
     <label className="text-setting"><span>邮箱</span><input type="email" autoComplete="username" required value={email} disabled={busy} onChange={event => setEmail(event.target.value)} /></label>
     <label className="text-setting"><span>密码</span><input type="password" autoComplete="current-password" required value={password} disabled={busy} onChange={event => setPassword(event.target.value)} /></label>
