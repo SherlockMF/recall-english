@@ -1,4 +1,4 @@
-# Recall English
+# Lomi English · 洛米英语
 
 本地优先的主动回忆英语学习网页：不靠选择题，用「想起再说出」巩固表达。
 
@@ -6,7 +6,7 @@
 
 | | |
 | --- | --- |
-| **产品名** | Recall English |
+| **产品名** | Lomi English · 洛米英语 |
 | **仓库** | `recall-english` |
 | **npm 包名** | `recall-english` |
 | **版本** | 0.1.0（词库 **V5.3**，内容修订 **5.3.2**） |
@@ -37,7 +37,7 @@ npm run dev
 
 浏览器打开 Vite 输出的本地地址即可。首次启动会把缺失的种子词写入 IndexedDB。
 
-### 部署到 lomivex.top
+### 部署到 english.lomivex.top
 
 邀请制云版本使用 Render Node.js 服务和 Supabase，支持邮箱登录、账号数据同步，以及管理员托管的 AI / 口语服务。当前 Blueprint 使用免费实例试运行，空闲后会休眠。按[部署手册](docs/deployment.md)配置数据库、邀请邮件、环境变量和域名；仓库包含 `render.yaml`，生产入口为 `npm start`。本地版不填写 Supabase 构建变量即可保持原用法。真实账号后台和 DNS 配置需由管理员执行。
 

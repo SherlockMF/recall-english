@@ -37,7 +37,7 @@ async function fixture({ active = true, allowed = true, quotaError = false, voic
   }))
   const root = mkdtempSync(join(tmpdir(), 'production-test-')); roots.push(root)
   writeFileSync(join(root, 'index.html'), '<html>app</html>')
-  const env = { APP_ORIGIN: 'https://lomivex.top', VITE_SUPABASE_URL: upstream, VITE_SUPABASE_PUBLISHABLE_KEY: 'public', SUPABASE_SECRET_KEY: 'sb_secret_test_private', DEEPSEEK_API_KEY: 'provider-secret', DASHSCOPE_API_KEY: 'voice-secret', DASHSCOPE_WORKSPACE_ID: 'workspace' }
+  const env = { APP_ORIGIN: 'https://english.lomivex.top', VITE_SUPABASE_URL: upstream, VITE_SUPABASE_PUBLISHABLE_KEY: 'public', SUPABASE_SECRET_KEY: 'sb_secret_test_private', DEEPSEEK_API_KEY: 'provider-secret', DASHSCOPE_API_KEY: 'voice-secret', DASHSCOPE_WORKSPACE_ID: 'workspace' }
   const request: typeof fetch = (input, init) => {
     if (String(input).startsWith('https://')) { targets.push({ url: String(input), headers: init?.headers }); return fetch(`${upstream}/provider`, init) }
     return fetch(input, init)
@@ -61,7 +61,7 @@ async function fixture({ active = true, allowed = true, quotaError = false, voic
   }
   return { base: await listen(createProductionServer({ env, root, fetch: request, messageConnect })), calls, targets, env, quotaStarted }
 }
-const auth = { Authorization: 'Bearer good', Origin: 'https://lomivex.top' }
+const auth = { Authorization: 'Bearer good', Origin: 'https://english.lomivex.top' }
 const chat = { messages: [{ role: 'user', content: 'JSON please' }], response_format: { type: 'json_object' } }
 it('fails closed when production identity configuration is absent', () => {
   expect(() => createProductionServer({ env: {} })).toThrow()
@@ -73,6 +73,7 @@ it('authenticates all APIs, rejects disabled users and spoofed origins, and keep
   expect((await fetch(`${base}/api/voice/config`)).status).toBe(401)
   expect((await fetch(`${base}/api/voice/config`, { headers: { Authorization: 'Bearer forged' } })).status).toBe(401)
   expect((await fetch(`${base}/api/voice/config`, { headers: { ...auth, Origin: 'https://evil.example' } })).status).toBe(403)
+  expect((await fetch(`${base}/api/voice/config`, { headers: { ...auth, Origin: 'https://lomivex.top' } })).status).toBe(403)
   expect((await fetch(`${base}/api/voice/config`, { headers: auth })).status).toBe(200)
   const disabled = await fixture({ active: false })
   expect((await fetch(`${disabled.base}/api/voice/config`, { headers: auth })).status).toBe(403)

@@ -13,7 +13,7 @@ services:
       - key: NODE_VERSION
         value: "22.x"
       - key: APP_ORIGIN
-        value: https://lomivex.top
+        value: https://english.lomivex.top
       - key: VITE_SUPABASE_URL
         sync: false
       - key: VITE_SUPABASE_PUBLISHABLE_KEY

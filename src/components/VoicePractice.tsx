@@ -111,7 +111,7 @@ function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack, 
 
   function transcriptText() {
     return [
-      `Recall English · ${currentScenario.label} · ${snapshot.elapsedSeconds} 秒`,
+      `Lomi English · ${currentScenario.label} · ${snapshot.elapsedSeconds} 秒`,
       ...snapshot.turns.filter((turn) => turn.text).map((turn) => `${turn.role === 'user' ? '你' : 'AI'}${turn.interrupted ? '（被打断）' : !turn.final ? '（未完成）' : ''}: ${turn.text}`),
       ...(feedback ? ['', '练习反馈（基于转写）', feedback.summaryZh,
         ...feedback.corrections.map((row) => `${row.original} → ${row.improved}\n${row.explanationZh}`),

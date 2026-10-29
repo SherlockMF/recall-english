@@ -28,10 +28,10 @@ export function AppShell({
       <header className="topbar">
         <button className="brand" onClick={() => onChangeTab('today')} type="button">
           <span className="brand-mark" aria-hidden="true">
-            <span>R</span>
+            <span>L</span>
           </span>
           <span className="brand-copy">
-            <strong>Recall</strong>
+            <strong>Lomi</strong>
             <small>ENGLISH</small>
           </span>
         </button>

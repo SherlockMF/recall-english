@@ -775,8 +775,8 @@ function App({ onReady, onBusyChange, onRequestLogin, initialTab = 'today', onTa
 function LoadingScreen() {
   return (
     <div className="loading-screen">
-      <span className="loading-mark">R</span>
-      <strong>Recall English</strong>
+      <span className="loading-mark">L</span>
+      <strong>Lomi English · 洛米英语</strong>
       <p>正在准备你的本地记忆库…</p>
     </div>
   )

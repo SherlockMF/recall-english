@@ -199,7 +199,7 @@ export function VoiceMessages({ items, accent, selection, onSelection, onBack, o
     finally { if (!controller.signal.aborted) setFeedbackBusy(false) }
   }
   function exportText(copy: boolean) {
-    const text = [`Recall English · 语音消息 · ${currentScenario.label}`, ...messages.filter((item) => item.text).map((item) => `${item.role === 'user' ? '你' : 'AI'}: ${item.text}`), ...(feedback ? ['练习反馈', feedback.summaryZh, ...feedback.corrections.map((row) => `${row.original} → ${row.improved}：${row.explanationZh}`), ...feedback.expressions.map((row) => `${row.en} — ${row.zh}`)] : [])].join('\n\n')
+    const text = [`Lomi English · 语音消息 · ${currentScenario.label}`, ...messages.filter((item) => item.text).map((item) => `${item.role === 'user' ? '你' : 'AI'}: ${item.text}`), ...(feedback ? ['练习反馈', feedback.summaryZh, ...feedback.corrections.map((row) => `${row.original} → ${row.improved}：${row.explanationZh}`), ...feedback.expressions.map((row) => `${row.en} — ${row.zh}`)] : [])].join('\n\n')
     if (copy) { if (!navigator.clipboard?.writeText) { setNotice('无法访问剪贴板，请下载文字。'); return }; void navigator.clipboard.writeText(text).then(() => setNotice('对话文字已复制。')).catch(() => setNotice('无法访问剪贴板，请下载文字。')); return }
     const url = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }))
     const link = document.createElement('a'); link.href = url; link.download = 'recall-english-voice-messages.txt'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000)

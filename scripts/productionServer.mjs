@@ -132,7 +132,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     const server = createProductionServer()
     const port = Number(process.env.PORT || 3000)
     if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Invalid PORT')
-    server.listen(port, '0.0.0.0', () => console.log(`Recall English listening on port ${port}`))
+    server.listen(port, '0.0.0.0', () => console.log(`Lomi English listening on port ${port}`))
     for (const signal of ['SIGTERM', 'SIGINT']) process.once(signal, () => { server.close(); setTimeout(() => process.exit(0), 10000).unref() })
   } catch { console.error('Production server configuration is incomplete or invalid.'); process.exitCode = 1 }
 }

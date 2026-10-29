@@ -1,6 +1,6 @@
-# lomivex.top 部署手册
+# english.lomivex.top 部署手册
 
-本文供首次接手的管理员将邀请制 Recall English 部署到 Render + Supabase。按顺序完成后台配置、发布和两账号验收后，再邀请正式用户。当前仓库准备工作不代表网站已经发布；真实项目、SMTP、供应商权限和 DNS 仍需后台验证。本地 Docker daemon 不可用，数据库自动测试使用 PGlite，不能替代真实 Supabase 集成验收。
+本文供首次接手的管理员将邀请制 Lomi English（洛米英语） 部署到 Render + Supabase。按顺序完成后台配置、发布和两账号验收后，再邀请正式用户。当前仓库准备工作不代表网站已经发布；真实项目、SMTP、供应商权限和 DNS 仍需后台验证。本地 Docker daemon 不可用，数据库自动测试使用 PGlite，不能替代真实 Supabase 集成验收。
 
 ## 1. 准备账号和发布版本
 
@@ -35,15 +35,15 @@ npm run cloud:seed -- --dry-run
 
 | 项目 | 值 |
 | --- | --- |
-| Site URL | `https://lomivex.top` |
-| Redirect URLs | `https://lomivex.top/auth/invite` |
-| Redirect URLs | `https://lomivex.top/auth/update-password` |
+| Site URL | `https://english.lomivex.top` |
+| Redirect URLs | `https://english.lomivex.top/auth/invite` |
+| Redirect URLs | `https://english.lomivex.top/auth/update-password` |
 
 只允许确定的正式回调，生产不要添加 `**` 或任意预览域名。[Supabase 回调配置](https://supabase.com/docs/guides/auth/redirect-urls)
 
 在 SMTP 服务商先验证发信域名，根据其实际要求配置 SPF、DKIM 和 DMARC；不要覆盖已有邮箱 MX、SPF 记录。确认服务商验证成功后，在 Supabase Custom SMTP 填写发信地址、SMTP host、port、user、password，并实际测试投递。默认邮件服务仅供测试，不能承担普通受邀用户的正式邮件。[SMTP 官方说明](https://supabase.com/docs/guides/auth/auth-smtp)
 
-网站域名和 TLS 就绪后再发邀请。在 Dashboard Users → Invite 中将 Redirect URL 设为 `https://lomivex.top/auth/invite`。若当前 Dashboard 邀请界面没有 Redirect URL 字段，发送前临时将 Site URL 改成这个完整邀请回调地址，发送后恢复根地址；确认收到的邮件目标落在 `/auth/invite`。受控管理程序也可调用 `auth.admin.inviteUserByEmail(email, { redirectTo: 'https://lomivex.top/auth/invite' })`，管理凭证仅留服务端。邮件模板保留默认 `ConfirmationURL` 确认链接，不直接链接网站跳过验证。[邀请 API](https://supabase.com/docs/reference/javascript/auth-admin-inviteuserbyemail)
+网站域名和 TLS 就绪后再发邀请。在 Dashboard Users → Invite 中将 Redirect URL 设为 `https://english.lomivex.top/auth/invite`。若当前 Dashboard 邀请界面没有 Redirect URL 字段，发送前临时将 Site URL 改成这个完整邀请回调地址，发送后恢复根地址；确认收到的邮件目标落在 `/auth/invite`。受控管理程序也可调用 `auth.admin.inviteUserByEmail(email, { redirectTo: 'https://english.lomivex.top/auth/invite' })`，管理凭证仅留服务端。邮件模板保留默认 `ConfirmationURL` 确认链接，不直接链接网站跳过验证。[邀请 API](https://supabase.com/docs/reference/javascript/auth-admin-inviteuserbyemail)
 
 每次邀请后，在 SQL Editor 启用成员，将示例邮箱替换成实际受邀邮箱；确认返回或受影响记录为 1：
 
@@ -79,7 +79,7 @@ Blueprint 明确使用 `plan: free`，确认创建页面显示免费实例。工
 | --- | --- |
 | `VITE_SUPABASE_URL` | 项目 URL；构建和运行时都需要，可公开 |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | 浏览器公开 key；构建和运行时都需要 |
-| `APP_ORIGIN` | 已设为 `https://lomivex.top`，无末尾斜杠 |
+| `APP_ORIGIN` | 已设为 `https://english.lomivex.top`，无末尾斜杠 |
 | `SUPABASE_SECRET_KEY` | 运行时服务端额度 RPC 管理凭证 |
 | `DEEPSEEK_API_KEY` | 服务端 DeepSeek 凭证 |
 | `DASHSCOPE_API_KEY` | 服务端百炼北京地域 Key |
@@ -91,7 +91,16 @@ Blueprint 明确使用 `plan: free`，确认创建页面显示免费实例。工
 
 ## 5. 域名与 TLS
 
-在 Render Custom Domains 添加根域名 `lomivex.top`，按后台实际给出的目标配置根域名记录和 `www`。不要套用过期固定 IP；修改前保存原 DNS 配置，核对与网站冲突的旧 A / AAAA / CNAME，保留邮件验证记录。根域名添加后 Render 提供 `www` 到根域名的跳转。完成 DNS Verify，等待 TLS 签发，然后检查两个域名、HTTPS 和回调路径。[Render 域名说明](https://render.com/docs/custom-domains)
+在现有 Render 服务的 Custom Domains 添加 `english.lomivex.top`。在 `lomivex.top` 的 DNS 管理页添加 CNAME，主机记录为 `english`，记录值使用 Render 后台实际给出的服务域名（不含 `https://` 和路径）。先核对 `english` 是否已有冲突的 A / AAAA / CNAME，保留主域名、`www` 和邮件验证记录。完成 DNS Verify，等待 TLS 签发，再检查新域名的 HTTPS 和回调路径。[Render 域名说明](https://render.com/docs/custom-domains)
+
+从主域名迁移时，按以下顺序切换：
+
+1. 先添加新域名绑定和 DNS，确认新域名的 `/healthz` 返回 `{ "ok": true }`，TLS 无证书错误。
+2. 在 Supabase 添加本手册第 3 节的新域名回调，迁移期间保留旧域名的精确回调，随后将 Site URL 改为 `https://english.lomivex.top`。
+3. 在现有 Render 服务中将 `APP_ORIGIN` 改为 `https://english.lomivex.top`，发布已验证版本；仅修改本地 `render.yaml` 不代表后台变量或线上版本已更新。保留原服务名 `recall-english` 和现有数据库，避免创建第二套服务或丢失数据。
+4. 验证新地址的登录、找回密码、API 和云同步后，再单独安排主域名用途或跳转。切换后旧地址的页面可能仍可打开，但旧 Origin 的 API 请求会被拒绝，不应继续作为学习入口。
+
+原地址尚未同步的浏览器数据应先导出备份；新子域名无法读取旧域名的 IndexedDB / localStorage。云端账号数据继续使用原 Supabase 项目，重新登录后同步。迁移不更改数据库名、备份格式或内部存储标识。
 
 正式 API 只接受 `APP_ORIGIN`，不能从 `onrender.com` 地址完整验证登录后功能。`/healthz` 是公开健康检查，只返回 `{ "ok": true }`；健康正常不代表数据库、SMTP 或供应商已经可用。
 
@@ -131,7 +140,7 @@ Blueprint 明确使用 `plan: free`，确认创建页面显示免费实例。工
 | Render 启动失败 | Node 22、完整构建结果、4 项身份配置；错误不会输出密钥 |
 | 能打开页面但没有云登录 | 构建时两项 `VITE_SUPABASE_*` 是否都存在，重新 build/deploy |
 | API 401 | 登录是否过期，前端是否带当前账号 Bearer；不要使用服务端 Key 代替登录 |
-| API 403 / 账号未启用 | 是否使用 `https://lomivex.top`、Origin 和 active 成员是否正确 |
+| API 403 / 账号未启用 | 是否使用 `https://english.lomivex.top`、Origin 和 active 成员是否正确 |
 | 同步失败 / 关联约束错误 | SQL 迁移、共享词库导入、账号、RLS；保留本地 outbox，先备份再排查 |
 | 邮件不到或链接无效 | 自定义 SMTP、发信域名验证、垃圾邮件、回调白名单、过期/已使用邀请 |
 | 429 | 账号当日调用额度或供应商限流；检查用量，不循环重试 |

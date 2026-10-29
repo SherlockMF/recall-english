@@ -2,7 +2,7 @@
   "name": "recall-english",
   "private": true,
   "version": "0.1.0",
-  "description": "Recall English — local-first active-recall English study for Malaysian campus, business, and finance/accounting.",
+  "description": "Lomi English — local-first active-recall English study for Malaysian campus, business, and finance/accounting.",
   "type": "module",
   "scripts": {
     "dev": "vite",
