@@ -141,6 +141,7 @@ function AuthForm({ client, error: initialError, onClose }: { client: ReturnType
     <button className="secondary-button" type="button" disabled={busy} onClick={() => void resetPassword()}>忘记密码</button>
     <button className="mini-text-button" type="button" onClick={onClose}>继续浏览</button>
     <small>暂不开放注册。首次使用请打开管理员发送的邀请邮件。</small>
+    <small>联系管理员：<a href="mailto:847542343@qq.com">847542343@qq.com</a></small>
   </form></div>
 }
 
