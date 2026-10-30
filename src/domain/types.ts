@@ -157,6 +157,8 @@ export interface UserSettings {
   vocabularyLevel?: VocabularyLevel
   adaptiveDifficulty?: boolean
   difficultyResetAt?: string
+  onboardingCompletedAt?: string
+  learningGoal?: SystemListSlug
   /**
    * When this differs from the app’s bundled `SEED_CONTENT_REVISION`,
    * `initializeDatabase` refreshes seed Word bodies by id (tracks kept).

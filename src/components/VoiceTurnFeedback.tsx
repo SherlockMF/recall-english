@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { generateVoiceTurnFeedback, type VoiceFeedback } from '../lib/voice/feedback'
+import type { SaveVoiceExpression as SaveAction } from '../lib/voice/review'
+import { SaveVoiceExpression } from './SaveVoiceExpression'
 
 type Result = { attempt: number } & ({ corrections: VoiceFeedback['corrections']; failed?: false } | { failed: true })
 
-export function VoiceTurnFeedback({ text, previousReply }: { text: string; previousReply: string }) {
+export function VoiceTurnFeedback({ text, previousReply, onSave }: { text: string; previousReply: string; onSave?: SaveAction }) {
   // Freeze context when this finalized utterance appears; later AI subtitles must not recheck it.
   const [context] = useState(previousReply)
   const [attempt, setAttempt] = useState(0)
@@ -35,6 +37,7 @@ export function VoiceTurnFeedback({ text, previousReply }: { text: string; previ
       <span className="voice-correction-label">建议改为</span>
       <p lang="en"><strong>{correction.improved}</strong></p>
       <small>{correction.explanationZh}</small>
+      <SaveVoiceExpression onSave={onSave} draft={{ expression: correction.improved, meaning: '', original: correction.original, note: correction.explanationZh }} />
     </div>) : <span>未发现明显语法或用词问题</span>}
   </div>
 }

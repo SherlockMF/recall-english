@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { SpeechAccent, VocabularyItem } from '../domain/types'
+import type { SpeechAccent, SystemListSlug, VocabularyItem } from '../domain/types'
 import { hasDeepseekApiKey } from '../lib/llm/config'
 import { useVoiceConfig } from '../lib/voice/config'
 import { generateVoiceFeedback, type VoiceFeedback } from '../lib/voice/feedback'
@@ -10,12 +10,14 @@ import { VoicePreparation, DEFAULT_VOICE_SELECTION, type VoicePreparationProps }
 import { MicrophoneIndicator, type MicrophoneIndicatorHandle } from './MicrophoneIndicator'
 import { VoiceMessages } from './VoiceMessages'
 import { VoiceTurnFeedback } from './VoiceTurnFeedback'
+import type { SaveVoiceExpression } from '../lib/voice/review'
+import { VoiceFeedbackReview } from './VoiceFeedbackReview'
 
 const PHASE_LABELS: Record<VoiceSnapshot['phase'], string> = {
   idle: '准备开始', connecting: '正在连接', ready: '对话已连接', listening: '正在听你说', thinking: 'AI 正在思考', speaking: 'AI 正在回复', paused: '对话已暂停', resuming: '正在恢复麦克风', ended: '练习已结束', error: '连接未完成',
 }
 
-function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack, onRequestLogin }: VoicePreparationProps & { accent: SpeechAccent; onBack: () => void; onRequestLogin?: () => void }) {
+function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack, onRequestLogin, onSaveExpression }: VoicePreparationProps & { accent: SpeechAccent; onBack: () => void; onRequestLogin?: () => void; onSaveExpression?: SaveVoiceExpression }) {
   const { config, error: configError, reload } = useVoiceConfig(!onRequestLogin)
   const { scenario, difficulty, selectedIds } = selection
   const [snapshot, setSnapshot] = useState(EMPTY_VOICE_SNAPSHOT)
@@ -147,7 +149,7 @@ function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack, 
             <span>{turn.role === 'user' ? '你' : 'AI 陪练'}</span>
             <div className="voice-turn-content">
               <p>{turn.text || (active ? '正在识别…' : '未收到转写')}</p>
-              {liveFeedbackAvailable && turn.role === 'user' && turn.final && !turn.interrupted && turn.text.trim() && <VoiceTurnFeedback key={turn.text} text={turn.text} previousReply={previousReplies[index]} />}
+              {liveFeedbackAvailable && turn.role === 'user' && turn.final && !turn.interrupted && turn.text.trim() && <VoiceTurnFeedback key={turn.text} text={turn.text} previousReply={previousReplies[index]} onSave={onSaveExpression} />}
             </div>
             {turn.interrupted ? <small>被打断 · 字幕可能包含未播放内容</small> : !turn.final ? <small>{active ? '文字生成中…' : '转写未完成'}</small> : null}
           </div>)}</div>}
@@ -163,7 +165,7 @@ function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack, 
           <button className="mini-text-button" disabled={!connected || snapshot.phase !== 'ready'} onClick={() => sessionRef.current?.requestHelp('chinese')} type="button">中文解释</button>
           <button className="mini-text-button" disabled={!connected || snapshot.phase !== 'ready'} onClick={() => sessionRef.current?.requestHelp('hint')} type="button">给点提示</button>
         </div>
-        <p className="voice-footnote">暂停时关闭麦克风并停止播放，保留当前对话；继续后由你接着说。口语练习不改变词汇掌握度或今日复习计划。字幕可能存在偏差。</p>
+        <p className="voice-footnote">暂停时关闭麦克风并停止播放，保留当前对话；继续后由你接着说。口语对话本身不计为词汇掌握。确认并加入复习的表达，会按每日新词数量安排。字幕可能存在偏差。</p>
         <p className="voice-footnote">{liveFeedbackAvailable ? '实时纠错已开启：每句转写完成后自动发送本句和上一条完整 AI 发言给 DeepSeek，结果显示在原句旁。仅检查文字表达，可能稍有延迟；不上传录音。' : '在学习设置中配置 DeepSeek 后可自动逐句纠错；语音对话可照常进行。'}</p>
       </div>
     </div>
@@ -171,7 +173,7 @@ function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack, 
       <div className="voice-review-heading"><div><p className="eyebrow">02 / 回看这次表达</p><h2 id="voice-review-title">聊完，再打磨。</h2></div><div className="voice-export-actions"><button className="secondary-button" onClick={() => void copy()} type="button">复制文字</button><button className="secondary-button" onClick={download} type="button"><Icon name="download" size={17} />下载文字</button></div></div>
       <p>点击后将已完成的个人发言转写发送给 DeepSeek，生成表达建议。最多 30,000 字符，超出时仅发送此前完整发言。反馈不评估发音，不作为掌握证据。</p>
       <button className="primary-button" disabled={active || feedbackBusy || !hasSpeech || Boolean(feedback)} onClick={() => void requestFeedback()} type="button">{feedbackBusy ? '正在生成反馈…' : feedback ? '本次反馈已生成' : '生成本次练习反馈'}</button>
-      {feedback && <div className="voice-feedback"><p>{feedback.summaryZh}</p>{feedback.corrections.length === 0 && <p>本次没有列出明确的表达错误。</p>}{feedback.corrections.map((row) => <div className="voice-correction" key={`${row.original}:${row.improved}`}><p className="voice-original">{row.original}</p><p><strong>{row.improved}</strong></p><small>{row.explanationZh}</small></div>)}{feedback.expressions.length > 0 && <div className="voice-useful-expressions">{feedback.expressions.map((row) => <div key={row.en}><strong>{row.en}</strong><span>{row.zh}</span></div>)}</div>}</div>}
+      {feedback && <VoiceFeedbackReview feedback={feedback} onSave={onSaveExpression} />}
       <p className="voice-footnote">已收到用量：输入 {snapshot.usage.inputTokens} / 输出 {snapshot.usage.outputTokens} tokens。{snapshot.usage.complete ? `语音模型估算 ¥${snapshot.usage.estimatedYuan.toFixed(4)}（按 2026-10-07 北京价格）` : '费用未完整统计'}；不含输入转写、DeepSeek 及尚未返回的用量，以控制台账单为准。</p>
     </section>}
     {message && <p className="voice-notice" role="status">{message}</p>}
@@ -179,10 +181,10 @@ function RealtimeVoicePractice({ items, accent, selection, onSelection, onBack, 
   </section>
 }
 
-export function VoicePractice({ items, accent, onRequestLogin }: { items: VocabularyItem[]; accent: SpeechAccent; onRequestLogin?: () => void }) {
+export function VoicePractice({ items, accent, onRequestLogin, onSaveExpression, learningGoal }: { items: VocabularyItem[]; accent: SpeechAccent; onRequestLogin?: () => void; onSaveExpression?: SaveVoiceExpression; learningGoal?: SystemListSlug }) {
   const [mode, setMode] = useState<'realtime' | 'messages' | null>(null)
-  const [selection, setSelection] = useState(DEFAULT_VOICE_SELECTION)
-  const shared = { items, accent, selection, onSelection: setSelection, onBack: () => setMode(null), onRequestLogin }
+  const [selection, setSelection] = useState(() => ({ ...DEFAULT_VOICE_SELECTION, scenario: learningGoal === 'accounting' ? 'finance' as const : learningGoal ?? DEFAULT_VOICE_SELECTION.scenario }))
+  const shared = { items, accent, selection, onSelection: setSelection, onBack: () => setMode(null), onRequestLogin, onSaveExpression }
   if (mode === 'realtime') return <RealtimeVoicePractice {...shared} />
   if (mode === 'messages') return <VoiceMessages {...shared} />
   return <section className="voice-page" aria-labelledby="voice-title">

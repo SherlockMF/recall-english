@@ -37,11 +37,11 @@ export function TodayView({
           <h1>{greetingFor(now)}，今天也把英语真正想起来。</h1>
           <p className="page-intro">先完成到期复习，再认识少量值得长期记住的新表达。</p>
         </div>
-        <div className="weekly-callout" aria-label={`${stats.retainedCount} 个表达的保持已验证`}>
+        <div className="weekly-callout" aria-label={`今天练过 ${stats.practicedItems} 个表达`}>
           <span className="callout-orbit"><Icon name="spark" size={17} /></span>
           <div>
-            <strong>{stats.retainedCount}</strong>
-            <span>保持已验证</span>
+            <strong>{stats.practicedItems}</strong>
+            <span>今天练过的表达</span>
           </div>
         </div>
       </section>
@@ -61,7 +61,7 @@ export function TodayView({
           <div className="plan-explanation">
             <p>今日已引入 {plan.introducedToday} 个新表达 · 剩余额度 {plan.remainingNewItems} 个</p>
             {plan.overflowDueCount > 0 && <p>仍有 {plan.overflowDueCount} 道到期练习未安排</p>}
-            {plan.reasons.map((reason) => <p key={reason}>{reason}</p>)}
+            <details><summary>为什么这样安排</summary>{plan.reasons.map((reason) => <p key={reason}>{reason}</p>)}</details>
           </div>
 
           <div className="hero-actions">
@@ -82,12 +82,20 @@ export function TodayView({
         </div>
       </section>
 
+      <section className="panel learning-outcome" aria-labelledby="outcome-title">
+        <p className="eyebrow">ONE STEP AT A TIME</p><h2 id="outcome-title">今天的收获，下一步的方向</h2>
+        <p>{stats.practicedItems ? `今天已经练过 ${stats.practicedItems} 个表达。反复尝试也是学习的一部分，不必一次全答对。` : '还没有今天的练习记录。从第一小课开始，试着自己想出答案。'}</p>
+        <p>{plan.reviewTaskCount > 0 ? `下一步：先完成 ${plan.reviewTaskCount} 道到期复习，把学过的再想起来。` : plan.newItemCount > 0 ? `下一步：认识 ${plan.newItemCount} 个新表达，再试着用自己的话说出来。` : '今天安排的练习已完成。可以去口语页练一段对话，或明天回来看看新的复习。'}</p>
+        {stats.retainedCount > 0 && <p>已有 {stats.retainedCount} 个表达，在间隔一段时间后仍能想起来。</p>}
+      </section>
+
+      <details className="learning-details"><summary>查看长期进度与统计依据</summary>
       <section className="dashboard-grid">
         <article className="panel progress-panel">
           <div className="panel-heading">
             <div>
               <p className="eyebrow">LEARNING MAP</p>
-              <h2>看见学习证据</h2>
+              <h2>表达积累</h2>
             </div>
             <span className="subtle-badge">三条主线</span>
           </div>
@@ -152,25 +160,26 @@ export function TodayView({
           </div>
           <div className="memory-score">
             <strong>{noHintRate === null ? '—' : `${noHintRate}%`}</strong>
-            <span>近 7 天延迟回忆正确率</span>
+            <span>隔一段时间，还能想起来吗？</span>
           </div>
           <p className="memory-note">
             {stats.delayedRecall.total < 10
-              ? '可判定样本不足 10 条。首次学习、即时重试、提示与自评不计入此指标；每日新词数量保持设置值。'
+              ? '再练几天，这里就会更有参考价值。目前可判定的复习不足 10 次，首次学习和看过提示的回答不计入。'
               : noHintRate !== null && noHintRate < 80
                 ? '延迟回忆较弱，可加强复习；每日新词数量保持设置值，不自动减少。'
                 : '先完成到期复习，新词约 80% 来自优先学习、20% 来自其他词库；一方不足由另一方补齐。'}
           </p>
-          <p className="quiet-copy">{stats.delayedRecall.correct} / {stats.delayedRecall.total} 次可判定延迟回忆正确</p>
+          <p className="quiet-copy">近 7 天延迟回忆正确率：{stats.delayedRecall.correct} / {stats.delayedRecall.total} 次。即时重试与自评不计入。</p>
           <p className="quiet-copy">今日练习 {stats.practicedItems} 个表达 · {stats.taskCount} 道不同题 · {stats.attemptCount} 次作答</p>
         </article>
       </section>
+      </details>
 
       <section className="panel recent-panel">
         <div className="panel-heading">
           <div>
             <p className="eyebrow">RECENT EXPRESSIONS</p>
-            <h2>最近留下的表达</h2>
+            <h2>最近练过，下次试着用</h2>
           </div>
           <span className="quiet-copy">少看，多想</span>
         </div>

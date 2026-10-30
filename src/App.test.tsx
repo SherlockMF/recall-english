@@ -84,9 +84,9 @@ describe('App integration', () => {
       await writeBatch({ attempts: [attempt('previous', now.getTime() - 9 * 86_400_000),
         attempt('boundary', now.getTime() - 7 * 86_400_000 + 30_000)] })
       render(<App />)
-      expect(await screen.findByText('1 / 1 次可判定延迟回忆正确')).toBeInTheDocument()
+      expect(await screen.findByText('近 7 天延迟回忆正确率：1 / 1 次。即时重试与自评不计入。')).toBeInTheDocument()
       await act(async () => { vi.advanceTimersByTime(60_000) })
-      expect(screen.getByText('0 / 0 次可判定延迟回忆正确')).toBeInTheDocument()
+      expect(screen.getByText('近 7 天延迟回忆正确率：0 / 0 次。即时重试与自评不计入。')).toBeInTheDocument()
     } finally { vi.useRealTimers() }
   })
 
@@ -354,7 +354,8 @@ describe('App integration', () => {
     render(<StrictMode><App /></StrictMode>)
 
     expect(await screen.findByText('今日学习计划', {}, { timeout: 20_000 })).toBeInTheDocument()
-    expect(screen.getByText('看见学习证据')).toBeInTheDocument()
+    await user.click(screen.getByText('查看长期进度与统计依据'))
+    expect(screen.getByText('表达积累')).toBeInTheDocument()
     expect(screen.getByText('日常生活')).toBeInTheDocument()
     expect(screen.getByText('商业英语')).toBeInTheDocument()
     expect(screen.getByText('金融会计')).toBeInTheDocument()

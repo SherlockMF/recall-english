@@ -11,12 +11,14 @@ import { VoicePreparation, type VoicePreparationProps } from './VoicePreparation
 import { MicrophoneIndicator, type MicrophoneIndicatorHandle } from './MicrophoneIndicator'
 import { VoiceMessageBubble, type VoiceMessage } from './VoiceMessageBubble'
 import { Icon } from './Icon'
+import type { SaveVoiceExpression } from '../lib/voice/review'
+import { VoiceFeedbackReview } from './VoiceFeedbackReview'
 
 type Phase = 'idle' | 'connecting' | 'ready' | 'processing' | 'ended' | 'error'
 const PHASES: Record<Phase, string> = { idle: '准备开始', connecting: '正在连接', ready: '等待你的语音消息', processing: '已提交 · 等待识别和 AI 回复', ended: '练习已结束', error: '连接未完成' }
 const tokenCount = (value: unknown) => typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : 0
 
-export function VoiceMessages({ items, accent, selection, onSelection, onBack, onRequestLogin }: VoicePreparationProps & { accent: SpeechAccent; onBack: () => void; onRequestLogin?: () => void }) {
+export function VoiceMessages({ items, accent, selection, onSelection, onBack, onRequestLogin, onSaveExpression }: VoicePreparationProps & { accent: SpeechAccent; onBack: () => void; onRequestLogin?: () => void; onSaveExpression?: SaveVoiceExpression }) {
   const { config, error: configError, reload } = useVoiceConfig(!onRequestLogin)
   const [phase, setPhase] = useState<Phase>('idle')
   const [messages, setMessages] = useState<VoiceMessage[]>([])
@@ -237,6 +239,6 @@ export function VoiceMessages({ items, accent, selection, onSelection, onBack, o
         <p className="voice-footnote">语音条仅在此页保留。结束后仍可回听，刷新或离开后清理。费用以百炼控制台为准。</p>
       </div>
     </div>
-    {messages.some((message) => message.text) && <section className="voice-review" aria-labelledby="voice-review-title"><div className="voice-review-heading"><div><p className="eyebrow">02 / 回看这次表达</p><h2 id="voice-review-title">聊完，再打磨。</h2></div><div className="voice-export-actions"><button type="button" className="secondary-button" onClick={() => exportText(true)}>复制文字</button><button type="button" className="secondary-button" onClick={() => exportText(false)}>下载文字</button></div></div><p>主动生成反馈时，只将已完成的个人发言转写发送给 DeepSeek；不上传录音，不评估发音。</p><button type="button" className="primary-button" disabled={active || !hasSpeech || feedbackBusy || Boolean(feedback)} onClick={() => void review()}>{feedbackBusy ? '正在生成反馈…' : feedback ? '本次反馈已生成' : '生成本次练习反馈'}</button>{feedback && <div className="voice-feedback"><p>{feedback.summaryZh}</p>{feedback.corrections.map((row) => <div className="voice-correction" key={row.original}><p className="voice-original">{row.original}</p><p><strong>{row.improved}</strong></p><small>{row.explanationZh}</small></div>)}<div className="voice-useful-expressions">{feedback.expressions.map((row) => <div key={row.en}><strong>{row.en}</strong><span>{row.zh}</span></div>)}</div></div>}<p className="voice-footnote">已收到用量：输入 {tokens.input} / 输出 {tokens.output} tokens。不含转写、DeepSeek 及未收到的用量。</p></section>}
+    {messages.some((message) => message.text) && <section className="voice-review" aria-labelledby="voice-review-title"><div className="voice-review-heading"><div><p className="eyebrow">02 / 回看这次表达</p><h2 id="voice-review-title">聊完，再打磨。</h2></div><div className="voice-export-actions"><button type="button" className="secondary-button" onClick={() => exportText(true)}>复制文字</button><button type="button" className="secondary-button" onClick={() => exportText(false)}>下载文字</button></div></div><p>主动生成反馈时，只将已完成的个人发言转写发送给 DeepSeek；不上传录音，不评估发音。</p><button type="button" className="primary-button" disabled={active || !hasSpeech || feedbackBusy || Boolean(feedback)} onClick={() => void review()}>{feedbackBusy ? '正在生成反馈…' : feedback ? '本次反馈已生成' : '生成本次练习反馈'}</button>{feedback && <VoiceFeedbackReview feedback={feedback} onSave={onSaveExpression} />}<p className="voice-footnote">已收到用量：输入 {tokens.input} / 输出 {tokens.output} tokens。不含转写、DeepSeek 及未收到的用量。</p></section>}
   </section>
 }

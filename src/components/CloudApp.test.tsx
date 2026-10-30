@@ -57,3 +57,13 @@ it('opens only the authenticated account database after checking access', async 
   expect(await screen.findByText('受保护的学习页面')).toBeInTheDocument()
   expect(screen.getByText('invited@example.com')).toBeInTheDocument()
 })
+
+it('shows a failed sign-out without hiding the account workspace', async () => {
+  fake.session = { user: { id: '33333333-3333-4333-8333-333333333333', email: 'invited@example.com' } } as Session
+  fake.signOut.mockRejectedValueOnce(new Error('offline'))
+  render(<CloudApp />)
+  await screen.findByText('受保护的学习页面')
+  fireEvent.click(screen.getByRole('button', { name: '退出登录' }))
+  expect(await screen.findByRole('alert')).toHaveTextContent('退出失败')
+  expect(screen.getByText('受保护的学习页面')).toBeInTheDocument()
+})

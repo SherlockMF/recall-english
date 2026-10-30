@@ -77,9 +77,12 @@ export function CloudApp() {
   }, [client, userId])
 
   async function signOut() {
-    const result = await client.auth.signOut({ scope: 'local' })
-    if (result.error) { setError('退出失败，请重试。'); return }
-    window.location.replace('/')
+    setError('')
+    try {
+      const result = await client.auth.signOut({ scope: 'local' })
+      if (result.error) { setError('退出失败，请重试。'); return }
+      window.location.replace('/')
+    } catch { setError('退出失败，请检查网络后重试。') }
   }
 
   if (session === undefined) return <div className="loading-screen" role="status">正在恢复登录…</div>
@@ -95,7 +98,7 @@ export function CloudApp() {
     {error ? <p role="alert">{error}</p> : <p role="status">正在验证账号权限…</p>}
     {error && <div className="backup-actions"><button type="button" className="secondary-button" onClick={() => window.location.reload()}>重试</button><button type="button" className="secondary-button" onClick={() => void signOut()}>退出登录</button></div>}
   </div>
-  return <AccountWorkspace key={readyAccount} initialTab={browsingTab} email={session.user.email ?? ''} client={client} onSignOut={() => void signOut()} />
+  return <AccountWorkspace key={readyAccount} accountError={error} initialTab={browsingTab} email={session.user.email ?? ''} client={client} onSignOut={() => void signOut()} />
 }
 
 function AuthForm({ client, error: initialError, onClose }: { client: ReturnType<typeof getCloudClient>; error: string; onClose: () => void }) {
@@ -169,7 +172,7 @@ function PasswordSetup({ client, onComplete }: { client: ReturnType<typeof getCl
   </form></main>
 }
 
-function AccountWorkspace({ client, email, onSignOut, initialTab }: { client: ReturnType<typeof getCloudClient>; email: string; onSignOut: () => void; initialTab: AppTab }) {
+function AccountWorkspace({ client, email, onSignOut, initialTab, accountError }: { client: ReturnType<typeof getCloudClient>; email: string; onSignOut: () => void; initialTab: AppTab; accountError: string }) {
   const [appReady, setAppReady] = useState(false)
   const [cacheReady, setCacheReady] = useState(false)
   const [state, setState] = useState<CloudSyncState>({ phase: 'waiting', message: '正在打开账号缓存…', conflicts: [] })
@@ -226,6 +229,7 @@ function AccountWorkspace({ client, email, onSignOut, initialTab }: { client: Re
       <button type="button" onClick={() => { if (!cacheReady) window.location.reload(); else void engine.current?.sync() }} disabled={(!cacheReady && state.phase !== 'error') || state.phase === 'syncing'}>{!cacheReady && state.phase === 'error' ? '重新载入' : '同步'}</button>
       <button type="button" onClick={onSignOut} disabled={workspaceBusy || state.phase === 'syncing'}>退出登录</button>
     </div>
+    {accountError && !workspaceBusy && <p className="auth-error" role="alert">{accountError}</p>}
     {state.conflicts.length > 0 && <section className="cloud-conflicts" aria-label="同步冲突">
       <p>同一份内容在两台设备上有不同修改。选择前可以在学习设置中导出本机备份。</p>
       {state.conflicts.map(conflict => <div key={conflict.entry.id}>
@@ -234,6 +238,9 @@ function AccountWorkspace({ client, email, onSignOut, initialTab }: { client: Re
       </div>)}
     </section>}
     {!cacheReady && appReady && <p className="cloud-cache-wait" role="status">正在恢复账号数据…</p>}
-    <div inert={appReady && !cacheReady ? true : undefined}><App initialTab={initialTab} onReady={onReady} onBusyChange={onBusyChange} /></div>
+    <div inert={appReady && !cacheReady ? true : undefined}><App initialTab={initialTab} onReady={onReady} onBusyChange={onBusyChange} dataReady={cacheReady && state.phase === 'synced'} account={{ email, error: accountError, syncMessage: state.message, onSignOut, signOutDisabled: state.phase === 'syncing', onResetPassword: async () => {
+      const result = await client.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/auth/update-password` })
+      if (result.error) throw result.error
+    } }} /></div>
   </>
 }

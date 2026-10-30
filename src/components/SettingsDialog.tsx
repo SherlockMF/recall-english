@@ -12,8 +12,12 @@ import { Icon } from './Icon'
 import { VoiceServiceStatus } from './VoiceServiceStatus'
 import { KeyStatusBadge } from './KeyStatusBadge'
 import { isCloudEnabled } from '../lib/cloud/config'
+import { AccountDataSection, type AccountControls } from './AccountDataSection'
 
 interface SettingsDialogProps {
+  account?: AccountControls
+  onClearLocal?: () => Promise<void>
+  onOpenOnboarding?: () => void
   onRequestLogin?: () => void
   settings: UserSettings
   vocabularyCount: number
@@ -37,8 +41,11 @@ export function SettingsDialog({
   onExportVocabulary,
   onImportVocabulary,
   onRequestLogin,
+  account,
+  onClearLocal,
+  onOpenOnboarding,
 }: SettingsDialogProps) {
-  const managed = Boolean(onRequestLogin) || isCloudEnabled()
+  const managed = Boolean(onRequestLogin || account) || isCloudEnabled()
   const [newItems, setNewItems] = useState(String(settings.newItemsPerDay))
   const [speechAccent, setSpeechAccent] = useState<SpeechAccent>(settings.speechAccent)
   const [vocabularyLevel, setVocabularyLevel] = useState<VocabularyLevel>(settings.vocabularyLevel ?? 'B1')
@@ -138,6 +145,9 @@ export function SettingsDialog({
           <div><p className="eyebrow">{managed ? 'PRIVATE ACCOUNT' : 'LOCAL & PRIVATE'}</p><h2 id="settings-title">学习设置</h2></div>
           <button aria-label="关闭设置" className="icon-button" onClick={onClose} type="button"><Icon name="close" size={20} /></button>
         </div>
+
+        <AccountDataSection managed={managed} account={account} onRequestLogin={onRequestLogin} onClearLocal={onClearLocal} />
+        {onOpenOnboarding && <div className="settings-section"><h3>开始引导</h3><p>重新选择目标、难度和学习节奏，不会清除已有学习记录。</p><button type="button" className="secondary-button" onClick={onOpenOnboarding}>重新打开使用引导</button></div>}
 
         <div className="settings-section">
           <div className="settings-copy">
@@ -291,7 +301,7 @@ export function SettingsDialog({
               setSaving(true)
               setMessage('')
               try {
-                if (!saveDeepseekKey(apiKey)) { setMessage('无法更新 DeepSeek Key，请检查浏览器存储权限后重试。'); return }
+                if (!managed && !saveDeepseekKey(apiKey)) { setMessage('无法更新 DeepSeek Key，请检查浏览器存储权限后重试。'); return }
                 await onSave({ ...settings, newItemsPerDay: limit, speechAccent, vocabularyLevel, adaptiveDifficulty,
                   difficultyResetAt: vocabularyLevel !== (settings.vocabularyLevel ?? 'B1') || adaptiveDifficulty !== (settings.adaptiveDifficulty !== false) ? new Date().toISOString() : settings.difficultyResetAt })
                 onClose()

@@ -175,6 +175,8 @@ export function normalizeUserSettings(raw: Partial<UserSettings> | UserSettings)
     vocabularyLevel: isVocabularyLevel(raw.vocabularyLevel) ? raw.vocabularyLevel : 'B1',
     adaptiveDifficulty: typeof raw.adaptiveDifficulty === 'boolean' ? raw.adaptiveDifficulty : true,
     difficultyResetAt: typeof raw.difficultyResetAt === 'string' && Number.isFinite(Date.parse(raw.difficultyResetAt)) ? raw.difficultyResetAt : undefined,
+    onboardingCompletedAt: typeof raw.onboardingCompletedAt === 'string' && Number.isFinite(Date.parse(raw.onboardingCompletedAt)) ? raw.onboardingCompletedAt : undefined,
+    learningGoal: raw.learningGoal && ['daily', 'business', 'finance', 'accounting'].includes(raw.learningGoal) ? raw.learningGoal : undefined,
     seedContentRevision:
       typeof raw.seedContentRevision === 'string' && raw.seedContentRevision.trim()
         ? raw.seedContentRevision.trim()

@@ -3,6 +3,9 @@ import type { CustomItemDraft } from './components/AddView'
 import { AppShell, type AppTab } from './components/AppShell'
 import type { EvaluationResult, RateDetail } from './components/StudySession'
 import { TodayView } from './components/TodayView'
+import type { AccountControls } from './components/AccountDataSection'
+import { saveVoiceExpression, type VoiceExpressionDraft } from './lib/voice/review'
+import { buildFirstLessonPlan } from './lib/onboarding'
 import { handcraftedSeedMemberships, handcraftedSeedWords, loadSeedPack } from './data/seedVocabulary'
 import { DICTIONARY_CONTENT_REVISION } from './data/dictionaryContentRevision'
 import { loadBundledDictionarySenses } from './data/dictionarySenses'
@@ -37,6 +40,7 @@ import {
 } from './lib/vocabularyPack'
 import {
   addWordToList,
+  clearDatabase,
   getLibrarySeedStatus,
   getAllReviewAttempts,
   getSettings,
@@ -80,6 +84,7 @@ import {
 interface ActiveSession {
   id: string
   plan: DailyPlan
+  firstLesson?: boolean
 }
 
 const AddView = lazy(() => import('./components/AddView').then(module => ({ default: module.AddView })))
@@ -87,11 +92,14 @@ const LibraryView = lazy(() => import('./components/LibraryView').then(module =>
 const SettingsDialog = lazy(() => import('./components/SettingsDialog').then(module => ({ default: module.SettingsDialog })))
 const StudySession = lazy(() => import('./components/StudySession').then(module => ({ default: module.StudySession })))
 const VoicePractice = lazy(() => import('./components/VoicePractice').then(module => ({ default: module.VoicePractice })))
+const OnboardingDialog = lazy(() => import('./components/OnboardingDialog').then(module => ({ default: module.OnboardingDialog })))
 const pageFallback = <p role="status">正在打开页面…</p>
 const studyFallback = <div className="study-overlay" role="status">正在准备训练…</div>
 const settingsFallback = <div className="dialog-backdrop" role="status">正在打开设置…</div>
 
 interface AppProps {
+  account?: AccountControls
+  dataReady?: boolean
   onReady?: () => void
   onBusyChange?: (busy: boolean) => void
   onRequestLogin?: () => void
@@ -99,7 +107,7 @@ interface AppProps {
   onTabChange?: (tab: AppTab) => void
 }
 
-function App({ onReady, onBusyChange, onRequestLogin, initialTab = 'today', onTabChange }: AppProps = {}) {
+function App({ onReady, onBusyChange, onRequestLogin, initialTab = 'today', onTabChange, account, dataReady = true }: AppProps = {}) {
   const [tab, setTab] = useState<AppTab>(initialTab)
   const preview = Boolean(onRequestLogin)
   const [items, setItems] = useState<VocabularyItem[]>([])
@@ -109,6 +117,7 @@ function App({ onReady, onBusyChange, onRequestLogin, initialTab = 'today', onTa
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_SETTINGS)
   const [session, setSession] = useState<ActiveSession | null>(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [onboardingOpen, setOnboardingOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
   const [dictionaryWarning, setDictionaryWarning] = useState('')
@@ -134,7 +143,7 @@ function App({ onReady, onBusyChange, onRequestLogin, initialTab = 'today', onTa
     return () => window.removeEventListener('recall-cloud-data-applied', refresh)
   }, [refreshData, preview])
   useEffect(() => { if (!loading && !loadError) onReady?.() }, [loading, loadError, onReady])
-  useEffect(() => { onBusyChange?.(Boolean(session || settingsOpen)) }, [session, settingsOpen, onBusyChange])
+  useEffect(() => { onBusyChange?.(Boolean(session || settingsOpen || onboardingOpen)) }, [session, settingsOpen, onboardingOpen, onBusyChange])
 
   const syncDictionaryContent = useCallback(async () => {
     setDictionaryBusy(true)
@@ -236,7 +245,7 @@ function App({ onReady, onBusyChange, onRequestLogin, initialTab = 'today', onTa
         return [{
           expression: item.expression,
           zhGloss: item.zhGloss,
-          stage: stats.evidenceByItemId.get(item.id)?.label ?? '未开始',
+          stage: ({ new: '未开始', learning: '正在练习', recall: '能双向想起', retained: '隔几天仍记得' })[stats.evidenceByItemId.get(item.id)?.key ?? 'new'],
         }]
       })
       .slice(0, 6)
@@ -392,7 +401,7 @@ function App({ onReady, onBusyChange, onRequestLogin, initialTab = 'today', onTa
     const snapshot = await getUserDataSnapshot()
     const current = new Date()
     const nextDifficulty = getStudyDifficulty(snapshot.settings, snapshot.vocabulary, snapshot.attempts, current)
-    const plan = buildDailyPlan({ settings: snapshot.settings, items: snapshot.vocabulary, tracks: snapshot.tracks, attempts: snapshot.attempts, timeEntries: snapshot.timeEntries, now: current })
+    const plan = (session?.firstLesson ? buildFirstLessonPlan : buildDailyPlan)({ settings: snapshot.settings, items: snapshot.vocabulary, tracks: snapshot.tracks, attempts: snapshot.attempts, timeEntries: snapshot.timeEntries, now: current })
     const next = refreshPendingNewTasks(pending, plan.tasks, snapshot.vocabulary, started)
     sessionDifficulty.current = nextDifficulty.level
     return next
@@ -594,6 +603,28 @@ function App({ onReady, onBusyChange, onRequestLogin, initialTab = 'today', onTa
     setSettings(updated)
   }
 
+  async function completeOnboarding(updated: UserSettings, start: boolean) {
+    await saveSettings(updated)
+    if (start) {
+      const snapshot = await getUserDataSnapshot()
+      const current = new Date()
+      const firstLesson = snapshot.attempts.length === 0 && snapshot.tracks.every(track => track.reps === 0)
+      const plan = (firstLesson ? buildFirstLessonPlan : buildDailyPlan)({ settings: updated,
+        items: snapshot.vocabulary, tracks: snapshot.tracks,
+        attempts: snapshot.attempts, timeEntries: snapshot.timeEntries, now: current })
+      sessionDifficulty.current = updated.vocabularyLevel ?? 'B1'
+      setNow(current)
+      setSession({ id: makeId('session'), plan, firstLesson })
+    }
+    setOnboardingOpen(false)
+  }
+
+  async function saveSpokenExpression(draft: VoiceExpressionDraft) {
+    if (onRequestLogin) { onRequestLogin(); return }
+    await saveVoiceExpression(draft)
+    await refreshData()
+  }
+
   async function downloadBackup() {
     try {
       const json = await exportBackupJson()
@@ -677,6 +708,10 @@ function App({ onReady, onBusyChange, onRequestLogin, initialTab = 'today', onTa
           <button type="button" onClick={() => setSessionError('')}>关闭提示后重试</button>
         </div>}
         <Suspense fallback={pageFallback}>
+        {tab === 'today' && dataReady && !settings.onboardingCompletedAt && attempts.length === 0 && <section className="panel onboarding-welcome">
+          <div><p className="eyebrow">WELCOME TO LOMI</p><h2>先用一小课，找到你的节奏。</h2><p>选一个常用场景，从最多 3 个表达开始。也可以直接浏览词库。</p></div>
+          <button className="primary-button" type="button" onClick={() => { if (onRequestLogin) onRequestLogin(); else setOnboardingOpen(true) }}>设置我的第一课</button>
+        </section>}
         {tab === 'today' && (
           <TodayView
             plan={dailyPlan}
@@ -712,9 +747,11 @@ function App({ onReady, onBusyChange, onRequestLogin, initialTab = 'today', onTa
             onCompleteSenses={completeSenses}
           />
         )}
-        {tab === 'voice' && <VoicePractice items={items} accent={settings.speechAccent} onRequestLogin={onRequestLogin} />}
+        {tab === 'voice' && <VoicePractice items={items} accent={settings.speechAccent} onRequestLogin={onRequestLogin} onSaveExpression={saveSpokenExpression} learningGoal={settings.learningGoal} />}
         </Suspense>
       </AppShell>
+
+      {onboardingOpen && <Suspense fallback={settingsFallback}><OnboardingDialog settings={settings} hasLearningHistory={attempts.length > 0 || tracks.some(track => track.reps > 0)} onComplete={completeOnboarding} onClose={() => setOnboardingOpen(false)} /></Suspense>}
 
       {session && (
         <Suspense fallback={studyFallback}>
@@ -755,6 +792,9 @@ function App({ onReady, onBusyChange, onRequestLogin, initialTab = 'today', onTa
       {settingsOpen && (
         <Suspense fallback={settingsFallback}>
         <SettingsDialog
+          account={account}
+          onClearLocal={account || preview ? undefined : async () => { await clearDatabase(); window.location.reload() }}
+          onOpenOnboarding={() => { setSettingsOpen(false); if (onRequestLogin) onRequestLogin(); else setOnboardingOpen(true) }}
           onRequestLogin={onRequestLogin ? () => { setSettingsOpen(false); onRequestLogin() } : undefined}
           attemptCount={attempts.length}
           onClose={() => setSettingsOpen(false)}

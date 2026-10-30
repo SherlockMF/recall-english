@@ -491,11 +491,15 @@ export function validateSettings(value: unknown, path: string, requireDailyMinut
     'vocabularyLevel',
     'adaptiveDifficulty',
     'difficultyResetAt',
+    'onboardingCompletedAt',
+    'learningGoal',
   ])
   literalAt(record.id, `${path}.id`, ['primary'] as const)
   if (record.vocabularyLevel !== undefined) literalAt(record.vocabularyLevel, `${path}.vocabularyLevel`, VOCABULARY_LEVELS)
   if (record.adaptiveDifficulty !== undefined) booleanAt(record.adaptiveDifficulty, `${path}.adaptiveDifficulty`)
   optionalDateAt(record.difficultyResetAt, `${path}.difficultyResetAt`)
+  optionalDateAt(record.onboardingCompletedAt, `${path}.onboardingCompletedAt`)
+  if (record.learningGoal !== undefined) literalAt(record.learningGoal, `${path}.learningGoal`, ['daily', 'business', 'finance', 'accounting'] as const)
   if (requireDailyMinutes || record.dailyMinutes !== undefined) {
     finiteNumberAt(record.dailyMinutes, `${path}.dailyMinutes`, { integer: true, min: 5, max: 120 })
   }
